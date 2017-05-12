@@ -7,11 +7,10 @@ Gem::Specification.new do |s|
   s.description = 'models of ish'
   s.authors     = [ 'piousbox' ]
   s.email       = 'victor@wasya.co'
-  s.files       = [ 'lib/ish_models.rb', 'lib/report.rb', 'lib/city.rb', 'lib/country.rb', 'lib/event.rb', 'lib/feature.rb',
-                    'lib/gallery.rb', 'lib/site.rb', 'lib/tag.rb', 'lib/venue.rb', 'lib/video.rb' ]
+  s.files       = Dir[ "lib/*" ]
   s.homepage    = 'http://wasya.co'
   s.license     = 'MIT'
 
-  s.add_runtime_dependency 'mongoid', '~> 0'
+  s.add_runtime_dependency 'mongoid', '~> 6.1.0'
 
 end

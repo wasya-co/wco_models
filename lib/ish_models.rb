@@ -1,12 +1,12 @@
 
 require 'city.rb'
+require 'country.rb'
+require 'event.rb'
+require 'feature.rb'
+require 'gallery.rb'
 require 'report.rb'
-
-=begin
-class IshModels
-  def self.hi
-    puts '+++ +++ Hello world from ish models!'
-  end
-end
-=end
+require 'site.rb'
+require 'tag.rb'
+require 'venue.rb'
+require 'video.rb'
 

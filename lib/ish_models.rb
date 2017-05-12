@@ -1,4 +1,6 @@
 
+require 'app_model2.rb'
+require 'aux_model.rb'
 require 'city.rb'
 require 'country.rb'
 require 'event.rb'

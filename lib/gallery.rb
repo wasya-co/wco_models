@@ -1,4 +1,3 @@
-require 'string'
 class Gallery < AppModel2
 
   belongs_to :site

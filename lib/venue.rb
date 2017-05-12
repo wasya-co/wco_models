@@ -1,10 +1,6 @@
-
-require 'string'
-
 class Venue
-
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  include ::Mongoid::Document
+  include ::Mongoid::Timestamps
 
   field :name, :type => String
   validates :name, :uniqueness => true, :allow_nil => false

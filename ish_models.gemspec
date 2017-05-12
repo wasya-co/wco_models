@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'ish_models'
-  s.version     = '0.0.3'
+  s.version     = '0.0.5'
   s.date        = '2017-05-10'
   s.summary     = 'models of ish'
   s.description = 'models of ish'
@@ -11,4 +11,7 @@ Gem::Specification.new do |s|
                     'lib/gallery.rb', 'lib/site.rb', 'lib/tag.rb', 'lib/venue.rb', 'lib/video.rb' ]
   s.homepage    = 'http://wasya.co'
   s.license     = 'MIT'
+
+  s.add_runtime_dependency 'mongoid', '~> 0'
+
 end

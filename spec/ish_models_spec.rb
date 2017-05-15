@@ -5,7 +5,7 @@ require 'spec_helper'
 describe IshModels do
   describe '#configure' do
     before do
-      IshModels.configure do |config|
+      IshModels.setup do |config|
         config.s3_credentials = {
           :bucket => 'such-and-such',
           :key => 'some-key',
@@ -16,6 +16,7 @@ describe IshModels do
 
     it 'whatever, affects' do
       photo = Photo.create
+      puts! photo.errors.messages, 'mgs'
       photo.persisted?.should eql true
     end
 

@@ -7,9 +7,9 @@ class Photo
   include Mongoid::Timestamps
   include Mongoid::Paperclip
 
-  belongs_to :user, :inverse_of => :photos
-  validates :user, :presence => true
-  field :username, :type => String
+  belongs_to :user,     :inverse_of => :photos
+  validates  :user,     :presence => true
+  field      :username, :type => String
 
   has_and_belongs_to_many :viewers, :class_name => 'User', :inverse_of => :viewable_photos
   
@@ -45,7 +45,7 @@ class Photo
                               :large => '950x650>'
                             },
                             :storage => :s3,
-                            :s3_credentials => IshModels.config[:s3_credentials],
+                            :s3_credentials => ::IshModels.configuration.s3_credentials,
                             :path => "photos/:style/:id/:filename"
   
   def self.n_per_manager_gallery

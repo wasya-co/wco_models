@@ -15,3 +15,8 @@ require 'tag.rb'
 require 'venue.rb'
 require 'video.rb'
 
+class IshModels
+  def self.config
+    ;
+  end
+end

@@ -1,7 +1,7 @@
 
 class Photo
   require 'aws-sdk'
-  require 'aws-sdk-v1'
+  # require 'aws-sdk-v1'
 
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -45,7 +45,7 @@ class Photo
                               :large => '950x650>'
                             },
                             :storage => :s3,
-                            :s3_credentials => ::S3_CREDENTIALS,
+                            :s3_credentials => IshModels.config[:s3_credentials],
                             :path => "photos/:style/:id/:filename"
   
   def self.n_per_manager_gallery

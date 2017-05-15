@@ -1,0 +1,3 @@
+
+0.0.5 - is used in microsites3_manager, microsites3_api
+0.0.6 - model Photo is in

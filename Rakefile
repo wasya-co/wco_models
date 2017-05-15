@@ -1,7 +1,6 @@
 
-task :default => :my_task
+task :default => :spec
 
-desc 'my task, I suppose'
-task :my_task do
-  puts 'my task'
+desc 'spec default task in rake'
+task :spec do
 end

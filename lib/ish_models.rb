@@ -1,21 +1,23 @@
 
-
 require 'ish_models/configuration'
+require 'ish_models/railtie' if defined?(Rails)
 
 module IshModels
+
   class << self
-    attr_writer :configuration
+    attr_accessor :configuration
   end
 
-  def self.configuration
+  def self.configure
     @configuration ||= Configuration.new
   end
 
   def self.setup
     yield(configuration)
   end
-
 end
+
+require 'ish_models/cache_key.rb'
 
 require 'app_model2.rb'
 require 'aux_model.rb'

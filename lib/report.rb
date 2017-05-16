@@ -60,6 +60,8 @@ class Report
     where({ is_public: true, is_trash: false }).order_by({ created_at: :desc })
   }
   
+  has_many :newsitems
+
   def self.list conditions = { :is_trash => false }
     out = self.where( conditions ).order_by( :name => :asc ).limit( 100 )
     [['', nil]] + out.map { |item| [ item.name, item.id ] }

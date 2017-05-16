@@ -37,8 +37,8 @@ class City
   has_one :guide, :class_name => 'User', :inverse_of => :guide_city
   has_many :current_users, :class_name => 'User', :inverse_of => :current_city
 
-  embeds_many :newsitems, cascade_callbacks: true
-  accepts_nested_attributes_for :newsitems
+  has_many :newsitems
+
   # @TODO @deprecated, I wish I don't use it.
   field :n_newsitems, :type => Integer, :default => 16
 
@@ -112,6 +112,8 @@ class City
       self.newsitems << Newsitem.new({ :descr => '', :username => '', :video => doc })
     end
   end
+
+  def method_missing
   
 end
 

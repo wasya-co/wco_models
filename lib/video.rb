@@ -1,6 +1,4 @@
-
 class Video
-
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -31,7 +29,6 @@ class Video
   validates :user, :presence => true
   
   accepts_nested_attributes_for :site, :tag, :city
-
 
   def self.list
     [['', nil]] + Video.all.order_by( :name => :desc ).map { |item| [ item.name, item.id ] }

@@ -31,6 +31,8 @@ class Photo
   field :is_trash,  :type => Boolean, :default => false
   default_scope ->{ where({ :is_trash => false }) }
 
+  File.open('/tmp/this', 'a') { |f| f.puts "#{Time.now} - inside photo.rb" }
+
   has_mongoid_attached_file :photo, 
                             :styles => {
                               :mini => '20x20#',
@@ -39,9 +41,10 @@ class Photo
                               :large => '950x650>'
                             },
                             :storage => :s3,
-                            :s3_credentials => ::IshModels.configuration.s3_credentials,
-                            :bucket => ::IshModels.configuration.s3_credentials[:bucket],
-                            :path => "photos/:style/:id/:filename"
+                            :s3_credentials => ::S3_CREDENTIALS,
+                            # :bucket => ::S3_CREDENTIALS[:bucket],
+                            :path => "photos/:style/:id/:filename",
+                            :s3_protocol => 'http'
   
   def self.n_per_manager_gallery
     25

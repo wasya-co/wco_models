@@ -4,3 +4,5 @@
         massively introducing Gemfile, rspec
         lets have config from host (s3)
 0.0.7 - missing bucket in photo config?
+0.0.8 - same
+0.0.9 - same, s3 config

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'byebug'
 gem 'rake'
 gem 'aws-sdk'
 gem 'mongoid'

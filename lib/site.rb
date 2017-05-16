@@ -34,9 +34,9 @@ class Site
   has_many :galleries
   has_many :tags
   has_many :videos
+  has_many :newsitems
 
   embeds_many :features
-  embeds_many :newsitems
   
   default_scope ->{ where({ :is_trash => false }).order_by({ :domain => :asc, :lang => :asc }) }
 
@@ -78,5 +78,9 @@ class Site
   def its_locales
     Site.where( :domain => self.domain ).map { |s| s.lang.to_sym }
   end
-  
+
+  def self.Tgm
+    Site.find_by( :domain => 'travel-guide.mobi', :lang => :en )
+  end
+
 end

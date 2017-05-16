@@ -25,7 +25,9 @@ class Gallery < AppModel2
   belongs_to :tag
   belongs_to :city
   belongs_to :venue
-    
+
+  has_many :newsitems
+
   set_callback(:create, :before) do |doc|
     doc.username = doc.user.username
     doc.galleryname = doc.name.to_simple_string

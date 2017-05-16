@@ -17,6 +17,7 @@ GEM
       aws-sdk-core (= 2.9.17)
     aws-sigv4 (1.0.0)
     bson (4.2.1)
+    byebug (9.0.6)
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -66,6 +67,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk
+  byebug
   mongoid
   mongoid-paperclip
   rake

@@ -1,17 +1,19 @@
 class Newsitem
   include Mongoid::Document
   include Mongoid::Timestamps
-  # include Mongoid::Paranoia
-  
+
+=begin  
   embedded_in :user
   embedded_in :site
   embedded_in :city
   embedded_in :tag
+=end
 
-  belongs_to :photo
-  belongs_to :report
-  belongs_to :gallery
-  belongs_to :video
+  belongs_to :site, :optional => true
+  belongs_to :city, :optional => true
+  belongs_to :report, :optional => true
+  belongs_to :gallery, :optional => true
+  # has_one :video
 
   field :name, :type => String
   field :descr, :type => String

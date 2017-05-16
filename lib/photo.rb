@@ -42,7 +42,6 @@ class Photo
                             },
                             :storage => :s3,
                             :s3_credentials => ::S3_CREDENTIALS,
-                            # :bucket => ::S3_CREDENTIALS[:bucket],
                             :path => "photos/:style/:id/:filename",
                             :s3_protocol => 'http'
   

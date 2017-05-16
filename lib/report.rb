@@ -34,22 +34,20 @@ class Report
   field :lang, :type => String, :default => 'en'
   index({ :lang => 1 })
    
+  belongs_to :user, :optional => true, :class_name => 'IshModels::User'
+  # validates :user, :presence => true, :allow_nil => false
   field :username, :type => String, :default => 'anonymous'
   validates :username, :presence => true, :allow_nil => false
-  belongs_to :user
-  validates :user, :presence => true, :allow_nil => false
   index({ :username => 1 })
 
   field :subhead, :type => String
   
-  belongs_to :tag
-  belongs_to :city
-  
-  belongs_to :site
-  validates :site, :presence => true
-  
+  belongs_to :tag,         :optional => true
+  belongs_to :city,        :optional => true
+  belongs_to :site,        :optional => true
+  belongs_to :cities_user, :optional => true
+
   has_and_belongs_to_many :venues
-  belongs_to :cities_user
   
   has_one :photo
 
@@ -99,7 +97,7 @@ class Report
       if !doc.venue_ids.blank?
         ( doc.venue_ids || [] ).each do |venue_id|
           v = Venue.find venue_id
-          u = User.find doc.user_id
+          u = ::IshModels::User.find doc.user_id
           n = Newsitem.new
           n.username = u.username unless u.blank?
           n.report = doc

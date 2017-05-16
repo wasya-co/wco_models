@@ -3,8 +3,8 @@ class Gallery < AppModel2
   belongs_to :site
   validates :site, :presence => true
 
-  belongs_to :user
-  validates :user, :presence => true
+  belongs_to :user, :optional => true, :class_name => 'IshModels::User'
+  # validates :user, :presence => true
   field :username, :type => String
   
   field :name, :type => String
@@ -22,9 +22,9 @@ class Gallery < AppModel2
 
   has_many :photos
 
-  belongs_to :tag
-  belongs_to :city
-  belongs_to :venue
+  belongs_to :tag, :optional => true
+  belongs_to :city, :optional => true
+  belongs_to :venue, :optional => true
 
   has_many :newsitems
 

@@ -1,11 +1,10 @@
-
-class City  
-
+class City
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
-  # this does not have to be validated because I can autogenerate this value, yes?
   field :name, :type => String
+
+  field :description, :type => String, :default => 'The description of this city'
 
   field :cityname, :type => String
   validates :cityname, :uniqueness => true, :allow_nil => false, :presence => true
@@ -24,7 +23,7 @@ class City
   field :x, :type => Float
   field :y, :type => Float
   
-  belongs_to :country
+  belongs_to :country, :optional => true
  
   has_many :events 
   has_many :galleries 
@@ -32,10 +31,10 @@ class City
   has_many :reports
   has_many :venues
   has_many :videos
+  has_many :current_users, :class_name => 'User', :inverse_of => :current_city
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
   has_one :guide, :class_name => 'User', :inverse_of => :guide_city
-  has_many :current_users, :class_name => 'User', :inverse_of => :current_city
 
   has_many :newsitems
 
@@ -112,8 +111,14 @@ class City
       self.newsitems << Newsitem.new({ :descr => '', :username => '', :video => doc })
     end
   end
-
-  def method_missing
-  
+ 
+  def self.method_missing name, *args, &block
+    city = City.where( :cityname => name ).first
+    return city if city
+    super
+  end
+   
 end
+
+
 

@@ -31,10 +31,10 @@ class City
   has_many :reports
   has_many :venues
   has_many :videos
-  has_many :current_users, :class_name => 'User', :inverse_of => :current_city
+  has_many :current_users, :class_name => '::IshModels::User', :inverse_of => :current_city
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
-  has_one :guide, :class_name => 'User', :inverse_of => :guide_city
+  has_one :guide, :class_name => '::IshModels::User', :inverse_of => :guide_city
 
   has_many :newsitems
 

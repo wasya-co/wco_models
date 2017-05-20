@@ -31,7 +31,7 @@ class Photo
   field :is_trash,  :type => Boolean, :default => false
   default_scope ->{ where({ :is_trash => false }) }
 
-  File.open('/tmp/this', 'a') { |f| f.puts "#{Time.now} - inside photo.rb" }
+  # File.open('/tmp/this', 'a') { |f| f.puts "#{Time.now} - inside photo.rb" }
 
   has_mongoid_attached_file :photo, 
                             :styles => {

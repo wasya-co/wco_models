@@ -32,18 +32,29 @@ class Gallery < AppModel2
     doc.username = doc.user.username
     doc.galleryname = doc.name.to_simple_string
 
-    # for the homepage
-    if doc.is_public && doc.site
-      n = Newsitem.new {}
-      n.gallery = doc
-      n.username = doc.user.username
-      sites = Site.where( :domain => doc.site.domain )
-      sites.each do |site|
-        site.newsitems << n
-        flag = site.save
-        if !flag
-          puts! site.errors
+    if doc.is_public 
+      # for the sites
+      if doc.site
+        sites = Site.where( :domain => doc.site.domain )
+        sites.each do |site|
+          n = Newsitem.new {}
+          n.gallery = doc
+          n.username = doc.username
+          site.newsitems << n
+          flag = site.save
+          if !flag
+            puts! site.errors
+          end
         end
+      end
+
+      # for the city
+      if doc.city
+        n = Newsitem.new {}
+        n.gallery = doc
+        n.city = doc.city
+        n.username = doc.username
+        n.save
       end
     end
   end

@@ -1,8 +1,7 @@
 
 require 'ish_models/railtie' if defined?(Rails)
-# require 'ish_models/configuration'
+require 'ish_models/configuration'
 
-=begin
 module IshModels
 
   class << self
@@ -17,7 +16,6 @@ module IshModels
     yield(configuration)
   end
 end
-=end
 
 require 'ish_models/cache_key.rb'
 require 'ish_models/user.rb'

@@ -35,7 +35,6 @@ require 'public_item.rb'
 require 'report.rb'
 require 'site.rb'
 require 'tag.rb'
-# require 'user.rb' # no, for devise
 require 'user_profile.rb'
 require 'venue.rb'
 require 'video.rb'

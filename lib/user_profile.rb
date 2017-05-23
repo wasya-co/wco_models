@@ -1,6 +1,4 @@
-
-class UserProfile
-  
+class UserProfile  
   include Mongoid::Document
   include Mongoid::Timestamps
   
@@ -17,4 +15,8 @@ class UserProfile
   
   belongs_to :user
   
+  def manager?
+    %w( piousbox@gmail.com manager@gmail.com ).include?( self.user.email ) ? true : false
+  end
+
 end

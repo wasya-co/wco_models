@@ -5,21 +5,20 @@ class Photo
   include Mongoid::Timestamps
   include Mongoid::Paperclip
 
-  belongs_to :user,     :inverse_of => :photos
-  validates  :user,     :presence => true
-  field      :username, :type => String
+  # belongs_to :user,     :inverse_of => :photos
+  # validates  :user,     :presence => true
+  # field      :username, :type => String
 
   has_and_belongs_to_many :viewers, :class_name => 'User', :inverse_of => :viewable_photos
   
-  belongs_to :profile_user, :class_name => 'User', :inverse_of => :profile_photo
-  belongs_to :profile_city, :class_name => 'City', :inverse_of => :profile_photo
-  belongs_to :profile_venue, :class_name => 'Venue', :inverse_of => :profile_photo
+  # belongs_to :profile_user, :class_name => 'User', :inverse_of => :profile_photo
+  belongs_to :profile_city,  :class_name => 'City',  :inverse_of => :profile_photo, :optional => true
+  belongs_to :profile_venue, :class_name => 'Venue', :inverse_of => :profile_photo, :optional => true
   
-  belongs_to :report
-  belongs_to :tag
-  belongs_to :venue
-  belongs_to :feature
-  belongs_to :gallery
+  belongs_to :report,  :optional => true
+  belongs_to :venue,   :optional => true
+  belongs_to :feature, :optional => true
+  belongs_to :gallery, :optional => true
   
   field :name,   :type => String
   field :descr,  :type => String
@@ -30,8 +29,6 @@ class Photo
   # @TODO: nuke this boolean _vp_ 20170515
   field :is_trash,  :type => Boolean, :default => false
   default_scope ->{ where({ :is_trash => false }) }
-
-  # File.open('/tmp/this', 'a') { |f| f.puts "#{Time.now} - inside photo.rb" }
 
   has_mongoid_attached_file :photo, 
                             :styles => {

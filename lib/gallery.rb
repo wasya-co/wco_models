@@ -3,8 +3,8 @@ class Gallery < AppModel2
   belongs_to :site
   validates :site, :presence => true
 
-  belongs_to :user, :optional => true, :class_name => 'IshModels::User'
-  # validates :user, :presence => true
+  belongs_to :user,         :optional => true
+  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile'
   field :username, :type => String
   
   field :name, :type => String
@@ -29,8 +29,10 @@ class Gallery < AppModel2
   has_many :newsitems
 
   set_callback(:create, :before) do |doc|
-    doc.username = doc.user.username
-    doc.galleryname = doc.name.to_simple_string
+    if doc.user_profile && doc.user_profile.username
+      doc.username = doc.user_profile.username
+    end
+    doc.galleryname = doc.id.to_s
 
     if doc.is_public 
       # for the sites

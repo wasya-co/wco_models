@@ -1,2 +1,16 @@
-#!/usr/bin/env ruby
+#!/bin/bash
 
+set -ex
+
+./scripts/version_bump
+
+bundle
+
+gem build ish_models.gemspec
+gem push ish_models-`cat VERSION`.gem
+
+git add .
+git commit -m 'autobuild `date "+%y%m%d"`'
+git push
+
+echo "ish_models build ok"

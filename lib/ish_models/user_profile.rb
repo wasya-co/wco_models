@@ -1,4 +1,4 @@
-class UserProfile  
+class IshModels::UserProfile  
   include Mongoid::Document
   include Mongoid::Timestamps
   

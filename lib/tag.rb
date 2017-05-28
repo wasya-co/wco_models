@@ -1,6 +1,4 @@
-
-class Tag
-  
+class Tag  
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -23,13 +21,12 @@ class Tag
   has_many :videos
 
   has_many :children_tags, :class_name => 'Tag', :inverse_of => :parent_tag
-  belongs_to :parent_tag, :class_name => 'Tag', :inverse_of => :children_tags
+  belongs_to :parent_tag, :class_name => 'Tag', :inverse_of => :children_tags, :optional => true
 
   embeds_many :features
   embeds_many :newsitems
 
-  belongs_to :site
-  validates :site, :presence => true
+  belongs_to :site, :optional => true
 
   default_scope ->{
     where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })

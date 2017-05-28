@@ -17,13 +17,10 @@ class Gallery < AppModel2
   field :descr, :type => String
   field :lang, :type => String, :default => 'en'
 
-  # not necessary because AppModel2
-  # default_scope ->{ where( :is_public => true, :is_trash => false ).order_by( :created_at => :desc ) }
-
   has_many :photos
 
-  belongs_to :tag, :optional => true
-  belongs_to :city, :optional => true
+  belongs_to :tag,   :optional => true
+  belongs_to :city,  :optional => true
   belongs_to :venue, :optional => true
 
   has_many :newsitems
@@ -34,6 +31,9 @@ class Gallery < AppModel2
     end
     doc.galleryname = doc.id.to_s
 
+    #
+    # newsitems
+    #
     if doc.is_public 
       # for the sites
       if doc.site
@@ -49,7 +49,6 @@ class Gallery < AppModel2
           end
         end
       end
-
       # for the city
       if doc.city
         n = Newsitem.new {}
@@ -59,6 +58,17 @@ class Gallery < AppModel2
         n.save
       end
     end
+
+    #
+    # cache
+    #
+    if doc.site
+      doc.site.touch
+    end
+    if doc.city
+      doc.city.touch
+    end
+
   end
 
   # @deprecated, use Gallery::ACTIONS

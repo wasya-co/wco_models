@@ -74,7 +74,7 @@ class IshModels::User
   
   has_many :reports
   has_many :photos
-  has_many :user_profiles
+  # has_many :user_profiles
   has_many :galleries
   has_many :videos
 

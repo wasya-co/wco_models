@@ -19,6 +19,7 @@ end
 
 require 'ish_models/cache_key.rb'
 require 'ish_models/user.rb'
+require 'ish_models/user_profile.rb'
 
 require 'app_model2.rb'
 require 'aux_model.rb'
@@ -35,6 +36,5 @@ require 'public_item.rb'
 require 'report.rb'
 require 'site.rb'
 require 'tag.rb'
-require 'user_profile.rb'
 require 'venue.rb'
 require 'video.rb'

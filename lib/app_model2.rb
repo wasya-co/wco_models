@@ -3,7 +3,7 @@ class AppModel2
   include ::Mongoid::Timestamps
 
   field :is_feature, :type => Boolean, :default => false
-  field :is_public, :type => Boolean, :default => true
+  field :is_public, :type => Boolean, :default => false
   field :is_done, :type => Boolean, :default => false
   field :is_trash, :type => Boolean, :default => false
   field :is_anonymous, :type => Boolean, :default => false

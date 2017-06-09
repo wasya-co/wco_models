@@ -108,7 +108,11 @@ class Report
 
       unless doc.city.blank?
         city = City.find doc.city.id
-        username = doc.user.username || 'anon'
+        if doc.user
+          username = doc.user.username || 'anon'
+        else
+          username = '<username>'
+        end
         n = Newsitem.new :report => doc, :username => username
         city.newsitems << n
         city.save

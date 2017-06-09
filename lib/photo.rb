@@ -15,10 +15,11 @@ class Photo
   belongs_to :profile_city,  :class_name => 'City',  :inverse_of => :profile_photo, :optional => true
   belongs_to :profile_venue, :class_name => 'Venue', :inverse_of => :profile_photo, :optional => true
   
-  belongs_to :report,  :optional => true
-  belongs_to :venue,   :optional => true
-  belongs_to :feature, :optional => true
-  belongs_to :gallery, :optional => true
+  belongs_to :report,   :optional => true
+  belongs_to :venue,    :optional => true
+  belongs_to :feature,  :optional => true
+  belongs_to :gallery,  :optional => true
+  belongs_to :newsitem, :optional => true
   
   field :name,   :type => String
   field :descr,  :type => String

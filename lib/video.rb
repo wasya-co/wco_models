@@ -27,7 +27,8 @@ class Video
   validates :site, :presence => true
   belongs_to :user
   validates :user, :presence => true
-  
+  belongs_to :newsitem, :optional => true
+
   accepts_nested_attributes_for :site, :tag, :city
 
   def self.list

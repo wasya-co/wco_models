@@ -13,7 +13,8 @@ class Newsitem
   belongs_to :city, :optional => true
   belongs_to :report, :optional => true
   belongs_to :gallery, :optional => true
-  # has_one :video
+  has_one :video
+  has_one :photo
 
   field :name, :type => String
   field :descr, :type => String

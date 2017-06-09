@@ -116,6 +116,7 @@ class Report
         n = Newsitem.new :report => doc, :username => username
         city.newsitems << n
         city.save
+        city.touch
       end
     end
   end

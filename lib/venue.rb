@@ -26,7 +26,7 @@ class Venue
   field :lang, :type => String, :default => 'en'
 
   belongs_to :city
-  belongs_to :owner, :class_name => 'User', :inverse_of => :owned_venue
+  # belongs_to :owner, :class_name => 'User', :inverse_of => :owned_venue
   validates :city, :allow_nil => false, :presence => true
 
   has_and_belongs_to_many :users
@@ -45,8 +45,14 @@ class Venue
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
-  set_callback(:create, :before) do |doc|
+  set_callback :create, :before do |doc|
     doc.name_seo = doc.name.gsub(' ', '-')
+  end
+
+  set_callback :save, :before do |doc|
+    if doc.city
+      city.touch
+    end
   end
 
   def self.types

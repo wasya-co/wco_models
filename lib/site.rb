@@ -60,7 +60,7 @@ class Site
   # manager uses it.
   def self.list
     out = self.all.order_by( :domain => :asc, :lang => :asc )
-    [['', nil]] + out.map { |item| [ "#{item.domain} #{item.lang}", item.id ] }
+    [['Select Site', nil, { :disabled => true }]] + out.map { |item| [ "#{item.domain} #{item.lang}", item.id ] }
   end
 
   def self.mobi

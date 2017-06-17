@@ -46,7 +46,7 @@ class Venue
   end
 
   set_callback(:create, :before) do |doc|
-    doc.name_seo = doc.name.to_simple_string
+    doc.name_seo = doc.name.gsub(' ', '-')
   end
 
   def self.types

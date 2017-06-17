@@ -21,13 +21,13 @@ class Video
   field :youtube_id, :type => String
   validates :youtube_id, :uniqueness => true, :presence => true
 
-  belongs_to :tag
-  belongs_to :city
+  belongs_to :tag,  :optional => true
+  belongs_to :city, :optional => true
   belongs_to :site
   validates :site, :presence => true
   belongs_to :user
   validates :user, :presence => true
-  belongs_to :newsitem, :optional => true
+  has_many :newsitems
 
   accepts_nested_attributes_for :site, :tag, :city
 

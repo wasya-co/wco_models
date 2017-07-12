@@ -32,7 +32,7 @@ class Video
   accepts_nested_attributes_for :site, :tag, :city
 
   def self.list
-    [['', nil]] + Video.all.order_by( :name => :desc ).map { |item| [ item.name, item.id ] }
+    [['', nil]] + Video.all.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
   set_callback( :create, :before ) do |doc|

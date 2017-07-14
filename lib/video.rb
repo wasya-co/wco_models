@@ -27,6 +27,7 @@ class Video
   validates :site, :presence => true
   belongs_to :user
   validates :user, :presence => true
+  belongs_to :user_profile, :optional => true
   has_many :newsitems
 
   accepts_nested_attributes_for :site, :tag, :city

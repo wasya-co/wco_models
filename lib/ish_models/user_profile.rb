@@ -3,6 +3,10 @@ class IshModels::UserProfile
   include Mongoid::Timestamps
   
   field :username, :type => String
+  field :name
+  field :email
+
+  field :fb_access_token
 
   field :about, :type => String
   field :education, :type => String
@@ -16,9 +20,13 @@ class IshModels::UserProfile
   field :lang, :type => String
  
   belongs_to :user
-
+  belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
+  belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
+ 
   has_many :galleries
-  
+  has_many :reports
+  has_many :videos
+
   def manager?
     %w( piousbox@gmail.com manager@gmail.com ).include?( self.user.email ) ? true : false
   end

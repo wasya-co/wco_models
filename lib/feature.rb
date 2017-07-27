@@ -13,10 +13,10 @@ class Feature
   field :inner_html,   :type => String
   field :weight,       :type => Integer, :default => 10
   
-  belongs_to :photo
-  belongs_to :report
-  belongs_to :gallery
-  belongs_to :video
+  belongs_to :photo, :optional => true
+  belongs_to :report, :optional => true
+  belongs_to :gallery, :optional => true
+  belongs_to :video, :optional => true
   # has_one :photo
   # has_one :report
   # has_one :gallery

@@ -7,6 +7,7 @@ class IshModels::UserProfile
   field :email
 
   field :fb_access_token
+  field :fb_long_access_token
 
   field :about, :type => String
   field :education, :type => String
@@ -24,7 +25,7 @@ class IshModels::UserProfile
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
  
   has_many :galleries
-  has_many :reports
+  has_many :reports, :inverse_of => :profile
   has_many :videos
 
   def manager?

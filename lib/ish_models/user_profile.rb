@@ -19,7 +19,10 @@ class IshModels::UserProfile
   field :doc_resume_path, :type => String
   
   field :lang, :type => String
- 
+
+  ROLES = [ :admin, :manager, :guy ] 
+  field :role_name, :type => Symbol
+
   belongs_to :user
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
@@ -28,7 +31,7 @@ class IshModels::UserProfile
   has_many :reports, :inverse_of => :profile
   has_many :videos
 
-  def manager?
+  def sudoer?
     %w( piousbox@gmail.com manager@gmail.com ).include?( self.user.email ) ? true : false
   end
 

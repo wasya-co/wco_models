@@ -109,8 +109,8 @@ class Report
 
       unless doc.city.blank?
         city = City.find doc.city.id
-        if doc.user
-          username = doc.user.username || 'anon'
+        if doc.profile
+          username = doc.profile.username || 'anon'
         else
           username = '<username>'
         end

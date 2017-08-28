@@ -20,6 +20,8 @@ class Site
   field :n_reports, :type => Integer
   field :n_galleries, :type => Integer
 
+  field :newsitems_per_page, :type => Integer, :default => 10
+
   field :is_video_enabled, :type => Boolean, :default => false
   field :is_resume_enabled, :type => Boolean, :default => false
   field :is_ads_enabled, :type => Boolean, :default => true

@@ -18,7 +18,7 @@ class IshModels::UserProfile
   field :pdf_resume_path, :type => String
   field :doc_resume_path, :type => String
   
-  field :lang, :type => String
+  field :lang, :type => String, :default => :en
 
   ROLES = [ :admin, :manager, :guy ] 
   field :role_name, :type => Symbol

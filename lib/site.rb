@@ -13,8 +13,9 @@ class Site
   field :subhead, :type => String
   field :home_redirect_path, :type => String, :default => nil
 
-  field :n_features, :type => Integer, :default => 4
-  field :n_newsitems, :type => Integer, :default => 20
+  field :n_features,             :type => Integer, :default => 4
+  field :n_newsitems,            :type => Integer, :default => 20
+  field :play_videos_in_preview, :type => Boolean, :default => true
 
   # denormalized
   field :n_reports, :type => Integer
@@ -36,9 +37,9 @@ class Site
   has_many :galleries
   has_many :tags
   has_many :videos
-  has_many :newsitems
+  has_many :newsitems, :order => :created_at.desc
 
-  embeds_many :features
+  embeds_many :features, :order => :created_at.desc
   
   default_scope ->{ where({ :is_trash => false }).order_by({ :domain => :asc, :lang => :asc }) }
 

@@ -49,8 +49,8 @@ class Tag
   end
 
   def self.list
-    out = Tag.all.order_by( :name => :desc )
-    [['', nil]] + out.map { |item| [ item.name, item.id ] }
+    out = Tag.unscoped.order_by( :name => :asc )
+    return( [['', nil]] + out.map { |item| [ item.name, item.id ] } )
   end
 
   # @deprecated, there will be no reports or galleries in tags. There will be only features and newsitems

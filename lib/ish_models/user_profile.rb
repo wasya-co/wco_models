@@ -31,6 +31,12 @@ class IshModels::UserProfile
   has_many :reports, :inverse_of => :profile
   has_many :videos
 
+  #
+  # preferences
+  #
+  field :videos_embed, :type => Boolean, :default => false
+
+
   def sudoer?
     %w( piousbox@gmail.com manager@gmail.com ).include?( self.user.email ) ? true : false
   end

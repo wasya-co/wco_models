@@ -6,6 +6,7 @@ class Video
 
   field :name, :type => String
   field :descr, :type => String
+  def description; descr; end
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
 

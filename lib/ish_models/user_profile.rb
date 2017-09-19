@@ -30,6 +30,7 @@ class IshModels::UserProfile
   has_many :galleries
   has_many :reports, :inverse_of => :profile
   has_many :videos
+  has_many :photos
 
   #
   # preferences

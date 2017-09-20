@@ -11,11 +11,8 @@ class Photo
 
   has_and_belongs_to_many :viewers, :class_name => 'User', :inverse_of => :viewable_photos
   
-  belongs_to :user_profile,  :class_name => 'IshModels::UserProfile'
-  def user
-    user_profile
-  end
-
+  belongs_to :user_profile,  :class_name => 'IshModels::UserProfile',               :optional => true
+  def user; user_profile; end
   belongs_to :profile_city,  :class_name => 'City',  :inverse_of => :profile_photo, :optional => true
   belongs_to :profile_venue, :class_name => 'Venue', :inverse_of => :profile_photo, :optional => true
   

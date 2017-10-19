@@ -19,6 +19,7 @@ end
 
 require 'ish_models/cache_key.rb'
 # require 'ish_models/user.rb'
+require 'ish_models/stock_watch.rb'
 require 'ish_models/user_profile.rb'
 
 require 'app_model2.rb'

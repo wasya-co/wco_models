@@ -1,4 +1,5 @@
 
+0.0.3 - fileupload should work
 0.0.5 - is used in microsites3_manager, microsites3_api
 0.0.6 - model Photo is in
         massively introducing Gemfile, rspec
@@ -7,4 +8,4 @@
 0.0.8 - same
 0.0.9 - same, s3 config
         let's do devise and multiengine config, finally
-0.0.33 - fileupload should work
+0.0.11 - moving gallery data from app_model2 to galleries2 (and later will transition to Gallery)

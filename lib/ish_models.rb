@@ -17,6 +17,8 @@ module IshModels
   end
 end
 
+require 'ish/gallery_name.rb'
+
 require 'ish_models/cache_key.rb'
 # require 'ish_models/user.rb'
 require 'ish_models/stock_watch.rb'
@@ -30,6 +32,7 @@ require 'country.rb'
 require 'event.rb'
 require 'feature.rb'
 require 'gallery.rb'
+require 'gallery2.rb'
 require 'manager.rb'
 require 'newsitem.rb'
 require 'photo.rb'

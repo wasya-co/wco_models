@@ -1,10 +1,28 @@
 
-class Gallery < AppModel2
+class Gallery2
+  include ::Mongoid::Document
+  include ::Mongoid::Timestamps
+  store_in :collection => 'galleries'
+
+  field :is_feature,   :type => Boolean, :default => false
+  field :is_public,    :type => Boolean, :default => false
+  field :is_done,      :type => Boolean, :default => false
+  field :is_trash,     :type => Boolean, :default => false
+
+  default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
+  index({ :is_public => 1, :is_trash => -1, :order_by => 1 })
+  
+  field :x, :type => Float
+  field :y, :type => Float
+
+  def self.list conditions = { :is_trash => false }
+    out = self.where( conditions ).order_by( :created_at => :desc )
+    [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
+  end
 
   belongs_to :site
-  validates :site, :presence => true
+  validates  :site, :presence => true
 
-  belongs_to :user,         :optional => true
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile'
   field :username, :type => String
   

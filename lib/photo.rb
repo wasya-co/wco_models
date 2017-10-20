@@ -19,7 +19,7 @@ class Photo
   belongs_to :report,   :optional => true
   belongs_to :venue,    :optional => true
   belongs_to :feature,  :optional => true
-  belongs_to :gallery,  :optional => true
+  belongs_to :gallery,  :optional => true # , :class_name => 'Gallery2'
   belongs_to :newsitem, :optional => true
   
   field :name,   :type => String

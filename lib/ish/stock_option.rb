@@ -7,22 +7,16 @@ class Ish::StockOption
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  store_in :collection => 'ish_stock_watch'
+  store_in :collection => 'ish_stock_option'
 
   field :ticker
+  field :expires_on, :type => Date
+  field :strike, :type => Float
 
-  NOTIFICATION_TYPES = [ :NONE, :EMAIL, :SMS ]
-  NOTIFICATION_NONE  = :NONE
-  NOTIFICATION_EMAIL = :EMAIL
-  NOTIFICATION_SMS   = :SMS
-  ACTIONS = NOTIFICATION_TYPES
-  field :notification_type, :type => Symbol, :as => :action
-  field :price, :type => Float
+  ACTIONS = [ :CALL, :PUT ]
+  field :action, :type => Symbol
 
-  DIRECTIONS      = [ :ABOVE, :BELOW ]
-  DIRECTION_ABOVE = :ABOVE
-  DIRECTION_BELOW = :BELOW
-  field :direction, :type => Symbol
+  field :quantity, :type => Integer
 
   belongs_to :profile, :class_name => 'IshModels::UserProfile'
 

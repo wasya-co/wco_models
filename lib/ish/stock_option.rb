@@ -13,11 +13,16 @@ class Ish::StockOption
   field :expires_on, :type => Date
   field :strike, :type => Float
 
-  ACTIONS = [ :CALL, :PUT ]
-  field :action, :type => Symbol
+  DIRECTIONS = [ :CALL, :PUT ]
+  field :direction, :type => Symbol
 
   field :quantity, :type => Integer
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  belongs_to :profile,      :class_name => 'IshModels::UserProfile'
+  belongs_to :stock_action, :class_name => 'Ish::StockAction', :optional => true
+
+  def to_s
+    "#{self.ticker} #{self.expires_on.to_time.strftime('%b %d %Y')} #{self.strike}"
+  end
 
 end

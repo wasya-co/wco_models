@@ -18,6 +18,7 @@ module IshModels
 end
 
 require 'ish/gallery_name.rb'
+require 'ish/stock_action.rb'
 require 'ish/stock_option.rb'
 require 'ish/stock_watch.rb'
 

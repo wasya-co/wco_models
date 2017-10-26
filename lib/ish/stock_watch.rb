@@ -26,4 +26,8 @@ class Ish::StockWatch
 
   belongs_to :profile, :class_name => 'IshModels::UserProfile'
 
+  def to_s
+    "#{self.ticker} #{self.direction} #{self.price}"
+  end
+
 end

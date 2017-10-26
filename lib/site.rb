@@ -15,13 +15,12 @@ class Site
 
   field :n_features,             :type => Integer, :default => 4
   field :n_newsitems,            :type => Integer, :default => 20
+  field :newsitems_per_page,     :type => Integer, :default => 10 # this is used. _vp_ 20171025
   field :play_videos_in_preview, :type => Boolean, :default => true
 
   # denormalized
   field :n_reports, :type => Integer
   field :n_galleries, :type => Integer
-
-  field :newsitems_per_page, :type => Integer, :default => 10
 
   field :is_video_enabled, :type => Boolean, :default => false
   field :is_resume_enabled, :type => Boolean, :default => false

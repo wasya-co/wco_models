@@ -13,4 +13,6 @@ class Ish::StockAction
   belongs_to :stock_watch, :class_name => 'Ish::StockWatch'
   has_many :stock_options, :class_name => 'Ish::StockOption'
 
+  field :is_active, :type => Boolean, :default => true # whether anything will be done upon alert trigger
+
 end

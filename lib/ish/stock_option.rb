@@ -17,12 +17,13 @@ class Ish::StockOption
   field :direction, :type => Symbol
 
   field :quantity, :type => Integer
+  field :is_active, :type => Integer, :default => true # whether this position is current or in the past
 
   belongs_to :profile,      :class_name => 'IshModels::UserProfile'
   belongs_to :stock_action, :class_name => 'Ish::StockAction', :optional => true
 
   def to_s
-    "#{self.ticker} #{self.expires_on.to_time.strftime('%b %d %Y')} #{self.strike}"
+    "#{self.ticker} #{self.expires_on.to_time.strftime('%b %d %Y')} #{self.strike} (x #{self.quantity})"
   end
 
 end

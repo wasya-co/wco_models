@@ -13,5 +13,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'mongoid', '~> 6.1.0', '>= 6.1.0'
   s.add_runtime_dependency 'devise', '> 0'
+  s.add_runtime_dependency 'mongoid-autoinc', '~> 6.0'
 
 end

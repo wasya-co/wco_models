@@ -32,7 +32,7 @@ class IshModels::UserProfile
   has_many :videos
   has_many :photos
 
-  has_many :stocks, :class_name => 'IshModels::StockWatch'
+  has_many :stocks, :class_name => 'Ish::StockWatch'
 
   #
   # preferences

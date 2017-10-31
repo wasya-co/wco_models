@@ -18,9 +18,11 @@ module IshModels
 end
 
 require 'ish/gallery_name.rb'
+require 'ish/payment.rb'
 require 'ish/stock_action.rb'
 require 'ish/stock_option.rb'
 require 'ish/stock_watch.rb'
+require 'ish/invoice.rb'
 
 # obsolete, use `ish` namespace now
 require 'ish_models/cache_key.rb'

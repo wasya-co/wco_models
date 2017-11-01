@@ -7,6 +7,7 @@ class Ish::Payment
   belongs_to :profile, :class_name => 'IshModels::UserProfile', :optional => true
 
   field :amount, :type => Float
+  field :charge, :type => Hash
 
 end
 

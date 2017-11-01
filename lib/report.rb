@@ -4,7 +4,7 @@ class Report
 
   field :name, :type => String
   validates :name, :presence => true
-  index({ :name => 1 }, { :unique => true })
+  # index({ :name => 1 }, { :unique => true })
   index({ :name => 1, :is_trash => 1 })
 
   field :name_seo, :type => String

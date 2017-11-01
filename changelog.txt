@@ -9,3 +9,4 @@
 0.0.9 - same, s3 config
         let's do devise and multiengine config, finally
 0.0.11 - moving gallery data from app_model2 to galleries2 (and later will transition to Gallery)
+0.0.12 - let's nuke app_model2

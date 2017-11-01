@@ -1,16 +1,10 @@
+
 class AppModel2
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
-  field :is_feature,   :type => Boolean, :default => false
   field :is_public,    :type => Boolean, :default => false
-  field :is_done,      :type => Boolean, :default => false
   field :is_trash,     :type => Boolean, :default => false
-
-  scope :fresh,  ->{ where({ :is_trash  => false }) }
-  scope :trash,  ->{ where({ :is_trash  => true  }) }
-  scope :public, ->{ where({ :is_public => true  }) }
-  scope :done,   ->{ where({ :is_done   => true  }) }
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
   

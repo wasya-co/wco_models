@@ -42,13 +42,14 @@ class Photo
                             :storage => :s3,
                             :s3_credentials => ::S3_CREDENTIALS,
                             :path => "photos/:style/:id/:filename",
-                            :s3_protocol => 'http'
+                            :s3_protocol => 'https',
+                            :validate_media_type => false
   
   def self.n_per_manager_gallery
     25
   end
 
-  validates_attachment_content_type :photo, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif"]
+  validates_attachment_content_type :photo, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
   
 end
 

@@ -27,13 +27,16 @@ class IshModels::UserProfile
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
  
-  has_many :galleries
+  has_many :galleries, :inverse_of => :user_profile
+  has_and_belongs_to_many :shared_galleries, :class_name => 'Gallery', :inverse_of => :shared_profiles
+
   has_many :reports, :inverse_of => :profile
   has_many :videos
   has_many :photos
-
   has_many :stocks, :class_name => 'Ish::StockWatch'
 
+  has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends
   #
   # preferences
   #

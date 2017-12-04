@@ -19,9 +19,9 @@ class Gallery
   belongs_to :site
   validates :site, :presence => true
 
-  belongs_to :user,         :optional => true
-  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile'
-  field :username, :type => String
+  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :galleries
+  field :username, :type => String # denormalization, not used _vp_ 20171203
+  has_and_belongs_to_many :shared_profiles, :class_name => 'IshModels::UserProfile', :inverse_of => :shared_galleries
   
   field :name, :type => String
   validates :name, :uniqueness => true # , :allow_nil => false
@@ -41,6 +41,7 @@ class Gallery
   belongs_to :venue, :optional => true
 
   has_many :newsitems
+
 
   set_callback(:create, :before) do |doc|
     if doc.user_profile && doc.user_profile.username

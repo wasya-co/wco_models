@@ -30,10 +30,12 @@ class IshModels::UserProfile
   has_many :galleries, :inverse_of => :user_profile
   has_and_belongs_to_many :shared_galleries, :class_name => 'Gallery', :inverse_of => :shared_profiles
 
-  has_many :reports, :inverse_of => :profile
-  has_many :videos
+  has_many :invoices
+  has_many :leads
   has_many :photos
+  has_many :reports, :inverse_of => :profile
   has_many :stocks, :class_name => 'Ish::StockWatch'
+  has_many :videos
 
   has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
   has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends

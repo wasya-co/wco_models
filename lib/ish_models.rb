@@ -23,6 +23,7 @@ require 'ish/stock_action.rb'
 require 'ish/stock_option.rb'
 require 'ish/stock_watch.rb'
 require 'ish/invoice.rb'
+require 'ish/lead.rb'
 
 # obsolete, use `ish` namespace now
 require 'ish_models/cache_key.rb'

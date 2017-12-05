@@ -44,16 +44,16 @@ class Site
 
   set_callback :create, :before do |doc|
     if Site.where( :lang => doc.lang, :domain => doc.domain ).length > 0
-      return false
+      false
     end
   end
 
   set_callback :update, :before do |doc|
     possible_duplicate = Site.where( :lang => doc.lang, :domain => doc.domain ).first
     if possible_duplicate.blank?
-      return true
+      true
     elsif doc.id != possible_duplicate.id
-      return false
+      false
     end
   end
 

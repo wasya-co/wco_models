@@ -24,12 +24,10 @@ class Video
 
   belongs_to :tag,  :optional => true
   belongs_to :city, :optional => true
-  belongs_to :site
-  validates :site, :presence => true
-  belongs_to :user
-  validates :user, :presence => true
-  belongs_to :user_profile, :optional => true
+  belongs_to :site, :optional => true
   has_many :newsitems
+
+  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :videos
 
   accepts_nested_attributes_for :site, :tag, :city
 

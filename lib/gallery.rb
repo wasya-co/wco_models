@@ -16,8 +16,8 @@ class Gallery
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
-  belongs_to :site
-  validates :site, :presence => true
+  belongs_to :site, :optional => true
+  # validates :site, :presence => true
 
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :galleries
   field :username, :type => String # denormalization, not used _vp_ 20171203

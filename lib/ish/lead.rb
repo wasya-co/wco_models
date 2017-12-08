@@ -16,10 +16,7 @@ class Ish::Lead
   field :company, :default => ''
   field :description
 
-=begin
-  field :amount, :type => Float
-  has_many :payments, :class_name => 'Ish::Payment'
-  field :description, :type => String
-=end
+  STATES = [ :considering, :applied ]
+  field :state, :type => Symbol
 
 end

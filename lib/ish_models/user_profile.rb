@@ -6,8 +6,8 @@ class IshModels::UserProfile
   field :name
 
   field :email
-  validates_format_of :email, :with => Devise::email_regexp
-  # validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
+  # validates_format_of :email, :with => ::Devise::email_regexp
+  validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
 
   field :fb_access_token
   field :fb_long_access_token

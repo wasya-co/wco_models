@@ -4,7 +4,10 @@ class IshModels::UserProfile
   
   field :username, :type => String
   field :name
+
   field :email
+  validates_format_of :email, :with => Devise::email_regexp
+  # validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
 
   field :fb_access_token
   field :fb_long_access_token
@@ -22,6 +25,9 @@ class IshModels::UserProfile
 
   ROLES = [ :admin, :manager, :guy ] 
   field :role_name, :type => Symbol
+
+  TAGS = [ :social, :professional ]
+  field :tag, :type => Symbol
 
   belongs_to :user
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true

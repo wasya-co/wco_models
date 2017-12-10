@@ -2,7 +2,6 @@ class IshModels::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
   
-  # field :username, :type => String
   field :name
   validates_presence_of :name
 
@@ -61,7 +60,7 @@ class IshModels::UserProfile
   # @TODO: check this, this is shit. _vp_ 20170527
   def self.list
     out = self.all.order_by( :domain => :asc, :lang => :asc )
-    [['', nil]] + out.map { |item| [ item.username, item.id ] }
+    [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
 end

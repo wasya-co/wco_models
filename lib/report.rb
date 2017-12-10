@@ -92,6 +92,11 @@ class Report
     end
   end
 
+  before_validation :set_name_seo, :on => :create
+  def set_name_seo
+    self.name_seo ||= self.name.gsub(' ', '-').gsub('.', '')
+  end
+
   set_callback :create, :after do |doc|
     if doc.is_public
 

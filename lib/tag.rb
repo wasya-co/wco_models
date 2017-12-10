@@ -34,7 +34,7 @@ class Tag
 
   before_create do |d|
     if d.name_seo.blank?
-      d.name_seo = d.name.to_simple_string
+      d.name_seo = d.name.gsub(' ', '-')
     end
   end
 

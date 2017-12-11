@@ -2,7 +2,7 @@ class IshModels::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
   
-  field :name
+  field :name, :as => :username
   validates_presence_of :name
 
   field :email

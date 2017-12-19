@@ -17,6 +17,14 @@ module IshModels
   end
 end
 
+require 'co_tailors'
+require 'co_tailors/pant.rb'
+require 'co_tailors/shirt.rb'
+require 'co_tailors/suit.rb'
+require 'co_tailors/profile_measurement.rb'
+require 'co_tailors/order.rb'
+require 'co_tailors/address.rb'
+
 require 'ish/gallery_name.rb'
 require 'ish/payment.rb'
 require 'ish/stock_action.rb'
@@ -45,6 +53,13 @@ require 'public_item.rb'
 require 'report.rb'
 require 'site.rb'
 require 'tag.rb'
-# require 'user_profile.rb'
 require 'venue.rb'
 require 'video.rb'
+
+
+
+
+
+
+
+

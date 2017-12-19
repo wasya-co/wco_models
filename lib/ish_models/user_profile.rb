@@ -63,4 +63,9 @@ class IshModels::UserProfile
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
+  # colombia tailors
+  has_many :measurements, :class_name => '::CoTailors::ProfileMeasurement'
+  has_many :addresses, :class_name => '::CoTailors::Address'
+  has_many :co_orders, :class_name => '::CoTailors::Order'
+
 end

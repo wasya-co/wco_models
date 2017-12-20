@@ -19,4 +19,7 @@ class Ish::Lead
   STATES = [ :considering, :applied ]
   field :state, :type => Symbol
 
+  field :is_done,  :type => Boolean, :default => false
+  field :is_trash, :type => Boolean, :default => false
+
 end

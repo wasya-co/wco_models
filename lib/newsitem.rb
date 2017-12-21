@@ -11,6 +11,7 @@ class Newsitem
 
   belongs_to :site, :optional => true
   belongs_to :city, :optional => true
+
   belongs_to :report, :optional => true
   belongs_to :gallery, :optional => true
   belongs_to :video, :optional => true

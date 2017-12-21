@@ -85,4 +85,8 @@ class Site
     Site.find_by( :domain => 'travel-guide.mobi', :lang => :en )
   end
 
+  def name
+    "#{domain}/#{lang}"
+  end
+
 end

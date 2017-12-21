@@ -22,4 +22,6 @@ class Ish::Lead
   field :is_done,  :type => Boolean, :default => false
   field :is_trash, :type => Boolean, :default => false
 
+  field :applied_on, :type => Time
+
 end

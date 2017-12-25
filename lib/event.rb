@@ -7,10 +7,10 @@ class Event
   field :name, :type => String
   validates :name, :presence => true, :uniqueness => true
 
-  field :name_seo, :type => String
-  validates :name_seo, :presence => true, :uniqueness => true
+  field :eventname, :type => String
+  validates :eventname, :presence => true, :uniqueness => true
 
-  field :descr, :type => String
+  field :description, :type => String
 
   field :date, :type => DateTime
   validates :date, :presence => true
@@ -19,3 +19,4 @@ class Event
   validates :city, :presence => true
   
 end
+

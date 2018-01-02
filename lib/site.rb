@@ -9,9 +9,10 @@ class Site
   field :lang, :type => String, :default => 'en'
   # validates :lang, { :uniqueness => :true, :scope => :domain }
 
-  field :title, :type => String
-  field :subhead, :type => String
-  field :home_redirect_path, :type => String, :default => nil
+  field :title
+  field :subhead
+  field :description
+  field :home_redirect_path
 
   field :n_features,             :type => Integer, :default => 4
   field :n_newsitems,            :type => Integer, :default => 20

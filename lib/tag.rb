@@ -5,9 +5,9 @@ class Tag
   field :name, :type => String
   validates :name, :uniqueness => true, :allow_nil => false
   
-  field :name_seo, :type => String
+  field :name_seo, :as => :tagname
   validates :name_seo, :uniqueness => true, :allow_nil => false
-
+  
   field :descr, :type => String, :default => ''
   
   field :is_public, :type => Boolean, :default => true
@@ -24,7 +24,8 @@ class Tag
   belongs_to :parent_tag, :class_name => 'Tag', :inverse_of => :children_tags, :optional => true
 
   embeds_many :features
-  embeds_many :newsitems
+  # embeds_many :newsitems
+  has_many :newsitems
 
   belongs_to :site, :optional => true
 

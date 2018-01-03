@@ -1,4 +1,3 @@
-
 class Ish::Payment
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,4 +10,3 @@ class Ish::Payment
 
 end
 
-  

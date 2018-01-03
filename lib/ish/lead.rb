@@ -13,7 +13,10 @@ class Ish::Lead
 
   field :email
   field :job_url
+
   field :company, :default => ''
+  validates_uniqueness_of :company
+
   field :description
 
   STATES = [ :considering, :applied ]
@@ -23,5 +26,8 @@ class Ish::Lead
   field :is_trash, :type => Boolean, :default => false
 
   field :applied_on, :type => Time
+
+  field :tag # 'hired_com_ror', not enumerated for now _vp_ 20180103
+  field :location
 
 end

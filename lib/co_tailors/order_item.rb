@@ -1,17 +1,15 @@
 
-class CoTailors::ProfileMeasurement
+class CoTailors::OrderItem
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  UNITS = [ :inches, :centimeters ]
-  field :units, :type => Symbol
+  belongs_to :order, :class_name => '::IshModels::Order'
 
-  belongs_to :profile, :class_name => '::IshModels::UserProfile'
+  KINDS = [ :shirt, :pants, :suit ]
+  field :kind, :type => Symbol
 
-  ## same as order item
   ## shirt
   # neck around
-  field :neck_across, :type => Float
   # chest around
   # waist around
   # sleeve length
@@ -19,11 +17,11 @@ class CoTailors::ProfileMeasurement
   # shirt length
   # bicep around
   # wrist around
+  
   ## pants
   # length
   # waist
   # hips
-  ## suit
 
 end
 

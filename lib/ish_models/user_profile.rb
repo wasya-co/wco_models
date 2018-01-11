@@ -11,6 +11,7 @@ class IshModels::UserProfile
 
   field :fb_access_token
   field :fb_long_access_token
+  field :fb_expires_in
 
   field :about, :type => String
   field :education, :type => String

@@ -4,13 +4,14 @@ class CoTailors::Address
   include Mongoid::Timestamps
 
   belongs_to :profile, :class_name => '::IshModels::UserProfile'
+  validates :profile, :presence => true
 
   field :name
   field :address_1
   field :address_2
   field :city
   field :state
-  field :zip
+  field :zipcode
   field :phone
 
 end

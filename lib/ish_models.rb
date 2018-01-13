@@ -23,6 +23,7 @@ require 'co_tailors/shirt.rb'
 require 'co_tailors/suit.rb'
 require 'co_tailors/profile_measurement.rb'
 require 'co_tailors/order.rb'
+require 'co_tailors/order_item.rb'
 require 'co_tailors/address.rb'
 
 require 'ish/gallery_name.rb'

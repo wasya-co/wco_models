@@ -6,24 +6,25 @@ class CoTailors::ProfileMeasurement
   UNITS = [ :inches, :centimeters ]
   field :units, :type => Symbol
 
-  belongs_to :profile, :class_name => '::IshModels::UserProfile'
+  belongs_to :profile,    :class_name => 'IshModels::UserProfile'
+  belongs_to :order_item, :class_name => 'CoTailors::OrderItem'
 
-  ## same as order item
   ## shirt
-  # neck around
-  field :neck_across, :type => Float
-  # chest around
-  # waist around
-  # sleeve length
-  # shoulder width
-  # shirt length
-  # bicep around
-  # wrist around
+  field :neck_around,    :type => Float
+  field :chest_around,   :type => Float
+  field :waist_around,   :type => Float
+  field :sleeve_length,  :type => Float
+  field :shoulder_width, :type => Float
+  field :shirt_length,   :type => Float
+  field :bicep_around,   :type => Float
+  field :wrist_around,   :type => Float
   ## pants
   # length
   # waist
   # hips
   ## suit
+
+  field :nickname
 
 end
 

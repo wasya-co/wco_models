@@ -52,7 +52,6 @@ class IshModels::UserProfile
   #
   field :videos_embed, :type => Boolean, :default => false
 
-
   def sudoer?
     %w( piousbox@gmail.com manager@gmail.com ).include?( self.user.email ) ? true : false
   end

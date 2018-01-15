@@ -11,20 +11,7 @@ class CoTailors::OrderItem
   FABRICS = [ :white, :black, :light_blue, :dark_blue, :dark_green, :pink, :gray ]
   field :fabric, :type => Symbol
 
-  ## shirt
-  # neck around
-  # chest around
-  # waist around
-  # sleeve length
-  # shoulder width
-  # shirt length
-  # bicep around
-  # wrist around
-  
-  ## pants
-  # length
-  # waist
-  # hips
+  has_one :measurement, :class_name => 'CoTailors::ProfileMeasurement'
 
 end
 

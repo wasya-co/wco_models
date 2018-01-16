@@ -4,10 +4,12 @@ class CoTailors::ProfileMeasurement
   include Mongoid::Timestamps
 
   UNITS = [ :inches, :centimeters ]
+  UNITS_INCHES = :inches
+  UNITS_CENTIMETERS = :centimeters
   field :units, :type => Symbol
 
-  belongs_to :profile,    :class_name => 'IshModels::UserProfile'
-  belongs_to :order_item, :class_name => 'CoTailors::OrderItem'
+  belongs_to :profile,    :class_name => 'IshModels::UserProfile', :optional => true
+  belongs_to :order_item, :class_name => 'CoTailors::OrderItem',   :optional => true
 
   ## shirt
   field :neck_around,    :type => Float

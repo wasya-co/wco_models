@@ -13,5 +13,7 @@ class CoTailors::OrderItem
 
   has_one :measurement, :class_name => 'CoTailors::ProfileMeasurement'
 
+  field :quantity, :type => Integer
+
 end
 

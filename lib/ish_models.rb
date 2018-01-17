@@ -2,6 +2,8 @@
 require 'ish_models/railtie' if defined?(Rails)
 require 'ish_models/configuration'
 
+::S3_CREDENTIALS ||= {}
+
 module IshModels
 
   class << self

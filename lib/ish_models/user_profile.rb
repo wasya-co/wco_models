@@ -68,4 +68,8 @@ class IshModels::UserProfile
   has_many :addresses,    :class_name => '::CoTailors::Address'
   has_many :orders,       :class_name => '::CoTailors::Order'
 
+  def current_order
+    self.orders.where( :submitted_at => nil ).first || CoTailors::Order.create( :profile => self )
+  end
+
 end

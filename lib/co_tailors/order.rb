@@ -1,3 +1,4 @@
+require_relative 'order_item'
 
 class CoTailors::Order
   include Mongoid::Document

@@ -2,6 +2,7 @@ require 'rubygems'
 require 'mongoid'
 require 'mongoid-paperclip'
 require 'factory_bot'
+require 'byebug'
 
 Mongoid.load!("config/mongoid.yml", :test)
 
@@ -29,4 +30,8 @@ def do_setup
   User.unscoped.destroy
   IshModels::UserProfile.unscoped.destroy
   @user_profile = FactoryBot.create :user_profile, :user => User.new, :name => 'some-name'
+
+  CoTailors::ProfileMeasurement.all.destroy
+  CoTailors::Order.all.destroy
+  CoTailors::OrderItem.all.destroy
 end

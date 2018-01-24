@@ -25,7 +25,7 @@ require 'co_tailors/shirt.rb'
 require 'co_tailors/suit.rb'
 require 'co_tailors/profile_measurement.rb'
 require 'co_tailors/order.rb'
-require 'co_tailors/order_item.rb'
+# require 'co_tailors/order_item.rb' # this is required from within order.rb
 require 'co_tailors/address.rb'
 
 require 'ish/gallery_name.rb'
@@ -37,7 +37,7 @@ require 'ish/invoice.rb'
 require 'ish/lead.rb'
 
 # obsolete, use `ish` namespace now
-require 'ish_models/cache_key.rb'
+require 'ish_models/cache_key.rb' # this is really obsolete? _vp_ 20180123
 require 'ish_models/user_profile.rb'
 
 require 'app_model2.rb'

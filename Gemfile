@@ -9,6 +9,10 @@ gem 'rake'
 # gem 'mongoid-paperclip'
 # gem 'mongoid-autoinc', '~> 6.0'
 
+group :development, :test do
+  gem 'byebug'
+end
+
 group :test do
   gem 'rspec'
   gem 'factory_bot'

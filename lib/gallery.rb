@@ -96,5 +96,7 @@ class Gallery
   end
   ACTIONS = [ 'show_mini', 'show_long', 'show' ]
 
+  field :issue
+
 end
 

@@ -141,4 +141,6 @@ class Report
     self.venues[0] || nil
   end
 
+  field :issue
+
 end

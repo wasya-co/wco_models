@@ -43,4 +43,6 @@ class Video
     
   end
 
+  field :issue
+
 end

@@ -20,6 +20,4 @@ describe 'CoTailors::OrderItem' do
   end
 
 end
-
-         
      

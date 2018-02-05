@@ -3,7 +3,7 @@ class Tag
   include Mongoid::Timestamps
 
   field :name, :type => String
-  validates :name, :uniqueness => true, :allow_nil => false
+  # validates :name, :uniqueness => true, :allow_nil => false
   
   field :name_seo, :as => :tagname
   validates :name_seo, :uniqueness => true, :allow_nil => false
@@ -28,6 +28,7 @@ class Tag
   has_many :newsitems
 
   belongs_to :site, :optional => true
+  belongs_to :city, :optional => true
 
   default_scope ->{
     where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })

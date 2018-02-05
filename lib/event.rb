@@ -17,6 +17,12 @@ class Event
   
   belongs_to :city
   validates :city, :presence => true
-  
+
+  field :x, :type => Float
+  field :y, :type => Float
+
+  has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_event
+  has_many :photos
+
 end
 

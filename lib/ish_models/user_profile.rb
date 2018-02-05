@@ -2,9 +2,11 @@ class IshModels::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
   
-  field :name, :as => :username
+  field :name
   validates_presence_of :name
 
+  field :username
+  
   field :email
   # validates_format_of :email, :with => ::Devise::email_regexp
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/

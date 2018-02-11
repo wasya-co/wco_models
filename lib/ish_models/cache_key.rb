@@ -4,8 +4,8 @@ module IshModels
     include ::Mongoid::Document
     include ::Mongoid::Timestamps
 
-    ## /api/cities.json
-    field :cities, :type => Time 
+    field :cities,         :type => Time # /api/cities.json
+    field :feature_cities, :type => Time # /api/cities/features.json
 
     def self.one
       IshModels::CacheKey.first || IshModels::CacheKey.new

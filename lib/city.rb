@@ -10,13 +10,13 @@ class City
   validates :cityname, :uniqueness => true, :allow_nil => false, :presence => true
   
   field :name_en, :type => String, :default => ''
-  validates :name_en, :uniqueness => true, :allow_nil => false, :presence => true
+  # validates :name_en, :uniqueness => true, :allow_nil => false, :presence => true
 
   field :name_ru, :type => String, :default => ''
-  validates :name_ru, :uniqueness => true, :allow_nil => false, :presence => true
+  # validates :name_ru, :uniqueness => true, :allow_nil => false, :presence => true
 
   field :name_pt, :type => String, :default => ''
-  validates :name_pt, :uniqueness => true, :allow_nil => false, :presence => true
+  # validates :name_pt, :uniqueness => true, :allow_nil => false, :presence => true
   
   field :is_feature, :type => Boolean, :default => false
   

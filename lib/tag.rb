@@ -30,6 +30,8 @@ class Tag
   belongs_to :site, :optional => true
   belongs_to :city, :optional => true
 
+  has_and_belongs_to_many :venues
+
   default_scope ->{
     where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })
   }
@@ -52,7 +54,7 @@ class Tag
 
   def self.list
     out = Tag.unscoped.order_by( :name => :asc )
-    return( [['', nil]] + out.map { |item| [ item.name, item.id ] } )
+    return( [['', nil, :disabled => true]] + out.map { |item| [ item.name, item.id ] } )
   end
 
   # @deprecated, there will be no reports or galleries in tags. There will be only features and newsitems

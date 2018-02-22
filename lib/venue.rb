@@ -8,14 +8,15 @@ class Venue
   field :name_seo, :type => String
   validates :name_seo, :uniqueness => true, :allow_nil => false
   
-  field :descr, :type => String
+  field :subhead
+  field :descr
   
   field :is_trash, :type => Boolean, :default => false
   scope :fresh, ->{ where({ :is_trash => false }) }
   scope :trash, ->{ where({ :is_trash => true }) }
 
   field :is_public, :type => Boolean, :default => true
-  scope :public, ->{ where({ :is_public => true }) }
+  scope :public,     ->{ where({ :is_public => true }) }
   scope :not_public, ->{ where({ :is_public => false }) }
 
   field :is_feature, :type => Boolean, :default => false
@@ -28,6 +29,8 @@ class Venue
   belongs_to :city
   # belongs_to :owner, :class_name => 'User', :inverse_of => :owned_venue
   validates :city, :allow_nil => false, :presence => true
+
+  has_and_belongs_to_many :tags
 
   has_and_belongs_to_many :users
 

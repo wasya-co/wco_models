@@ -33,4 +33,13 @@ class Ish::Lead
   field :tag # 'hired_com_ror', not enumerated for now _vp_ 20180103
   field :location
 
+  field :url
+
+  field :raw_phone, :type => String
+  def phone= which
+    write_attribute :raw_phone, which
+    write_attribute :phone, which.gsub(/\D/, '').to_i
+  end
+  field :phone, :type => Integer
+
 end

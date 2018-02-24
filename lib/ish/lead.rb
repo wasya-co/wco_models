@@ -16,6 +16,8 @@ class Ish::Lead
 
   field :email
   field :job_url
+  field :company_url
+  field :yelp_url
 
   field :company, :default => ''
   validates_uniqueness_of :company
@@ -32,8 +34,6 @@ class Ish::Lead
 
   field :tag # 'hired_com_ror', not enumerated for now _vp_ 20180103
   field :location
-
-  field :url
 
   field :raw_phone, :type => String
   def phone= which

@@ -19,8 +19,9 @@ class Ish::Lead
   field :company_url
   field :yelp_url
 
-  field :company, :default => ''
+  field :company
   validates_uniqueness_of :company
+  index({ :company => -1 })
 
   field :description
 

@@ -9,6 +9,8 @@ class CoTailors::Product
 
   KINDS = %w( shirt pants suit )
   field :kind,        :type => String
+  index({ :kind => -1 })
+  validates_uniqueness_of :kind
 
 end
 

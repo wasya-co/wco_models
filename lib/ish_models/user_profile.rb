@@ -66,7 +66,7 @@ class IshModels::UserProfile
   end
 
   # colombia tailors
-  has_many :measurements, :class_name => '::CoTailors::ProfileMeasurement'
+  has_one  :measurement,  :class_name => '::CoTailors::ProfileMeasurement'
   has_many :addresses,    :class_name => '::CoTailors::Address'
   has_many :orders,       :class_name => '::CoTailors::Order'
 

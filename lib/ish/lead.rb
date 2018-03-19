@@ -25,15 +25,15 @@ class Ish::Lead
 
   field :description
 
-  STATES = [ :considering, :applied ]
-  field :state, :type => Symbol
+  STATES = %w( considering applied )
+  field :state, :type => String
 
   field :is_done,  :type => Boolean, :default => false
   field :is_trash, :type => Boolean, :default => false
 
   field :applied_on, :type => Time
 
-  field :tag # 'hired_com_ror', not enumerated for now _vp_ 20180103
+  field :tag, :type => String # 'hired_com_ror', not enumerated for now _vp_ 20180103
   field :location
 
   field :raw_phone, :type => String

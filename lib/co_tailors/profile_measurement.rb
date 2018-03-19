@@ -12,14 +12,14 @@ class CoTailors::ProfileMeasurement
   belongs_to :order_item, :class_name => 'CoTailors::OrderItem',   :optional => true
 
   ## shirt
-  field :neck_around,    :type => Float
-  field :chest_around,   :type => Float
-  field :waist_around,   :type => Float
-  field :sleeve_length,  :type => Float
-  field :shoulder_width, :type => Float
-  field :shirt_length,   :type => Float
-  field :bicep_around,   :type => Float
-  field :wrist_around,   :type => Float
+  field :neck_around,    :type => Float, :default => 0
+  field :chest_around,   :type => Float, :default => 0
+  field :waist_around,   :type => Float, :default => 0
+  field :sleeve_length,  :type => Float, :default => 0
+  field :shoulder_width, :type => Float, :default => 0
+  field :shirt_length,   :type => Float, :default => 0
+  field :bicep_around,   :type => Float, :default => 0
+  field :wrist_around,   :type => Float, :default => 0 # Is this optional? I want less here
   ## pants
   # length
   # waist

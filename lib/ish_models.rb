@@ -20,9 +20,7 @@ module IshModels
 end
 
 require 'co_tailors'
-require 'co_tailors/pant.rb'
-require 'co_tailors/shirt.rb'
-require 'co_tailors/suit.rb'
+require 'co_tailors/product.rb'
 require 'co_tailors/profile_measurement.rb'
 require 'co_tailors/order.rb'
 # require 'co_tailors/order_item.rb' # this is required from within order.rb

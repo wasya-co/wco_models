@@ -52,9 +52,10 @@ class Tag
     Tag.where( :parent_tag_id => nil )
   end
 
+  # the first blank used to be disabled, not anymore _vp_ 20180418
   def self.list
     out = Tag.unscoped.order_by( :name => :asc )
-    return( [['', nil, :disabled => true]] + out.map { |item| [ item.name, item.id ] } )
+    return( [['', nil]] + out.map { |item| [ item.name, item.id ] } )
   end
 
   # @deprecated, there will be no reports or galleries in tags. There will be only features and newsitems

@@ -7,7 +7,8 @@ class Ish::Payment
 
   field :amount, :type => Float
   field :charge, :type => Hash
-
+  field :email,  :type => String
+  
   after_create :compute_paid_invoice_amount
 
   protected

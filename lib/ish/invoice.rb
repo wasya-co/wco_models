@@ -11,7 +11,7 @@ class Ish::Invoice
 
   store_in :collection => 'ish_invoice'
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  field :email, :type => String
 
   field :number, :type => Integer
   increments :number
@@ -19,6 +19,7 @@ class Ish::Invoice
   field :amount, :type => Float
 
   has_many :payments, :class_name => 'Ish::Payment'
+  field :paid_amount, :type => Float, :default => 0
 
   field :description, :type => String
 

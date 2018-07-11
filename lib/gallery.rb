@@ -98,5 +98,8 @@ class Gallery
 
   field :issue
 
+  RENDER_TITLES = :gallery_render_titles_const
+  RENDER_THUMBS = :gallery_render_thumbs_const
+
 end
 

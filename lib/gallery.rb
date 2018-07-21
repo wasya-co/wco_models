@@ -98,8 +98,8 @@ class Gallery
 
   field :issue
 
-  RENDER_TITLES = :gallery_render_titles_const
-  RENDER_THUMBS = :gallery_render_thumbs_const
+  RENDER_TITLES = 'gallery_render_titles_const' # string b/c transmited over http
+  RENDER_THUMBS = 'gallery_render_thumbs_const' # string b/c transmited over http
 
 end
 

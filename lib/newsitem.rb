@@ -6,7 +6,12 @@ class Newsitem
   belongs_to :tag,     :optional => true
   belongs_to :city,    :optional => true
   belongs_to :report,  :optional => true
+  
   belongs_to :gallery, :optional => true
+  def gallery
+    Gallery.unscoped.find( self.gallery_id )
+  end
+
   belongs_to :video,   :optional => true
 
   has_one :photo

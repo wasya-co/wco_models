@@ -87,6 +87,11 @@ class Site
   def self.Tgm
     Site.find_by( :domain => 'travel-guide.mobi', :lang => :en )
   end
+  def self.sedux
+    site   = Site.where( :domain => 'sedux.local' ).first
+    site ||= Site.where( :domain => 'sedux.net'   ).first
+    site
+  end
 
   def name
     "#{domain}/#{lang}"

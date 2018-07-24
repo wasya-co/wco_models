@@ -26,6 +26,7 @@ require 'co_tailors/order.rb'
 # require 'co_tailors/order_item.rb' # this is required from within order.rb
 require 'co_tailors/address.rb'
 
+require 'ish/crawler.rb'
 require 'ish/gallery_name.rb'
 require 'ish/payment.rb'
 require 'ish/stock_action.rb'

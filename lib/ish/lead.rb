@@ -17,6 +17,7 @@ class Ish::Lead
   field :email
   field :job_url
   field :company_url
+  field :website_html
   field :yelp_url
 
   field :company
@@ -42,5 +43,9 @@ class Ish::Lead
     write_attribute :phone, which.gsub(/\D/, '').to_i
   end
   field :phone, :type => Integer
+  field :address, :type => String
+
+  # If I crawl on 20180724, I add "20180724" here, so I don't crawl in the same way again.
+  field :extra, :type => Array, :default => []
 
 end

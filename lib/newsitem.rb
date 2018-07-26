@@ -9,7 +9,7 @@ class Newsitem
   
   belongs_to :gallery, :optional => true
   def gallery
-    Gallery.unscoped.find( self.gallery_id )
+    self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
   end
 
   belongs_to :video,   :optional => true

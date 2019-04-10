@@ -45,6 +45,7 @@ class IshModels::UserProfile
   has_many :reports, :inverse_of => :user_profile
   has_many :stocks,   :class_name => 'Ish::StockWatch'
   has_many :videos, :inverse_of => :user_profile
+  has_many :newsitems, inverse_of: :user_profile
 
   has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
   has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends

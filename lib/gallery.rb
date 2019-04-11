@@ -13,7 +13,7 @@ class Gallery
   field :y, :type => Float
 
   def self.list conditions = { :is_trash => false }
-    out = self.where( conditions ).order_by( :created_at => :desc )
+    out = self.unscoped.where( conditions ).order_by( :created_at => :desc )
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 

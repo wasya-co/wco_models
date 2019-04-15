@@ -7,6 +7,9 @@ if ! (( ssh-add -L | grep mac_id_rsa )) ; then
 fi
 
 ./scripts/version_bump &&
+version=`cat VERSION`
+cat ish_models.gemspec-template | \
+  sed -e "s/\$version/$version/g" > ish_models.gemspec
 
 bundle &&
 

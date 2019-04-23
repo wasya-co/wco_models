@@ -45,9 +45,9 @@ class Video
 
   field :issue
 
-  has_attached_file :video, styles: {},
+  has_attached_file :video, styles: {
     :thumb => { geometry: '192x108', format: 'jpeg' },
   }, processors: [ :transcoder ]
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/
-  
+
 end

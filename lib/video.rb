@@ -55,7 +55,7 @@ class Video
     :s3_credentials => ::S3_CREDENTIALS,
     :path => "videos/:style/:id/:filename",
     :s3_protocol => 'https',
-    :s3_permissions => :public_read,
+    :s3_permissions => 'public-read',
     :validate_media_type => false
 
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/

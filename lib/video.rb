@@ -1,6 +1,7 @@
 class Video
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paperclip
 
   PER_PAGE = 6
 
@@ -20,7 +21,7 @@ class Video
   field :lang, :type => String, :default => 'en'
 
   field :youtube_id, :type => String
-  validates :youtube_id, :uniqueness => true, :presence => true
+  # validates :youtube_id, :uniqueness => true, :presence => true
 
   belongs_to :tag,  :optional => true
   belongs_to :city, :optional => true
@@ -32,7 +33,7 @@ class Video
   accepts_nested_attributes_for :site, :tag, :city
 
   def self.list
-    [['', nil]] + Video.all.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
+    [['', nil]] + Video.unscoped.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
   set_callback( :create, :before ) do |doc|
@@ -45,9 +46,18 @@ class Video
 
   field :issue
 
-  has_attached_file :video, styles: {
-    :thumb => { geometry: '192x108', format: 'jpeg' },
-  }, processors: [ :transcoder ]
+  has_mongoid_attached_file :video,
+    styles: {
+      :thumb => { geometry: '192x108', format: 'jpeg' },
+    },
+    # processors: [ :transcoder ],
+    :storage => :s3,
+    :s3_credentials => ::S3_CREDENTIALS,
+    :path => "videos/:style/:id/:filename",
+    :s3_protocol => 'https',
+    :s3_permissions => :public_read,
+    :validate_media_type => false
+
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/
 
 end

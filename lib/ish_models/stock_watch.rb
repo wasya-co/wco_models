@@ -1,4 +1,8 @@
 
+#
+# See also ish_manager / lib / stockwatcher.rb
+#
+
 class IshModels::StockWatch
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,6 +15,7 @@ class IshModels::StockWatch
   NOTIFICATION_SMS   = :SMS
   ACTIONS = NOTIFICATION_TYPES
   field :notification_type, :type => Symbol, :as => :action
+
 =begin
   def action
     return notification_type

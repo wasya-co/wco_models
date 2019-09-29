@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -ex
+
+cp config/mongoid.yml-example config/mongoid.yml
+
+gem install bundler --no-ri --no-rdoc
+bundle
+bundle exec rspec spec
+

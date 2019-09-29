@@ -870,6 +870,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 2.0.0)
   byebug
   factory_bot
   ish_models!

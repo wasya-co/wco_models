@@ -9,6 +9,8 @@ gem 'rake'
 # gem 'mongoid-paperclip'
 # gem 'mongoid-autoinc', '~> 6.0'
 
+gem 'bundler', '~> 2.0.0'
+
 group :development, :test do
   gem 'byebug'
 end

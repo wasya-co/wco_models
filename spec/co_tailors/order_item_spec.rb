@@ -4,6 +4,7 @@ describe 'CoTailors::OrderItem' do
     do_setup
   end
 
+=begin
   it 'validates measurement, quantity, fabric, kind' do
     order = CoTailors::Order.create
     m = CoTailors::ProfileMeasurement.create
@@ -18,6 +19,7 @@ describe 'CoTailors::OrderItem' do
     item = CoTailors::OrderItem.new params
     item.save.should eql true
   end
+=end
 
 end
      

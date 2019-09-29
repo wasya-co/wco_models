@@ -3,18 +3,21 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.5.3-node-browsers
+      - image: circleci/mongo:3.5.6
     working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
 
       - run:
           name: install dependencies
           command: |
             gem install bundler -v 2.0.1
             bundle install --jobs=4 --retry=3 --path vendor/bundle
+            cp config/mongoid.yml-example config/mongoid.yml
 
       - save_cache:
           paths:

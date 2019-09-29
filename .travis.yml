@@ -1,5 +1,8 @@
 language: ruby
+services: 
+ - mongodb
 rvm:
  - 2.5.0
+before_install: gem install bundler
 script: ./scripts/travisci_test
 

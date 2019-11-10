@@ -57,7 +57,19 @@ class Video
     :s3_protocol => 'https',
     :s3_permissions => 'public-read',
     :validate_media_type => false
-
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/
 
+  has_mongoid_attached_file :thumb, 
+    :styles => {
+      :mini   => '20x20#',
+      :thumb  => "100x100#",
+      :small  => "400x400>",
+    },
+    :storage => :s3,
+    :s3_credentials => ::S3_CREDENTIALS,
+    :path => "videos/:style/:id/thumb_:filename",
+    :s3_protocol => 'https',
+    :validate_media_type => false
+  validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
+  
 end

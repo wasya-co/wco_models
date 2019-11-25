@@ -47,9 +47,7 @@ class Video
   field :issue
 
   has_mongoid_attached_file :video,
-    styles: {
-      :thumb => { geometry: '192x108', format: 'jpeg' },
-    },
+    # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
     # processors: [ :transcoder ],
     :storage => :s3,
     :s3_credentials => ::S3_CREDENTIALS,

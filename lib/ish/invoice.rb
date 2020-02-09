@@ -16,10 +16,10 @@ class Ish::Invoice
   field :number, :type => Integer
   increments :number
 
-  field :amount, :type => Float
+  field :amount, :type => Integer
 
   has_many :payments, :class_name => 'Ish::Payment'
-  field :paid_amount, :type => Float, :default => 0
+  field :paid_amount, :type => Integer, :default => 0
 
   field :description, :type => String
 

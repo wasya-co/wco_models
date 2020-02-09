@@ -75,4 +75,9 @@ class IshModels::UserProfile
     self.orders.where( :submitted_at => nil ).first || CoTailors::Order.create( :profile => self )
   end
 
+  #
+  # GameUI
+  #
+  field :n_stars, type: Integer, default: 0
+
 end

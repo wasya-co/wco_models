@@ -1,8 +1,3 @@
-
-#
-# Campaign
-# _vp_ 20180128
-#
 class Ish::Campaign
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -16,8 +11,6 @@ class Ish::Campaign
 
   field :subject
   field :body
-
-  
 
   field :is_done,  :type => Boolean, :default => false
   field :is_trash, :type => Boolean, :default => false

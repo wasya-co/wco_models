@@ -1,9 +1,3 @@
-
-def puts! a, b=''
-    puts "+++ #{b}"
-    puts a.inspect
-end
-
 module Ish
   class Crawler
 
@@ -13,12 +7,9 @@ module Ish
       website = r.css('cite')[0].text
       website = "https://#{website}" unless website[0..3] == 'http'
 
-      puts! website, 'website'
-
       begin
         r = HTTParty.get( website, :verify => false )
       rescue OpenSSL::SSL::SSLError => e
-        puts! e, 'e'
         return { :url => website }
       end
 

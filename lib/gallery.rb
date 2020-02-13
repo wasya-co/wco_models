@@ -107,5 +107,9 @@ class Gallery
   RENDER_TITLES = 'gallery_render_titles_const' # string b/c transmited over http
   RENDER_THUMBS = 'gallery_render_thumbs_const' # string b/c transmited over http
 
+  def self.find_by_slug slug
+    ::Gallery.where( galleryname: slug ).first
+  end
+
 end
 

@@ -14,23 +14,11 @@ class IshModels::UserProfile
   field :fb_access_token
   field :fb_long_access_token
   field :fb_expires_in
-
-  field :about, :type => String
-  field :education, :type => String
-  field :objectives, :type => String
-  field :current_employment, :type => String
-  field :past_employment, :type => String
-  
-  field :pdf_resume_path, :type => String
-  field :doc_resume_path, :type => String
   
   field :lang, :type => String, :default => :en
 
   ROLES = [ :admin, :manager, :guy ] 
   field :role_name, :type => Symbol
-
-  TAGS = [ :social, :professional ]
-  field :tag, :type => Symbol
 
   belongs_to :user
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
@@ -66,11 +54,12 @@ class IshModels::UserProfile
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
-  # colombia tailors
+  #
+  # CoT - colombia tailors
+  #
   has_one  :measurement,  :class_name => '::CoTailors::ProfileMeasurement'
   has_many :addresses,    :class_name => '::CoTailors::Address'
   has_many :orders,       :class_name => '::CoTailors::Order'
-
   def current_order
     self.orders.where( :submitted_at => nil ).first || CoTailors::Order.create( :profile => self )
   end
@@ -79,5 +68,24 @@ class IshModels::UserProfile
   # GameUI
   #
   field :n_stars, type: Integer, default: 0
+  has_many :premium_purchases, :class_name => '::Gameui::PremiumPurchase'
+  def has_premium_purchase item
+    byebug
+    a = item.premium_purchases.where( profile: self ).count
+    return a > 0
+  end
 
 end
+
+=begin
+  field :about, :type => String
+  field :education, :type => String
+  field :objectives, :type => String
+  field :current_employment, :type => String
+  field :past_employment, :type => String  
+  field :pdf_resume_path, :type => String
+  field :doc_resume_path, :type => String
+
+  TAGS = [ :social, :professional ]
+  field :tag, :type => Symbol
+=end

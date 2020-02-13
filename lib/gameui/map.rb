@@ -18,10 +18,11 @@ class ::Gameui::Map
 
   field :img_path
 
-=begin
-  w: 1600, h: 1000, description: 'World Map', 
-      img: 'https://ish-archive.s3.amazonaws.com/2020/202002/GameUI/assets/202002_world_map/1600x1000_world-map.jpg',
-=end
+  ORDERING_TYPE_ALPHABETIC = 'alphabetic'
+  ORDERING_TYPE_CUSTOM     = 'custom'
+  ORDERING_TYPE_TIMESTAMP  = 'timestamp'
+  ORDERING_TYPES = [ ORDERING_TYPE_ALPHABETIC, ORDERING_TYPE_CUSTOM, ORDERING_TYPE_TIMESTAMP ]
+  field :ordering_type, type: String, default: 'custom' # timestamp, alphabetic, custom
+  validates :ordering_type, presence: true
 
 end
-

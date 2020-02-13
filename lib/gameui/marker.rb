@@ -16,16 +16,28 @@ class ::Gameui::Marker
   validates :x, presence: true
   field :y, type: Integer
   validates :y, presence: true
+
   field :img_path
   validates :img_path, presence: true
+  field :title_img_path
+  validates :title_img_path, presence: true
 
   field :description
 
+  field :is_active, type: Boolean, default: true
+  field :deleted_at, type: Time, default: nil
 
-=begin
-  w: 1600, h: 1000, description: 'World Map', 
-      img: 'https://ish-archive.s3.amazonaws.com/2020/202002/GameUI/assets/202002_world_map/1600x1000_world-map.jpg',
-=end
+  field :name, type: String
+  validates :name, presence: true
+
+  field :ordering, type: String, default: 'jjj'
+
+  ITEM_TYPE_LOCATION = 'gameui-location'
+  ITEM_TYPE_MAP = 'gameui-map'
+  ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP ]
+  field :item_type, type: String
+  validates :item_type, presence: true
+
 
 end
 

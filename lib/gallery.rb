@@ -4,8 +4,15 @@ class Gallery
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
-  field :is_public,    :type => Boolean, :default => false
-  field :is_trash,     :type => Boolean, :default => false
+  field :is_public,  type: Boolean, default: false
+  field :is_trash,   type: Boolean, default: false
+
+  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
+  def is_premium
+    premium_tier > 0
+  end
+  def premium?; is_premium; end
+  has_many :premium_purchases, as: :item
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
   
@@ -21,7 +28,7 @@ class Gallery
   # validates :site, :presence => true
 
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :galleries
-  field :username, :type => String # denormalization, not used _vp_ 20171203
+  field :username, :type => String
   has_and_belongs_to_many :shared_profiles, :class_name => 'IshModels::UserProfile', :inverse_of => :shared_galleries
   
   field :name, :type => String
@@ -29,7 +36,7 @@ class Gallery
 
   field :galleryname, :type => String
   index({ :galleryname => -1 }, { :unique => true })
-  embeds_many :gallery_names, :class_name => 'Ish::GalleryName'
+  embeds_many :gallery_names, :class_name => '::Ish::GalleryName'
 
   field :subhead, :type => String
   field :descr,   :type => String, :as => :description
@@ -43,10 +50,9 @@ class Gallery
 
   has_many :newsitems
 
-
   set_callback(:create, :before) do |doc|
-    if doc.user_profile && doc.user_profile.username
-      doc.username = doc.user_profile.username
+    if doc.user_profile && doc.user_profile.name
+      doc.username = doc.user_profile.name
     end
     doc.galleryname ||= doc.id.to_s
 

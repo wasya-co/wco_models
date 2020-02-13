@@ -70,9 +70,7 @@ class IshModels::UserProfile
   field :n_stars, type: Integer, default: 0
   has_many :premium_purchases, :class_name => '::Gameui::PremiumPurchase'
   def has_premium_purchase item
-    byebug
-    a = item.premium_purchases.where( profile: self ).count
-    return a > 0
+    item.premium_purchases.where( user_profile: self ).exists?
   end
 
 end

@@ -12,7 +12,7 @@ class Gallery
     premium_tier > 0
   end
   def premium?; is_premium; end
-  has_many :premium_purchases, as: :item
+  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
   

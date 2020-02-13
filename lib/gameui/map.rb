@@ -7,6 +7,7 @@ class ::Gameui::Map
 
   field :slug
   validates :slug, uniqueness: true, presence: true
+  field :parent_slug
 
   field :w, type: Integer
   validates :w, presence: true
@@ -25,4 +26,5 @@ class ::Gameui::Map
   field :ordering_type, type: String, default: 'custom' # timestamp, alphabetic, custom
   validates :ordering_type, presence: true
 
+  
 end

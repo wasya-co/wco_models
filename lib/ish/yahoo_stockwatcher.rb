@@ -5,9 +5,9 @@ class ::YahooStockwatcher
   def watch_once
 
     stocks = Ish::StockWatch.where( :notification_type => :EMAIL )
-    puts! stocks.map(&:ticker), "Watching these stocks"
+    # puts! stocks.map(&:ticker), "Watching these stocks"
     stocks.each do |stock|
-      puts! stock.ticker, 'ticker'
+      # puts! stock.ticker, 'ticker'
       r = HTTParty.get "https://query1.finance.yahoo.com/v7/finance/chart/#{stock.ticker}?interval=1d&indicators=quote", timeout: 10
       r = JSON.parse( r.body ).deep_symbolize_keys
       r = r[:chart][:result][0][:meta][:regularMarketPrice]

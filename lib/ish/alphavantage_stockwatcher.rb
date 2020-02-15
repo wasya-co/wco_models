@@ -1,5 +1,5 @@
 
-class Stockwatcher
+class AlphavantageStockwatcher
 
   def initialize
   end

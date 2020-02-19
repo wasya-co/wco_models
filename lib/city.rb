@@ -13,6 +13,11 @@ class City
   field :x, :type => Float
   field :y, :type => Float
 
+  field :deleted_at, type: Time
+  def self.all
+    self.where( deleted_at: nil ).order_by( name: :desc )
+  end
+
   belongs_to :country, :optional => true
 
   has_many :events 

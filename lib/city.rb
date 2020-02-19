@@ -61,6 +61,10 @@ class City
   def self.n_features
     4
   end
+  def n_features
+    4
+  end
+
 
   def j_reports args = {}
     out =  []

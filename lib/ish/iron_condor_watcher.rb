@@ -22,36 +22,50 @@ class ::Ish::IronCondorWatcher
   end
 
   def watch_once
-    condors = ::Ish::IronCondor.all
+    condors = ::Ish::IronCondor.all_filled
     condors.each do |condor|
+      puts! condor.ticker, 'Watching this condor'
 
       path = "/v1/market/ext/quotes.json?symbols=#{condor.ticker}"
       response = @access_token.get(path, {'Accept' => 'application/json'})
-      json = JSON.parse response.body
-      json.deep_symbolize_keys!
+      json = JSON.parse( response.body ).deep_symbolize_keys
       bid = json[:response][:quotes][:quote][:bid].to_f
       ask = json[:response][:quotes][:quote][:ask].to_f
       natural = ( bid + ask ) / 2
 
-      ## upper panic
-      if bid > condor.upper_panic_theshold
-        
-        xml = condor.rollup_tmpl access_token=@access_token, natural=natural
-        puts! xml, 'xml'
+      puts! [ bid, ask ], 'bid, ask'
+      puts! [ condor.upper_panic_threshold, condor.lower_panic_threshold ], 'upper/lower panic'
 
-        IshManager::ApplicationMailer.condor_rollup_alert( condor ).deliver
+      ## upper panic
+      if bid > condor.upper_panic_threshold
+        xml = condor.rollup_xml access_token=@access_token, natural=natural
+        print! xml, 'xml'
+
+        IshManager::ApplicationMailer.condor_followup_alert( condor, { action: :rollup } ).deliver_later
         
         ## place order
-        # path_order = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders.xml"
-        path_order = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"
-        response = @access_token.post(path_order, {'Accept' => 'application/json'})
-        json_order = JSON.parse response.body
-        puts! json_order, 'json_order'
+        path_preview = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"
+        response = @access_token.post( path_preview, xml )
+        print! response.body
+        # path_order   = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders.xml"
+        # response = @access_token.post( path_order, xml )
+        # print! response.body
       end
 
       ## lower panic
-      if ask < condor.lower_panil_theshold
-        # followup, roll down
+      if ask < condor.lower_panic_threshold
+        xml = condor.rolldown_xml access_token=@access_token, natural=natural
+        print! xml, 'xml'
+
+        IshManager::ApplicationMailer.condor_followup_alert( condor, { action: :rolldown } ).deliver_later
+        
+        ## place order
+        path_preview = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"
+        response = @access_token.post( path_preview, xml )
+        print! response.body
+        # path_order   = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders.xml"
+        # response = @access_token.post( path_order, xml )
+        # print! response.body
       end
 
     end

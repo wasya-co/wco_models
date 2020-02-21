@@ -110,7 +110,7 @@ class Gallery
   RENDER_TITLES = 'gallery_render_titles_const' # string b/c transmited over http
   RENDER_THUMBS = 'gallery_render_thumbs_const' # string b/c transmited over http
 
-  belongs_to :newsparent, polymorphic: true
+  belongs_to :newsparent, polymorphic: true, optional: true
 
 end
 

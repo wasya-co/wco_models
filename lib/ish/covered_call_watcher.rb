@@ -1,29 +1,14 @@
 
-# result = @access_token.get('/v1/accounts.json', {'Accept' => 'application/json'})
-# json = JSON.parse result.body
-
-class ::Ish::IronCondorWatcher
+class ::Ish::CoveredCallWatcher
 
   def initialize
     @consumer = OAuth::Consumer.new ALLY_CREDS[:consumer_key], ALLY_CREDS[:consumer_secret], { :site => 'https://api.tradeking.com' }
     @access_token = OAuth::AccessToken.new(@consumer, ALLY_CREDS[:access_token], ALLY_CREDS[:access_token_secret])
   end
 
-  def ally_status_update
-    path = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders.xml"
-    response = @access_token.get( path, {'Accept' => 'application/json'})
-    print! response.body, 'body'
-
-    # have model AllyOrder ?
-    # Then, if the order is filled, adjust the condor (suppose rolled down):
-    # update field :put_sell_strike
-    # update field :put_buy_strike
-    # update field :status => :filled 
-  end
-
   def new_order
-    condor = ::Ish::IronCondor.all.first
-    xml = condor.new_multileg_order_example
+    ccall = ::Ish::CoveredCall.all.first
+    xml = ccall.new_multileg_order_example
     print! xml, 'xml'
     path = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders.xml"
     # path = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"
@@ -32,26 +17,26 @@ class ::Ish::IronCondorWatcher
   end
 
   def watch_once
-    condors = ::Ish::IronCondor.all_filled
-    condors.each do |condor|
-      puts! condor.ticker, 'Watching this condor'
+    ccalls = ::Ish::CoveredCall.all
+    ccalls.each do |ccall|
+      puts! ccall.ticker, 'Watching this ccall'
 
-      path = "/v1/market/ext/quotes.json?symbols=#{condor.ticker}"
+      path = "/v1/market/ext/quotes.json?symbols=#{ccall.ticker}"
       response = @access_token.get(path, {'Accept' => 'application/json'})
       json = JSON.parse( response.body ).deep_symbolize_keys
       bid = json[:response][:quotes][:quote][:bid].to_f
       ask = json[:response][:quotes][:quote][:ask].to_f
       natural = ( bid + ask ) / 2
 
-      puts! [ bid, ask ], 'bid, ask'
-      puts! [ condor.upper_panic_threshold, condor.lower_panic_threshold ], 'upper/lower panic'
+      # puts! [ bid, ask ], 'bid, ask'
+      # puts! [ ccall.upper_panic_threshold, ccall.lower_panic_threshold ], 'upper/lower panic'
 
       ## upper panic
-      if bid > condor.upper_panic_threshold
-        xml = condor.rollup_xml access_token=@access_token, natural=natural
+      if bid > ccall.upper_panic_threshold
+        xml = ccall.rollup_xml access_token=@access_token, natural=natural
         print! xml, 'xml'
 
-        IshManager::ApplicationMailer.condor_followup_alert( condor, { action: :rollup } ).deliver_later
+        IshManager::ApplicationMailer.ccall_followup_alert( ccall, { action: :rollup } ).deliver_later
         
         ## place order
         path_preview = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"
@@ -63,11 +48,11 @@ class ::Ish::IronCondorWatcher
       end
 
       ## lower panic
-      if ask < condor.lower_panic_threshold
-        xml = condor.rolldown_xml access_token=@access_token, natural=natural
+      if ask < ccall.lower_panic_threshold
+        xml = ccall.rolldown_xml access_token=@access_token, natural=natural
         print! xml, 'xml'
 
-        IshManager::ApplicationMailer.condor_followup_alert( condor, { action: :rolldown } ).deliver_later
+        IshManager::ApplicationMailer.ccall_followup_alert( ccall, { action: :rolldown } ).deliver_later
         
         ## place order
         path_preview = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"

@@ -4,6 +4,8 @@ require 'ish_models/configuration'
 
 ::S3_CREDENTIALS ||= {}
 
+module Ish; end
+
 module IshModels
 
   class << self
@@ -31,6 +33,7 @@ require 'gameui/map.rb'
 require 'gameui/marker.rb'
 require 'gameui/premium_purchase.rb'
 
+require 'ish/covered_call'
 require 'ish/crawler.rb'
 require 'ish/gallery_name.rb'
 require 'ish/iron_condor.rb'

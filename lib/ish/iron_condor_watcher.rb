@@ -21,6 +21,7 @@ class ::Ish::IronCondorWatcher
     # update field :status => :filled 
   end
 
+=begin
   def new_order
     condor = ::Ish::IronCondor.all.first
     xml = condor.new_multileg_order_example
@@ -30,6 +31,7 @@ class ::Ish::IronCondorWatcher
     response = @access_token.post(path, xml)
     print! response.body, 'response'
   end
+=end
 
   def watch_once
     condors = ::Ish::IronCondor.all_filled
@@ -67,7 +69,7 @@ class ::Ish::IronCondorWatcher
         xml = condor.rolldown_xml access_token=@access_token, natural=natural
         print! xml, 'xml'
 
-        IshManager::ApplicationMailer.condor_followup_alert( condor, { action: :rolldown } ).deliver_later
+        IshManager::ApplicationMailer.condor_followup_alert( { action: 'rolldown', condor_id: condor.id } ).deliver_later
         
         ## place order
         path_preview = "/v1/accounts/#{ALLY_CREDS[:account_id]}/orders/preview.xml"

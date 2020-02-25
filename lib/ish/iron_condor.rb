@@ -147,15 +147,13 @@ class Ish::IronCondor
     json_sell = JSON.parse( response.body ).deep_symbolize_keys
     json_sell_bid = json_sell[:response][:quotes][:quote][:bid].to_f
     json_sell_ask = json_sell[:response][:quotes][:quote][:ask].to_f
-    puts! json_sell, 'json_sell'
-
+    
     price8 = (new_call_buy_strike*1000).to_s.rjust(8, '0')
     path = "/v1/market/ext/quotes.json?symbols=#{ticker}#{ymd}C#{price8}"
     response = @access_token.post(path, {'Accept' => 'application/json'})
     json_buy = JSON.parse( response.body ).deep_symbolize_keys
     json_buy_bid = json_buy[:response][:quotes][:quote][:bid].to_f
     json_buy_ask = json_buy[:response][:quotes][:quote][:ask].to_f
-    puts! json_buy, 'json_buy'
 
     px_sell = ( json_sell_bid.to_f + json_sell_ask ) / 2
     px_sell = px_sell # .round 2
@@ -163,11 +161,16 @@ class Ish::IronCondor
     px_buy = px_buy # .round 2
     px = px_sell - px_buy
     px = ( px * 20 ).round.to_f / 20 # down to nearest 0.05
-    puts! px, 'px'
+    
+    json_puts! json_sell, 'json_sell'
+    json_puts! json_buy, 'json_buy'
+    puts! px, '^00 - px'
 
+=begin
     update( status: :rolling_up, 
       new_call_sell_strike: new_call_sell_strike, 
       new_call_buy_strike: new_call_buy_strike )
+=end
 
     rollup_tmpl =<<~AOL
       <?xml version="1.0" encoding="UTF-8"?>
@@ -239,15 +242,16 @@ class Ish::IronCondor
     json_sell = JSON.parse( response.body ).deep_symbolize_keys
     json_sell_bid = json_sell[:response][:quotes][:quote][:bid].to_f
     json_sell_ask = json_sell[:response][:quotes][:quote][:ask].to_f
-    puts! json_sell, 'json_sell'
+    json_puts! json_sell, 'json_sell'
 
     price8 = (new_put_buy_strike*1000).to_s.rjust(8, '0')
     path = "/v1/market/ext/quotes.json?symbols=#{ticker}#{ymd}C#{price8}"
+    puts! path, 'path buy'
     response = @access_token.post(path, {'Accept' => 'application/json'})
     json_buy = JSON.parse( response.body ).deep_symbolize_keys
     json_buy_bid = json_buy[:response][:quotes][:quote][:bid].to_f
     json_buy_ask = json_buy[:response][:quotes][:quote][:ask].to_f
-    puts! json_buy, 'json_buy'
+    json_puts! json_buy, 'json_buy'
 
     px_sell = ( json_sell_bid.to_f + json_sell_ask ) / 2
     px_sell = px_sell # .round 2
@@ -257,9 +261,11 @@ class Ish::IronCondor
     px = ( px * 20 ).round.to_f / 20 # down to nearest 0.05
     puts! px, 'px'
 
+=begin
     update( status: :rolling_down, 
       new_put_sell_strike: new_put_sell_strike, 
       new_put_buy_strike: new_put_buy_strike )
+=end
 
     rollup_tmpl =<<~AOL
       <?xml version="1.0" encoding="UTF-8"?>

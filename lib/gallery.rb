@@ -112,5 +112,9 @@ class Gallery
 
   belongs_to :newsparent, polymorphic: true, optional: true
 
+  set_callback :update, :after do |doc|
+    Site.update_all updated_at: Time.now
+  end
+  
 end
 

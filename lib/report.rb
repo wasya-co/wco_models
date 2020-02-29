@@ -97,6 +97,10 @@ class Report
     self.name_seo ||= self.name.gsub(' ', '-').gsub('.', '')
   end
 
+  set_callback :update, :after do |doc|
+    Site.update_all updated_at: Time.now
+  end
+  
   set_callback :create, :after do |doc|
     if doc.is_public
 

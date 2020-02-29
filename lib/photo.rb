@@ -38,9 +38,12 @@ class Photo
                             :styles => {
                               :mini   => '20x20#',
                               :thumb  => "100x100#",
-                              :small  => "400x400>",
-                              :w330   => "330x330>",
-                              :large  => '950x650>'
+                              :thumb2  => "200x200#",
+                              :s169 => "640x360>",
+                              # :s43 => "640x480>",
+                              # :small  => "400x400>",
+                              # :w330   => "330x330>",
+                              :large  => '950x650>',
                             },
                             :storage => :s3,
                             :s3_credentials => ::S3_CREDENTIALS,

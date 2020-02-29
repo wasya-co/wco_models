@@ -69,4 +69,8 @@ class Video
     :validate_media_type => false
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
   
+  set_callback :update, :after do |doc|
+    Site.update_all updated_at: Time.now
+  end
+  
 end

@@ -73,4 +73,13 @@ class Video
     Site.update_all updated_at: Time.now
   end
 
+  ## copy-paste
+  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
+  def is_premium
+    premium_tier > 0
+  end
+  def premium?; is_premium; end
+  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
+
+
 end

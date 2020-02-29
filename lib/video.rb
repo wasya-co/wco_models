@@ -40,10 +40,10 @@ class Video
       doc.city.add_newsitem( doc ) unless doc.city.blank?
       doc.site.add_newsitem( doc ) unless doc.site.blank?
     end
-    
   end
 
   field :issue
+  field :subhead
 
   has_mongoid_attached_file :video,
     # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
@@ -72,5 +72,5 @@ class Video
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now
   end
-  
+
 end

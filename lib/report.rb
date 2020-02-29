@@ -41,7 +41,8 @@ class Report
   validates :username, :presence => true, :allow_nil => false
   index({ :username => 1 })
 
-  field :subhead, :type => String
+  field :issue
+  field :subhead
   
   belongs_to :tag,         :optional => true
   belongs_to :city,        :optional => true
@@ -144,7 +145,5 @@ class Report
   def venue
     self.venues[0] || nil
   end
-
-  field :issue
 
 end

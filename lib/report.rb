@@ -1,4 +1,4 @@
-class Report   
+class Report
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
@@ -42,12 +42,12 @@ class Report
   index({ :username => 1 })
 
   field :subhead, :type => String
-  
-  belongs_to :tag,         :optional => true
+
   belongs_to :city,        :optional => true
   belongs_to :site,        :optional => true
   belongs_to :cities_user, :optional => true
 
+  has_and_belongs_to_many :tags
   has_and_belongs_to_many :venues
   
   has_one :photo
@@ -80,13 +80,13 @@ class Report
   end
   
   def self.not_tagged
-    Report.where( :tag_id => nil, :city => nil )
+    Report.where( :tag_ids => nil, :city => nil )
   end
   
   def self.for_homepage args
     begin
       tag_ids = args[:main_tag].children_tags.map { |tag| tag._id } + [ args[:main_tag]._id ]
-      return Report.where( :tag_id.in => tag_ids ).page args[:page]
+      return Report.where( :tag_ids.in => tag_ids ).page args[:page]
     rescue
       return Report.page args[:page]  
     end
@@ -134,7 +134,7 @@ class Report
   end
 
   def self.not_tagged
-    Report.where( :tag_id => nil, :city => nil )
+    Report.where( :tag_ids => nil, :city => nil )
   end
 
   def venue

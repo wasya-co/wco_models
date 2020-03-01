@@ -40,10 +40,10 @@ class Video
       doc.city.add_newsitem( doc ) unless doc.city.blank?
       doc.site.add_newsitem( doc ) unless doc.site.blank?
     end
-    
   end
 
   field :issue
+  field :subhead
 
   has_mongoid_attached_file :video,
     # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
@@ -60,7 +60,11 @@ class Video
     :styles => {
       :mini   => '20x20#',
       :thumb  => "100x100#",
+      :thumb2  => "200x200#",
+      :s169 => "640x360#",
+      # :s43 => "640x480#",
       :small  => "400x400>",
+      :large  => '950x650>',
     },
     :storage => :s3,
     :s3_credentials => ::S3_CREDENTIALS,
@@ -69,4 +73,17 @@ class Video
     :validate_media_type => false
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
   
+  set_callback :update, :after do |doc|
+    Site.update_all updated_at: Time.now
+  end
+
+  ## copy-paste
+  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
+  def is_premium
+    premium_tier > 0
+  end
+  def premium?; is_premium; end
+  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
+
+
 end

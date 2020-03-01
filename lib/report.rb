@@ -41,8 +41,9 @@ class Report
   validates :username, :presence => true, :allow_nil => false
   index({ :username => 1 })
 
-  field :subhead, :type => String
-
+  field :issue
+  field :subhead
+  
   belongs_to :city,        :optional => true
   belongs_to :site,        :optional => true
   belongs_to :cities_user, :optional => true
@@ -97,6 +98,10 @@ class Report
     self.name_seo ||= self.name.gsub(' ', '-').gsub('.', '')
   end
 
+  set_callback :update, :after do |doc|
+    Site.update_all updated_at: Time.now
+  end
+  
   set_callback :create, :after do |doc|
     if doc.is_public
 
@@ -141,6 +146,12 @@ class Report
     self.venues[0] || nil
   end
 
-  field :issue
-
+  ## copy-paste
+  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
+  def is_premium
+    premium_tier > 0
+  end
+  def premium?; is_premium; end
+  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
+  
 end

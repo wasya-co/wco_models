@@ -138,10 +138,6 @@ class Report
     end
   end
 
-  def self.not_tagged
-    Report.where( :tag_ids => nil, :city => nil )
-  end
-
   def venue
     self.venues[0] || nil
   end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.113)
+    ish_models (0.0.33.114)
       aws-sdk
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)
@@ -969,7 +969,7 @@ GEM
     mongoid-paperclip (0.0.11)
       mongoid
       paperclip (>= 2.3.6, != 4.3.0)
-    nokogiri (1.10.8)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     paperclip (6.1.0)

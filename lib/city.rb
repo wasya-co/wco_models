@@ -16,7 +16,7 @@ class City
 
   field :deleted_at, type: Time
   def self.all
-    self.where( deleted_at: nil ).order_by( name: :desc )
+    self.where( deleted_at: nil, is_active: true ).order_by( name: :desc )
   end
 
   belongs_to :country, :optional => true
@@ -39,6 +39,7 @@ class City
   embeds_many :features
 
   field :calendar_frame, :type => String
+  field :is_active, type: Boolean, default: true
 
   default_scope ->{ order_by({ :name => :asc }) }
 

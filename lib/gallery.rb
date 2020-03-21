@@ -47,7 +47,7 @@ class Gallery
 
   has_many :photos
 
-  belongs_to :tag,   :optional => true
+  has_and_belongs_to_many :tags
   belongs_to :city,  :optional => true
   belongs_to :venue, :optional => true
 

@@ -27,7 +27,7 @@ class City
   has_many :reports
   has_many :venues
   has_many :videos
-  has_many :tags
+  has_and_belongs_to_many :tags
 
   has_many :current_users, :class_name => '::IshModels::UserProfile', :inverse_of => :current_city
   has_many :newsitems

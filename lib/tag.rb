@@ -16,10 +16,6 @@ class Tag
   
   field :weight, :type => Integer, :default => 10
 
-  has_and_belongs_to_many :reports
-  has_many :galleries
-  has_many :videos
-
   has_many :children_tags, :class_name => 'Tag', :inverse_of => :parent_tag
   belongs_to :parent_tag, :class_name => 'Tag', :inverse_of => :children_tags, :optional => true
 
@@ -31,6 +27,10 @@ class Tag
   belongs_to :city, :optional => true
 
   has_and_belongs_to_many :venues
+  has_and_belongs_to_many :cities
+  has_and_belongs_to_many :galleries
+  has_and_belongs_to_many :reports
+  has_and_belongs_to_many :videos
 
   default_scope ->{
     where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })

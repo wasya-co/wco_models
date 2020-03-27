@@ -22,14 +22,14 @@ class Video
   field :youtube_id, :type => String
   # validates :youtube_id, :uniqueness => true, :presence => true
 
-  belongs_to :tag,  :optional => true
+  has_and_belongs_to_many :tags
   belongs_to :city, :optional => true
   belongs_to :site, :optional => true
   has_many :newsitems
 
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :videos
 
-  accepts_nested_attributes_for :site, :tag, :city
+  accepts_nested_attributes_for :site, :tags, :city
 
   def self.list
     [['', nil]] + Video.unscoped.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }

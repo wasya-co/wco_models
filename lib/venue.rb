@@ -43,6 +43,8 @@ class Venue
   embeds_many :newsitems
   embeds_many :features
 
+  PER_PAGE = 6
+
   def self.list conditions = { :is_trash => false }
     out = self.where( conditions).order_by( :name => :asc )
     [['', nil]] + out.map { |item| [ item.name, item.id ] }

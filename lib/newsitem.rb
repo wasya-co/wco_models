@@ -31,6 +31,8 @@ class Newsitem
   field :downvoting_users, :type => Array, :default => []
   field :is_feature,       :type => Boolean, :default => false
 
+  PER_PAGE = 6
+
   default_scope ->{ order_by({ :created_at => :desc }) }
 
   def self.from_params item

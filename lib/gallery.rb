@@ -4,6 +4,8 @@ class Gallery
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
+  PER_PAGE = 6
+
   field :is_public,  type: Boolean, default: false
   field :is_trash,   type: Boolean, default: false
 

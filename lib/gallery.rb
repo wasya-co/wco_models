@@ -109,8 +109,8 @@ class Gallery
 
   field :issue
 
-  RENDER_TITLES = 'gallery_render_titles_const' # string b/c transmited over http
-  RENDER_THUMBS = 'gallery_render_thumbs_const' # string b/c transmited over http
+  RENDER_TITLES = 'index_titles' # view name
+  RENDER_THUMBS = 'index_thumbs' # view name
 
   belongs_to :newsparent, polymorphic: true, optional: true
 

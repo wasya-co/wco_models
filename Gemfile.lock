@@ -978,7 +978,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails-dom-testing (2.0.3)

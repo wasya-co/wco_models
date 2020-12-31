@@ -8,7 +8,12 @@ class Ish::Payment
   field :amount, :type => Integer # in cents
   field :charge, :type => Hash
   field :email,  :type => String
-  
+
+  field :client_secret
+  field :payment_intent_id
+
+  field :status, type: Symbol
+
   after_create :compute_paid_invoice_amount
 
   protected

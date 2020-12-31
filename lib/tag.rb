@@ -1,19 +1,19 @@
-class Tag  
+class Tag
   include Mongoid::Document
   include Mongoid::Timestamps
 
   field :name, :type => String
   # validates :name, :uniqueness => true, :allow_nil => false
-  
+
   field :name_seo, :as => :tagname
   validates :name_seo, :uniqueness => true, :allow_nil => false
-  
+
   field :descr, :type => String, :default => ''
-  
+
   field :is_public, :type => Boolean, :default => true
   field :is_trash, :type => Boolean, :default => false
   field :is_feature, :type => Boolean, :default => false
-  
+
   field :weight, :type => Integer, :default => 10
 
   has_many :children_tags, :class_name => 'Tag', :inverse_of => :parent_tag
@@ -47,7 +47,7 @@ class Tag
       Tag.each { |r| r.remove }
     end
   end
-  
+
   def self.no_parent
     Tag.where( :parent_tag_id => nil )
   end
@@ -71,10 +71,10 @@ class Tag
   def self.n_videos
     4
   end
-  
+
   # @deprecated I don't even know why I have this. Should be simplified into non-being.
   def self.n_features
     4
   end
-  
+
 end

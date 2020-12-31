@@ -17,7 +17,7 @@ class Gallery
   has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
-  
+
   field :x, :type => Float
   field :y, :type => Float
 
@@ -32,11 +32,11 @@ class Gallery
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :galleries
   field :username, :type => String
   has_and_belongs_to_many :shared_profiles, :class_name => 'IshModels::UserProfile', :inverse_of => :shared_galleries
-  
-  field :name, :type => String
+
+  field :name
   validates :name, :uniqueness => true # , :allow_nil => false
 
-  field :galleryname, :type => String
+  field :galleryname
   index({ :galleryname => -1 }, { :unique => true })
   embeds_many :gallery_names, :class_name => '::Ish::GalleryName'
   def self.find_by_slug slug
@@ -64,7 +64,7 @@ class Gallery
     #
     # newsitems
     #
-    if doc.is_public 
+    if doc.is_public
       # for the sites
       if doc.site
         sites = Site.where( :domain => doc.site.domain )
@@ -117,6 +117,6 @@ class Gallery
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now
   end
-  
+
 end
 

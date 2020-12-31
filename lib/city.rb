@@ -2,7 +2,7 @@ class City
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
   include AuxModel
-  
+
   field :name, :type => String
   field :description, :type => String, :default => 'The description of this city'
 
@@ -21,8 +21,8 @@ class City
 
   belongs_to :country, :optional => true
 
-  has_many :events 
-  has_many :galleries 
+  has_many :events
+  has_many :galleries
   has_many :photos
   has_many :reports
   has_many :venues

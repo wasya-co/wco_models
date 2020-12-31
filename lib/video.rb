@@ -56,7 +56,7 @@ class Video
     :validate_media_type => false
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/
 
-  has_mongoid_attached_file :thumb, 
+  has_mongoid_attached_file :thumb,
     :styles => {
       :mini   => '20x20#',
       :thumb  => "100x100#",
@@ -72,7 +72,7 @@ class Video
     :s3_protocol => 'https',
     :validate_media_type => false
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
-  
+
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now
   end

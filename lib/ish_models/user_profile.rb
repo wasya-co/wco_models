@@ -1,12 +1,12 @@
-class IshModels::UserProfile  
+class IshModels::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+
   field :name
   validates_presence_of :name
 
   field :username
-  
+
   field :email
   # validates_format_of :email, :with => ::Devise::email_regexp
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
@@ -14,16 +14,16 @@ class IshModels::UserProfile
   field :fb_access_token
   field :fb_long_access_token
   field :fb_expires_in
-  
+
   field :lang, :type => String, :default => :en
 
-  ROLES = [ :admin, :manager, :guy ] 
+  ROLES = [ :admin, :manager, :guy ]
   field :role_name, :type => Symbol
 
   belongs_to :user
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
- 
+
   has_many :galleries, :inverse_of => :user_profile
   has_and_belongs_to_many :shared_galleries, :class_name => 'Gallery', :inverse_of => :shared_profiles
 
@@ -37,6 +37,8 @@ class IshModels::UserProfile
 
   has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
   has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends
+
+  field :n_unlocks, type: Integer, default: 0
 
   #
   # preferences
@@ -75,12 +77,14 @@ class IshModels::UserProfile
 
 end
 
+Profile = IshModels::UserProfile
+
 =begin
   field :about, :type => String
   field :education, :type => String
   field :objectives, :type => String
   field :current_employment, :type => String
-  field :past_employment, :type => String  
+  field :past_employment, :type => String
   field :pdf_resume_path, :type => String
   field :doc_resume_path, :type => String
 

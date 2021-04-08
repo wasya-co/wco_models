@@ -8,6 +8,7 @@ class Gallery
 
   field :is_public,  type: Boolean, default: false
   field :is_trash,   type: Boolean, default: false
+  field :is_done,    type: Boolean, default: false
 
   field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
   def is_premium

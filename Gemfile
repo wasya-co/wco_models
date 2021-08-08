@@ -2,14 +2,13 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'byebug'
 gem 'rake'
 # gem 'aws-sdk'
 # gem 'mongoid'
 # gem 'mongoid-paperclip'
 # gem 'mongoid-autoinc', '~> 6.0'
 
-gem 'bundler', '~> 2.0.0'
+gem 'bundler'
 
 group :development, :test do
   gem 'byebug'

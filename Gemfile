@@ -9,10 +9,10 @@ gem 'rake'
 # gem 'mongoid-autoinc', '~> 6.0'
 
 gem 'bundler'
+gem 'httparty'
 
 group :development, :test do
   gem 'byebug'
-  gem 'httparty'
 end
 
 group :test do

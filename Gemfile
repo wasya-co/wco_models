@@ -12,6 +12,7 @@ gem 'bundler'
 
 group :development, :test do
   gem 'byebug'
+  gem 'httparty'
 end
 
 group :test do

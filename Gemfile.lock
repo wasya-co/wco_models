@@ -1164,6 +1164,9 @@ GEM
     erubi (1.10.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
+    httparty (0.18.1)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
@@ -1192,6 +1195,7 @@ GEM
     mongoid-paperclip (0.0.11)
       mongoid
       paperclip (>= 2.3.6, != 4.3.0)
+    multi_xml (0.6.0)
     nokogiri (1.12.2-x86_64-darwin)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -1249,6 +1253,7 @@ DEPENDENCIES
   bundler
   byebug
   factory_bot
+  httparty
   ish_models!
   rake
   rspec

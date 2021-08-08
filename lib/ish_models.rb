@@ -33,6 +33,7 @@ require 'gameui/map.rb'
 require 'gameui/marker.rb'
 require 'gameui/premium_purchase.rb'
 
+require 'ish/ameritrade'
 require 'ish/covered_call'
 require 'ish/crawler.rb'
 require 'ish/gallery_name.rb'

@@ -39,6 +39,9 @@ class IshModels::UserProfile
   has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends
 
   field :n_unlocks, type: Integer, default: 0
+  def n_coins
+    n_unlocks
+  end
 
   #
   # preferences
@@ -72,7 +75,10 @@ class IshModels::UserProfile
   field :n_stars, type: Integer, default: 0
   has_many :premium_purchases, :class_name => '::Gameui::PremiumPurchase'
   def has_premium_purchase item
-    item.premium_purchases.where( user_profile: self ).exists?
+    item.premium_purchases.where( user_profile_id: self.id ).exists?
+  end
+  def premium_purchases
+    ::Gameui::PremiumPurchase.where( user_profile_id: self.id )
   end
 
 end

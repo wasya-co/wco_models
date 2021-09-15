@@ -7,7 +7,8 @@ class Newsitem
   belongs_to :city,    :optional => true
   belongs_to :report,  :optional => true
   belongs_to :user_profile, class_name: 'IshModels::UserProfile', optional: true
-  
+  belongs_to :map, class_name: '::Gameui::Map', optional: true
+
   belongs_to :gallery, :optional => true
   def gallery
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
@@ -43,7 +44,7 @@ class Newsitem
     unless item[:report_id].blank?
       n.report = Report.find item[:report_id]
     end
-    
+
     unless item[:gallery_id].blank?
       n.gallery = Gallery.find item[:gallery_id]
     end
@@ -52,5 +53,5 @@ class Newsitem
 
     return n
   end
-  
+
 end

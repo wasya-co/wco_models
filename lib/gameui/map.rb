@@ -8,10 +8,12 @@ class ::Gameui::Map
 
   field :slug
   validates :slug, uniqueness: true, presence: true
+
   field :parent_slug
-  def name
-    slug
-  end
+  belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
+  has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
+
+  field :name
 
   field :w, type: Integer
   validates :w, presence: true
@@ -33,6 +35,16 @@ class ::Gameui::Map
   def self.list conditions = { is_trash: false }
     out = self.order_by( created_at: :desc )
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
+  end
+
+  def breadcrumbs
+    out = [{ name: self.name, slug: self.slug, link: false }]
+    p = self.parent
+    while p
+      out.push({ name: p.name, slug: p.slug })
+      p = p.parent
+    end
+    out.reverse
   end
 
 end

@@ -13,6 +13,11 @@ class ::Gameui::Map
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
 
+  field :map_slug
+  def map
+    ::Gameui::Map.where( slug: map_slug ).first
+  end
+
   field :name
 
   field :w, type: Integer

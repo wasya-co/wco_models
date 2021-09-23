@@ -38,6 +38,7 @@ class ::Gameui::Marker
   field :item_type, type: String
   validates :item_type, presence: true
 
+  field :url
 
 end
 

@@ -12,6 +12,9 @@ class ::Gameui::Map
   field :parent_slug
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
+  has_one :image_asset, class_name: '::Ish::ImageAsset'
+
+  has_and_belongs_to_many :bookmarked_profiles, class_name: '::IshModels::UserProfile', inverse_of: :bookmarked_location
 
   field :map_slug
   def map
@@ -39,7 +42,7 @@ class ::Gameui::Map
 
   def self.list conditions = { is_trash: false }
     out = self.order_by( created_at: :desc )
-    [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
+    [[nil, nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
   def breadcrumbs

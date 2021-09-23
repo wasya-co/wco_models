@@ -18,5 +18,6 @@ end
 group :test do
   gem 'rspec'
   gem 'factory_bot'
+  gem 'mongoid-rspec'
   # gem 'kaminari-mongoid'
 end

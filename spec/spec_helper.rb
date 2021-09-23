@@ -3,6 +3,8 @@ require 'mongoid'
 require 'mongoid-paperclip'
 require 'factory_bot'
 require 'byebug'
+require 'mongoid-rspec'
+
 
 Mongoid.load!("config/mongoid.yml", :test)
 
@@ -24,6 +26,9 @@ RSpec.configure do |config|
   config.before(:suite) do
     FactoryBot.find_definitions
   end
+
+  config.include Mongoid::Matchers, type: :model
+  config.include Mongoid::Matchers
 end
 
 def do_setup
@@ -35,3 +40,4 @@ def do_setup
   CoTailors::Order.all.destroy
   CoTailors::OrderItem.all.destroy
 end
+

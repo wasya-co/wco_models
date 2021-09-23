@@ -10,6 +10,7 @@ class IshModels::UserProfile
   field :email
   # validates_format_of :email, :with => ::Devise::email_regexp
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
+  validates_uniqueness_of :email
 
   field :fb_access_token
   field :fb_long_access_token
@@ -34,6 +35,11 @@ class IshModels::UserProfile
   has_many :stocks,   :class_name => 'Ish::StockWatch'
   has_many :videos, :inverse_of => :user_profile
   has_many :newsitems, inverse_of: :user_profile
+
+  has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
+  def bookmarks
+    bookmarked_locations
+  end
 
   has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
   has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends

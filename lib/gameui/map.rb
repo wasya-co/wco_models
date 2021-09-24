@@ -12,7 +12,7 @@ class ::Gameui::Map
   field :parent_slug
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
-  has_one :image_asset, class_name: '::Ish::ImageAsset'
+  has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
 
   has_and_belongs_to_many :bookmarked_profiles, class_name: '::IshModels::UserProfile', inverse_of: :bookmarked_location
 
@@ -22,16 +22,23 @@ class ::Gameui::Map
   end
 
   field :name
+  field :description
+
+  # @deprecated, dont use!
+  field :img_path
 
   field :w, type: Integer
   validates :w, presence: true
-
   field :h, type: Integer
   validates :h, presence: true
 
-  field :description
-
-  field :img_path
+  # @TODO: this is shared between map and marker, move to a concern.
+  before_validation :compute_w_h
+  def compute_w_h
+    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
+    self.w = geo.width
+    self.h = geo.height
+  end
 
   ORDERING_TYPE_ALPHABETIC = 'alphabetic'
   ORDERING_TYPE_CUSTOM     = 'custom'

@@ -8,21 +8,37 @@ class ::Gameui::Marker
   field :slug
   validates :slug, uniqueness: true, presence: true
 
+  field :description
+
+  has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker_image
+  has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title_image
+
+
+  # @deprecated, don't use!
+  # _vp_ 2021-09-23
+  field :img_path
+  # validates :img_path, presence: true
+  field :title_img_path
+  # validates :title_img_path, presence: true
   field :w, type: Integer
   validates :w, presence: true
   field :h, type: Integer
   validates :h, presence: true
-  field :x, type: Integer
-  validates :x, presence: true
-  field :y, type: Integer
-  validates :y, presence: true
+  field :x, type: Integer, default: 0
+  # validates :x, presence: true
+  field :y, type: Integer, default: 0
+  # validates :y, presence: true
+  field :centerOffsetX, type: Integer, default: 0
+  # validates :centerXOffset, presence: true
+  field :centerOffsetY, type: Integer, default: 0
+  # validates :centerYOffset, presence: true
 
-  field :img_path
-  validates :img_path, presence: true
-  field :title_img_path
-  validates :title_img_path, presence: true
-
-  field :description
+  before_validation :compute_w_h
+  def compute_w_h
+    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
+    self.w = geo.width
+    self.h = geo.height
+  end
 
   field :is_active, type: Boolean, default: true
   field :deleted_at, type: Time, default: nil

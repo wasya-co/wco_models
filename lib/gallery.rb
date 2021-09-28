@@ -39,6 +39,9 @@ class Gallery
 
   field :galleryname
   index({ :galleryname => -1 }, { :unique => true })
+  def slug
+    galleryname
+  end
   embeds_many :gallery_names, :class_name => '::Ish::GalleryName'
   def self.find_by_slug slug
     ::Gallery.where( galleryname: slug ).first

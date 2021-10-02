@@ -53,7 +53,8 @@ class Video
     :path => "videos/:style/:id/:filename",
     :s3_protocol => 'https',
     :s3_permissions => 'public-read',
-    :validate_media_type => false
+    :validate_media_type => false,
+    s3_region: ::S3_CREDENTIALS[:region]
   validates_attachment_content_type :video, content_type: /\Avideo\/.*\Z/
 
   has_mongoid_attached_file :thumb,
@@ -70,7 +71,8 @@ class Video
     :s3_credentials => ::S3_CREDENTIALS,
     :path => "videos/:style/:id/thumb_:filename",
     :s3_protocol => 'https',
-    :validate_media_type => false
+    :validate_media_type => false,
+    s3_region: ::S3_CREDENTIALS[:region]
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
 
   set_callback :update, :after do |doc|

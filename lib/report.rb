@@ -10,11 +10,17 @@ class Report
   field :name_seo, :type => String
   validates :name_seo, :uniqueness => true, :presence => true
   index({ :name_seo => 1 }, { :unique => true })
+  def slug
+    name_seo
+  end
 
-  field :descr, :type => String 
+  ## Can be one of: default (nil), longscroll
+  field :item_type, type: String
+
+  field :descr, :type => String
 
   field :is_trash, :type => Boolean, :default => false
-  index :is_trash => 1, :is_public => 1 
+  index :is_trash => 1, :is_public => 1
 
   field :is_public, :type => Boolean, :default => true
   index({ :is_public => 1 })
@@ -27,13 +33,13 @@ class Report
 
   field :is_done, :type => Boolean, :default => true
   index({ :is_done => 1 })
-  
+
   field :x, :type => Float
   field :y, :type => Float
 
   field :lang, :type => String, :default => 'en'
   index({ :lang => 1 })
-   
+
   belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile'
 
   # validates :user, :presence => true, :allow_nil => false
@@ -43,14 +49,14 @@ class Report
 
   field :issue
   field :subhead
-  
+
   belongs_to :city,        :optional => true
   belongs_to :site,        :optional => true
   belongs_to :cities_user, :optional => true
 
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :venues
-  
+
   has_one :photo
 
   field :n_upvotes, :default => 0
@@ -59,15 +65,15 @@ class Report
   default_scope ->{
     where({ is_public: true, is_trash: false }).order_by({ created_at: :desc })
   }
-  
+
   has_many :newsitems
 
   def self.list conditions = { :is_trash => false }
     out = self.where( conditions ).order_by( :name => :asc ).limit( 100 )
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
-  
-  PER_PAGE = 20  
+
+  PER_PAGE = 20
   def self.paginates_per
     self::PER_PAGE
   end
@@ -75,33 +81,33 @@ class Report
   def venue
     return self.venues[0] || nil
   end
-  
+
   def self.all
     self.where( :is_public => true, :is_trash => false ).order_by( :created_at => :desc )
   end
-  
+
   def self.not_tagged
     Report.where( :tag_ids => nil, :city => nil )
   end
-  
+
   def self.for_homepage args
     begin
       tag_ids = args[:main_tag].children_tags.map { |tag| tag._id } + [ args[:main_tag]._id ]
       return Report.where( :tag_ids.in => tag_ids ).page args[:page]
     rescue
-      return Report.page args[:page]  
+      return Report.page args[:page]
     end
   end
 
   before_validation :set_name_seo, :on => :create
   def set_name_seo
-    self.name_seo ||= self.name.gsub(' ', '-').gsub('.', '')
+    self.name_seo ||= self.name.downcase.gsub(/[^a-z0-9\s]/i, '').gsub(' ', '-')
   end
 
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now
   end
-  
+
   set_callback :create, :after do |doc|
     if doc.is_public
 
@@ -115,7 +121,7 @@ class Report
           v.newsitems << n
           v.save
         end
-      end 
+      end
 
       unless doc.city.blank?
         city = City.find doc.city.id
@@ -131,7 +137,7 @@ class Report
       end
     end
   end
-  
+
   def self.clear
     if Rails.env.test?
       self.unscoped.each { |r| r.remove }
@@ -149,5 +155,5 @@ class Report
   end
   def premium?; is_premium; end
   has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
-  
+
 end

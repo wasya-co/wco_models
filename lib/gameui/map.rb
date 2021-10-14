@@ -24,6 +24,12 @@ class ::Gameui::Map
   field :name
   field :description
 
+  ## Possible keys: description, map, markers, newsitems,
+  field :labels, type: Object, default: {}
+  ## Possible keys:
+  ## config.description.collapsible
+  field :config, type: Object, default: {}
+
   # @deprecated, dont use!
   field :img_path
 

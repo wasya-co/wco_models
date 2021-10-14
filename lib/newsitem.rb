@@ -20,6 +20,10 @@ class Newsitem
 
   field :name
   field :descr
+  def description
+    descr
+  end
+
   field :image_path
   field :link_path
   field :username

@@ -5,4 +5,8 @@ FactoryBot.define do
     email { 'test@email.com' }
   end
 
+  factory :tag, class: Tag do
+    name { 'tag-name' }
+  end
+
 end

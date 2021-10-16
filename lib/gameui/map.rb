@@ -4,7 +4,7 @@ class ::Gameui::Map
   include Mongoid::Timestamps
 
   has_many :markers, :class_name => '::Gameui::Marker', inverse_of: :map
-  has_many :newsitems, inverse_of: :map
+  has_many :newsitems, inverse_of: :map, order: :created_at.desc
 
   field :slug
   validates :slug, uniqueness: true, presence: true

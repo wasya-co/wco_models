@@ -36,7 +36,7 @@ class City
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
   has_one :guide, :class_name => '::IshModels::UserProfile', :inverse_of => :guide_city
 
-  embeds_many :features
+  has_many :features
 
   field :calendar_frame, :type => String
   field :is_active, type: Boolean, default: true

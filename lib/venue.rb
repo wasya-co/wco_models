@@ -41,9 +41,8 @@ class Venue
   has_many :reports
   has_many :galleries
   has_many :photos
-
-  embeds_many :newsitems
-  embeds_many :features
+  has_many :newsitems
+  has_many :features
 
   PER_PAGE = 6
 

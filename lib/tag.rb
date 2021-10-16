@@ -1,12 +1,13 @@
 class Tag
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Ish::Utils
 
   field :name, :type => String
   # validates :name, :uniqueness => true, :allow_nil => false
 
-  field :name_seo, :as => :tagname
-  validates :name_seo, :uniqueness => true, :allow_nil => false
+  field :slug
+  validates :slug, :uniqueness => true, presence: true, allow_nil: false
 
   field :descr, :type => String, :default => ''
 
@@ -19,8 +20,7 @@ class Tag
   has_many :children_tags, :class_name => 'Tag', :inverse_of => :parent_tag
   belongs_to :parent_tag, :class_name => 'Tag', :inverse_of => :children_tags, :optional => true
 
-  embeds_many :features
-  # embeds_many :newsitems
+  has_many :features
   has_many :newsitems
 
   belongs_to :site, :optional => true
@@ -36,11 +36,7 @@ class Tag
     where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })
   }
 
-  before_create do |d|
-    if d.name_seo.blank?
-      d.name_seo = d.name.gsub(' ', '-')
-    end
-  end
+  before_validation :set_slug
 
   def self.clear
     if Rails.env.test?

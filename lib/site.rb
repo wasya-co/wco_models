@@ -30,7 +30,7 @@ class Site
   field :is_primary, :type => Boolean, :default => false
   field :is_private, :type => Boolean, :default => false
   field :private_user_emails, :type => Array, :default => []
-  
+
   field :homepage_layout, :type => String, :default => 'show'
   field :layout, :type => String, :default => 'application'
 
@@ -40,9 +40,8 @@ class Site
   has_many :videos
   has_many :newsitems, :order => :created_at.desc
   has_many :issues, :class_name => 'Ish::Issue'
+  has_many :features, :order => :created_at.desc
 
-  embeds_many :features, :order => :created_at.desc
-  
   default_scope ->{ where({ :is_trash => false }).order_by({ :domain => :asc, :lang => :asc }) }
 
   set_callback :create, :before do |doc|
@@ -61,7 +60,7 @@ class Site
   end
 
   LANGUAGES = [ 'en', 'ru', 'pt' ]
-  
+
   # manager uses it.
   def self.list
     out = self.all.order_by( :domain => :asc, :lang => :asc )
@@ -79,7 +78,7 @@ class Site
   def n_private_reports
     self.reports.unscoped.where( :is_public => false, :is_trash => false ).length
   end
-  
+
   def its_locales
     Site.where( :domain => self.domain ).map { |s| s.lang.to_sym }
   end

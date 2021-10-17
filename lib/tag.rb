@@ -68,9 +68,9 @@ class Tag
     4
   end
 
-  # @deprecated I don't even know why I have this. Should be simplified into non-being.
   def self.n_features
     4
   end
+  field :n_features, type: Integer, default: 4
 
 end

@@ -9,11 +9,9 @@ describe Report do
     it 'sets slug if not present' do
       @report = Report.new( name: 'Some name' )
       flag = @report.save
-      if !flag
-        puts! @report.errors.full_mesages
-      end
+      puts! @report.errors.full_messages if !flag
       flag.should eql true
-      @report.name_seo.should eql 'some-name'
+      @report.slug[0...9].should eql 'some-name'
     end
   end
 

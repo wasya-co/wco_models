@@ -1,18 +1,16 @@
 class Report
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
+  include Ish::Utils
 
   field :name, :type => String
   validates :name, :presence => true
   # index({ :name => 1 }, { :unique => true })
   index({ :name => 1, :is_trash => 1 })
 
-  field :name_seo, :type => String
-  validates :name_seo, :uniqueness => true, :presence => true
-  index({ :name_seo => 1 }, { :unique => true })
-  def slug
-    name_seo
-  end
+  field :slug
+  validates :slug, :uniqueness => true, :presence => true
+  index({ :slug => 1 }, { :unique => true })
 
   ## Can be one of: default (nil), longscroll
   field :item_type, type: String
@@ -99,10 +97,7 @@ class Report
     end
   end
 
-  before_validation :set_name_seo, :on => :create
-  def set_name_seo
-    self.name_seo ||= self.name.downcase.gsub(/[^a-z0-9\s]/i, '').gsub(' ', '-')
-  end
+  before_validation :set_slug, :on => :create
 
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now

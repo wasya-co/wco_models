@@ -39,5 +39,12 @@ def do_setup
   CoTailors::ProfileMeasurement.all.destroy
   CoTailors::Order.all.destroy
   CoTailors::OrderItem.all.destroy
+
+  # C
+  City.unscoped.destroy_all
+  @city = FactoryBot.create :city
+
+  # V
+  Venue.unscoped.destroy_all
 end
 

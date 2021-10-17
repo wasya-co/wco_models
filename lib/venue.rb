@@ -1,14 +1,16 @@
 class Venue
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
+  include Ish::Utils
 
   field :address
 
   field :name, :type => String
   validates :name, :uniqueness => true, :allow_nil => false
 
-  field :name_seo, :type => String
-  validates :name_seo, :uniqueness => true, :allow_nil => false
+  field :slug
+  validates :slug, :uniqueness => true, :allow_nil => false
+  before_validation :set_slug
 
   field :subhead
   field :descr
@@ -51,9 +53,7 @@ class Venue
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
-  set_callback :create, :before do |doc|
-    doc.name_seo = doc.name.gsub(' ', '-')
-  end
+
 
   set_callback :save, :before do |doc|
     if doc.city

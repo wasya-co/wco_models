@@ -6,7 +6,8 @@ class ::Gameui::Marker
   belongs_to :map, :class_name => '::Gameui::Map'
 
   field :slug
-  validates :slug, uniqueness: true, presence: true
+  validates_uniqueness_of :slug, scope: :map_id
+  validates_presence_of :slug
 
   field :description
 

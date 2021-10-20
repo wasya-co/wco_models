@@ -5,17 +5,16 @@ class Photo
   include Mongoid::Timestamps
   include Mongoid::Paperclip
 
-  # belongs_to :user,     :inverse_of => :photos
-  # validates  :user,     :presence => true
-  # field      :username, :type => String
-
   has_and_belongs_to_many :viewers, :class_name => 'User', :inverse_of => :viewable_photos
 
   belongs_to :user_profile,  :class_name => 'IshModels::UserProfile',               :optional => true
-  def user; user_profile; end
-  belongs_to :profile_city,  :class_name => 'City',  :inverse_of => :profile_photo, :optional => true
-  belongs_to :profile_venue, :class_name => 'Venue', :inverse_of => :profile_photo, :optional => true
-  belongs_to :profile_event, :class_name => 'Event', :inverse_of => :profile_photo, :optional => true
+  def user
+    user_profile
+  end
+  belongs_to :profile_city,  :class_name => 'City',                    :inverse_of => :profile_photo, :optional => true
+  belongs_to :user_profile,  :class_name => 'IshModels::UserProfile',  :inverse_of => :profile_photo, :optional => true
+  belongs_to :profile_venue, :class_name => 'Venue',                   :inverse_of => :profile_photo, :optional => true
+  belongs_to :profile_event, :class_name => 'Event',                   :inverse_of => :profile_photo, :optional => true
 
   belongs_to :report,   :optional => true
   belongs_to :venue,    :optional => true

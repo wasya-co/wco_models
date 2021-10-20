@@ -16,10 +16,12 @@ class IshModels::UserProfile
   field :fb_long_access_token
   field :fb_expires_in
 
-  field :lang, :type => String, :default => :en
+  field :lang, default: 'en'
 
   ROLES = [ :admin, :manager, :guy ]
   field :role_name, :type => Symbol
+
+  has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
 
   belongs_to :user
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
@@ -90,16 +92,3 @@ class IshModels::UserProfile
 end
 
 Profile = IshModels::UserProfile
-
-=begin
-  field :about, :type => String
-  field :education, :type => String
-  field :objectives, :type => String
-  field :current_employment, :type => String
-  field :past_employment, :type => String
-  field :pdf_resume_path, :type => String
-  field :doc_resume_path, :type => String
-
-  TAGS = [ :social, :professional ]
-  field :tag, :type => Symbol
-=end

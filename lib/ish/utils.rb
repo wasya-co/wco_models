@@ -5,7 +5,11 @@ module Ish::Utils
 
   def set_slug
     return if slug
-    new_slug = name.downcase.gsub(/[^a-z0-9\s]/i, '').gsub(' ', '-')
+    if name
+      new_slug = name.downcase.gsub(/[^a-z0-9\s]/i, '').gsub(' ', '-')
+    else
+      new_slug = '1'
+    end
     if self.class.where( slug: new_slug ).first
       loop do
         if new_slug[new_slug.length-1].to_i != 0

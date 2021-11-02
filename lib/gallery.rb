@@ -25,9 +25,9 @@ class Gallery
 
   field :x,       :type => Float
   field :y,       :type => Float
-  field :subhead, :type => String
-  field :descr,   :type => String, :as => :description
-  field :lang,    :type => String, :default => 'en'
+  field :subhead
+  field :descr,   :as => :description
+  field :lang,    :default => 'en'
   field :issue
   field :username
 
@@ -35,6 +35,7 @@ class Gallery
   field :slug
   index({ :slug => -1 }, { :unique => true })
   validates :slug, presence: true, uniqueness: true
+  before_validation :set_slug, :on => :create
 
   ## @TODO: I should have a redirect service, instead of this specific thing. But only after making $50.
   # embeds_many :gallery_names, :class_name => '::Ish::GalleryName'

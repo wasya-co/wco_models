@@ -11,6 +11,7 @@ class Report
   field :slug
   validates :slug, :uniqueness => true, :presence => true
   index({ :slug => 1 }, { :unique => true })
+  before_validation :set_slug, :on => :create
 
   ## Can be one of: default (nil), longscroll
   field :item_type, type: String
@@ -97,7 +98,7 @@ class Report
     end
   end
 
-  before_validation :set_slug, :on => :create
+
 
   set_callback :update, :after do |doc|
     Site.update_all updated_at: Time.now

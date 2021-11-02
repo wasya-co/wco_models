@@ -5,7 +5,7 @@ describe Report do
     do_setup
   end
 
-  describe 'creates/updates' do
+  describe '#create' do
     it 'sets slug if not present' do
       @report = Report.new( name: 'Some name' )
       flag = @report.save

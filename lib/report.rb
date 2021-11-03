@@ -19,7 +19,7 @@ class Report
   field :descr, :type => String
 
   field :is_trash, :type => Boolean, :default => false
-  index :is_trash => 1, :is_public => 1
+  index({ :is_trash => 1, :is_public => 1 }, { name: 'default_index' })
 
   field :is_public, :type => Boolean, :default => true
   index({ :is_public => 1 })

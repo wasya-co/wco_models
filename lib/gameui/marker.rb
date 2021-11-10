@@ -3,16 +3,26 @@ class ::Gameui::Marker
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :map, :class_name => '::Gameui::Map'
 
   field :slug
-  validates_uniqueness_of :slug, scope: :map_id # @TODO: probably remove this, no reason not to have two markers to the same slug (destination)
+  ## @TODO: probably remove this, no reason not to have two markers to the same slug (destination)
+  validates_uniqueness_of :slug, scope: :map_id
   validates_presence_of :slug
 
   field :description
 
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker_image
   has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title_image
+
+  field :deleted_at, type: Time, default: nil
+
+  # shareable, nonpublic
+  field :is_public, type: Boolean, default: true
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_markers
+  default_scope ->{ where({ is_public: true, deleted_at: nil }).order_by({ slug: :desc }) }
+  ## @TODO: index default scope, maybe instead of HABTM, use :thru for shared profiles. Make is poly anyway?
+
+  belongs_to :map, :class_name => '::Gameui::Map'
 
 
   # @deprecated, don't use!
@@ -42,7 +52,6 @@ class ::Gameui::Marker
   end
 
   field :is_active, type: Boolean, default: true
-  field :deleted_at, type: Time, default: nil
 
   field :name, type: String
   validates :name, presence: true

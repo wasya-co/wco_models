@@ -28,7 +28,9 @@ class Ish::UserProfile
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
 
   has_many :galleries, :inverse_of => :user_profile
-  has_and_belongs_to_many :shared_galleries, :class_name => 'Gallery', :inverse_of => :shared_profiles
+  has_and_belongs_to_many :shared_galleries, :inverse_of => :shared_profiles, class_name: 'Gallery'
+  has_and_belongs_to_many :shared_markers,   :inverse_of => :shared_profiles, class_name: 'Gameui::Marker'
+  has_and_belongs_to_many :shared_locations, :inverse_of => :shared_profiles, class_name: 'Gameui::Map'
 
   has_many :invoices,                             :class_name => '::Ish::Invoice'
   has_many :leads,                                :class_name => '::Ish::Lead'

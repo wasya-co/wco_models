@@ -11,6 +11,8 @@ class Gallery
   validates :name, :uniqueness => true # , :allow_nil => false
 
   field :is_public,  type: Boolean, default: false
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_galleries
+
   field :is_trash,   type: Boolean, default: false
   field :is_done,    type: Boolean, default: false
 
@@ -36,10 +38,6 @@ class Gallery
   validates :slug, presence: true, uniqueness: true
   before_validation :set_slug, :on => :create
 
-  ## @TODO: I should have a redirect service, instead of this specific thing. But only after making $50.
-  # embeds_many :gallery_names, :class_name => '::Ish::GalleryName'
-
-
   def self.list conditions = { :is_trash => false }
     out = self.unscoped.where( conditions ).order_by( :created_at => :desc )
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
@@ -48,7 +46,6 @@ class Gallery
   belongs_to :site,         :optional => true
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :galleries
 
-  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_galleries
   has_and_belongs_to_many :tags
 
   has_many :newsitems
@@ -56,7 +53,6 @@ class Gallery
 
   belongs_to :city,  :optional => true
   belongs_to :venue, :optional => true
-  belongs_to :newsparent, polymorphic: true, optional: true
 
 
   set_callback(:create, :before) do |doc|

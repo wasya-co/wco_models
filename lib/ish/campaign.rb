@@ -4,7 +4,7 @@ class Ish::Campaign
 
   store_in :collection => 'ish_campaign'
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  belongs_to :profile, :class_name => 'Ish::UserProfile'
 
   has_and_belongs_to_many :leads,             :class_name => 'Ish::Lead'
   has_and_belongs_to_many :unsubscribe_leads, :class_name => 'Ish::Lead'

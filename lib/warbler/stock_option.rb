@@ -19,7 +19,7 @@ class Ish::StockOption
   field :quantity, :type => Integer
   field :is_active, :type => Integer, :default => true # whether this position is current or in the past
 
-  belongs_to :profile,      :class_name => 'IshModels::UserProfile'
+  belongs_to :profile,      :class_name => 'Ish::UserProfile'
   belongs_to :stock_action, :class_name => 'Ish::StockAction', :optional => true
 
   def to_s

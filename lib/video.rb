@@ -27,7 +27,7 @@ class Video
   belongs_to :site, :optional => true
   # has_many :newsitems # unnecessary, right? _vp_ 20200412
 
-  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :videos
+  belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos
 
   accepts_nested_attributes_for :site, :tags, :city
 

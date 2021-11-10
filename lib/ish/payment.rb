@@ -3,7 +3,7 @@ class Ish::Payment
   include Mongoid::Timestamps
 
   belongs_to :invoice, :class_name => 'Ish::Invoice', optional: true
-  belongs_to :profile, :class_name => 'IshModels::UserProfile' # , :optional => true
+  belongs_to :profile, :class_name => 'Ish::UserProfile' # , :optional => true
 
   field :amount, :type => Integer # in cents
   field :charge, :type => Hash

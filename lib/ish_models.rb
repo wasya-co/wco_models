@@ -9,6 +9,7 @@ class Gameui; end
 module Ish; end
 # I need this thing for permissions#
 class Manager; end
+module Warbler; end
 
 module IshModels
 
@@ -25,22 +26,13 @@ module IshModels
   end
 end
 
-# require 'co_tailors'
-# require 'co_tailors/product.rb'
-# require 'co_tailors/profile_measurement.rb'
-# require 'co_tailors/order.rb'
-# require 'co_tailors/order_item.rb' # this is required from within order.rb
-# require 'co_tailors/address.rb'
-
 require 'gameui/map.rb'
 require 'gameui/map_bookmark.rb'
 require 'gameui/marker.rb'
 require 'gameui/premium_purchase.rb'
 
-# require 'ish/cache_key.rb' # this is really obsolete? _vp_ 20180123
-# require 'ish/campaign.rb'
-# require 'app_model2.rb'
-
+require 'ish/cache_key.rb'
+require 'ish/campaign.rb'
 require 'ish/crawler.rb'
 require 'ish/gallery_name.rb'
 require 'ish/image_asset.rb'
@@ -68,16 +60,18 @@ require 'tag.rb'
 require 'venue.rb'
 require 'video.rb'
 
+require 'warbler/stock_watch.rb'
+require 'warbler/ameritrade.rb'
+
 ## warbler
-# require 'ish/alphavantage_stockwatcher.rb'
-# require 'ish/ameritrade'
-# require 'ish/covered_call'
-# require 'ish/iron_condor.rb'
-# require 'ish/iron_condor_watcher.rb'
-# require 'ish/stock_action.rb'
-# require 'ish/stock_option.rb'
-# require 'ish/stock_watch.rb'
-# require 'ish/yahoo_stockwatcher.rb'
+# require 'warbler/alphavantage_stockwatcher.rb'
+# require 'warbler/ameritrade'
+# require 'warbler/covered_call'
+# require 'warbler/iron_condor.rb'
+# require 'warbler/iron_condor_watcher.rb'
+# require 'warbler/stock_action.rb'
+# require 'warbler/stock_option.rb'
+# require 'warbler/yahoo_stockwatcher.rb'
 
 
 

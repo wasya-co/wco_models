@@ -1,9 +1,5 @@
 
-#
-# See also ish_manager / lib / stockwatcher.rb
-#
-
-class IshModels::StockWatch
+class Warbler::StockWatch
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -16,15 +12,6 @@ class IshModels::StockWatch
   ACTIONS = NOTIFICATION_TYPES
   field :notification_type, :type => Symbol, :as => :action
 
-=begin
-  def action
-    return notification_type
-  end
-  def action= which
-    notification_type = which
-  end
-=end
-
   field :price, :type => Float
 
   DIRECTIONS      = [ :ABOVE, :BELOW ]
@@ -32,6 +19,6 @@ class IshModels::StockWatch
   DIRECTION_BELOW = :BELOW
   field :direction, :type => Symbol
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  belongs_to :profile, :class_name => 'Ish::UserProfile'
 
 end

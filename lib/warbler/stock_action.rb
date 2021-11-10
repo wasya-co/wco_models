@@ -9,7 +9,7 @@ class Ish::StockAction
 
   store_in :collection => 'ish_stock_action'
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  belongs_to :profile, :class_name => 'Ish::UserProfile'
   belongs_to :stock_watch, :class_name => 'Ish::StockWatch'
   has_many :stock_options, :class_name => 'Ish::StockOption'
 

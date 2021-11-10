@@ -16,7 +16,7 @@ class ::Gameui::Map
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
   has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
 
-  has_and_belongs_to_many :bookmarked_profiles, class_name: '::IshModels::UserProfile', inverse_of: :bookmarked_location
+  has_and_belongs_to_many :bookmarked_profiles, class_name: '::Ish::UserProfile', inverse_of: :bookmarked_location
 
   field :map_slug
   def map

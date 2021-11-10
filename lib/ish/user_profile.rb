@@ -30,12 +30,12 @@ class Ish::UserProfile
   has_many :galleries, :inverse_of => :user_profile
   has_and_belongs_to_many :shared_galleries, :class_name => 'Gallery', :inverse_of => :shared_profiles
 
-  has_many :invoices, :class_name => 'Ish::Invoice'
-  has_many :leads,    :class_name => 'Ish::Lead'
+  has_many :invoices,                             :class_name => '::Ish::Invoice'
+  has_many :leads,                                :class_name => '::Ish::Lead'
   has_many :photos
-  has_many :reports, :inverse_of => :user_profile
-  has_many :stocks,   :class_name => 'Ish::StockWatch'
-  has_many :videos, :inverse_of => :user_profile
+  has_many :reports,   inverse_of: :user_profile
+  has_many :stocks,                               :class_name => '::Warbler::StockWatch'
+  has_many :videos,    inverse_of: :user_profile
   has_many :newsitems, inverse_of: :user_profile
 
   has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
@@ -43,43 +43,32 @@ class Ish::UserProfile
     bookmarked_locations
   end
 
-  has_and_belongs_to_many :friends,   :class_name => 'Ish::UserProfile', :inverse_of => :friendeds
-  has_and_belongs_to_many :friendeds, :class_name => 'Ish::UserProfile', :inverse_of => :friends
+  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', :inverse_of => :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', :inverse_of => :friends
 
   field :n_unlocks, type: Integer, default: 0
   def n_coins
     n_unlocks
   end
 
-  #
-  # preferences
-  #
+  ## preferences
+  ## @TODO: better naming convention, or remove this
   field :videos_embed, :type => Boolean, :default => false
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.user.email ) ? true : false
   end
 
-  # manager uses it.
-  # @TODO: check this, this is shit. _vp_ 20170527
+  ## manager uses it.
+  ## @TODO: check this, this is shit. _vp_ 20170527
   def self.list
     out = self.all.order_by( :domain => :asc, :lang => :asc )
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
-  #
-  # CoT - colombia tailors
-  #
-  has_one  :measurement,  :class_name => '::CoTailors::ProfileMeasurement'
-  has_many :addresses,    :class_name => '::CoTailors::Address'
-  has_many :orders,       :class_name => '::CoTailors::Order'
-  def current_order
-    self.orders.where( :submitted_at => nil ).first || CoTailors::Order.create( :profile => self )
-  end
-
-  #
-  # GameUI
-  #
+  ##
+  ## GameUI
+  ##
   field :n_stars, type: Integer, default: 0
   has_many :premium_purchases, :class_name => '::Gameui::PremiumPurchase'
   def has_premium_purchase item
@@ -90,5 +79,3 @@ class Ish::UserProfile
   end
 
 end
-
-Profile = Ish::UserProfile

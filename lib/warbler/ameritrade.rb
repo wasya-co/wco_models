@@ -1,4 +1,6 @@
 
+require 'httparty'
+
 #
 # * make calls every once in a while
 # * If the option price dips below a threshold, close the position (create the order to buy back the option)
@@ -9,36 +11,21 @@
 # https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains
 # FVRR_082021P200
 
-require 'httparty'
 
-module Ish::Ameritrade
+module Warbler::Ameritrade
 
   CONFIG = {
     underlying_downprice_tolerance: 0.14,
   }
 
-  # def self.main_fvrr_1
-  #   query_hash = {
-  #     apikey: ::TD_AME[:apiKey],
-  #     symbol: 'FVRR',
-  #     contractType: 'PUT',
-  #     strike: 200,
-  #     fromDate: '2021-08-20',
-  #     toDate: '2021-08-20',
-  #   }
-  #   response = ::Ish::Ameritrade::Api.get_option_chain(query_hash)
-  #   puts! response, 'ze repsonse'
-  # end
-
   ## AKA stop loss
   def self.main_fvrr_2
-    # response = ::Ish::Ameritrade::Api.get_quote({ symbol: 'FVRR_082021P200' })
 
     # @TODO: pass the info on the position in here.
     strike_price = 200
 
     # What is my risk tolerance here? 14% down movement of the underlying
-    response = ::Ish::Ameritrade::Api.get_quote({ symbol: 'FVRR' })
+    response = ::Warbler::Ameritrade::Api.get_quote({ symbol: 'FVRR' })
     last_price = response[:lastPrice]
     tolerable_price = ( strike_price * (1-CONFIG[:underlying_downprice_tolerance]) )
 
@@ -49,7 +36,7 @@ module Ish::Ameritrade
 
 end
 
-class Ish::Ameritrade::Api
+class ::Warbler::Ameritrade::Api
   include ::HTTParty
   base_uri 'https://api.tdameritrade.com'
 

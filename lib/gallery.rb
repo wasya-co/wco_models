@@ -46,9 +46,9 @@ class Gallery
   end
 
   belongs_to :site,         :optional => true
-  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile', :inverse_of => :galleries
+  belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :galleries
 
-  has_and_belongs_to_many :shared_profiles, :class_name => 'IshModels::UserProfile', :inverse_of => :shared_galleries
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_galleries
   has_and_belongs_to_many :tags
 
   has_many :newsitems

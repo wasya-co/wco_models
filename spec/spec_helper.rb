@@ -33,12 +33,8 @@ end
 
 def do_setup
   User.unscoped.destroy
-  IshModels::UserProfile.unscoped.destroy
+  Ish::UserProfile.unscoped.destroy
   @user_profile = FactoryBot.create :user_profile, :user => User.new, :name => 'some-name'
-
-  CoTailors::ProfileMeasurement.all.destroy
-  CoTailors::Order.all.destroy
-  CoTailors::OrderItem.all.destroy
 
   # C
   City.unscoped.destroy_all

@@ -1,10 +1,15 @@
+require 'ish/premium_item'
 
 class ::Gameui::Map
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Ish::PremiumItem
 
   has_many :markers, :class_name => '::Gameui::Marker', inverse_of: :map
+
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
+
+  field :deleted_at, type: Time, default: nil
 
   field :slug
   validates :slug, uniqueness: true, presence: true
@@ -14,7 +19,14 @@ class ::Gameui::Map
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
   has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
 
-  has_and_belongs_to_many :bookmarked_profiles, class_name: '::IshModels::UserProfile', inverse_of: :bookmarked_location
+  has_and_belongs_to_many :bookmarked_profiles, class_name: '::Ish::UserProfile', inverse_of: :bookmarked_location
+
+  # shareable, nonpublic
+  field :is_public, type: Boolean, default: true
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_locations
+  default_scope ->{ where({ is_public: true, deleted_at: nil }).order_by({ slug: :desc }) }
+  ## @TODO: index default scope, maybe instead of HABTM, use :thru for shared profiles. Make is poly anyway?
+
 
   field :map_slug
   def map
@@ -23,6 +35,9 @@ class ::Gameui::Map
 
   field :name
   field :description
+
+  RATED_OPTIONS = [ 'pg-13', 'r', 'nc-17' ]
+  field :rated, default: 'pg-13' # 'r', 'nc-17'
 
   ## Possible keys: description, map, markers, newsitems,
   field :labels, type: Object, default: {}
@@ -69,3 +84,5 @@ class ::Gameui::Map
   end
 
 end
+
+Location = ::Gameui::Map

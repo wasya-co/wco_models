@@ -6,7 +6,7 @@ class Newsitem
   belongs_to :tag,     :optional => true
   belongs_to :city,    :optional => true
   belongs_to :report,  :optional => true
-  belongs_to :user_profile, class_name: 'IshModels::UserProfile', optional: true
+  belongs_to :user_profile, class_name: 'Ish::UserProfile', optional: true
   belongs_to :map, class_name: '::Gameui::Map', optional: true
 
   belongs_to :gallery, :optional => true

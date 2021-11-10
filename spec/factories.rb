@@ -6,7 +6,7 @@ FactoryBot.define do
     cityname { 'CityName' }
   end
 
-  factory :user_profile, :class => IshModels::UserProfile do
+  factory :user_profile, :class => Ish::UserProfile do
     email { 'test@email.com' }
   end
 

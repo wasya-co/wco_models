@@ -1,10 +1,15 @@
 
-require 'ish_models/railtie' if defined?(Rails)
-require 'ish_models/configuration'
+require 'ish/railtie' if defined?(Rails)
+require 'ish/configuration'
 
 ::S3_CREDENTIALS ||= {}
 
+module CoTailors; end
+class Gameui; end
 module Ish; end
+# I need this thing for permissions#
+class Manager; end
+module Warbler; end
 
 module IshModels
 
@@ -21,65 +26,53 @@ module IshModels
   end
 end
 
-require 'co_tailors'
-require 'co_tailors/product.rb'
-require 'co_tailors/profile_measurement.rb'
-require 'co_tailors/order.rb'
-# require 'co_tailors/order_item.rb' # this is required from within order.rb
-require 'co_tailors/address.rb'
+require 'gameui/map'
+require 'gameui/map_bookmark'
+require 'gameui/marker'
+require 'gameui/premium_purchase'
 
-require 'gameui'
-require 'gameui/map.rb'
-require 'gameui/map_bookmark.rb'
-require 'gameui/marker.rb'
-require 'gameui/premium_purchase.rb'
+require 'ish/cache_key'
+require 'ish/campaign'
+require 'ish/crawler'
+require 'ish/gallery_name'
+require 'ish/image_asset'
+require 'ish/input_error'
+require 'ish/invoice'
+require 'ish/issue'
+require 'ish/lead'
+require 'ish/nonpublic'
+require 'ish/payment'
+require 'ish/premium_item'
+require 'ish/utils'
+require 'ish/user_profile'
 
-# require 'ish/alphavantage_stockwatcher.rb'
-require 'ish/ameritrade'
-require 'ish/campaign.rb'
-require 'ish/covered_call'
-require 'ish/crawler.rb'
-require 'ish/gallery_name.rb'
-require 'ish/image_asset.rb'
-require 'ish/input_error.rb'
-require 'ish/invoice.rb'
-require 'ish/iron_condor.rb'
-require 'ish/iron_condor_watcher.rb'
-require 'ish/issue.rb'
-require 'ish/lead.rb'
-require 'ish/payment.rb'
-require 'ish/stock_action.rb'
-require 'ish/stock_option.rb'
-require 'ish/stock_watch.rb'
-require 'ish/utils.rb'
-require 'ish/yahoo_stockwatcher.rb'
+require 'aux_model'
+require 'city'
+require 'cities_user'
+require 'country'
+require 'event'
+require 'feature'
+require 'gallery'
+require 'newsitem'
+require 'photo'
+require 'report'
+require 'site'
+require 'tag'
+require 'venue'
+require 'video'
 
-# obsolete, use `ish` namespace now
-require 'ish_models/cache_key.rb' # this is really obsolete? _vp_ 20180123
-require 'ish_models/user_profile.rb'
+require 'warbler/stock_watch'
+require 'warbler/ameritrade'
 
-require 'app_model2.rb'
-require 'aux_model.rb'
-require 'city.rb'
-require 'cities_user.rb'
-require 'country.rb'
-require 'event.rb'
-require 'feature.rb'
-require 'gallery.rb'
-# require 'gallery2.rb'
-require 'manager.rb'
-require 'newsitem.rb'
-require 'photo.rb'
-require 'public_item.rb'
-require 'report.rb'
-require 'site.rb'
-require 'tag.rb'
-require 'venue.rb'
-require 'video.rb'
-
-
-
-
+## warbler
+# require 'warbler/alphavantage_stockwatcher'
+# require 'warbler/ameritrade'
+# require 'warbler/covered_call'
+# require 'warbler/iron_condor'
+# require 'warbler/iron_condor_watcher'
+# require 'warbler/stock_action'
+# require 'warbler/stock_option'
+# require 'warbler/yahoo_stockwatcher'
 
 
 

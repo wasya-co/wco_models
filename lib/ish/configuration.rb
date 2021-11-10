@@ -1,5 +1,5 @@
 
-module IshModels
+module Ish
   class Configuration
     attr_accessor :s3_credentials
 

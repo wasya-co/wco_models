@@ -39,7 +39,7 @@ class Report
   field :lang, :type => String, :default => 'en'
   index({ :lang => 1 })
 
-  belongs_to :user_profile, :optional => true, :class_name => 'IshModels::UserProfile'
+  belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile'
 
   # validates :user, :presence => true, :allow_nil => false
   field :username, :type => String, :default => 'anonymous'

@@ -8,7 +8,7 @@ class CoTailors::ProfileMeasurement
   UNITS_CENTIMETERS = :centimeters
   field :units, :type => Symbol
 
-  belongs_to :profile,    :class_name => 'IshModels::UserProfile', :optional => true
+  belongs_to :profile,    :class_name => 'Ish::UserProfile', :optional => true
   belongs_to :order_item, :class_name => 'CoTailors::OrderItem',   :optional => true
 
   ## shirt

@@ -29,12 +29,12 @@ class City
   has_many :videos
   has_and_belongs_to_many :tags
 
-  has_many :current_users, :class_name => '::IshModels::UserProfile', :inverse_of => :current_city
+  has_many :current_users, :class_name => '::Ish::UserProfile', :inverse_of => :current_city
   has_many :newsitems
 
-  has_many :current_users, :class_name => '::IshModels::UserProfile', :inverse_of => :current_city
+  has_many :current_users, :class_name => '::Ish::UserProfile', :inverse_of => :current_city
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
-  has_one :guide, :class_name => '::IshModels::UserProfile', :inverse_of => :guide_city
+  has_one :guide, :class_name => '::Ish::UserProfile', :inverse_of => :guide_city
 
   has_many :features
 

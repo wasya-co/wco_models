@@ -3,7 +3,7 @@ class CoTailors::Address
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :profile, :class_name => '::IshModels::UserProfile'
+  belongs_to :profile, :class_name => '::Ish::UserProfile'
   validates :profile, :presence => true
 
   field :name

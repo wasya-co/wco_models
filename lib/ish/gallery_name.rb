@@ -1,4 +1,5 @@
 
+# @TODO: completely rework this
 module Ish
   class GalleryName
     include Mongoid::Document

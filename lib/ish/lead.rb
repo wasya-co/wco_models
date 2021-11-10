@@ -9,10 +9,10 @@ class Ish::Lead
 
   store_in :collection => 'ish_lead'
 
-  belongs_to :profile, :class_name => 'IshModels::UserProfile'
+  belongs_to :profile, :class_name => '::Ish::UserProfile'
 
-  has_and_belongs_to_many :campaigns,             :class_name => 'Ish::Campaign', :inverse_of => :leads
-  has_and_belongs_to_many :unsubscribe_campaigns, :class_name => 'Ish::Campaign', :inverse_of => :unsubscribe_leads
+  has_and_belongs_to_many :campaigns,             :class_name => '::Ish::Campaign', :inverse_of => :leads
+  has_and_belongs_to_many :unsubscribe_campaigns, :class_name => '::Ish::Campaign', :inverse_of => :unsubscribe_leads
 
   field :email
   field :job_url

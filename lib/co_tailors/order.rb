@@ -4,7 +4,7 @@ class CoTailors::Order
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :profile, :class_name => '::IshModels::UserProfile'
+  belongs_to :profile, :class_name => '::Ish::UserProfile'
 
   has_many :items, :class_name => '::CoTailors::OrderItem'
 

@@ -11,3 +11,5 @@
 0.0.11 - moving gallery data from app_model2 to galleries2 (and later will transition to Gallery)
 0.0.12 - let's nuke app_model2
 0.1.0 - NOT USED! Too much work to make those changes. We stay on 0.0.12.
+0.0.13 - moving IshModels::UserProfile -> Ish::UserProfile
+

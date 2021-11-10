@@ -8,7 +8,7 @@ module IshModels
     field :feature_cities, :type => Time # /api/cities/features.json
 
     def self.one
-      IshModels::CacheKey.first || IshModels::CacheKey.new
+      Ish::CacheKey.first || Ish::CacheKey.new
     end
   end
 end

@@ -6,7 +6,7 @@ class ::Gameui::Marker
   belongs_to :map, :class_name => '::Gameui::Map'
 
   field :slug
-  validates_uniqueness_of :slug, scope: :map_id
+  validates_uniqueness_of :slug, scope: :map_id # @TODO: probably remove this, no reason not to have two markers to the same slug (destination)
   validates_presence_of :slug
 
   field :description

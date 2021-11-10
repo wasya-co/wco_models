@@ -1,7 +1,9 @@
+require 'ish/premium_item'
 
 class ::Gameui::Map
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Ish::PremiumItem
 
   has_many :markers, :class_name => '::Gameui::Marker', inverse_of: :map
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
@@ -23,6 +25,9 @@ class ::Gameui::Map
 
   field :name
   field :description
+
+  RATED_OPTIONS = [ 'pg-13', 'r', 'nc-17' ]
+  field :rated, default: 'pg-13' # 'r', 'nc-17'
 
   ## Possible keys: description, map, markers, newsitems,
   field :labels, type: Object, default: {}
@@ -69,3 +74,5 @@ class ::Gameui::Map
   end
 
 end
+
+Location = ::Gameui::Map

@@ -1,5 +1,6 @@
 
-class AppModel2
+# @deprecated, remove
+class Ish::AppModel2
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
 
@@ -7,7 +8,7 @@ class AppModel2
   field :is_trash,     :type => Boolean, :default => false
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
-  
+
   field :x, :type => Float
   field :y, :type => Float
 
@@ -16,11 +17,5 @@ class AppModel2
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
-  private
 
-  def puts! arg, label=""
-    puts "+++ +++ #{label}"
-    puts arg.inspect
-  end
-  
 end

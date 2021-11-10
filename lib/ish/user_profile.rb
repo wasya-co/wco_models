@@ -1,4 +1,4 @@
-class IshModels::UserProfile
+class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -43,8 +43,8 @@ class IshModels::UserProfile
     bookmarked_locations
   end
 
-  has_and_belongs_to_many :friends,   :class_name => 'IshModels::UserProfile', :inverse_of => :friendeds
-  has_and_belongs_to_many :friendeds, :class_name => 'IshModels::UserProfile', :inverse_of => :friends
+  has_and_belongs_to_many :friends,   :class_name => 'Ish::UserProfile', :inverse_of => :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => 'Ish::UserProfile', :inverse_of => :friends
 
   field :n_unlocks, type: Integer, default: 0
   def n_coins
@@ -91,4 +91,4 @@ class IshModels::UserProfile
 
 end
 
-Profile = IshModels::UserProfile
+Profile = Ish::UserProfile

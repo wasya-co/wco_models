@@ -24,8 +24,6 @@ class ::Gameui::Map
   # shareable, nonpublic
   field :is_public, type: Boolean, default: true
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_locations
-  default_scope ->{ where({ is_public: true, deleted_at: nil }).order_by({ slug: :desc }) }
-  ## @TODO: index default scope, maybe instead of HABTM, use :thru for shared profiles. Make is poly anyway?
 
 
   field :map_slug

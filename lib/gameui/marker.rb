@@ -60,7 +60,8 @@ class ::Gameui::Marker
 
   ITEM_TYPE_LOCATION = 'gameui-location'
   ITEM_TYPE_MAP = 'gameui-map'
-  ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP ]
+  ITEM_TYPE_OBJ = 'gameui-obj'
+  ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP, ITEM_TYPE_OBJ ]
   field :item_type, type: String
   validates :item_type, presence: true
 

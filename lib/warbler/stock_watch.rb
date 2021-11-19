@@ -2,6 +2,7 @@
 class Warbler::StockWatch
   include Mongoid::Document
   include Mongoid::Timestamps
+  store_in collection: 'ish_stock_watches'
 
   field :ticker
 

@@ -6,6 +6,7 @@ class Ish::UserProfile
   validates_presence_of :name
 
   field :username
+  field :scratchpad
 
   field :email
   # validates_format_of :email, :with => ::Devise::email_regexp

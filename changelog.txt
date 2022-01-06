@@ -13,4 +13,5 @@
 0.1.0 - NOT USED! Too much work to make those changes. We stay on 0.0.12.
 0.0.13 - moving IshModels::UserProfile -> Ish::UserProfile
 1.0.0 - this is breaking changes, so bump major. _vp_ 2021-11-10
+1.1.0 - 20220106 - ish_profile#generate, new year new me
 

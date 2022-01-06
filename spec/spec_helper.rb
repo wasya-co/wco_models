@@ -8,9 +8,12 @@ require 'mongoid-rspec'
 
 Mongoid.load!("config/mongoid.yml", :test)
 
+
 class User
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
+  field :email
+  field :password
 end
 
 require_relative '../lib/ish_models.rb'

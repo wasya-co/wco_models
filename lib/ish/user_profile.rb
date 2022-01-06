@@ -81,4 +81,30 @@ class Ish::UserProfile
     ::Gameui::PremiumPurchase.where( user_profile_id: self.id )
   end
 
+  # used in rake tasks
+  def self.generate delta
+    email = delta[:email]
+    password = delta[:password]
+    role_name = delta[:role_name]
+
+    profile = Ish::UserProfile.where( email: email ).first
+    if profile
+      puts! profile, "UserProfile#generate, already exists"
+      return
+    end
+
+    user = User.where( email: email ).first
+    if !user
+      user = User.new({ email: email, password: password })
+    end
+    profile = Ish::UserProfile.new({ email: email, name: email, role_name: role_name, user: user })
+    profile.save
+
+    if profile.persisted?
+      ;
+    else
+      puts! profile.errors.full_messages, "Cannot save profile"
+    end
+  end
+
 end

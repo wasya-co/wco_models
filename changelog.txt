@@ -14,4 +14,6 @@
 0.0.13 - moving IshModels::UserProfile -> Ish::UserProfile
 1.0.0 - this is breaking changes, so bump major. _vp_ 2021-11-10
 1.1.0 - 20220106 - ish_profile#generate, new year new me
-
+        ruby 2.6.8
+1.2.0 - 20200117 ruby 3.1.0
+                 ruby 2.7.5 then

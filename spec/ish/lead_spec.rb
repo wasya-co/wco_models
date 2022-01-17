@@ -12,4 +12,4 @@ describe 'Ish::Lead' do
   end
 
 end
-     
+

@@ -1,11 +1,10 @@
 
 *~
-*.trash
+*trash
 \#*
 .#*
 /ish_models-0.*.gem
 /vendor
 /.bundle
-/trash
 config/mongoid.yml
 .byebug_history

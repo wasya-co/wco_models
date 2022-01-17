@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.summary     = 'models of ish'
   s.description = 'models of ish'
   s.authors     = [ 'piousbox' ]
-  s.email       = 'victor@wasya.co'
+  s.email       = 'piousbox@gmail.com'
   s.files       = Dir[ "lib/*", "lib/**/*" ]
-  s.homepage    = 'http://wasya.co'
+  s.homepage    = 'https://wasya.co'
   s.license     = 'MIT'
 
   s.add_runtime_dependency 'mongoid', '~> 7.0.5'

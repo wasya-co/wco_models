@@ -14,4 +14,8 @@ FactoryBot.define do
     name { 'tag-name' }
   end
 
+  factory :video do
+    description { 'some-description' }
+  end
+
 end

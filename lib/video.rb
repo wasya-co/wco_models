@@ -2,16 +2,25 @@ class Video
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Mongoid::Paranoia
 
   PER_PAGE = 6
 
   field :name, :type => String
   field :descr, :type => String, :as => :description
 
-  default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
+  # default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
 
   field :is_trash, :type => Boolean, :default => false
-  field :is_public, :type => Boolean, :default => true
+  def is_trash
+    if deleted_at
+      true
+    else
+      self[:is_trash]
+    end
+  end
+
+  field :is_public, :type => Boolean, :default => false
   field :is_feature, :type => Boolean, :default => false
 
   field :x, :type => Float

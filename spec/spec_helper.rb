@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'mongoid'
 require 'mongoid-paperclip'
+require 'mongoid_paranoia'
 require 'factory_bot'
 require 'byebug'
 require 'mongoid-rspec'

@@ -12,6 +12,14 @@ class Video
   # default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
 
   field :is_trash, :type => Boolean, :default => false
+  def is_trash
+    if deleted_at
+      true
+    else
+      self[:is_trash]
+    end
+  end
+
   field :is_public, :type => Boolean, :default => false
   field :is_feature, :type => Boolean, :default => false
 

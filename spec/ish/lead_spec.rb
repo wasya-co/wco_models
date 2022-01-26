@@ -1,4 +1,4 @@
-require 'spec_helper'
+
 describe 'Ish::Lead' do
   before :each do
     do_setup

@@ -4,10 +4,12 @@ require 'mongoid-paperclip'
 require 'factory_bot'
 require 'byebug'
 require 'mongoid-rspec'
-
+require 'database_cleaner-mongoid'
+require_relative '../lib/ish_models.rb'
 
 Mongoid.load!("config/mongoid.yml", :test)
 
+DatabaseCleaner.clean
 
 class User
   include ::Mongoid::Document
@@ -15,8 +17,6 @@ class User
   field :email
   field :password
 end
-
-require_relative '../lib/ish_models.rb'
 
 def puts! a, b=''
   puts "+++ +++ #{b}"

@@ -19,5 +19,6 @@ group :test do
   gem 'rspec'
   gem 'factory_bot'
   gem 'mongoid-rspec'
+  gem 'database_cleaner-mongoid'
   # gem 'kaminari-mongoid'
 end

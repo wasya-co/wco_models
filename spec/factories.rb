@@ -27,6 +27,7 @@ FactoryBot.define do
     sequence :email do |n|
       "some-#{n}@email.com"
     end
+    password { 'some-password' }
   end
 
   factory :user_profile, :class => Ish::UserProfile do

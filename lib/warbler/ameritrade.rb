@@ -60,18 +60,23 @@ class ::Warbler::Ameritrade::Api
     opts = {}
 
     # validate input
-    validOpts = %i| contractType strike symbol|
+    validOpts = %i| contractType strike |
     validOpts.each do |s|
       if _opts[s]
         opts[s] = _opts[s]
       else
-        raise Ish::InputError.new("invalid input, missing #{s}")
+        raise Ish::InputError.new("Invalid input, missing '#{s}'.")
       end
     end
     if _opts[:date]
       opts[:fromDate] = opts[:toDate] = _opts[:date]
     else
-      raise Ish::InputError.new("invalid input, missing 'date'")
+      raise Ish::InputError.new("Invalid input, missing 'date'.")
+    end
+    if _opts[:ticker]
+      opts[:symbol] = _opts[:ticker].upcase
+    else
+      raise Ish::InputError.new("Invalid input, missing 'ticker'.")
     end
 
     query = { apikey: ::TD_AME[:apiKey], strikeCount: 1 }.merge opts

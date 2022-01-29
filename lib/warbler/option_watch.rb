@@ -1,12 +1,24 @@
 
-class Warbler::StockWatch
+class Warbler::OptionWatch
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'ish_stock_watches'
+  store_in collection: 'ish_option_watches'
 
   SLEEP_TIME_SECONDS = 60
 
-  field :ticker
+  field :ticker # like NVDA
+  validates :ticker, presence: true
+  # field :symbol # like NVDA_021822C230
+
+  ## Strike isn't called price!
+  field :strike, :type => Float
+  validates :strike, presence: true
+
+  field :contractType
+  validates :contractType, presence: true
+
+  field :date
+  validates :date, presence: true
 
   NOTIFICATION_TYPES = [ :NONE, :EMAIL, :SMS ]
   ACTIONS            = NOTIFICATION_TYPES
@@ -14,8 +26,6 @@ class Warbler::StockWatch
   NOTIFICATION_EMAIL = :EMAIL
   NOTIFICATION_SMS   = :SMS
   field :notification_type, :type => Symbol, :as => :action
-
-  field :price, :type => Float
 
   DIRECTIONS      = [ :ABOVE, :BELOW ]
   DIRECTION_ABOVE = :ABOVE

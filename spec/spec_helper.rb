@@ -11,6 +11,7 @@ require_relative '../lib/ish_models.rb'
 Mongoid.load!("config/mongoid.yml", :test)
 
 DatabaseCleaner.clean
+Ish::UserProfile.unscoped.destroy_all
 
 class User
   include ::Mongoid::Document
@@ -18,6 +19,7 @@ class User
   field :email
   field :password
 end
+User.unscoped.destroy_all
 
 def puts! a, b=''
   puts "+++ +++ #{b}"

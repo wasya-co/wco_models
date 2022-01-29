@@ -61,18 +61,14 @@ require 'tag'
 require 'venue'
 require 'video'
 
+require 'warbler/option_watch'
 require 'warbler/stock_watch'
 require 'warbler/ameritrade'
 
 ## warbler
-# require 'warbler/alphavantage_stockwatcher'
-# require 'warbler/ameritrade'
 # require 'warbler/covered_call'
 # require 'warbler/iron_condor'
-# require 'warbler/iron_condor_watcher'
 # require 'warbler/stock_action'
-# require 'warbler/stock_option'
-# require 'warbler/yahoo_stockwatcher'
 
 
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Warbler::OptionWatch do
   before do
-    @fields = %i| contractType strike ticker date |
+    @fields = %i| contractType date strike price ticker |
   end
 
   describe '#create' do

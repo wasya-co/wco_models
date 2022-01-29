@@ -10,9 +10,13 @@ class Warbler::OptionWatch
   validates :ticker, presence: true
   # field :symbol # like NVDA_021822C230
 
-  ## Strike isn't called price!
+  ## Strike isn't the same as price!
   field :strike, :type => Float
   validates :strike, presence: true
+
+  ## What is the price of the option at some strike?
+  field :price, type: Float
+  validates :price, presence: true
 
   field :contractType
   validates :contractType, presence: true

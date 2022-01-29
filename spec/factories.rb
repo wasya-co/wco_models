@@ -10,9 +10,10 @@ FactoryBot.define do
 
   factory :option_watch, class: Warbler::OptionWatch do
     contractType { 'PUT' }
+    date { '2021-01-01' }
+    price { 55 }
     strike { 100 }
     ticker { 'SPY' }
-    date { '2021-01-01' }
     after :build do |doc|
       doc.profile = create(:user_profile)
     end

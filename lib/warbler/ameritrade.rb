@@ -82,9 +82,11 @@ class ::Warbler::Ameritrade::Api
     query = { apikey: ::TD_AME[:apiKey], strikeCount: 1 }.merge opts
     path = "/v1/marketdata/chains"
     out = self.get path, { query: query }
+    ## out = HTTParty.get "https://api.tdameritrade.com#{path}", { query: query }
     out = out.parsed_response.deep_symbolize_keys
     tmp_sym = "#{opts[:contractType].to_s.downcase}ExpDateMap".to_sym
     out[tmp_sym].first[1].first[1][0]
   end
 
 end
+

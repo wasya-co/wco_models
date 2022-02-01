@@ -8,17 +8,6 @@ FactoryBot.define do
     cityname { 'CityName' }
   end
 
-  factory :option_watch, class: Warbler::OptionWatch do
-    contractType { 'PUT' }
-    date { '2021-01-01' }
-    price { 55 }
-    strike { 100 }
-    ticker { 'SPY' }
-    after :build do |doc|
-      doc.profile = create(:user_profile)
-    end
-  end
-
   factory :tag, class: Tag do
     name { 'tag-name' }
   end

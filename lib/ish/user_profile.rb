@@ -37,8 +37,10 @@ class Ish::UserProfile
   has_many :leads,                                :class_name => '::Ish::Lead'
   has_many :photos
   has_many :reports,   inverse_of: :user_profile
-  has_many :stocks,                               :class_name => '::Warbler::StockWatch'
-  has_many :option_watches, class_name: '::Warbler::OptionWatch'
+
+  # has_many :stock_watches,  class_name: 'IronWarbler::StockWatch'
+  # has_many :option_watches, class_name: 'IronWarbler::OptionWatch'
+
   has_many :videos,    inverse_of: :user_profile
   has_many :newsitems, inverse_of: :user_profile
 

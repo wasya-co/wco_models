@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'ish_models'
-  s.version     = '0.0.33.153'
+  s.version     = '0.0.33.154'
   s.date        = '2017-05-10'
   s.summary     = 'models of ish'
   s.description = 'models of ish'
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://wasya.co'
   s.license     = 'Proprietary'
 
-  s.add_runtime_dependency 'mongoid', '~> 7.3.0'
+  s.add_runtime_dependency 'mongoid', '~> 7.0.5'
   s.add_runtime_dependency 'mongoid_paranoia'
   s.add_runtime_dependency 'mongoid-autoinc', '~> 6.0'
   s.add_runtime_dependency 'mongoid-paperclip'

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://wasya.co'
   s.license     = 'Proprietary'
 
-  s.add_runtime_dependency 'mongoid', '~> 7.0.5'
+  s.add_runtime_dependency 'mongoid', '~> 7.3.0'
   s.add_runtime_dependency 'mongoid_paranoia'
   s.add_runtime_dependency 'mongoid-autoinc', '~> 6.0'
   s.add_runtime_dependency 'mongoid-paperclip'

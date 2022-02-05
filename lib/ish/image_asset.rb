@@ -1,3 +1,4 @@
+
 class Ish::ImageAsset
   require 'aws-sdk'
 

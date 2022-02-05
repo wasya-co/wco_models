@@ -1,0 +1,6 @@
+#!/bin/bash
+
+version=`cat VERSION`
+cat ish_models.gemspec-template | \
+  sed -e "s/\$version/$version/g" > ish_models.gemspec
+

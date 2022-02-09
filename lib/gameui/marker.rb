@@ -9,21 +9,48 @@ class ::Gameui::Marker
   validates_uniqueness_of :slug, scope: :map_id
   validates_presence_of :slug
 
+
+  field :name, type: String
+  validates :name, presence: true
+
+  field :ordering, type: String, default: 'jjj'
+
+  ITEM_TYPE_LOCATION = 'gameui-location'
+  ITEM_TYPE_MAP = 'gameui-map'
+  ITEM_TYPE_OBJ = 'gameui-obj'
+  ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP, ITEM_TYPE_OBJ ]
+  field :item_type, type: String
+  validates :item_type, presence: true
+
+  field :url
+
   field :description
 
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker_image
   has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title_image
 
-  field :deleted_at, type: Time, default: nil
+  field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 
-  # shareable, nonpublic
   field :is_public, type: Boolean, default: true
+  def self.public
+    where( is_public: true )
+  end
+  ## Active AND [ mine, shared, or public ]
+  def self.permitted_to profile
+    active.any_of( {is_public: true},
+      {:shared_profile_ids => profile.id},
+      {creator_profile_id: profile.id} )
+  end
+
+  field :is_active, type: Boolean, default: true
+  def self.active
+    where( is_active: true )
+  end
+
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_markers
-  default_scope ->{ where({ is_public: true, deleted_at: nil }).order_by({ slug: :desc }) }
-  ## @TODO: index default scope, maybe instead of HABTM, use :thru for shared profiles. Make is poly anyway?
 
   belongs_to :map, :class_name => '::Gameui::Map'
-
+  belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 
   # @deprecated, don't use!
   # _vp_ 2021-09-23
@@ -44,28 +71,21 @@ class ::Gameui::Marker
   field :centerOffsetY, type: Integer, default: 0
   # validates :centerYOffset, presence: true
 
+  # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
-    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
-    self.w = geo.width
-    self.h = geo.height
+    begin
+      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
+      self.w = geo.width
+      self.h = geo.height
+    rescue Paperclip::Errors::NotIdentifiedByImageMagickError => e
+      puts! e, 'Could not #compute_w_h'
+      # @TODO: do something with this
+    end
   end
 
-  field :is_active, type: Boolean, default: true
 
-  field :name, type: String
-  validates :name, presence: true
 
-  field :ordering, type: String, default: 'jjj'
-
-  ITEM_TYPE_LOCATION = 'gameui-location'
-  ITEM_TYPE_MAP = 'gameui-map'
-  ITEM_TYPE_OBJ = 'gameui-obj'
-  ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP, ITEM_TYPE_OBJ ]
-  field :item_type, type: String
-  validates :item_type, presence: true
-
-  field :url
 
 end
 

@@ -5,6 +5,11 @@ describe Ish::UserProfile do
     do_setup
   end
 
+  context 'associations' do
+    it { is_expected.to have_many(:my_maps) }
+    it { is_expected.to have_many(:my_markers) }
+  end
+
   context '#generate' do
     it "doesnt generate if exists" do
       n = Ish::UserProfile.unscoped.count

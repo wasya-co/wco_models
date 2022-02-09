@@ -7,7 +7,7 @@ Mongoid.load!("config/mongoid.yml", :test)
 describe IshModels do
   describe '#configure' do
 
-    it 'whatever, affects' do
+    it 'sanity' do
       photo = Photo.create
       photo.persisted?.should eql true
     end
@@ -15,5 +15,5 @@ describe IshModels do
   end
 end
 
-         
-     
+
+

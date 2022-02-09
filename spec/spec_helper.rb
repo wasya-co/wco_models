@@ -6,6 +6,14 @@ require 'factory_bot'
 require 'byebug'
 require 'mongoid-rspec'
 require 'database_cleaner-mongoid'
+
+::S3_CREDENTIALS ||= {
+  :access_key_id => ENV['AWS_KEY_TRAVIS'],
+  :secret_access_key => ENV['AWS_SECRET_TRAVIS'],
+  :bucket => "ish-test-3",
+  :region => 'us-east-1' # NOT :s3_region ?!?!
+}
+
 require_relative '../lib/ish_models.rb'
 
 Mongoid.load!("config/mongoid.yml", :test)

@@ -6,9 +6,9 @@ class Ish::ImageAsset
   include Mongoid::Timestamps
   include Mongoid::Paperclip
 
-  belongs_to :location,           class_name: 'Gameui::Map', inverse_of: :image,       optional: true
-  belongs_to :marker_image,       class_name: 'Gameui::Map', inverse_of: :image,       optional: true
-  belongs_to :marker_title_image, class_name: 'Gameui::Map', inverse_of: :title_image, optional: true
+  belongs_to :location,     class_name: 'Gameui::Map', inverse_of: :image,       optional: true
+  belongs_to :marker,       class_name: 'Gameui::Marker', inverse_of: :image,       optional: true
+  belongs_to :marker_title, class_name: 'Gameui::Marker', inverse_of: :title_image, optional: true
 
   has_mongoid_attached_file :image,
                             :styles => {
@@ -25,4 +25,4 @@ class Ish::ImageAsset
 
 end
 
-
+Asset = Ish::ImageAsset

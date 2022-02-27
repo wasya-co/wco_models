@@ -6,16 +6,15 @@ class Ish::UserProfile
 
   store_in collection: 'ish_user_profiles'
 
-  field :name
-  validates_presence_of :name
-
-  field :username
-  field :scratchpad
-
+  def name
+    _id
+  end
   field :email
-  # validates_format_of :email, :with => ::Devise::email_regexp
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
+
+
+  field :scratchpad
 
   field :fb_access_token
   field :fb_long_access_token
@@ -118,3 +117,5 @@ class Ish::UserProfile
   end
 
 end
+
+Profile = Ish::UserProfile

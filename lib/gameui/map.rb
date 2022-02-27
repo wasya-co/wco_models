@@ -5,7 +5,8 @@ class ::Gameui::Map
   include Mongoid::Timestamps
   include Ish::PremiumItem
 
-  has_many :markers, :class_name => '::Gameui::Marker', inverse_of: :map
+  has_many :markers,      :class_name => '::Gameui::Marker', inverse_of: :map
+  has_many :from_markers, :class_name => '::Gameui::Marker', inverse_of: :destination
 
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
 
@@ -92,3 +93,4 @@ class ::Gameui::Map
 end
 
 Location = ::Gameui::Map
+Map = Gameui::Map

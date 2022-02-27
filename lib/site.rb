@@ -5,6 +5,7 @@ class Site
   include AuxModel
 
   field :domain, :type => String
+  validates_presence_of :domain
 
   field :lang, :type => String, :default => 'en'
   # validates :lang, { :uniqueness => :true, :scope => :domain }

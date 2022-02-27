@@ -15,7 +15,7 @@ class ::Gameui::Marker
 
   field :ordering, type: String, default: 'jjj'
 
-  ITEM_TYPE_LOCATION = 'gameui-location'
+  ITEM_TYPE_LOCATION = '::Gameui::Map' # @TODO: this used to be gameui-location . How is this different from gameui-map ?
   ITEM_TYPE_MAP = 'gameui-map'
   ITEM_TYPE_OBJ = 'gameui-obj'
   ITEM_TYPES = [ ITEM_TYPE_LOCATION, ITEM_TYPE_MAP, ITEM_TYPE_OBJ ]
@@ -26,8 +26,8 @@ class ::Gameui::Marker
 
   field :description
 
-  has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker_image
-  has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title_image
+  has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker
+  has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title
 
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 
@@ -49,7 +49,8 @@ class ::Gameui::Marker
 
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_markers
 
-  belongs_to :map, :class_name => '::Gameui::Map'
+  belongs_to :map,             class_name: '::Gameui::Map',    inverse_of: :markers
+  belongs_to :destination,     class_name: '::Gameui::Map',    inverse_of: :from_markers
   belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 
   # @deprecated, don't use!
@@ -74,6 +75,12 @@ class ::Gameui::Marker
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
+
+    if !image # @TODO: think about this
+      self.h = self.w = 0
+      return
+    end
+
     begin
       geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
       self.w = geo.width
@@ -89,3 +96,4 @@ class ::Gameui::Marker
 
 end
 
+Marker = Gameui::Marker

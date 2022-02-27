@@ -32,9 +32,10 @@ FactoryBot.define do
   end
 
   factory :gallery do
-    name { 'xxTestxx' }
-    slug { 'xxSlugxx' }
+    name { generate(:slug) }
+    slug { generate(:slug) }
     is_trash { false }
+    is_public { true }
     after :build do |g|
       g.site ||= Site.new( :domain => 'xxDomainxx', :lang => 'xxLangxx' )
       g.slug ||= name

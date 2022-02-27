@@ -106,7 +106,11 @@ class Ish::UserProfile
     if !user
       user = User.new({ email: email, password: password })
     end
-    profile = Ish::UserProfile.new({ email: email, name: email, role_name: role_name, user: user })
+    profile = Ish::UserProfile.new({
+      email: email,
+      role_name: role_name,
+      user: user,
+    })
     profile.save
 
     if profile.persisted?

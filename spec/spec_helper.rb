@@ -21,11 +21,18 @@ Mongoid.load!("config/mongoid.yml", :test)
 DatabaseCleaner.clean
 Ish::UserProfile.unscoped.destroy_all
 
+module Rails
+  def self.root
+    './'
+  end
+end
+
 class User
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
   field :email
   field :password
+  has_one :profile, :class_name => '::Ish::UserProfile'
 end
 User.unscoped.destroy_all
 
@@ -46,9 +53,6 @@ RSpec.configure do |config|
 end
 
 def do_setup
-  User.unscoped.destroy
-  Ish::UserProfile.unscoped.destroy
-  @user_profile = FactoryBot.create :user_profile, :user => User.new, :name => 'some-name'
 
   # C
   City.unscoped.destroy_all

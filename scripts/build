@@ -1,5 +1,9 @@
 #!/bin/bash
 
+##
+## This scriptdoesn't necessarily build master!
+##
+
 set -x
 
 if ssh-add -L | grep macpc ; then

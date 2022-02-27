@@ -1,17 +1,20 @@
+
+## @TODO: rename to Ish::Profile
 class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :name
-  validates_presence_of :name
+  store_in collection: 'ish_user_profiles'
 
-  field :username
-  field :scratchpad
-
+  def name
+    _id
+  end
   field :email
-  # validates_format_of :email, :with => ::Devise::email_regexp
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
+
+
+  field :scratchpad
 
   field :fb_access_token
   field :fb_long_access_token
@@ -31,14 +34,19 @@ class Ish::UserProfile
   has_many :galleries, :inverse_of => :user_profile
   has_and_belongs_to_many :shared_galleries, :inverse_of => :shared_profiles, class_name: 'Gallery'
   has_and_belongs_to_many :shared_markers,   :inverse_of => :shared_profiles, class_name: 'Gameui::Marker'
+  has_many :my_markers,   :inverse_of => :creator_profile, class_name: 'Gameui::Marker'
   has_and_belongs_to_many :shared_locations, :inverse_of => :shared_profiles, class_name: 'Gameui::Map'
+  has_many :my_maps, :inverse_of => :creator_profile, class_name: 'Gameui::Map'
 
   has_many :invoices,                             :class_name => '::Ish::Invoice'
   has_many :leads,                                :class_name => '::Ish::Lead'
   has_many :photos
   has_many :reports,   inverse_of: :user_profile
-  has_many :stocks,                               :class_name => '::Warbler::StockWatch'
-  has_many :option_watches, class_name: '::Warbler::OptionWatch'
+
+  ## @TODO: do something about this.
+  # has_many :stock_watches,  class_name: 'IronWarbler::StockWatch'
+  # has_many :option_watches, class_name: 'IronWarbler::OptionWatch'
+
   has_many :videos,    inverse_of: :user_profile
   has_many :newsitems, inverse_of: :user_profile
 
@@ -109,3 +117,5 @@ class Ish::UserProfile
   end
 
 end
+
+Profile = Ish::UserProfile

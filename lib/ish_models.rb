@@ -40,7 +40,6 @@ require 'ish/input_error'
 require 'ish/invoice'
 require 'ish/issue'
 require 'ish/lead'
-require 'ish/nonpublic'
 require 'ish/payment'
 require 'ish/premium_item'
 require 'ish/utils'
@@ -60,16 +59,6 @@ require 'site'
 require 'tag'
 require 'venue'
 require 'video'
-
-require 'warbler/option_watch'
-require 'warbler/stock_watch'
-require 'warbler/ameritrade'
-
-## warbler
-# require 'warbler/covered_call'
-# require 'warbler/iron_condor'
-# require 'warbler/stock_action'
-
 
 
 

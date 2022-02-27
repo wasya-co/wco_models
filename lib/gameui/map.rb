@@ -5,7 +5,8 @@ class ::Gameui::Map
   include Mongoid::Timestamps
   include Ish::PremiumItem
 
-  has_many :markers, :class_name => '::Gameui::Marker', inverse_of: :map
+  has_many :markers,      :class_name => '::Gameui::Marker', inverse_of: :map
+  has_many :from_markers, :class_name => '::Gameui::Marker', inverse_of: :destination
 
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
 
@@ -15,15 +16,18 @@ class ::Gameui::Map
   validates :slug, uniqueness: true, presence: true
 
   field :parent_slug
+
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
   has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
+  belongs_to :creator_profile, class_name: '::Ish::UserProfile', inverse_of: :my_maps
 
   has_and_belongs_to_many :bookmarked_profiles, class_name: '::Ish::UserProfile', inverse_of: :bookmarked_location
 
   # shareable, nonpublic
   field :is_public, type: Boolean, default: true
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_locations
+
 
 
   field :map_slug
@@ -54,9 +58,14 @@ class ::Gameui::Map
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
-    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
-    self.w = geo.width
-    self.h = geo.height
+    begin
+      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
+      self.w = geo.width
+      self.h = geo.height
+    rescue Paperclip::Errors::NotIdentifiedByImageMagickError => e
+      puts! e, 'Could not #compute_w_h'
+      # @TODO: do something with this
+    end
   end
 
   ORDERING_TYPE_ALPHABETIC = 'alphabetic'
@@ -84,3 +93,4 @@ class ::Gameui::Map
 end
 
 Location = ::Gameui::Map
+Map = Gameui::Map

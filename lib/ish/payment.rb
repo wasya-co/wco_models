@@ -1,3 +1,5 @@
+
+
 class Ish::Payment
   include Mongoid::Document
   include Mongoid::Timestamps

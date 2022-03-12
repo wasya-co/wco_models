@@ -1,18 +1,29 @@
 
+require 'ish/utils'
+
 ## @TODO: rename to Ish::Profile
 class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Ish::Utils
 
   store_in collection: 'ish_user_profiles'
 
-  def name
-    _id
-  end
   field :email
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
 
+  ## @TODO: remove this alias
+  def name
+    email
+  end
+
+  def export_fields
+    %w|
+      email
+      role_name
+    |
+  end
 
   field :scratchpad
 
@@ -48,7 +59,7 @@ class Ish::UserProfile
   # has_many :option_watches, class_name: 'IronWarbler::OptionWatch'
 
   has_many :videos,    inverse_of: :user_profile
-  has_many :newsitems, inverse_of: :user_profile
+  has_many :newsitems, inverse_of: :user_profile ## @TODO: remove?!
 
   has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
   def bookmarks
@@ -89,6 +100,7 @@ class Ish::UserProfile
   def premium_purchases
     ::Gameui::PremiumPurchase.where( user_profile_id: self.id )
   end
+  field :is_purchasing, type: Boolean, default: false
 
   # used in rake tasks
   def self.generate delta

@@ -1,6 +1,22 @@
 
 module Ish::Utils
 
+  def export
+    out = {}
+    %w| created_at updated_at |.map do |f|
+      out[f] = send(f)
+    end
+    export_fields.map do |field|
+      if field[-3..-1] == '_id'
+        out[field] = send(field).to_s
+      else
+        out[field] = send(field)
+      end
+    end
+    out[:_id] = id.to_s
+    out
+  end
+
   private
 
   def set_slug

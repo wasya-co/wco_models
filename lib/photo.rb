@@ -1,9 +1,11 @@
-class Photo
-  require 'aws-sdk'
 
+require 'aws-sdk'
+
+class Photo
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Ish::Utils
 
   has_and_belongs_to_many :viewers, :class_name => 'User', :inverse_of => :viewable_photos
 
@@ -28,10 +30,8 @@ class Photo
   field :weight, :type => Integer, :default => 10
 
   field :is_public, :type => Boolean, :default => true
-
-  # @TODO: nuke this boolean _vp_ 20170515
-  field :is_trash,  :type => Boolean, :default => false
-  default_scope ->{ where({ :is_trash => false }) }
+  field :is_trash,  :type => Boolean, :default => false # @TODO: nuke this boolean _vp_ 20170515
+  default_scope ->{ where({ :is_trash => false }) } # @TODO: nuke default scopes
 
   has_mongoid_attached_file :photo,
                             :styles => {
@@ -51,6 +51,15 @@ class Photo
 
   def self.n_per_manager_gallery
     25
+  end
+
+  def export_fields
+    %w|
+      gallery_id
+      name descr weight is_public is_trash
+
+      photo_file_name photo_content_type photo_file_size photo_updated_at photo_fingerprint
+    |
   end
 
   validates_attachment_content_type :photo, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]

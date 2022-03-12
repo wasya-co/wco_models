@@ -13,6 +13,7 @@ class Report
   index({ :slug => 1 }, { :unique => true })
   before_validation :set_slug, :on => :create
 
+  ## @TODO: then constantize this.
   ## Can be one of: default (nil), longscroll
   field :item_type, type: String
 
@@ -151,5 +152,9 @@ class Report
   end
   def premium?; is_premium; end
   has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
+
+  def export_fields
+    %w| name descr |
+  end
 
 end

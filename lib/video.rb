@@ -3,6 +3,7 @@ class Video
   include Mongoid::Timestamps
   include Mongoid::Paperclip
   include Mongoid::Paranoia
+  include Ish::Utils
 
   PER_PAGE = 6
 
@@ -96,5 +97,8 @@ class Video
   def premium?; is_premium; end
   has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
 
+  def export_fields
+    %w| name descr |
+  end
 
 end

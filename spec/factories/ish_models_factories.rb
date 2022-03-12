@@ -4,6 +4,10 @@
 
 FactoryBot.define do
 
+  sequence :cityname do |n|
+    "cityname-#{n}"
+  end
+
   sequence :email do |n|
     "test-#{n}@email.com"
   end
@@ -18,17 +22,19 @@ FactoryBot.define do
 
   # alphabetized : )
 
-  factory :admin do
-    email { 'piousbox@gmail.com' }
-    password { '1234567890' }
-    after :build do |u|
-      p = Ish::UserProfile.create email: 'piousbox@gmail.com', name: 'sudoer', user: u
+  factory :admin, parent: :user do
+    email { generate(:email) }
+    transient do
+      role_name { 'admin' }
     end
+    # after :build do |u, opts|
+    #   u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
+    # end
   end
 
   factory :city do
     name { 'City' }
-    cityname { 'city' }
+    cityname { generate(:cityname) }
   end
 
   factory :gallery do
@@ -62,7 +68,9 @@ FactoryBot.define do
     slug { generate(:slug) }
     item_type { ::Gameui::Marker::ITEM_TYPES[0] }
     after :build do |marker|
-      marker.image = create :image_asset
+      marker.image           ||= create :image_asset
+      marker.destination     ||= Gameui::Map.where( slug: marker.slug ).first || create(:map)
+      marker.creator_profile ||= create(:user).profile
     end
   end
 
@@ -80,7 +88,7 @@ FactoryBot.define do
     end
   end
 
-  factory :purchase, class: Gameui::PremiumPurchase do
+  factory :premium_purchase, aliases: [ :purchase ], class: Gameui::PremiumPurchase do
   end
 
   factory :report do
@@ -98,8 +106,13 @@ FactoryBot.define do
   factory :user do
     email { generate(:email) }
     password { '1234567890' }
-    after :build do |u|
-      u.profile ||= create(:profile, email: u.email, user: u)
+
+    transient do
+      role_name { 'guy' }
+    end
+
+    after :build do |u, opts|
+      u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
     end
   end
 

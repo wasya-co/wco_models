@@ -5,6 +5,12 @@ describe Gameui::Marker do
     # do_setup
   end
 
+  it '#export' do
+    marker = create(:marker)
+    result = marker.export
+    result[:_id].class.should eql String
+  end
+
   it '#permitted_to' do
     map = create(:map)
     map_2 = create(:map)

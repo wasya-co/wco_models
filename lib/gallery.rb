@@ -114,5 +114,9 @@ class Gallery
     Site.update_all updated_at: Time.now
   end
 
+  def export_fields
+    %w| name descr |
+  end
+
 end
 

@@ -41,6 +41,12 @@ def puts! a, b=''
   puts a.inspect
 end
 
+## prettyprint for json (@TODO: implement)
+def pputs! a, b=''
+  puts "+++ +++ #{b}"
+  puts a
+end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 

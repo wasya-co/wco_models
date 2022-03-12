@@ -1,6 +1,10 @@
+
+require 'ish/utils'
+
 class Newsitem
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Ish::Utils
 
   belongs_to :site,    :optional => true
   belongs_to :tag,     :optional => true
@@ -56,6 +60,17 @@ class Newsitem
     n.partial_name = item.partial_name unless item.partial_name.blank?
 
     return n
+  end
+
+  def export_fields
+    %w| name descr image_path link_path |
+  end
+
+  def collect export_object
+    export_object[:galleries][gallery.id.to_s] = gallery.id.to_s if gallery
+    export_object[:photos][photo.id.to_s] = photo.id.to_s if photo
+    export_object[:reports][report.id.to_s] = report.id.to_s if report
+    export_object[:videos][video.id.to_s] = video.id.to_s if video
   end
 
 end

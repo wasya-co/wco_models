@@ -2,13 +2,12 @@
 class ::Gameui::Marker
   include Mongoid::Document
   include Mongoid::Timestamps
-
+  include Ish::Utils
 
   field :slug
   ## @TODO: probably remove this, no reason not to have two markers to the same slug (destination)
   validates_uniqueness_of :slug, scope: :map_id
   validates_presence_of :slug
-
 
   field :name, type: String
   validates :name, presence: true
@@ -23,7 +22,7 @@ class ::Gameui::Marker
   validates :item_type, presence: true
 
   field :url
-
+  field :version, type: String, default: '0.0.0'
   field :description
 
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker
@@ -53,29 +52,34 @@ class ::Gameui::Marker
   belongs_to :destination,     class_name: '::Gameui::Map',    inverse_of: :from_markers
   belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 
-  # @deprecated, don't use!
-  # _vp_ 2021-09-23
-  field :img_path
-  # validates :img_path, presence: true
-  field :title_img_path
-  # validates :title_img_path, presence: true
+  # # @deprecated, don't use!
+  # # _vp_ 2021-09-23
+  # field :img_path
+  # # validates :img_path, presence: true
+  # field :title_img_path
+  # # validates :title_img_path, presence: true
+
   field :w, type: Integer
   validates :w, presence: true
+
   field :h, type: Integer
   validates :h, presence: true
+
   field :x, type: Integer, default: 0
   # validates :x, presence: true
+
   field :y, type: Integer, default: 0
   # validates :y, presence: true
+
   field :centerOffsetX, type: Integer, default: 0
   # validates :centerXOffset, presence: true
+
   field :centerOffsetY, type: Integer, default: 0
   # validates :centerYOffset, presence: true
 
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
-
     if !image # @TODO: think about this
       self.h = self.w = 0
       return
@@ -91,8 +95,37 @@ class ::Gameui::Marker
     end
   end
 
+  def export_fields
+    %w|
+      centerOffsetX centerOffsetY creator_profile_id
+      deleted_at description destination_id
+      h
+      is_active is_public item_type
+      map_id
+      name
+      ordering
+      slug
+      url
+      version
+      w
+      x
+      y
+    |
+  end
 
+  def collect export_object
+    puts! export_object, "collecting in marker: |#{slug}|."
 
+    if image
+      export_object[:image_assets][image.id.to_s] = image.id.to_s
+    end
+    if title_image
+      export_object[:image_assets][title_image.id.to_s] = title_image.id.to_s
+    end
+    if !export_object[:maps][destination.id.to_s]
+      destination.collect export_object
+    end
+  end
 
 end
 

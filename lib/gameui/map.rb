@@ -106,6 +106,8 @@ class ::Gameui::Map
       videos: {},
     }
   end
+  def self.empty_export; Gameui::Map.new.empty_export; end
+
   def empty_export_arr
     return {
       galleries: [],
@@ -165,8 +167,6 @@ class ::Gameui::Map
   ##
   def export_subtree
     collected = collect(empty_export)
-    puts! collected, '#export_subtree has this collected'
-
     exportable = empty_export_arr
     collected.map do |k, v|
       if v.present?
@@ -182,8 +182,6 @@ class ::Gameui::Map
   end
 
   def collect export_object
-    puts! export_object, "collecting in map: |#{slug}|."
-
     map = self
     export_object[:maps][map.id.to_s] = map.id.to_s
 

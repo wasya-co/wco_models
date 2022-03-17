@@ -14,7 +14,7 @@ module Ish::Utils
       end
     end
     out[:_id] = id.to_s
-    out
+    out.with_indifferent_access
   end
 
   private

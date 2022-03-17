@@ -7,21 +7,21 @@ describe Gameui::Map do
 
   it '#collect' do
     map = create(:map)
-    result = map.collect Gameui::Map::EMPTY_EXPORT
-    result[:maps].should eql([ map.id ])
+    result = map.collect Gameui::Map.empty_export
+    result[:maps].should eql({ map.id.to_s => map.id.to_s })
   end
 
   it '#export' do
     map = create(:map)
     result = map.export
-    result[:id].should_not eql nil
+    result[:_id].should_not eql nil
     result[:slug].should eql map.slug
   end
 
   it '#export_subtree' do
     map = create(:map)
     result = map.export_subtree
-    pputs! result, 'results'
+    result['image_assets'].length.should > 0
   end
 
 end

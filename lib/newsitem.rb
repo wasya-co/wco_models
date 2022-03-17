@@ -6,19 +6,19 @@ class Newsitem
   include Mongoid::Timestamps
   include Ish::Utils
 
-  belongs_to :site,    :optional => true
-  belongs_to :tag,     :optional => true
-  belongs_to :city,    :optional => true
-  belongs_to :report,  :optional => true
+  belongs_to :site,    optional: true
+  belongs_to :tag,     optional: true
+  belongs_to :city,    optional: true
+  belongs_to :report,  optional: true
   belongs_to :user_profile, class_name: 'Ish::UserProfile', optional: true
-  belongs_to :map, class_name: '::Gameui::Map', optional: true
+  belongs_to :map,          class_name: '::Gameui::Map',    optional: true
 
-  belongs_to :gallery, :optional => true
+  belongs_to :gallery, optional: true
   def gallery
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
   end
 
-  belongs_to :video,   :optional => true
+  belongs_to :video,   optional: true
 
   has_one :photo
 
@@ -63,7 +63,17 @@ class Newsitem
   end
 
   def export_fields
-    %w| name descr image_path link_path |
+    %w|
+      descr
+      gallery_id
+      image_path
+      link_path
+      map_id
+      name
+      photo_id
+      report_id
+      video_id
+    |
   end
 
   def collect export_object

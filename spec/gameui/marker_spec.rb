@@ -6,7 +6,7 @@ describe Gameui::Marker do
   end
 
   it '#export' do
-    marker = create(:marker)
+    marker = create(:marker, map: create(:map) )
     result = marker.export
     result[:_id].class.should eql String
   end

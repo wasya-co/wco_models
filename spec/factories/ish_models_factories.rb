@@ -82,7 +82,6 @@ FactoryBot.define do
 
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
-    id { generate(:handle) }
     after :build do |doc|
       doc.user ||= create(:user)
     end

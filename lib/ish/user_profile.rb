@@ -70,7 +70,7 @@ class Ish::UserProfile
   has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', :inverse_of => :friends
 
   field :n_unlocks, type: Integer, default: 0
-  def n_coins
+  def n_coins # @deprecated, do not use
     n_unlocks
   end
 

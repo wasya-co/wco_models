@@ -1,7 +1,4 @@
 
-## @TODO: this is copy-pasted *in part* from ish_models, should be in one place really.
-## should convert location of factories across gems
-
 FactoryBot.define do
 
   sequence :cityname do |n|
@@ -83,7 +80,7 @@ FactoryBot.define do
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
     after :build do |doc|
-      doc.user ||= create(:user)
+      doc.user ||= create(:user, profile: doc)
     end
   end
 

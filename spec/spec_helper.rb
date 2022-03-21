@@ -1,11 +1,14 @@
-require 'rubygems'
+
+require 'byebug'
+require 'database_cleaner-mongoid'
+require 'factory_bot'
 require 'mongoid'
 require 'mongoid-paperclip'
 require 'mongoid_paranoia'
-require 'factory_bot'
-require 'byebug'
 require 'mongoid-rspec'
-require 'database_cleaner-mongoid'
+require 'rubygems'
+
+Paperclip.options[:log] = false
 
 ::S3_CREDENTIALS ||= {
   :access_key_id => ENV['AWS_KEY_TRAVIS'],

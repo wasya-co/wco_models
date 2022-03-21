@@ -13,10 +13,7 @@ class Ish::UserProfile
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
 
-  ## @TODO: remove this alias
-  def name
-    email
-  end
+  field :name
 
   def export_fields
     %w|
@@ -59,7 +56,7 @@ class Ish::UserProfile
   # has_many :option_watches, class_name: 'IronWarbler::OptionWatch'
 
   has_many :videos,    inverse_of: :user_profile
-  has_many :newsitems, inverse_of: :user_profile ## @TODO: remove?!
+  has_many :newsitems, inverse_of: :profile # @TODO: remove? denorm handle over here?
 
   has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
   def bookmarks

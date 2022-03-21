@@ -48,7 +48,7 @@ class Gallery
 
   has_and_belongs_to_many :tags
 
-  has_many :newsitems
+  has_many :newsitems # seems correct. _vp_ 2022-03-21
   has_many :photos
 
   belongs_to :city,  :optional => true

@@ -6,21 +6,18 @@ class Newsitem
   include Mongoid::Timestamps
   include Ish::Utils
 
-  belongs_to :site,    optional: true
-  belongs_to :tag,     optional: true
   belongs_to :city,    optional: true
-  belongs_to :report,  optional: true
-  belongs_to :user_profile, class_name: 'Ish::UserProfile', optional: true
-  belongs_to :map,          class_name: '::Gameui::Map',    optional: true
-
-  belongs_to :gallery, optional: true
+  belongs_to :gallery, optional: true  # seems correct. _vp_ 2022-03-21
   def gallery
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
   end
-
+  belongs_to :map,     optional: true,     class_name: '::Gameui::Map'
+  belongs_to :profile, optional: true, class_name: 'Ish::UserProfile'
+  belongs_to :photo,   optional: true
+  belongs_to :report,  optional: true
+  belongs_to :site,    optional: true
+  belongs_to :tag,     optional: true
   belongs_to :video,   optional: true
-
-  has_one :photo
 
   field :name
   field :descr

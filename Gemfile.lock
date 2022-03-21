@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.159)
+    ish_models (0.0.33.160)
       aws-sdk
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)
@@ -149,7 +149,7 @@ GEM
     aws-sdk-chimesdkidentity (1.9.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-chimesdkmeetings (1.8.0)
+    aws-sdk-chimesdkmeetings (1.9.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-chimesdkmessaging (1.10.0)
@@ -331,7 +331,7 @@ GEM
     aws-sdk-ec2instanceconnect (1.24.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-ecr (1.55.0)
+    aws-sdk-ecr (1.56.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-ecrpublic (1.12.0)
@@ -607,7 +607,7 @@ GEM
     aws-sdk-marketplacemetering (1.44.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-mediaconnect (1.43.0)
+    aws-sdk-mediaconnect (1.44.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-mediaconvert (1.87.0)
@@ -730,10 +730,10 @@ GEM
     aws-sdk-qldbsession (1.22.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-quicksight (1.63.0)
+    aws-sdk-quicksight (1.64.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-ram (1.38.0)
+    aws-sdk-ram (1.39.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-rds (1.142.0)

@@ -22,7 +22,7 @@ class Ish::UserProfile
     |
   end
 
-  field :scratchpad
+  field :scratchpad, default: ''
 
   field :fb_access_token
   field :fb_long_access_token

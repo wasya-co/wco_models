@@ -62,7 +62,7 @@ class Photo
     |
   end
 
-  validates_attachment_content_type :photo, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
+  validates_attachment_content_type :photo, :content_type => ["image/webp", "image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
 
 end
 

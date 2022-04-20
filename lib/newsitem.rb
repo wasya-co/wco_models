@@ -11,7 +11,7 @@ class Newsitem
   def gallery
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
   end
-  belongs_to :map,     optional: true,     class_name: '::Gameui::Map'
+  belongs_to :map,     optional: true, class_name: '::Gameui::Map'
   belongs_to :profile, optional: true, class_name: 'Ish::UserProfile'
   belongs_to :photo,   optional: true
   belongs_to :report,  optional: true
@@ -36,6 +36,18 @@ class Newsitem
   field :upvoting_users,   :type => Array, :default => []
   field :downvoting_users, :type => Array, :default => []
   field :is_feature,       :type => Boolean, :default => false
+
+  TYPE_GALLERY = :type_gallery
+  TYPE_PHOTO   = :type_photo
+  TYPE_REPORT  = :type_report
+  TYPE_VIDEO   = :type_video
+  def item_type
+    return TYPE_GALLERY if gallery_id
+    return TYPE_PHOTO   if photo_id
+    return TYPE_REPORT  if report_id
+    return TYPE_VIDEO   if video_id
+  end
+
 
   PER_PAGE = 6
 

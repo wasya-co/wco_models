@@ -4,15 +4,15 @@ class Tag
   include Ish::Utils
 
   field :name, :type => String
-  # validates :name, :uniqueness => true, :allow_nil => false
+  validates :name, :uniqueness => true, :allow_nil => false
 
   field :slug
   validates :slug, :uniqueness => true, presence: true, allow_nil: false
 
   field :descr, :type => String, :default => ''
 
-  field :is_public, :type => Boolean, :default => true
-  field :is_trash, :type => Boolean, :default => false
+  field :is_public,  :type => Boolean, :default => true
+  field :is_trash,   :type => Boolean, :default => false
   field :is_feature, :type => Boolean, :default => false
 
   field :weight, :type => Integer, :default => 10
@@ -31,10 +31,7 @@ class Tag
   has_and_belongs_to_many :galleries
   has_and_belongs_to_many :reports
   has_and_belongs_to_many :videos
-
-  default_scope ->{
-    where({ :is_public => true, :is_trash => false }).order_by({ :name => :asc })
-  }
+  has_and_belongs_to_many :maps, class_name: 'Gameui::Map'
 
   before_validation :set_slug
 

@@ -49,7 +49,21 @@ class ::Gameui::Marker
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_markers
 
   belongs_to :map,             class_name: '::Gameui::Map',    inverse_of: :markers
+
   belongs_to :destination,     class_name: '::Gameui::Map',    inverse_of: :from_markers
+  before_validation :set_destination
+  def set_destination
+    d = Map.where({ slug: slug }).first
+
+    puts! self, '#set_destination'
+
+    if !d
+      self.errors.add( "Cannot save marker, destination |#{slug}| not found." )
+      return
+    end
+    self.destination_id = d.id
+  end
+
   belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 
   # # @deprecated, don't use!
@@ -61,9 +75,24 @@ class ::Gameui::Marker
 
   field :w, type: Integer
   validates :w, presence: true
-
   field :h, type: Integer
   validates :h, presence: true
+  # @TODO: this is shared between map and marker, move to a concern.
+  before_validation :compute_w_h
+  def compute_w_h
+    if !image # @TODO: think about this
+      self.h = self.w = 0
+      return
+    end
+    begin
+      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
+      self.w = geo.width
+      self.h = geo.height
+    rescue Paperclip::Errors::NotIdentifiedByImageMagickError => e
+      puts! e, 'Could not #compute_w_h'
+      # @TODO: do something with this
+    end
+  end
 
   field :x, type: Integer, default: 0
   # validates :x, presence: true
@@ -77,23 +106,7 @@ class ::Gameui::Marker
   field :centerOffsetY, type: Integer, default: 0
   # validates :centerYOffset, presence: true
 
-  # @TODO: this is shared between map and marker, move to a concern.
-  before_validation :compute_w_h
-  def compute_w_h
-    if !image # @TODO: think about this
-      self.h = self.w = 0
-      return
-    end
 
-    begin
-      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.image))
-      self.w = geo.width
-      self.h = geo.height
-    rescue Paperclip::Errors::NotIdentifiedByImageMagickError => e
-      puts! e, 'Could not #compute_w_h'
-      # @TODO: do something with this
-    end
-  end
 
   def export_fields
     %w|

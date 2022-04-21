@@ -59,6 +59,10 @@ class ::Gameui::Map
   field :h, type: Integer
   validates :h, presence: true
 
+  ## @TODO: abstract this into a module
+  field :x, :type => Float
+  field :y, :type => Float
+
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h

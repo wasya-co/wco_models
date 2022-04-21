@@ -30,6 +30,10 @@ class ::Gameui::Marker
 
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 
+  ## @TODO: abstract this into a module
+  field :x, :type => Float
+  field :y, :type => Float
+
   field :is_public, type: Boolean, default: true
   def self.public
     where( is_public: true )
@@ -93,12 +97,6 @@ class ::Gameui::Marker
       # @TODO: do something with this
     end
   end
-
-  field :x, type: Integer, default: 0
-  # validates :x, presence: true
-
-  field :y, type: Integer, default: 0
-  # validates :y, presence: true
 
   field :centerOffsetX, type: Integer, default: 0
   # validates :centerXOffset, presence: true

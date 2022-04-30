@@ -1,5 +1,5 @@
 
-class CoTailors::Address
+class Address
   include Mongoid::Document
   include Mongoid::Timestamps
 

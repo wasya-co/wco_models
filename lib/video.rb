@@ -1,3 +1,5 @@
+require 'mongoid/paranoia'
+
 class Video
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -9,8 +11,6 @@ class Video
 
   field :name, :type => String
   field :descr, :type => String, :as => :description
-
-  # default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
 
   field :is_trash, :type => Boolean, :default => false
   def is_trash

@@ -62,12 +62,11 @@ FactoryBot.define do
 
   factory :marker, class: Gameui::Marker do
     name { 'name' }
-    slug { generate(:slug) }
     item_type { ::Gameui::Marker::ITEM_TYPES[0] }
     after :build do |marker|
-      marker.image           ||= create :image_asset
-      marker.destination     ||= Gameui::Map.where( slug: marker.slug ).first || create(:map)
       marker.creator_profile ||= create(:user).profile
+      marker.destination     ||= create(:map)
+      marker.image           ||= create :image_asset
     end
   end
 

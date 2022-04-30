@@ -45,7 +45,6 @@ require 'ish/premium_item'
 require 'ish/utils'
 require 'ish/user_profile'
 
-require 'aux_model'
 require 'city'
 require 'cities_user'
 require 'country'

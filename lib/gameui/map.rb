@@ -87,7 +87,7 @@ class ::Gameui::Map
 
   def self.list conditions = { is_trash: false }
     out = self.order_by( created_at: :desc )
-    [[nil, nil]] + out.map { |item| [ item.name, item.id ] }
+    [[nil, nil]] + out.map { |item| [ item.name, item.id.to_s ] }
   end
 
   def breadcrumbs

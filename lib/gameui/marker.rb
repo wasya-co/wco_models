@@ -4,13 +4,12 @@ class ::Gameui::Marker
   include Mongoid::Timestamps
   include Ish::Utils
 
-  field :slug
-  ## @TODO: probably remove this, no reason not to have two markers to the same slug (destination)
-  validates_uniqueness_of :slug, scope: :map_id
-  validates_presence_of :slug
-
   field :name, type: String
-  validates :name, presence: true
+  validates_uniqueness_of :name, scope: :map_id
+  validates_presence_of :name
+  def slug
+    id.to_s
+  end
 
   field :ordering, type: String, default: 'jjj'
 
@@ -31,8 +30,8 @@ class ::Gameui::Marker
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 
   ## @TODO: abstract this into a module
-  field :x, :type => Float
-  field :y, :type => Float
+  field :x, :type => Float, default: 0
+  field :y, :type => Float, default: 0
 
   field :is_public, type: Boolean, default: true
   def self.public
@@ -54,19 +53,7 @@ class ::Gameui::Marker
 
   belongs_to :map,             class_name: '::Gameui::Map',    inverse_of: :markers
 
-  belongs_to :destination,     class_name: '::Gameui::Map',    inverse_of: :from_markers
-  before_validation :set_destination
-  def set_destination
-    d = Map.where({ slug: slug }).first
-
-    puts! self, '#set_destination'
-
-    if !d
-      self.errors.add( "Cannot save marker, destination |#{slug}| not found." )
-      return
-    end
-    self.destination_id = d.id
-  end
+  belongs_to :destination, class_name: '::Gameui::Map', inverse_of: :from_markers
 
   belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 
@@ -98,11 +85,8 @@ class ::Gameui::Marker
     end
   end
 
-  field :centerOffsetX, type: Integer, default: 0
-  # validates :centerXOffset, presence: true
-
-  field :centerOffsetY, type: Integer, default: 0
-  # validates :centerYOffset, presence: true
+  field :centerOffsetX, type: Float, default: 0
+  field :centerOffsetY, type: Float, default: 0
 
 
 

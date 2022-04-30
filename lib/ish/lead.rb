@@ -7,7 +7,7 @@ class Ish::Lead
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  store_in :collection => 'ish_lead'
+  store_in :collection => 'ish_leads'
 
   belongs_to :profile, :class_name => '::Ish::UserProfile'
 
@@ -49,3 +49,6 @@ class Ish::Lead
   field :extra, :type => Array, :default => []
 
 end
+
+Lead = Ish::Lead
+

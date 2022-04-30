@@ -1,7 +1,9 @@
+
 require 'spec_helper'
+
 describe 'Tag' do
   before do
-    do_setup
+    DatabaseCleaner.clean
     @tag = FactoryBot.create :tag
   end
 

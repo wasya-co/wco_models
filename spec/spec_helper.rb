@@ -8,6 +8,11 @@ require 'mongoid_paranoia'
 require 'mongoid-rspec'
 require 'rubygems'
 
+def puts! a, b=''
+  puts "+++ +++ #{b}"
+  puts a.inspect
+end
+
 Paperclip.options[:log] = false
 
 ::S3_CREDENTIALS ||= {
@@ -22,7 +27,6 @@ require_relative '../lib/ish_models.rb'
 Mongoid.load!("config/mongoid.yml", :test)
 
 DatabaseCleaner.clean
-Ish::UserProfile.unscoped.destroy_all
 
 module Rails
   def self.root
@@ -62,12 +66,6 @@ RSpec.configure do |config|
 end
 
 def do_setup
-
-  # C
-  City.unscoped.destroy_all
-  @city = FactoryBot.create :city
-
-  # V
-  Venue.unscoped.destroy_all
+  DatabaseCleaner.clean
 end
 

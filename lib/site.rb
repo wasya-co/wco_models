@@ -2,7 +2,6 @@ class Site
 
   include Mongoid::Document
   include Mongoid::Timestamps
-  include AuxModel
 
   field :domain, :type => String
   validates_presence_of :domain

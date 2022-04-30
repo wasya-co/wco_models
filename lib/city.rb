@@ -1,7 +1,6 @@
 class City
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
-  include AuxModel
 
   field :name, :type => String
   field :description, :type => String, :default => 'The description of this city'

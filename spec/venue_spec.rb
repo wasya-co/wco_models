@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Venue do
   before :each do
     do_setup
+    @city = FactoryBot.create :city
   end
 
   describe 'creates/updates' do

@@ -13,6 +13,9 @@ FactoryBot.define do
     "handle-#{n}"
   end
 
+  sequence :name do |n|
+    "name-#{n}"
+  end
   sequence :slug do |n|
     "slug-#{n}"
   end
@@ -61,7 +64,7 @@ FactoryBot.define do
   end
 
   factory :marker, class: Gameui::Marker do
-    name { 'name' }
+    name { generate(:name) }
     item_type { ::Gameui::Marker::ITEM_TYPES[0] }
     after :build do |marker|
       marker.creator_profile ||= create(:user).profile

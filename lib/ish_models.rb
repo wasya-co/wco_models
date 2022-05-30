@@ -28,21 +28,25 @@ end
 
 require 'gameui/map'
 require 'gameui/map_bookmark'
+# require 'gameui/mapobject' # no way... can I keep Marker? I'll even create a destination for each, for now
 require 'gameui/marker'
 require 'gameui/premium_purchase'
 
 require 'ish/cache_key'
 require 'ish/campaign'
 require 'ish/crawler'
+require 'ish/email_context'
 require 'ish/gallery_name'
 require 'ish/image_asset'
 require 'ish/input_error'
 require 'ish/invoice'
 require 'ish/issue'
 require 'ish/lead'
+require 'ish/meeting'
 require 'ish/payment'
 require 'ish/premium_item'
 require 'ish/utils'
+require 'ish/unsubscribe'
 require 'ish/user_profile'
 
 require 'city'

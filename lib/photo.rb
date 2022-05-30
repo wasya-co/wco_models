@@ -25,6 +25,8 @@ class Photo
   belongs_to :gallery,  :optional => true
   belongs_to :newsitem, :optional => true
 
+  belongs_to :itemable, polymorphic: true, optional: true
+
   field :name,   :type => String
   field :descr,  :type => String
   field :weight, :type => Integer, :default => 10

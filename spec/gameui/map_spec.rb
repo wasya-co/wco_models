@@ -5,6 +5,10 @@ describe Gameui::Map do
     do_setup
   end
 
+  it 'has one left_item' do 
+    Gameui::Map.reflect_on_association(:left_item).class.should eql Mongoid::Association::Referenced::HasOne
+  end
+
   it '#collect' do
     map = create(:map)
     result = map.collect Gameui::Map.empty_export

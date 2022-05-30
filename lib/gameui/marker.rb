@@ -65,9 +65,9 @@ class ::Gameui::Marker
   # # validates :title_img_path, presence: true
 
   field :w, type: Integer
-  validates :w, presence: true
+  validates :w, presence: true ## @TODO: why did I need this? obj markers don't have w/h
   field :h, type: Integer
-  validates :h, presence: true
+  validates :h, presence: true ## @TODO: why did I need this? obj markers don't have w/h
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
@@ -81,6 +81,7 @@ class ::Gameui::Marker
       self.h = geo.height
     rescue Paperclip::Errors::NotIdentifiedByImageMagickError => e
       puts! e, 'Could not #compute_w_h'
+      self.h = self.w = 0
       # @TODO: do something with this
     end
   end

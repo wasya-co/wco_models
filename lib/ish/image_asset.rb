@@ -20,9 +20,18 @@ class Ish::ImageAsset
                             :path => "image_assets/:style/:id/:filename",
                             :s3_protocol => 'https',
                             :validate_media_type => false,
-                            s3_region: ::S3_CREDENTIALS[:region]
+                            s3_region: ::S3_CREDENTIALS[:region, ]
+  has_mongoid_attached_file :gltf,
+                            :storage => :s3,
+                            :s3_credentials => ::S3_CREDENTIALS,
+                            :path => "gltf_assets/:style/:id/:filename",
+                            :s3_protocol => 'https',
+                            :validate_media_type => false,
+                            s3_region: ::S3_CREDENTIALS[:region, ]
 
-  validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
+  validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 
+    'application/octet-stream', ]
+  ## 'model/gltf+json', 'model/gltf-binary',
 
   def export_fields
     %w|

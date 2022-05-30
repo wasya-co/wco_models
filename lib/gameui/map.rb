@@ -1,6 +1,9 @@
 require 'ish/premium_item'
 require 'ish/utils'
 
+##
+## Should really be called Location, b/c map refers to geospatial, whereas locatin is more semantic.
+##
 class ::Gameui::Map
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,23 +14,35 @@ class ::Gameui::Map
   has_many :from_markers, :class_name => '::Gameui::Marker', inverse_of: :destination
 
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
+  has_one :left_item, as: :itemable
 
-  field :deleted_at, type: Time, default: nil
+  field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia, right?
+
+  field :name
+  field :description
 
   field :slug
   validates :slug, uniqueness: true, presence: true
 
   field :parent_slug
+  
+  field :contract_address
+  field :token_symbol
+
+  # herehere
+  has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
+  # @deprecated, dont use!
+  field :img_path
 
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
-  has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
   belongs_to :creator_profile, class_name: '::Ish::UserProfile', inverse_of: :my_maps
 
   has_and_belongs_to_many :bookmarked_profiles, class_name: '::Ish::UserProfile', inverse_of: :bookmarked_location
   has_and_belongs_to_many :tags, class_name: 'Tag', inverse_of: :map
 
-  # shareable, nonpublic
+  ## shareable, nonpublic
+  ## @TODO: this should be a concern? _vp_ 2022-05-30
   field :is_public, type: Boolean, default: true
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_locations
 
@@ -39,9 +54,6 @@ class ::Gameui::Map
     ::Gameui::Map.where( slug: map_slug ).first
   end
 
-  field :name
-  field :description
-
   RATED_OPTIONS = [ 'pg-13', 'r', 'nc-17' ]
   field :rated, default: 'pg-13' # 'r', 'nc-17'
 
@@ -51,18 +63,15 @@ class ::Gameui::Map
   ## config.description.collapsible
   field :config, type: Object, default: {}
 
-  # @deprecated, dont use!
-  field :img_path
-
-  field :w, type: Integer
-  validates :w, presence: true
-  field :h, type: Integer
-  validates :h, presence: true
-
   ## @TODO: abstract this into a module
   field :x, :type => Float
   field :y, :type => Float
 
+  ## @TODO: what's this? _vp_ 2022-05-30
+  field :w, type: Integer
+  validates :w, presence: true
+  field :h, type: Integer
+  validates :h, presence: true
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
@@ -78,6 +87,7 @@ class ::Gameui::Map
     end
   end
 
+  ## @TODO: looks shared, move to a concern
   ORDERING_TYPE_ALPHABETIC = 'alphabetic'
   ORDERING_TYPE_CUSTOM     = 'custom'
   ORDERING_TYPE_TIMESTAMP  = 'timestamp'
@@ -100,6 +110,7 @@ class ::Gameui::Map
     out.reverse
   end
 
+  ## @TODO: exportable should be a concern
   def empty_export
     return {
       galleries: {},
@@ -228,6 +239,5 @@ class ::Gameui::Map
   end
 
 end
-
 Location = ::Gameui::Map
 Map = Gameui::Map

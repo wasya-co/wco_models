@@ -42,6 +42,7 @@ require 'ish/issue'
 require 'ish/lead'
 require 'ish/payment'
 require 'ish/premium_item'
+require 'ish/unsubscribe'
 require 'ish/utils'
 require 'ish/user_profile'
 

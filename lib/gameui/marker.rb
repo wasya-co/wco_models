@@ -9,8 +9,10 @@ class ::Gameui::Marker
   validates_presence_of :name
 
   ## This is not a map, I don't need a slug.
+  ## @TODO: remove it. _vp_ 2022-06-17
+  field :slug
   def slug
-    id.to_s
+    return self[:slug] || id.to_s
   end
 
   field :ordering, type: String, default: 'jjj'

@@ -7,6 +7,8 @@ class ::Gameui::Marker
   field :name, type: String
   validates_uniqueness_of :name, scope: :map_id
   validates_presence_of :name
+
+  ## This is not a map, I don't need a slug.
   def slug
     id.to_s
   end

@@ -30,7 +30,7 @@ class ::Gameui::Marker
 
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker
   has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title
-  has_one :asset3d,     class_name: '::Ish::Asset3d'
+  has_one :asset3d,     class_name: '::Gameui::Asset3d'
 
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 

@@ -4,11 +4,13 @@ require 'ish/configuration'
 
 ::S3_CREDENTIALS ||= {}
 
-module CoTailors; end
 class Gameui; end
+
 module Ish; end
-# I need this thing for permissions#
+
+# I need this thing for permissions???
 class Manager; end
+
 module Warbler; end
 
 module IshModels

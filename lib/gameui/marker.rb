@@ -7,8 +7,12 @@ class ::Gameui::Marker
   field :name, type: String
   validates_uniqueness_of :name, scope: :map_id
   validates_presence_of :name
+
+  ## This is not a map, I don't need a slug.
+  ## @TODO: remove it. _vp_ 2022-06-17
+  field :slug
   def slug
-    id.to_s
+    return self[:slug] || id.to_s
   end
 
   field :ordering, type: String, default: 'jjj'
@@ -26,6 +30,7 @@ class ::Gameui::Marker
 
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker
   has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title
+  has_one :asset3d,     class_name: '::Gameui::Asset3d'
 
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 

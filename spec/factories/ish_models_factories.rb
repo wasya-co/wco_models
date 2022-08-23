@@ -1,18 +1,17 @@
 
 FactoryBot.define do
 
+  # alphabetized : )
+
   sequence :cityname do |n|
     "cityname-#{n}"
   end
-
   sequence :email do |n|
     "test-#{n}@email.com"
   end
-
   sequence :handle do |n|
     "handle-#{n}"
   end
-
   sequence :name do |n|
     "name-#{n}"
   end
@@ -20,16 +19,24 @@ FactoryBot.define do
     "slug-#{n}"
   end
 
-  # alphabetized : )
-
   factory :admin, parent: :user do
     email { generate(:email) }
     transient do
-      role_name { 'admin' }
+      role_name { :admin }
     end
-    # after :build do |u, opts|
-    #   u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
-    # end
+    after :build do |u, opts|
+      u.profile.role_name = opts.role_name
+    end
+  end
+
+  factory :manager, parent: :user do
+    email { generate(:email) }
+    transient do
+      role_name { :manager }
+    end
+    after :build do |u, opts|
+      u.profile.role_name = opts.role_name
+    end
   end
 
   factory :city do
@@ -109,7 +116,7 @@ FactoryBot.define do
       role_name { 'guy' }
     end
 
-    after :build do |u, opts|
+    after :build do |u, opts|      
       u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
     end
   end

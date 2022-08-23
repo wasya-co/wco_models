@@ -26,6 +26,10 @@ module IshModels
   end
 end
 
+# Needs to be before gameui/asset3d
+require 'ish/utils'
+
+require 'gameui/asset3d'
 require 'gameui/map'
 require 'gameui/map_bookmark'
 # require 'gameui/mapobject' # no way... can I keep Marker? I'll even create a destination for each, for now
@@ -45,7 +49,6 @@ require 'ish/lead'
 require 'ish/meeting'
 require 'ish/payment'
 require 'ish/premium_item'
-require 'ish/utils'
 require 'ish/unsubscribe'
 require 'ish/user_profile'
 

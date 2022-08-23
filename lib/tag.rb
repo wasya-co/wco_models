@@ -4,10 +4,10 @@ class Tag
   include Ish::Utils
 
   field :name, :type => String
-  validates :name, :uniqueness => true, :allow_nil => false
+  validates :name, uniqueness: true, presence: true, allow_nil: false # @TODO: tags should only be unique globally, and per-user.
 
   field :slug
-  validates :slug, :uniqueness => true, presence: true, allow_nil: false
+  validates :slug, uniqueness: true, presence: true, allow_nil: false
 
   field :descr, :type => String, :default => ''
 

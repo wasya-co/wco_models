@@ -8,7 +8,9 @@ class Ish::Unsubscribe
   validates_uniqueness_of :email
 
   field :reason
-
+  
+  field :unsubscribed_at
+  
   field :mailer_type
 
 end

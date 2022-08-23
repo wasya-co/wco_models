@@ -31,6 +31,9 @@ class Ish::UserProfile
   field :lang, default: 'en'
 
   ROLES = [ :admin, :manager, :guy ]
+  ROLE_ADMIN   = :admin
+  ROLE_MANAGER = :manager
+  ROLE_GUY     = :guy
   field :role_name, :type => Symbol
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city

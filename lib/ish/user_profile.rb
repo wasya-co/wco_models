@@ -1,10 +1,12 @@
 
 require 'ish/utils'
+require 'mongoid/voteable'
 
 ## @TODO: rename to Ish::Profile
 class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Voter
   include Ish::Utils
 
   store_in collection: 'ish_user_profiles'

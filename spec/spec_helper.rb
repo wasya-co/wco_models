@@ -8,6 +8,9 @@ require 'mongoid_paranoia'
 require 'mongoid-rspec'
 require 'rubygems'
 
+require_relative '../lib/mongoid/voteable.rb'
+require_relative '../lib/mongoid/voter.rb'
+
 def puts! a, b=''
   puts "+++ +++ #{b}"
   puts a.inspect

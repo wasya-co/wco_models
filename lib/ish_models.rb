@@ -28,8 +28,11 @@ module IshModels
   end
 end
 
-# Needs to be before gameui/asset3d
+## Needs to be before gameui/asset3d
 require 'ish/utils'
+
+require 'mongoid/voteable'
+require 'mongoid/voter'
 
 require 'gameui/asset3d'
 require 'gameui/map'
@@ -66,6 +69,7 @@ require 'site'
 require 'tag'
 require 'venue'
 require 'video'
+
 
 
 

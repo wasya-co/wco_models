@@ -23,6 +23,5 @@
         2022-02-09 - better n-tier arch
 master  2022-03-12 - import/export of maps
 1.6.0 - 2022-04-30 - specs pass, wiring in active admin for mongoid leads.
-
+1.7.0 - 2022-05-03 - models Unsubscribe, and Meeting.
 1.8.0 - 2022-08-22 - acts_as_votable gem
-

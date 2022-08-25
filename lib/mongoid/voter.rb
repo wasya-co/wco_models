@@ -28,7 +28,7 @@ module Mongoid
           votee_id = options[:votee_id]
         end
       end
-      
+
       votees(votee_class).where(:_id => votee_id).count == 1
     end
 
@@ -46,7 +46,7 @@ module Mongoid
       end
       votee.vote_value(_id)
     end
-    
+
     # Cancel the vote on a votee
     #
     # @param [Object] votee the votee to be unvoted
@@ -77,14 +77,14 @@ module Mongoid
       else
         votee_class = options[:votee_type].classify.constantize
       end
-      
+
       if options[:value].nil?
         options[:unvote] = true
         options[:value] = vote_value(options)
       else
         options[:revote] = options.has_key?(:revote) ? !options[:revote].blank? : voted?(options)
       end
-      
+
       options[:voter_id] = _id
 
       ( votee || votee_class ).vote(options)

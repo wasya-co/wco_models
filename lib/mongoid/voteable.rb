@@ -40,8 +40,8 @@ module Mongoid
         votee_id = options[:votee_id]
         voter_id = options[:voter_id]
 
-        votee_id = BSON::ObjectId(votee_id) if votee_id.is_a?(String)
-        voter_id = BSON::ObjectId(voter_id) if voter_id.is_a?(String)
+        # votee_id = BSON::ObjectId(votee_id) if votee_id.is_a?(String)
+        # voter_id = BSON::ObjectId(voter_id) if voter_id.is_a?(String)
 
         klass = options[:class]
         klass ||= VOTE_POINT.keys.include?(name) ? name : collection.name.classify
@@ -189,7 +189,7 @@ module Mongoid
     #
     # @param [Mongoid Object, BSON::ObjectId] voter is Mongoid object the id of the voter who made the vote
     def vote_value(voter)
-      voter_id = voter.is_a?(BSON::ObjectId) ? voter : voter._id
+      voter_id = voter.is_a?(BSON::ObjectId) ? voter : voter.is_a?(String) ? voter : voter._id
       return :up if up_voter_ids.try(:include?, voter_id)
       return :down if down_voter_ids.try(:include?, voter_id)
     end

@@ -58,7 +58,7 @@ module Mongoid
             point_delta = -value_point[:up] + value_point[:down]
           end
 
-          update_result = collection.update({
+          update_result = collection.update_one({
             # Validate voter_id did a vote with value for votee_id
             :_id => votee_id,
             "voteable.#{positive_field.to_s}" => { '$ne' => voter_id },
@@ -84,7 +84,7 @@ module Mongoid
           end
 
           # Check if voter_id did a vote with value for votee_id
-          update_result = collection.update({
+          update_result = collection.update_one({
             # Validate voter_id did a vote with value for votee_id
             :_id => votee_id,
             "voteable.#{negative_field.to_s}" => { '$ne' => voter_id },
@@ -221,6 +221,7 @@ module Mongoid
         0
       end
     end
+    alias :votes_score :votes_point
 
     # Array of up voter ids
     def up_voter_ids

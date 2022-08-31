@@ -1,4 +1,5 @@
 require 'mongoid/paranoia'
+require_relative './mongoid/votable.rb'
 
 class Video
   include Mongoid::Document
@@ -6,6 +7,9 @@ class Video
   include Mongoid::Paperclip
   include Mongoid::Paranoia
   include Ish::Utils
+
+  include Mongoid::Votable
+  vote_point self, :up => +1, :down => -1
 
   PER_PAGE = 6
 
@@ -100,5 +104,7 @@ class Video
   def export_fields
     %w| name descr |
   end
+
+
 
 end

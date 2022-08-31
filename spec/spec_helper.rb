@@ -8,6 +8,24 @@ require 'mongoid_paranoia'
 require 'mongoid-rspec'
 require 'rubygems'
 
+require_relative '../lib/mongoid/votable.rb'
+require_relative '../lib/mongoid/voter.rb'
+class Post
+  include ::Mongoid::Document
+  include ::Mongoid::Votable
+  vote_point self, :up => +1, :down => -1
+  has_many :comments
+end
+class Comment
+  include Mongoid::Document
+  include Mongoid::Votable
+  belongs_to :post
+  vote_point self, :up => +1, :down => -3
+  vote_point Post, :up => +2, :down => -1
+end
+
+
+
 def puts! a, b=''
   puts "+++ +++ #{b}"
   puts a.inspect
@@ -42,11 +60,6 @@ class User
   has_one :profile, :class_name => '::Ish::UserProfile'
 end
 User.unscoped.destroy_all
-
-def puts! a, b=''
-  puts "+++ +++ #{b}"
-  puts a.inspect
-end
 
 ## prettyprint for json (@TODO: implement)
 def pputs! a, b=''

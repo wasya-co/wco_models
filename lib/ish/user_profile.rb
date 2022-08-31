@@ -1,10 +1,12 @@
 
 require 'ish/utils'
+require 'mongoid/votable'
 
 ## @TODO: rename to Ish::Profile
 class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Voter
   include Ish::Utils
 
   store_in collection: 'ish_user_profiles'
@@ -30,15 +32,17 @@ class Ish::UserProfile
 
   field :lang, default: 'en'
 
-  ROLES = [ :admin, :manager, :guy ]
-  ROLE_ADMIN   = :admin
-  ROLE_MANAGER = :manager
+  ROLES = [ :guy, :manager, :admin ]
   ROLE_GUY     = :guy
-  field :role_name, :type => Symbol
+  ROLE_MANAGER = :manager
+  ROLE_ADMIN   = :admin
+  field :role_name, :type => Symbol, default: :guy
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
 
   belongs_to :user
+  validates_presence_of :user
+
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
 

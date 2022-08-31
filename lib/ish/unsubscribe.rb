@@ -4,8 +4,16 @@ class Ish::Unsubscribe
   include Mongoid::Timestamps
 
   field :email
-  field :unsubscribed_at
+  validates_presence_of :email
+  validates_uniqueness_of :email
+
+  field :mailer_type
+
   field :reason
+
+  field :unsubscribed_at
+
+
 
 end
 

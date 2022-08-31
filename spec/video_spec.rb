@@ -24,6 +24,23 @@ describe Video do
     end
   end
 
+  describe 'voting' do
+    it 'votes' do
+      video = create(:video)
+      profile = create(:user_profile)
+
+      video.votes_count.should eql 0
+      video.votes_point.should eql 0
+
+      # profile.vote(video, :up)
+      video.vote( voter_id: profile.id, value: :up )
+      video.reload
+
+      video.votes_count.should eql 1
+      video.votes_point.should eql 1
+    end
+  end
+
 end
 
 

@@ -1,5 +1,5 @@
 require 'mongoid/paranoia'
-require_relative './mongoid/voteable.rb'
+require_relative './mongoid/votable.rb'
 
 class Video
   include Mongoid::Document
@@ -8,7 +8,7 @@ class Video
   include Mongoid::Paranoia
   include Ish::Utils
 
-  include Mongoid::Voteable
+  include Mongoid::Votable
   vote_point self, :up => +1, :down => -1
 
   PER_PAGE = 6

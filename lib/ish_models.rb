@@ -31,7 +31,7 @@ end
 ## Needs to be before gameui/asset3d
 require 'ish/utils'
 
-require 'mongoid/voteable'
+require 'mongoid/votable'
 require 'mongoid/voter'
 
 require 'gameui/asset3d'

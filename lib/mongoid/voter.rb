@@ -5,9 +5,12 @@ module Mongoid
     # Get list of voted votees
     #
     # @param [Class] klass the votee class, e.g. `Post` or `Comment`
-    # @return [Array, nil] an array of voteable objects voted by this voter
+    # @return [Array, nil] an array of votable objects voted by this voter
     def votees(klass)
-      klass.any_of({ "voteable.up_voter_ids" => _id }, { "voteable.down_voter_ids" => _id })
+      # Is this id, or id.to_s ?
+      # let's not convert to string, lets use bson::objectid.
+      # _vp_ 2022-08-31
+      klass.any_of({ "votable.up_voter_ids" => _id }, { "votable.down_voter_ids" => _id })
     end
 
     # Check to see if this voter voted on the votee or not

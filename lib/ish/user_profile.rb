@@ -1,6 +1,6 @@
 
 require 'ish/utils'
-require 'mongoid/voteable'
+require 'mongoid/votable'
 
 ## @TODO: rename to Ish::Profile
 class Ish::UserProfile

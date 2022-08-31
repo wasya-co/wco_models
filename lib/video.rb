@@ -6,8 +6,10 @@ class Video
   include Mongoid::Timestamps
   include Mongoid::Paperclip
   include Mongoid::Paranoia
-  include Mongoid::Voteable
   include Ish::Utils
+
+  include Mongoid::Voteable
+  vote_point self, :up => +1, :down => -1
 
   PER_PAGE = 6
 
@@ -103,6 +105,6 @@ class Video
     %w| name descr |
   end
 
-  vote_point self, :up => +1, :down => -1
+
 
 end

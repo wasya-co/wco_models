@@ -1,10 +1,14 @@
 
 require 'ish/utils'
+# require_relative './mongoid/voteable.rb'
 
 class Newsitem
   include Mongoid::Document
   include Mongoid::Timestamps
   include Ish::Utils
+
+  include Mongoid::Voteable
+  vote_point self, :up => +1, :down => -1
 
   belongs_to :city,    optional: true
   belongs_to :gallery, optional: true  # seems correct. _vp_ 2022-03-21

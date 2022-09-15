@@ -17,10 +17,11 @@ class ::Gameui::Map
   field :slug
   validates :slug, uniqueness: true, presence: true
 
+  # @TODO: remove field, replace with relation. _vp_ 2022-09-13
   field :parent_slug
-
   belongs_to :parent, class_name: '::Gameui::Map', inverse_of: :childs, optional: true
   has_many :childs, class_name: '::Gameui::Map', inverse_of: :parent
+
   has_one :image, class_name: '::Ish::ImageAsset', inverse_of: :location
   belongs_to :creator_profile, class_name: '::Ish::UserProfile', inverse_of: :my_maps
 
@@ -33,7 +34,7 @@ class ::Gameui::Map
 
   field :version, type: String, default: '0.0.0'
 
-  ## @TODO: what is this?
+  ## @TODO: or self, right? and refactor this, seems N+1. _vp_ 2022-09-13
   field :map_slug
   def map
     ::Gameui::Map.where( slug: map_slug ).first
@@ -58,6 +59,9 @@ class ::Gameui::Map
   validates :w, presence: true
   field :h, type: Integer
   validates :h, presence: true
+
+  MAP_TYPES = [ :map_2d, :map_3d, :map_geospatial, :map_gallery, :map_toc ] ## Mostly not implemented. _vp_ 2022-09-06
+  field :map_type, default: :map_2d
 
   ## @TODO: abstract this into a module
   field :x, :type => Float

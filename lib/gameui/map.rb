@@ -55,14 +55,17 @@ class ::Gameui::Map
   # @deprecated, dont use!
   field :img_path
 
+  ## Make sure to use x,y and w,h as appropriate.
   field :w, type: Integer
   validates :w, presence: true
   field :h, type: Integer
   validates :h, presence: true
 
-  MAP_TYPES = [ :map_2d, :map_3d, :map_geospatial, :map_gallery, :map_toc ] ## Mostly not implemented. _vp_ 2022-09-06
-  field :map_type, default: :map_2d
+  ## Not used! See config.map_panel_type instead.
+  # MAP_TYPES = [ :map_2d, :map_3d, :map_geospatial, :map_gallery, :map_toc ] ## Mostly not implemented. _vp_ 2022-09-06
+  # field :map_type, default: :map_2d
 
+  ## Make sure to use x,y and w,h as appropriate.
   ## @TODO: abstract this into a module
   field :x, :type => Float
   field :y, :type => Float

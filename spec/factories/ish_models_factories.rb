@@ -36,9 +36,11 @@ FactoryBot.define do
     end
     after :build do |u, opts|
       u.profile.role_name = opts.role_name
+      u.confirmed_at = Time.now
     end
   end
 
+  ## @deprecated
   factory :city do
     name { 'City' }
     cityname { generate(:cityname) }
@@ -60,13 +62,14 @@ FactoryBot.define do
   end
 
   factory :map, class: Gameui::Map do
-    name { 'name' }
-    slug { generate(:slug) }
     config { "{}" }
     creator_profile { create(:profile) }
     labels { "{}" }
+    name { 'name' }
+    slug { generate(:slug) }
     after :build do |map|
-      map.image = create :image_asset
+      ## I need both: locatin_id and map.image ?! _vp_ 2022-09-17
+      map.image = create(:image_asset, location_id: map.id)
     end
   end
 
@@ -100,10 +103,12 @@ FactoryBot.define do
     name { 'Report Name' }
   end
 
+  ## @deprecated
   factory :site do
     domain { 'domain.com' }
   end
 
+  ## @deprecated
   factory :tag do
     name { 'tag-name' }
   end
@@ -116,7 +121,7 @@ FactoryBot.define do
       role_name { 'guy' }
     end
 
-    after :build do |u, opts|      
+    after :build do |u, opts|
       u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
     end
   end

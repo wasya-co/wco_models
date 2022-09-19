@@ -190,7 +190,8 @@ module Mongoid
     #
     # @param [Mongoid Object, BSON::ObjectId] voter is Mongoid object the id of the voter who made the vote
     def vote_value(voter)
-      voter_id = voter.is_a?(BSON::ObjectId) ? voter.to_s : voter.is_a?(String) ? voter : voter.id.to_s
+      ## The last last one, voter.id not voter.id.to_s _vp_ 2022-09-19
+      voter_id = voter.is_a?(BSON::ObjectId) ? voter : voter.is_a?(String) ? voter : voter.id
 
       return :up if up_voter_ids.try(:include?, voter_id)
       return :down if down_voter_ids.try(:include?, voter_id)

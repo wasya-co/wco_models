@@ -13,11 +13,13 @@ class Report
   index({ :slug => 1 }, { :unique => true })
   before_validation :set_slug, :on => :create
 
-  ## @TODO: then constantize this.
-  ## Can be one of: default (nil), longscroll
+  ## Can be one of: default (nil), longscroll,
+  ##   wordpress e.g. https://piousbox.com/wp-json/wp/v2/posts?slug=intro
+  # ITEM_TYPES = %w| longscroll wordpress |
   field :item_type, type: String
 
   field :descr, :type => String
+  field :raw_json
 
   field :is_trash, :type => Boolean, :default => false
   index({ :is_trash => 1, :is_public => 1 }, { name: 'default_index' })

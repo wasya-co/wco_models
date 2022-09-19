@@ -58,7 +58,7 @@ class ::Gameui::Marker
 
   belongs_to :map,             class_name: '::Gameui::Map',    inverse_of: :markers
 
-  belongs_to :destination, class_name: '::Gameui::Map', inverse_of: :from_markers
+  belongs_to :destination, class_name: '::Gameui::Map', inverse_of: :from_markers, optional: true
 
   belongs_to :creator_profile, class_name: 'Ish::UserProfile', inverse_of: :my_markers
 

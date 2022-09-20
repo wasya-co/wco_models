@@ -1,3 +1,4 @@
+
 require 'ish/premium_item'
 require 'ish/utils'
 
@@ -7,15 +8,20 @@ class ::Gameui::Map
   include Ish::PremiumItem
   include Ish::Utils
 
+  field :name
+
+  field :slug
+  validates :slug, uniqueness: true, presence: true
+
+  field :description
+
+  ## @TODO: probably, abstract this. _vp_ 2022-09-20
+  field :deleted_at, type: Time, default: nil
+
   has_many :markers,      :class_name => '::Gameui::Marker', inverse_of: :map
   has_many :from_markers, :class_name => '::Gameui::Marker', inverse_of: :destination
 
   has_many :newsitems, inverse_of: :map, order: :created_at.desc
-
-  field :deleted_at, type: Time, default: nil
-
-  field :slug
-  validates :slug, uniqueness: true, presence: true
 
   # @TODO: remove field, replace with relation. _vp_ 2022-09-13
   field :parent_slug
@@ -40,9 +46,6 @@ class ::Gameui::Map
     ::Gameui::Map.where( slug: map_slug ).first
   end
 
-  field :name
-  field :description
-
   RATED_OPTIONS = [ 'pg-13', 'r', 'nc-17' ]
   field :rated, default: 'pg-13' # 'r', 'nc-17'
 
@@ -55,21 +58,21 @@ class ::Gameui::Map
   # @deprecated, dont use!
   field :img_path
 
-  ## Make sure to use x,y and w,h as appropriate.
-  field :w, type: Integer
-  validates :w, presence: true
-  field :h, type: Integer
-  validates :h, presence: true
-
   ## Not used! See config.map_panel_type instead.
   # MAP_TYPES = [ :map_2d, :map_3d, :map_geospatial, :map_gallery, :map_toc ] ## Mostly not implemented. _vp_ 2022-09-06
   # field :map_type, default: :map_2d
 
-  ## Make sure to use x,y and w,h as appropriate.
+  ## Make sure to use x,y,z and w,h as appropriate.
   ## @TODO: abstract this into a module
-  field :x, :type => Float
-  field :y, :type => Float
+  field :x, type: Float
+  field :y, type: Float
+  field :z, type: Float
 
+  ## Make sure to use x,y,z and w,h as appropriate.
+  field :w, type: Integer
+  validates :w, presence: true
+  field :h, type: Integer
+  validates :h, presence: true
   # @TODO: this is shared between map and marker, move to a concern.
   before_validation :compute_w_h
   def compute_w_h
@@ -107,6 +110,10 @@ class ::Gameui::Map
     out.reverse
   end
 
+  ##
+  ## @TODO: move the export func, below, to a module. _vp_ 2022-09-20
+  ##
+
   def empty_export
     return {
       galleries: {},
@@ -131,9 +138,7 @@ class ::Gameui::Map
       videos: [],
     }
   end
-  def self.export_key_to_class
-    Map.new.export_key_to_class
-  end
+
   def export_key_to_class
     return {
       galleries: 'Gallery',
@@ -155,6 +160,9 @@ class ::Gameui::Map
       # 'reports' => 'Report',
       # 'videos' => 'Video',
     }.with_indifferent_access
+  end
+  def self.export_key_to_class
+    Map.new.export_key_to_class
   end
 
   def export_fields
@@ -233,6 +241,10 @@ class ::Gameui::Map
 
     export_object
   end
+
+  ## endExport
+
+  field :newsitems_page_size, default: 25
 
 end
 

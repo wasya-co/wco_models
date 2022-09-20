@@ -1,5 +1,6 @@
 
 require 'ish/utils'
+
 # require_relative './mongoid/votable.rb'
 
 class Newsitem

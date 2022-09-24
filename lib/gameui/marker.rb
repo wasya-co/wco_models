@@ -8,13 +8,6 @@ class ::Gameui::Marker
   validates_uniqueness_of :name, scope: :map_id
   validates_presence_of :name
 
-  ## This is not a map, I don't need a slug.
-  ## @TODO: remove it. _vp_ 2022-06-17
-  field :slug
-  def slug
-    return self[:slug] || id.to_s
-  end
-
   field :ordering, type: String, default: 'jjj'
 
   ITEM_TYPE_LOCATION = '::Gameui::Map' # @TODO: this used to be gameui-location . How is this different from gameui-map ?

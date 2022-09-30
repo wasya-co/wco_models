@@ -29,6 +29,7 @@ class Newsitem
   def description
     descr
   end
+  field :subhead
 
   field :image_path
   field :link_path

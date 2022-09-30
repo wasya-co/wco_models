@@ -26,3 +26,4 @@ master  2022-03-12 - import/export of maps
 1.7.0 - 2022-05-03 - models Unsubscribe, and Meeting.
 1.8.0 - 2022-08-22 - copy-pasting mongoid_votable in there.
                      for videos and newsitems for now
+1.9.0 - 2022-09-29 - re-adding office models: emailContext, emailTemplate.

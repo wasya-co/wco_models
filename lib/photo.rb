@@ -27,6 +27,7 @@ class Photo
 
   field :name,   :type => String
   field :descr,  :type => String
+  field :subhead
   field :weight, :type => Integer, :default => 10
 
   field :is_public, :type => Boolean, :default => true

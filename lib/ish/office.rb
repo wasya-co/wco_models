@@ -1,3 +1,0 @@
-
-class ::Ish::Office
-end

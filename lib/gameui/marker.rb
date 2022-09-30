@@ -97,7 +97,6 @@ class ::Gameui::Marker
       map_id
       name
       ordering
-      slug
       url
       version
       w
@@ -107,8 +106,6 @@ class ::Gameui::Marker
   end
 
   def collect export_object
-    puts! export_object, "collecting in marker: |#{slug}|."
-
     if image
       export_object[:image_assets][image.id.to_s] = image.id.to_s
     end

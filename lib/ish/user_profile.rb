@@ -40,8 +40,7 @@ class Ish::UserProfile
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
 
-  belongs_to :user
-  validates_presence_of :user
+  belongs_to :user, class_name: 'TmpUser', inverse_of: :profile
 
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true

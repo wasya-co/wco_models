@@ -49,6 +49,3 @@ class Ish::Lead
   field :extra, :type => Array, :default => []
 
 end
-
-Lead = Ish::Lead
-

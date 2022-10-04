@@ -1,6 +1,10 @@
 
-task :default => :spec
+namespace :rspec do
 
-desc 'spec default task in rake'
-task :spec do
+  task :default => :spec
+
+  desc 'spec default task in rake'
+  task :spec do
+  end
+
 end

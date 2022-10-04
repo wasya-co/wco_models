@@ -46,7 +46,6 @@ FactoryBot.define do
     is_trash { false }
     is_public { true }
     after :build do |g|
-      g.site ||= Site.new( :domain => 'xxDomainxx', :lang => 'xxLangxx' )
       g.slug ||= name
     end
   end

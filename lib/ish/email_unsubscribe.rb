@@ -1,5 +1,5 @@
 
-class Ish::Unsubscribe
+class Ish::EmailUnsubscribe
   include Mongoid::Document
   include Mongoid::Timestamps
 

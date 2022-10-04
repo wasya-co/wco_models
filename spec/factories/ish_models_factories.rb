@@ -3,9 +3,6 @@ FactoryBot.define do
 
   # alphabetized : )
 
-  sequence :cityname do |n|
-    "cityname-#{n}"
-  end
   sequence :email do |n|
     "test-#{n}@email.com"
   end
@@ -38,12 +35,6 @@ FactoryBot.define do
       u.profile.role_name = opts.role_name
       u.confirmed_at = Time.now
     end
-  end
-
-  ## @deprecated
-  factory :city do
-    name { 'City' }
-    cityname { generate(:cityname) }
   end
 
   factory :gallery do
@@ -101,16 +92,6 @@ FactoryBot.define do
 
   factory :report do
     name { 'Report Name' }
-  end
-
-  ## @deprecated
-  factory :site do
-    domain { 'domain.com' }
-  end
-
-  ## @deprecated
-  factory :tag do
-    name { 'tag-name' }
   end
 
   factory :user do

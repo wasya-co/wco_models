@@ -50,5 +50,3 @@ class Ish::Lead
 
 end
 
-Lead = Ish::Lead
-

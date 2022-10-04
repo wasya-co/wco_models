@@ -40,8 +40,8 @@ class Ish::UserProfile
 
   has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
 
-  belongs_to :user
-  validates_presence_of :user
+  # belongs_to :user
+  # validates_presence_of :user
 
   belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
   belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
@@ -83,7 +83,7 @@ class Ish::UserProfile
   field :videos_embed, :type => Boolean, :default => false
 
   def sudoer?
-    %w( piousbox@gmail.com victor@wasya.co ).include?( self.user.email ) ? true : false
+    %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
   end
 
   ## manager uses it.
@@ -125,7 +125,7 @@ class Ish::UserProfile
     profile = Ish::UserProfile.new({
       email: email,
       role_name: role_name,
-      user: user,
+      # user: user,
     })
     profile.save
 

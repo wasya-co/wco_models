@@ -8,7 +8,9 @@ class Gallery
   PER_PAGE = 6
 
   field :name
-  validates :name, :uniqueness => true # , :allow_nil => false
+  validates :name, :uniqueness => true
+  field :subhead
+  field :descr,   :as => :description
 
   field :is_public,  type: Boolean, default: false
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_galleries
@@ -27,10 +29,9 @@ class Gallery
 
   field :x,       :type => Float
   field :y,       :type => Float
-  field :subhead
-  field :descr,   :as => :description
+  field :z,       :type => Float
+
   field :lang,    :default => 'en'
-  field :issue
   field :username
 
   field :slug
@@ -43,7 +44,6 @@ class Gallery
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
-  belongs_to :site,         :optional => true
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :galleries
 
   has_and_belongs_to_many :tags
@@ -51,14 +51,7 @@ class Gallery
   has_many :newsitems # seems correct. _vp_ 2022-03-21
   has_many :photos
 
-  belongs_to :city,  :optional => true
-  belongs_to :venue, :optional => true
-
-
   set_callback(:create, :before) do |doc|
-    if doc.user_profile && doc.user_profile.name
-      doc.username = doc.user_profile.name
-    end
 
     #
     # newsitems
@@ -78,24 +71,6 @@ class Gallery
           end
         end
       end
-      # for the city
-      if doc.city
-        n = Newsitem.new {}
-        n.gallery = doc
-        n.city = doc.city
-        n.username = doc.username
-        n.save
-      end
-    end
-
-    #
-    # cache
-    #
-    if doc.site
-      doc.site.touch
-    end
-    if doc.city
-      doc.city.touch
     end
 
   end
@@ -109,13 +84,8 @@ class Gallery
   RENDER_TITLES = 'index_titles' # view name
   RENDER_THUMBS = 'index_thumbs' # view name
 
-
-  set_callback :update, :after do |doc|
-    Site.update_all updated_at: Time.now
-  end
-
   def export_fields
-    %w| name descr |
+    %w| name subhead descr |
   end
 
 end

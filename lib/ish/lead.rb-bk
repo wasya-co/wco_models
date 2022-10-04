@@ -1,0 +1,38 @@
+
+#
+# Lead
+# _vp_ 20171204
+#
+class Ish::Lead
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  store_in :collection => 'ish_leads'
+
+  # field :email
+  # field :company_url
+  # field :yelp_url
+
+  # # company name
+  # field :company
+  # validates_uniqueness_of :company
+  # index({ :company => -1 })
+
+  # field :description # comment, actually
+
+  field :is_done,  :type => Boolean, :default => false
+  field :is_trash, :type => Boolean, :default => false
+
+  field :tag, :type => String # 'hired_com_ror', not enumerated for now _vp_ 20180103
+  # field :location
+
+  field :raw_phone, :type => String
+  def phone= which
+    write_attribute :raw_phone, which
+    write_attribute :phone, which.gsub(/\D/, '').to_i
+  end
+  field :phone, :type => Integer
+
+end
+
+

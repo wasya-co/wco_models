@@ -84,7 +84,7 @@ class Ish::UserProfile
 
   ## @TODO: remove _vp_ 2022-10-04
   def sudoer?
-    %w( piousbox@gmail.com victor@wasya.co ).include?( self.user&.email )
+    %w( piousbox@gmail.com victor@wasya.co ).include?( email )
   end
 
   ## manager uses it.

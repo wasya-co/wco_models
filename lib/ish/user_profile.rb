@@ -82,8 +82,9 @@ class Ish::UserProfile
   ## @TODO: better naming convention, or remove this
   field :videos_embed, :type => Boolean, :default => false
 
+  ## @TODO: remove _vp_ 2022-10-04
   def sudoer?
-    %w( piousbox@gmail.com victor@wasya.co ).include?( self.user.email ) ? true : false
+    %w( piousbox@gmail.com victor@wasya.co ).include?( self.user&.email )
   end
 
   ## manager uses it.

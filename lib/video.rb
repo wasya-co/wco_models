@@ -34,16 +34,10 @@ class Video
   field :lang, :type => String, :default => 'en'
 
   field :youtube_id, :type => String
-  # validates :youtube_id, :uniqueness => true, :presence => true
+  validates :youtube_id, :uniqueness => true
 
-  has_and_belongs_to_many :tags
-  belongs_to :city, :optional => true
-  belongs_to :site, :optional => true
-  # has_many :newsitems # unnecessary, right? _vp_ 20200412
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos
-
-  accepts_nested_attributes_for :site, :tags, :city
 
   def self.list
     [['', nil]] + Video.unscoped.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }

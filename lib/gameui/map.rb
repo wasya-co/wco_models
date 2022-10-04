@@ -32,7 +32,6 @@ class ::Gameui::Map
   belongs_to :creator_profile, class_name: '::Ish::UserProfile', inverse_of: :my_maps
 
   has_and_belongs_to_many :bookmarked_profiles, class_name: '::Ish::UserProfile', inverse_of: :bookmarked_location
-  has_and_belongs_to_many :tags, class_name: 'Tag', inverse_of: :map
 
   # shareable, nonpublic
   field :is_public, type: Boolean, default: true

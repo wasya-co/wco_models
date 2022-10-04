@@ -125,7 +125,6 @@ class Ish::UserProfile
     profile = Ish::UserProfile.new({
       email: email,
       role_name: role_name,
-      # user: user,
     })
     profile.save
 

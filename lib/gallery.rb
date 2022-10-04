@@ -46,8 +46,6 @@ class Gallery
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :galleries
 
-  has_and_belongs_to_many :tags
-
   has_many :newsitems # seems correct. _vp_ 2022-03-21
   has_many :photos
 
@@ -57,20 +55,20 @@ class Gallery
     # newsitems
     #
     if doc.is_public
-      # for the sites
-      if doc.site
-        sites = Site.where( :domain => doc.site.domain )
-        sites.each do |site|
-          n = Newsitem.new {}
-          n.gallery = doc
-          n.username = doc.username
-          site.newsitems << n
-          flag = site.save
-          if !flag
-            puts! site.errors
-          end
-        end
-      end
+
+      # if doc.site
+      #   sites = Site.where( :domain => doc.site.domain )
+      #   sites.each do |site|
+      #     n = Newsitem.new {}
+      #     n.gallery = doc
+      #     n.username = doc.username
+      #     site.newsitems << n
+      #     flag = site.save
+      #     if !flag
+      #       puts! site.errors
+      #     end
+      #   end
+      # end
     end
 
   end

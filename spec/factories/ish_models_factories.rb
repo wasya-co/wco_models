@@ -15,15 +15,18 @@ FactoryBot.define do
   sequence :slug do |n|
     "slug-#{n}"
   end
+  sequence :youtube_id do |n|
+    "youtube_id-#{n}"
+  end
 
   factory :admin, parent: :user do
     email { generate(:email) }
     transient do
       role_name { :admin }
     end
-    after :build do |u, opts|
-      u.profile.role_name = opts.role_name
-    end
+    # after :build do |u, opts|
+    #   u.profile.role_name = opts.role_name
+    # end
   end
 
   factory :manager, parent: :user do
@@ -31,10 +34,10 @@ FactoryBot.define do
     transient do
       role_name { :manager }
     end
-    after :build do |u, opts|
-      u.profile.role_name = opts.role_name
-      u.confirmed_at = Time.now
-    end
+    # after :build do |u, opts|
+    #   u.profile.role_name = opts.role_name
+    #   u.confirmed_at = Time.now
+    # end
   end
 
   factory :gallery do
@@ -68,7 +71,7 @@ FactoryBot.define do
     name { generate(:name) }
     item_type { ::Gameui::Marker::ITEM_TYPES[0] }
     after :build do |marker|
-      marker.creator_profile ||= create(:user).profile
+      marker.creator_profile ||= create(:profile)
       marker.destination     ||= create(:map)
       marker.image           ||= create :image_asset
     end
@@ -82,9 +85,9 @@ FactoryBot.define do
 
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
-    after :build do |doc|
-      doc.user ||= create(:user, profile: doc)
-    end
+    # after :build do |doc|
+    #   create(:user, email: doc.email)
+    # end
   end
 
   factory :premium_purchase, aliases: [ :purchase ], class: Gameui::PremiumPurchase do
@@ -102,14 +105,14 @@ FactoryBot.define do
       role_name { 'guy' }
     end
 
-    after :build do |u, opts|
-      u.profile ||= create(:profile, email: u.email, user: u, role_name: opts.role_name)
-    end
+    # after :build do |u, opts|
+    #   create(:profile, email: u.email, role_name: opts.role_name)
+    # end
   end
 
   factory :video do
     name { 'some-name' }
-    youtube_id { 'some-youtube-id' }
+    youtube_id { generate(:youtube_id) }
   end
 
 

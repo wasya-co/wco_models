@@ -13,9 +13,10 @@ describe Ish::UserProfile do
   context '#generate' do
     it "doesnt generate if exists" do
       @user = create(:user)
+      @profile = create(:profile, email: @user.email)
       n = Ish::UserProfile.unscoped.count
       Ish::UserProfile.generate({
-        email: @user.profile.email,
+        email: @user.email,
         password: 'test1234',
         role_name: :admin,
       })

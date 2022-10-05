@@ -5,6 +5,7 @@
 ##
 
 set -x
+set -e
 
 if ssh-add -L | grep macpc ; then
   echo ok # nothing
@@ -12,18 +13,18 @@ else
   ssh-add ~/.ssh/mac_id_rsa_2
 fi
 
-./scripts/version_bump &&
+./scripts/version_bump
 version=`cat VERSION`
 cat ish_models.gemspec-template | \
   sed -e "s/\$version/$version/g" > ish_models.gemspec
 
-bundle &&
+bundle > /dev/null
 
-gem build ish_models.gemspec &&
-gem push ish_models-`cat VERSION`.gem &&
+gem build ish_models.gemspec
+gem push ish_models-$version.gem
 
-git add . &&
-git commit -m 'autobuild `date "+%Y%m%d"`' ;
-git push &&
+git add .
+git commit -m 'autobuild `date "+%Y%m%d"`'
+git push
 
 echo "ish_models build ok"

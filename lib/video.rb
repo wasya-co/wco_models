@@ -1,4 +1,5 @@
 require 'mongoid/paranoia'
+require 'mongoid_paperclip'
 require_relative './mongoid/votable.rb'
 
 class Video

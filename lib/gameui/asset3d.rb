@@ -1,5 +1,6 @@
 
 require 'aws-sdk'
+require 'mongoid_paperclip'
 
 class ::Gameui::Asset3d
   include Mongoid::Document

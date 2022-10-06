@@ -1,4 +1,3 @@
-require 'kaminari/mongoid'
 
 class Gallery
   include ::Mongoid::Document

@@ -7,6 +7,8 @@ class Ish::EmailContext
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  PAGE_PARAM_NAME = 'email_contexts_page'
+
   field :to_email
   validates_presence_of :to_email
 

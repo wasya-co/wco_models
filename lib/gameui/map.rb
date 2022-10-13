@@ -49,7 +49,7 @@ class ::Gameui::Map
   field :rated, default: 'pg-13' # 'r', 'nc-17'
 
   ## Possible keys: description, map, markers, newsitems,
-  field :labels, type: Object, default: {}
+  field :labels, type: Object, default: ' {"description":"Description", "map":"Map", "markers":"Markers", "newsitems":"Newsitems"} '
   ## Possible keys:
   ## config.description.collapsible
   field :config, type: Object, default: {}

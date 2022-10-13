@@ -19,27 +19,6 @@ FactoryBot.define do
     "youtube_id-#{n}"
   end
 
-  factory :admin, parent: :user do
-    email { generate(:email) }
-    transient do
-      role_name { :admin }
-    end
-    # after :build do |u, opts|
-    #   u.profile.role_name = opts.role_name
-    # end
-  end
-
-  factory :manager, parent: :user do
-    email { generate(:email) }
-    transient do
-      role_name { :manager }
-    end
-    # after :build do |u, opts|
-    #   u.profile.role_name = opts.role_name
-    #   u.confirmed_at = Time.now
-    # end
-  end
-
   factory :gallery do
     name { generate(:slug) }
     slug { generate(:slug) }
@@ -84,9 +63,6 @@ FactoryBot.define do
 
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
-    # after :build do |doc|
-    #   create(:user, email: doc.email)
-    # end
   end
 
   factory :premium_purchase, aliases: [ :purchase ], class: Gameui::PremiumPurchase do
@@ -99,14 +75,6 @@ FactoryBot.define do
   factory :user do
     email { generate(:email) }
     password { '1234567890' }
-
-    transient do
-      role_name { 'guy' }
-    end
-
-    # after :build do |u, opts|
-    #   create(:profile, email: u.email, role_name: opts.role_name)
-    # end
   end
 
   factory :video do

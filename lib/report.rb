@@ -77,40 +77,6 @@ class Report
     self.where( :is_public => true, :is_trash => false ).order_by( :created_at => :desc )
   end
 
-  set_callback :update, :after do |doc|
-    Site.update_all updated_at: Time.now
-  end
-
-  # set_callback :create, :after do |doc|
-  #   if doc.is_public
-
-  #     if !doc.venue_ids.blank?
-  #       ( doc.venue_ids || [] ).each do |venue_id|
-  #         v = Venue.find venue_id
-  #         u = ::IshModels::User.find doc.user_id
-  #         n = Newsitem.new
-  #         n.username = u.username unless u.blank?
-  #         n.report = doc
-  #         v.newsitems << n
-  #         v.save
-  #       end
-  #     end
-
-  #     unless doc.city.blank?
-  #       city = City.find doc.city.id
-  #       if defined?( doc.profile ) && doc.profile
-  #         username = doc.profile.username || 'anon'
-  #       else
-  #         username = '<username>'
-  #       end
-  #       n = Newsitem.new :report => doc, :username => username
-  #       city.newsitems << n
-  #       city.save
-  #       city.touch
-  #     end
-  #   end
-  # end
-
   def self.clear
     if Rails.env.test?
       self.unscoped.each { |r| r.remove }

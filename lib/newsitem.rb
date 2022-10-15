@@ -11,7 +11,6 @@ class Newsitem
   include Mongoid::Votable
   vote_point self, :up => +1, :down => -1
 
-  belongs_to :city,    optional: true
   belongs_to :gallery, optional: true  # seems correct. _vp_ 2022-03-21
   def gallery
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
@@ -20,8 +19,6 @@ class Newsitem
   belongs_to :profile, optional: true, class_name: 'Ish::UserProfile'
   belongs_to :photo,   optional: true
   belongs_to :report,  optional: true
-  belongs_to :site,    optional: true
-  belongs_to :tag,     optional: true
   belongs_to :video,   optional: true
 
   field :name

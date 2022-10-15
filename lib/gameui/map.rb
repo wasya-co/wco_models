@@ -49,10 +49,18 @@ class ::Gameui::Map
   field :rated, default: 'pg-13' # 'r', 'nc-17'
 
   ## Possible keys: description, map, markers, newsitems,
-  field :labels, type: Object, default: ' {"description":"Description", "map":"Map", "markers":"Markers", "newsitems":"Newsitems"} '
+  field :labels, type: Object, default: <<~AOL
+    { "description":"Description", "map":"Map", "markers":"Markers", "newsitems":"Newsitems"
+    }
+  AOL
+
   ## Possible keys:
   ## config.description.collapsible
-  field :config, type: Object, default: {}
+  field :config, type: Object, default: <<~AOL
+    { "map_panel_type": "ThreePanelV1",
+      "studio": { "hasFloor": true, "studioLength": 2500, "studioWidth": 2500 }
+    }
+  AOL
 
   # @deprecated, dont use!
   field :img_path

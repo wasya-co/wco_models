@@ -24,12 +24,16 @@ class ::Gameui::Marker
   has_one :image,       class_name: '::Ish::ImageAsset', inverse_of: :marker
   has_one :title_image, class_name: '::Ish::ImageAsset', inverse_of: :marker_title
   has_one :asset3d,     class_name: '::Gameui::Asset3d'
+  def is_3d
+    !!asset3d
+  end
 
   field :deleted_at, type: Time, default: nil # @TODO: replace with paranoia
 
   ## @TODO: abstract this into a module
   field :x, :type => Float, default: 0
   field :y, :type => Float, default: 0
+  field :z, :type => Float, default: 0
 
   field :is_public, type: Boolean, default: true
   def self.public

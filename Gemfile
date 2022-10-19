@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rake'
-gem 'httparty'
+# gem 'rake'
+# gem 'httparty'
 
 group :development, :test do
   gem 'byebug'

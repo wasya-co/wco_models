@@ -1,5 +1,5 @@
 
-require 'aws-sdk'
+# require 'aws-sdk'
 require 'mongoid_paperclip'
 
 class Photo

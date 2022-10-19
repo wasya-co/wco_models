@@ -1,7 +1,7 @@
 
 require 'ish/railtie' if defined?(Rails)
 require 'ish/configuration'
-require 'aws-sdk'
+require 'aws-sdk-s3'
 require 'kaminari/mongoid'
 
 ::S3_CREDENTIALS ||= {}

@@ -34,6 +34,8 @@ class ::Gameui::Marker
   field :x, :type => Float, default: 0
   field :y, :type => Float, default: 0
   field :z, :type => Float, default: 0
+  field :castShadow, type: Boolean, default: true
+  field :receiveShadow, type: Boolean, default: false
 
   field :is_public, type: Boolean, default: true
   def self.public

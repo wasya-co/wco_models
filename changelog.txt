@@ -28,4 +28,5 @@ master   2022-03-12 - import/export of maps
 1.9.0  - 2022-09-29 - re-adding office models: emailContext, emailTemplate.
 2.0.0  - 2022-10-03 - major cleanup. No cities, sites, venues, users.
 2.1.0  - 2022-10-19 - removed aws-sdk, replaced with aws-ask-s3
-              11-10 - and bugfix, allow videos with empty youtube_id
+         2022-11-10 - and bugfix, allow videos with empty youtube_id
+                    - adding from_email

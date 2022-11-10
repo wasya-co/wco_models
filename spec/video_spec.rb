@@ -2,9 +2,11 @@ require 'spec_helper'
 
 describe Video do
 
-  it 'defaults' do
+  it '#create, defaults' do
     video = build(:video)
     video.is_public.should eql false
+    video.youtube_id.should eql nil
+    video.save.should eql true
   end
 
   it 'delete' do

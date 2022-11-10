@@ -35,7 +35,7 @@ class Video
   field :lang, :type => String, :default => 'en'
 
   field :youtube_id, :type => String
-  validates :youtube_id, :uniqueness => true
+  validates :youtube_id, :uniqueness => true, allow_nil: true
 
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos

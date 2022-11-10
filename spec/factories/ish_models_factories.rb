@@ -79,7 +79,6 @@ FactoryBot.define do
 
   factory :video do
     name { 'some-name' }
-    youtube_id { generate(:youtube_id) }
   end
 
 

@@ -29,14 +29,15 @@ class Video
   field :is_public, :type => Boolean, :default => false
   field :is_feature, :type => Boolean, :default => false
 
-  field :x, :type => Float
-  field :y, :type => Float
+  field :x, type: Float
+  field :y, type: Float
+  field :z, type: Float
 
   field :lang, :type => String, :default => 'en'
 
-  field :youtube_id, :type => String
-  validates :youtube_id, :uniqueness => true, allow_nil: true
-
+  field :youtube_id
+  validates_uniqueness_of :youtube_id, allow_blank: true, case_sensitive: false
+  before_save { youtube_id.present? || youtube_id = nil }
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos
 
@@ -44,12 +45,6 @@ class Video
     [['', nil]] + Video.unscoped.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
-  set_callback( :create, :before ) do |doc|
-    if doc.is_public
-      doc.city.add_newsitem( doc ) unless doc.city.blank?
-      doc.site.add_newsitem( doc ) unless doc.site.blank?
-    end
-  end
 
   field :issue
   field :subhead
@@ -83,10 +78,6 @@ class Video
     :validate_media_type => false,
     s3_region: ::S3_CREDENTIALS[:region]
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
-
-  set_callback :update, :after do |doc|
-    Site.update_all updated_at: Time.now
-  end
 
   ## copy-paste
   field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free

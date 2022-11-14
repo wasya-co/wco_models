@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'ish_models'
-  s.version     = '0.0.33.182'
+  s.version     = '0.0.33.183'
   s.date        = '2017-05-10'
   s.summary     = 'models of ish'
   s.description = 'models of ish'

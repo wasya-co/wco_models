@@ -54,5 +54,10 @@ class Ish::EmailContext
   field :to_email
   validates_presence_of :to_email, if: -> { type == TYPE_SINGLE }
 
+  #
+  # For tracking
+  #
+  attr_reader :tid
+
 end
 EmailContext = Ish::EmailContext

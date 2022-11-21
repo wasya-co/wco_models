@@ -8,6 +8,9 @@ class Ish::EmailContext
   include Mongoid::Timestamps
 
   field :title
+  def slug
+    title
+  end
 
   PAGE_PARAM_NAME = 'email_contexts_page'
 
@@ -39,10 +42,18 @@ class Ish::EmailContext
   field :sent_at, type: DateTime
   field :scheduled_at, type: DateTime
 
-  def leads
+  def self.all_campaigns
+    Ish::EmailContext.where( type: TYPE_CAMPAIGN )
+  end
+
+  def campaign_leads
     if self.type == TYPE_CAMPAIGN
-      return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead ).map { |p| p.lead }
+      return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
     end
+  end
+
+  def leads
+    campaign_leads&.map { |p| p.lead }
   end
 
 
@@ -60,4 +71,4 @@ class Ish::EmailContext
   attr_reader :tid
 
 end
-EmailContext = Ish::EmailContext
+EmailCampaign = Ish::EmailContext

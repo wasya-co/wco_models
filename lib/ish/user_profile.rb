@@ -54,7 +54,6 @@ class Ish::UserProfile
   has_many :my_maps, :inverse_of => :creator_profile, class_name: 'Gameui::Map'
 
   has_many :invoices,                             :class_name => '::Ish::Invoice'
-  has_many :leads,                                :class_name => '::Ish::Lead'
   has_many :photos
   has_many :reports,   inverse_of: :user_profile
 

@@ -57,10 +57,18 @@ class Ish::EmailContext
   end
 
 
-  #
-  # For templating:
-  #
-  field :tmpl_name
+  ##
+  ## For templating:
+  ##
+  ## commonly: name, companyName
+  field :tmpl, type: Hash, default: {}
+  def body_templated
+    out = email_template.body
+    tmpl.each do |k, v|
+      out.gsub!("{#{k}}", v)
+    end
+    out
+  end
 
   field :to_email
   validates_presence_of :to_email, if: -> { type == TYPE_SINGLE }

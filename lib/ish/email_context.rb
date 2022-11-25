@@ -46,6 +46,10 @@ class Ish::EmailContext
     Ish::EmailContext.where( type: TYPE_CAMPAIGN )
   end
 
+  def self.unsent_campaigns
+    Ish::EmailContext.where( type: TYPE_CAMPAIGN, sent_at: nil )
+  end
+
   def campaign_leads
     if self.type == TYPE_CAMPAIGN
       return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )

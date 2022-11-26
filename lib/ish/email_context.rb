@@ -14,7 +14,8 @@ class Ish::EmailContext
 
   PAGE_PARAM_NAME = 'email_contexts_page'
 
-  FROM_EMAILS = %w| piousbox@gmail.com victor@piousbox.com victor@wasya.co no-reply@piousbox.com |
+  FROM_EMAILS = %w| piousbox@gmail.com victor@piousbox.com no-reply@piousbox.com
+    admin@wasya.co hello@wasya.co no-reply@wasya.co victor@wasya.co |
   field :from_email
   validates_presence_of :from_email
   def self.from_email_list

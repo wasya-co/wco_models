@@ -19,6 +19,15 @@ FactoryBot.define do
     "youtube_id-#{n}"
   end
 
+  factory :email_campaign, class: ::Ish::EmailContext do
+    type { ::Ish::EmailContext::TYPE_CAMPAIGN }
+  end
+
+  factory :email_template, class: ::Ish::EmailTemplate do
+    slug { 'm20221201react' }
+    subject { 'xxSome Subjectxx' }
+  end
+
   factory :gallery do
     name { generate(:slug) }
     slug { generate(:slug) }

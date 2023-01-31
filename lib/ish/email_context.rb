@@ -41,7 +41,7 @@ class Ish::EmailContext
   field :rendered_str
 
   field :sent_at, type: DateTime
-  field :scheduled_at, type: DateTime
+  field :send_at, type: DateTime
 
   def self.all_campaigns
     Ish::EmailContext.where( type: TYPE_CAMPAIGN )
@@ -59,6 +59,21 @@ class Ish::EmailContext
 
   def leads
     campaign_leads&.map { |p| p.lead }
+  end
+
+  def self.unsent
+    new.unsent
+  end
+  def unsent
+    where( sent_at: nil )
+  end
+
+  def self.current
+    new.current
+  end
+  def current
+    # or({ :send_at.lte => Time.now }, { :send_at => nil }) ## This won't work b/c I need draft state!
+    where({ :send_at.lte => Time.now  })
   end
 
 

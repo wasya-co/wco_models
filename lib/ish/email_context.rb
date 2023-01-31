@@ -65,7 +65,7 @@ class Ish::EmailContext
     new.unsent
   end
   def unsent
-    where( sent_at: nil )
+    Ish::EmailContext.where( sent_at: nil )
   end
 
   def self.current
@@ -73,7 +73,7 @@ class Ish::EmailContext
   end
   def current
     # or({ :send_at.lte => Time.now }, { :send_at => nil }) ## This won't work b/c I need draft state!
-    where({ :send_at.lte => Time.now  })
+    Ish::EmailContext.where({ :send_at.lte => Time.now  })
   end
 
 

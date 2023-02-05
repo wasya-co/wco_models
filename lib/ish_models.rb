@@ -44,6 +44,7 @@ require 'gameui/premium_purchase'
 
 require 'ish/cache_key'
 require 'ish/crawler'
+require 'ish/email_campaign'
 require 'ish/email_context'
 require 'ish/email_template'
 require 'ish/email_unsubscribe'

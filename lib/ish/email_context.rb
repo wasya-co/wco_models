@@ -1,6 +1,6 @@
 
 #
-# Sends a single email, or a campaign.
+# Sends a single email
 #
 
 class Ish::EmailContext
@@ -14,7 +14,8 @@ class Ish::EmailContext
 
   PAGE_PARAM_NAME = 'email_contexts_page'
 
-  FROM_EMAILS = %w| piousbox@gmail.com victor@piousbox.com no-reply@piousbox.com
+  FROM_EMAILS = %w| hello@infiniteshelter.com no-reply@infiniteshelter.com
+    piousbox@gmail.com victor@piousbox.com no-reply@piousbox.com
     admin@wasya.co hello@wasya.co no-reply@wasya.co victor@wasya.co |
   field :from_email
   validates_presence_of :from_email

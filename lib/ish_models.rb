@@ -66,6 +66,7 @@ require 'photo'
 require 'report'
 require 'video'
 
+require 'office/action'
 require 'office/email_message'
 
 

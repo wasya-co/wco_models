@@ -7,9 +7,11 @@ class Ish::EmailContext
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :title
-  def slug
-    title
+  ## @TODO: probably rename it to slug
+  field :slug
+  validates_uniqueness_of :slug, allow_nil: true
+  def title
+    slug
   end
 
   PAGE_PARAM_NAME = 'email_contexts_page'
@@ -23,6 +25,7 @@ class Ish::EmailContext
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end
 
+  ## @deprecated, campaigns are now separate.
   TYPE_SINGLE = 'TYPE_SINGLE'
   TYPE_CAMPAIGN = 'TYPE_CAMPAIGN'
   field :type, default: TYPE_SINGLE

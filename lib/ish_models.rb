@@ -13,6 +13,8 @@ module Ish; end
 # I need this thing for permissions???
 class Manager; end
 
+module Office; end
+
 module Warbler; end
 
 module IshModels
@@ -63,6 +65,9 @@ require 'newsitem'
 require 'photo'
 require 'report'
 require 'video'
+
+require 'office/email_message'
+
 
 
 

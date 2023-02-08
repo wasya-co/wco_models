@@ -25,15 +25,6 @@ class Ish::EmailContext
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end
 
-  ## @deprecated, campaigns are now separate.
-  TYPE_SINGLE = 'TYPE_SINGLE'
-  TYPE_CAMPAIGN = 'TYPE_CAMPAIGN'
-  field :type, default: TYPE_SINGLE
-  def self.types_list
-    [ [TYPE_SINGLE, TYPE_SINGLE], [TYPE_CAMPAIGN, TYPE_CAMPAIGN] ]
-  end
-
-
   field :subject
   validates_presence_of :subject
 
@@ -47,23 +38,6 @@ class Ish::EmailContext
   field :sent_at, type: DateTime
   field :send_at, type: DateTime
 
-  def self.all_campaigns
-    Ish::EmailContext.where( type: TYPE_CAMPAIGN )
-  end
-
-  def self.unsent_campaigns
-    Ish::EmailContext.where( type: TYPE_CAMPAIGN, sent_at: nil )
-  end
-
-  def campaign_leads
-    if self.type == TYPE_CAMPAIGN
-      return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
-    end
-  end
-
-  def leads
-    campaign_leads&.map { |p| p.lead }
-  end
 
   def self.unsent
     new.unsent
@@ -95,7 +69,7 @@ class Ish::EmailContext
   end
 
   field :to_email
-  validates_presence_of :to_email, if: -> { type == TYPE_SINGLE }
+  validates_presence_of :to_email
 
   #
   # For tracking
@@ -103,4 +77,3 @@ class Ish::EmailContext
   attr_reader :tid
 
 end
-EmailCampaign = Ish::EmailContext

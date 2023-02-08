@@ -19,12 +19,17 @@ FactoryBot.define do
     "youtube_id-#{n}"
   end
 
-  factory :email_campaign, class: ::Ish::EmailContext do
-    type { ::Ish::EmailContext::TYPE_CAMPAIGN }
+  factory :email_campaign, class: ::Ish::EmailCampaign do
+    subject { 'xxSome Subjectxx' }
+    from_email { 'from@email.com' }
+  end
+
+  factory :email_context, class: ::Ish::EmailContext do
+
   end
 
   factory :email_template, class: ::Ish::EmailTemplate do
-    slug { 'm20221201react' }
+    slug { generate(:slug) }
     subject { 'xxSome Subjectxx' }
   end
 
@@ -49,7 +54,7 @@ FactoryBot.define do
     name { 'name' }
     slug { generate(:slug) }
     after :build do |map|
-      ## I need both: locatin_id and map.image ?! _vp_ 2022-09-17
+      ## I need both: location_id and map.image ?! _vp_ 2022-09-17
       map.image = create(:image_asset, location_id: map.id)
     end
   end

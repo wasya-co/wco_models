@@ -23,7 +23,7 @@ class Office::EmailMessage
 
   field :to,   type: Array, default: []
   field :cc,   type: Array, default: []
-  field :bss,  type: Array, default: []
+  field :bcc,  type: Array, default: []
   field :date, type: DateTime
   def received_at
     date

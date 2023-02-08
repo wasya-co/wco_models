@@ -35,13 +35,13 @@ class Ish::EmailCampaign
   field :sent_at, type: DateTime
   field :send_at, type: DateTime
 
-  # def campaign_leads
-  #   return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
-  # end
+  def campaign_leads
+    return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
+  end
 
-  # def leads
-  #   campaign_leads&.map { |p| p.lead }
-  # end
+  def leads
+    campaign_leads&.map { |p| p.lead }
+  end
 
 
   ##
@@ -56,9 +56,6 @@ class Ish::EmailCampaign
     end
     out
   end
-
-  field :to_email
-  validates_presence_of :to_email, if: -> { type == TYPE_SINGLE }
 
   #
   # For tracking

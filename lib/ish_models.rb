@@ -8,7 +8,7 @@ require 'kaminari/mongoid'
 
 class Gameui; end
 
-module Iro; end
+# module Iro; end
 class Ish::InputError < RuntimeError; end
 module Ish; end
 
@@ -43,6 +43,8 @@ require 'gameui/map'
 require 'gameui/map_bookmark'
 require 'gameui/marker'
 require 'gameui/premium_purchase'
+
+# require 'iro/option_price_item'
 
 require 'ish/cache_key'
 require 'ish/crawler'

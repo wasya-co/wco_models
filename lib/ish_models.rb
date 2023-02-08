@@ -8,14 +8,14 @@ require 'kaminari/mongoid'
 
 class Gameui; end
 
+module Iro; end
+class Ish::InputError < RuntimeError; end
 module Ish; end
 
 # I need this thing for permissions???
 class Manager; end
 
 module Office; end
-
-module Warbler; end
 
 module IshModels
 
@@ -52,7 +52,6 @@ require 'ish/email_template'
 require 'ish/email_unsubscribe'
 require 'ish/gallery_name'
 require 'ish/image_asset'
-require 'ish/input_error'
 require 'ish/invoice'
 require 'ish/lorem_ipsum'
 require 'ish/meeting'

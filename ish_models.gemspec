@@ -16,7 +16,10 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'mongoid-autoinc', '~> 6.0'
   s.add_runtime_dependency 'mongoid-paperclip'
   s.add_runtime_dependency 'kaminari-mongoid', '~> 1.0.1'
+
   s.add_runtime_dependency 'devise', '> 0'
   s.add_runtime_dependency 'aws-sdk-s3'
 
+  s.add_runtime_dependency 'mysql2', '~> 0.5.4'
+  s.add_runtime_dependency 'rails', '~> 6.1.0'
 end

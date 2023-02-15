@@ -68,7 +68,7 @@ class Report
     [['', nil]] + out.map { |item| [ item.name, item.id ] }
   end
 
-  PER_PAGE = 20
+  PER_PAGE = 10
   def self.paginates_per
     self::PER_PAGE
   end

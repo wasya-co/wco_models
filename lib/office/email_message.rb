@@ -16,14 +16,16 @@ class Office::EmailMessage
   field :part_html
   # attachments ?
 
-  field :from, type: Array, default: []
-  def from_str
-    from.join(", ")
-  end
+  field :from,  type: :string
+  field :froms, type: Array, default: []
 
-  field :to,   type: Array, default: []
-  field :cc,   type: Array, default: []
-  field :bcc,  type: Array, default: []
+  field :to,    type: :string
+  field :tos,   type: Array, default: []
+
+  field :ccs,   type: Array, default: []
+
+  field :bccs,  type: Array, default: []
+
   field :date, type: DateTime
   def received_at
     date

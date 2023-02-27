@@ -7,6 +7,10 @@ class Office::EmailMessage
   include Mongoid::Timestamps
 
   field :raw,         type: :string
+
+  field :message_id,  type: :string # MESSAGE-ID
+  validates_uniqueness_of :message_id
+
   field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix
   # validates_presence_of :object_key
   field :object_path, type: :string ## A routable s3 url
@@ -29,6 +33,11 @@ class Office::EmailMessage
   field :date, type: DateTime
   def received_at
     date
+  end
+
+  belongs_to :email_conversation
+  def conv
+    email_conversation
   end
 
   ## @TODO: reimplement, look at footer instead.

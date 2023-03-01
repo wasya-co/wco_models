@@ -2,6 +2,7 @@
 class Office::EmailConversation
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
 
   field :subject
   field :message_id

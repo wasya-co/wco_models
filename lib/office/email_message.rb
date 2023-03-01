@@ -11,6 +11,8 @@ class Office::EmailMessage
   field :message_id,  type: :string # MESSAGE-ID
   validates_uniqueness_of :message_id
 
+  field :in_reply_to_id, type: :string
+
   field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix
   # validates_presence_of :object_key
   field :object_path, type: :string ## A routable s3 url
@@ -22,6 +24,10 @@ class Office::EmailMessage
 
   field :from,  type: :string
   field :froms, type: Array, default: []
+
+  def lead
+    Lead.find_by email: from
+  end
 
   field :to,    type: :string
   field :tos,   type: Array, default: []

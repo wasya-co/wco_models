@@ -5,16 +5,19 @@ class Office::EmailConversation
   include Mongoid::Paranoia
 
   field :subject
-  field :message_id
 
   field :participants, type: Array, default: []
   def participants
     return self[:participants] if self[:participants].length > 1
 
-    tmp = email_messages.map { |e| e.from }.uniq.sort
+    tmp = email_messages.map { |e| e.from }.uniq.compact.sort
     update_attributes( participants: tmp )
     return tmp
   end
+
+  # def leads
+  #   Lead.where( email: participants )
+  # end
 
   has_many :email_messages
   def email_messages
@@ -31,4 +34,5 @@ class Office::EmailConversation
   end
 
 end
-
+EmailConversation = Office::EmailConversation
+Conv = Office::EmailConversation

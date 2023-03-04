@@ -1,0 +1,23 @@
+
+##
+## 2023-03-04 _vp_ When I receive one.
+## 2023-03-04 _vp_ Also when I send one, forever.
+##
+class Office::EmailAction
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  field :slug, type: :string
+  validates :slug, uniqueness: true, allow_nil: true
+
+  belongs_to :email_template, class_name: '::Ish::EmailTemplate'
+
+  field :next_in_days, type: :string
+  field :next_at_time, type: :string
+
+  belongs_to :prev_email_action, class_name: '::Office::EmailAction', optional: true, inverse_of: :next_email_actions
+  has_many :next_email_actions, class_name: '::Office::EmailAction', inverse_of: :prev_email_action
+
+  has_many :scheduled_email_actions, class_name: '::Office::ScheduledEmailAction'
+end
+

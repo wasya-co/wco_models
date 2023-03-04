@@ -27,5 +27,7 @@ class ::Ish::EmailTemplate
     binding()
   end
 
+  has_many :email_actions
+
 end
-Tmpl = ::Ish::EmailTemplate
+::Tmpl = ::Ish::EmailTemplate

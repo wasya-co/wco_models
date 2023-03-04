@@ -79,16 +79,32 @@ class Office::EmailMessage
     self.save
   end
 
-  ## action.match_from = '@synchrony.com'
-  def apply_actions
-    triggers = Office::Action.active.where({ channel: 'email' })
-    triggers.each do |trigger|
-      if self.from_str.match(/#{trigger.match_from}/i)
-        trigger.actions do |action|
-          Office::Action.call( action[:method], { msg: self }.merge( action[:params] ))
-        end
-      end
+  def apply_filter filter
+
+    case filter.kind
+    when 'skip-inbox'
+      self.tags.delete( WpTag.email_inbox_tag )
+    when 'autorespond'
+      Ish::EmailContext.create({
+        email_template: Tmpl.find_by_slug( filter.email_template_slug ),
+        lead: lead,
+      })
+    when 'autorespond-remind'
+      Office::EmailAction.create({
+        tmpl_slug: 'require-sign-nda',
+        next_in_days: -> { rand(1..5) },
+        next_at_time: ->{ rand(8..16).hours + rand(1..59).minutes },
+        next_action: 're-remind-sign-nda',
+      })
+
+      Ish::EmailContext.create({
+        email_template: Tmpl.find_by_slug( filter.email_template_slug ),
+        lead: lead,
+      })
+    else
+      raise "unknown filter kind: #{filter.kind}"
     end
+
   end
 
 end

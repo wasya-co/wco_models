@@ -31,6 +31,7 @@ class Ish::EmailContext
   field :body
 
   belongs_to :email_template
+  belongs_to :scheduled_email_action, class_name: '::Office::ScheduledEmailAction', optional: true
 
   field :rendered_str
 
@@ -54,8 +55,9 @@ class Ish::EmailContext
   end
 
   ## @deprecated: use self.lead
-  field :to_email
-  validates_presence_of :to_email
+  # field :to_email
+  # validates_presence_of :to_email
+
   field :lead_id
   def lead
     Lead.find lead_id

@@ -70,6 +70,7 @@ require 'video'
 require 'office/action'
 require 'office/email_conversation'
 require 'office/email_message'
+require 'office/email_message_stub'
 require 'office/scheduled_email'
 
 

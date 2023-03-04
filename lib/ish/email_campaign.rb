@@ -44,18 +44,18 @@ class Ish::EmailCampaign
   end
 
 
-  ##
-  ## For templating:
-  ##
-  ## commonly: name, companyName
-  field :tmpl, type: Hash, default: {}
-  def body_templated
-    out = email_template.body
-    tmpl.each do |k, v|
-      out.gsub!("{#{k}}", v)
-    end
-    out
-  end
+  # ##
+  # ## For templating:
+  # ##
+  # ## commonly: name, companyName
+  # field :tmpl, type: Hash, default: {}
+  # def body_templated
+  #   out = email_template.body
+  #   tmpl.each do |k, v|
+  #     out.gsub!("{#{k}}", v)
+  #   end
+  #   out
+  # end
 
   #
   # For tracking

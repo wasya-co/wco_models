@@ -4,20 +4,28 @@ class ::Ish::EmailTemplate
   include Mongoid::Timestamps
 
   field :slug
-  validates_uniqueness_of :slug, scope: [ :version ]
+  validates_uniqueness_of :slug
   validates_presence_of :slug
 
-  field :version, default: '0.0.0'
-
-  TYPES = %w| partial plain |
-  field :type
-  def self.type_list
-    [ [nil,nil] ] + TYPES.map { |i| [i, i] }
-  end
+  field :layout, type: :string, default: 'plain'
+  LAYOUTS = %w| plain
+    m20221201react m20221222merryxmas
+    marketing_react_1
+    marketing_ror_1 marketing_ror_2
+    marketing_wordpres_1 marketing_wordpress_2
+    piousbox_roundborders
+    plain
+    wasyaco_roundborders |
 
   field :subject
   field :body
   field :from_email
 
+  ## 2023-03-04 _vp_ This works!
+  def get_binding
+    @lead = Lead.where( email: 'stub@wasya.co' ).first
+    binding()
+  end
+
 end
-EmailTemplate = ::Ish::EmailTemplate
+Tmpl = ::Ish::EmailTemplate

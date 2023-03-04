@@ -4,35 +4,29 @@ class Office::EmailConversation
   include Mongoid::Timestamps
   include Mongoid::Paranoia
 
+  STATE_UNREAD = 'state_unread'
+  STATE_READ = 'state_read'
+  STATES = [ STATE_UNREAD, STATE_READ ]
+  field :state
+
   field :subject
+  field :latest_at
 
-  field :participants, type: Array, default: []
-  def participants
-    return self[:participants] if self[:participants].length > 1
-
-    tmp = email_messages.map { |e| e.from }.uniq.compact.sort
-    update_attributes( participants: tmp )
-    return tmp
+  field :lead_ids, type: :array, default: []
+  def leads
+    Lead.find( lead_ids )
   end
 
-  # def leads
-  #   Lead.where( email: participants )
-  # end
+  field :term_ids, type: :array, default: []
+  def tags
+    WpTag.find( term_ids )
+  end
 
   has_many :email_messages
   def email_messages
     Office::EmailMessage.where( email_conversation_id: self.id )
   end
 
-  field :latest_date
-  def latest_date
-    return self[:latest_date] if self[:latest_date]
-
-    tmp = email_messages.order_by( date: :desc ).first.date
-    update_attributes( latest_date: tmp )
-    return tmp
-  end
-
 end
-EmailConversation = Office::EmailConversation
+# EmailConversation = Office::EmailConversation
 Conv = Office::EmailConversation

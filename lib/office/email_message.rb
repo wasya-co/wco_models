@@ -92,3 +92,6 @@ class Office::EmailMessage
   end
 
 end
+Msg = Office::EmailMessage
+
+

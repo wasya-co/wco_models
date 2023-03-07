@@ -7,15 +7,29 @@ require 'mongoid-paperclip'
 require 'mongoid_paranoia'
 require 'mongoid-rspec'
 require 'rubygems'
+require 'active_record'
+
+require 'active_record'
+require 'w/wp_tag'
+require 'w/wp_term_taxonomy'
+require 'mysql2'
 
 require_relative '../lib/mongoid/votable.rb'
 require_relative '../lib/mongoid/voter.rb'
+
+def puts! a, b=''
+  puts "+++ +++ #{b}"
+  puts a.inspect
+end
+
+
 class Post
   include ::Mongoid::Document
   include ::Mongoid::Votable
   vote_point self, :up => +1, :down => -1
   has_many :comments
 end
+
 class Comment
   include Mongoid::Document
   include Mongoid::Votable
@@ -24,12 +38,14 @@ class Comment
   vote_point Post, :up => +2, :down => -1
 end
 
-
-
-def puts! a, b=''
-  puts "+++ +++ #{b}"
-  puts a.inspect
-end
+db_config = YAML.load_file('./spec/w/database.yml')['test']
+ActiveRecord::Base.establish_connection(
+  adapter:  'mysql2', # or 'postgresql' or 'sqlite3'
+  database: db_config['database'],
+  username: db_config['username'],
+  password: db_config['password'],
+  host:     'localhost'
+)
 
 Paperclip.options[:log] = false
 

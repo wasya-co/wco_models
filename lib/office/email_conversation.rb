@@ -27,6 +27,26 @@ class Office::EmailConversation
     Office::EmailMessage.where( email_conversation_id: self.id )
   end
 
+  ## Copied from email_message
+  field :wp_term_ids, type: Array, default: []
+  ## Tested manually ok, does not pass the spec. @TODO: hire to make pass spec? _vp_ 2023-03-07
+  def add_tag tag
+    if WpTag == tag.class
+      self[:wp_term_ids] = self[:wp_term_ids].push(tag.id).uniq
+      self.save!
+    else
+      throw "#add_tag expects a WpTag as the only parameter."
+    end
+  end
+  def remove_tag tag
+    if WpTag == tag.class
+      self[:wp_term_ids].delete( tag.id )
+      self.save!
+    else
+      throw "#remove_tag expects a WpTag as the only parameter."
+    end
+  end
+
 end
 # EmailConversation = Office::EmailConversation
 Conv = Office::EmailConversation

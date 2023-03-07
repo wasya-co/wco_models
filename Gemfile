@@ -14,4 +14,7 @@ group :test do
   gem 'factory_bot'
   gem 'mongoid-rspec'
   gem 'database_cleaner-mongoid'
+
+  gem 'activerecord'
+  gem 'mysql2'
 end

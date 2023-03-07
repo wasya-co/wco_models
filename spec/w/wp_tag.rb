@@ -1,0 +1,1 @@
+/Users/piousbox/projects/ruby/microsites3/app/models/wp_tag.rb

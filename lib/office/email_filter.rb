@@ -9,11 +9,16 @@ class Office::EmailFilter
   field :from_regex
   field :body_regex
 
-  KINDS = %i|
-    autorespond autorespond-remind
-    skip-inbox
-  |;
+  KIND_SKIP_INBOX = 'skip-inbox'
+  KIND_AUTORESPOND = 'autorespond'
+  KINDS = [ nil, KIND_SKIP_INBOX, KIND_AUTORESPOND ]
   field :kind
+
+  STATE_ACTIVE = 'active'
+  STATE_INACTIVE = 'inactive'
+  STATES = [ STATE_ACTIVE, STATE_INACTIVE ]
+  field :state, type: :string, default: STATE_ACTIVE
+  scope :active, ->{ where( state: STATE_ACTIVE ) }
 
 end
 

@@ -45,15 +45,16 @@ class Gallery
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :galleries
 
-  has_many :newsitems # seems correct. _vp_ 2022-03-21
-  has_many :photos
+  has_many :newsitems # Seems correct. _vp_ 2022-03-21
 
+  has_many :photos, order: { ordering: :asc }
 
+  ACTIONS = [ 'show_mini', 'show_long', 'show' ]
   # @deprecated, use Gallery::ACTIONS
   def self.actions
     ACTIONS
   end
-  ACTIONS = [ 'show_mini', 'show_long', 'show' ]
+
 
   RENDER_TITLES = 'index_titles' # view name
   RENDER_THUMBS = 'index_thumbs' # view name

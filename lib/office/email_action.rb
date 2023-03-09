@@ -10,6 +10,8 @@ class Office::EmailAction
   field :slug, type: :string
   validates :slug, uniqueness: true, allow_nil: true
 
+  field :descr, type: :string
+
   belongs_to :email_template, class_name: '::Ish::EmailTemplate'
 
   field :next_in_days, type: :string

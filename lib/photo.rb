@@ -19,7 +19,17 @@ class Photo
   belongs_to :gallery,  :optional => true
   belongs_to :newsitem, :optional => true
 
+  # photo.photo.to_s.split('/').last.split('?').first
   field :name,   :type => String
+  def name
+    return self[:name] if self[:name]
+    update_attribute(:name, self.photo.to_s.split('/').last.split('?').first)
+    name
+  end
+
+  field :ordering, type: :integer
+  index({ ordering: -1 })
+
   field :descr,  :type => String
   field :subhead
   field :weight, :type => Integer, :default => 10

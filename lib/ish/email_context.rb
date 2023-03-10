@@ -3,7 +3,7 @@
 # Sends a single email
 #
 
-class Ish::EmailContext
+class ::Ish::EmailContext
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -11,14 +11,28 @@ class Ish::EmailContext
   field :slug
   validates_uniqueness_of :slug, allow_nil: true
 
+  field :preview_str, type: :string
+  def preview_str
+    if self[:preview_str].presence?
+      return self[:preview_str]
+    else
+      return tmpl.preview_str
+    end
+  end
+
   PAGE_PARAM_NAME = 'email_contexts_page'
 
-  FROM_EMAILS = %w|
-    hello@infiniteshelter.com no-reply@infiniteshelter.com
-    piousbox@gmail.com
-    victor@piousbox.com no-reply@piousbox.com
-    admin@wasya.co hello@wasya.co no-reply@wasya.co victor@wasya.co
-  |;
+  FROM_EMAILS = [
+    'Infinite Shelter <hello@infiniteshelter.com>',
+    'Infinite Shelter <no-reply@infiniteshelter.com>',
+    'Victor Piousbox <piousbox@gmail.com>',
+    'Victor Piousbox <victor@piousbox.com>',
+    'Victor Piousbox <no-reply@piousbox.com>',
+    'Victor Piousbox <admin@wasya.co>',
+    'WasyaCo Consulting <hello@wasya.co>',
+    'WasyaCo Consulting <no-reply@wasya.co>',
+    'Victor Piousbox <victor@wasya.co>',
+  ];
   field :from_email
   validates_presence_of :from_email
   def self.from_email_list
@@ -31,6 +45,10 @@ class Ish::EmailContext
   field :body
 
   belongs_to :email_template
+  def tmpl
+    email_template
+  end
+
   belongs_to :scheduled_email_action, class_name: '::Office::ScheduledEmailAction', optional: true
 
   field :rendered_str
@@ -54,14 +72,21 @@ class Ish::EmailContext
     Ish::EmailContext.where({ :send_at.lte => Time.now  })
   end
 
-  ## @deprecated: use self.lead
-  # field :to_email
-  # validates_presence_of :to_email
 
   field :lead_id
   def lead
     Lead.find lead_id
   end
+  ## @deprecated: use self.lead
+  field :to_email
+  def to_email
+    if self[:lead_id]
+      return lead[:email]
+    else
+      return self[:to_email]
+    end
+  end
+
 
   ##
   ## For tracking / utm

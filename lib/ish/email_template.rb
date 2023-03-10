@@ -7,6 +7,8 @@ class ::Ish::EmailTemplate
   validates_uniqueness_of :slug
   validates_presence_of :slug
 
+  field :preview_str, type: :string
+
   field :layout, type: :string, default: 'plain'
   LAYOUTS = %w| plain
     m20221201react m20221222merryxmas
@@ -27,7 +29,8 @@ class ::Ish::EmailTemplate
     binding()
   end
 
-  has_many :email_actions
+  has_many :email_actions, class_name: '::Office::EmailAction'
+  has_many :email_contexts, class_name: '::Ish::EmailContext'
 
 end
 ::Tmpl = ::Ish::EmailTemplate

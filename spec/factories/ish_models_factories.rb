@@ -28,6 +28,10 @@ FactoryBot.define do
 
   end
 
+  factory :email_conversation, class: ::Office::EmailConversation do
+    latest_at { Time.now }
+  end
+
   factory :email_template, class: ::Ish::EmailTemplate do
     slug { generate(:slug) }
     subject { 'xxSome Subjectxx' }

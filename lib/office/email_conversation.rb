@@ -33,12 +33,17 @@ class Office::EmailConversation
 
   ## Tested manually ok, does not pass the spec. @TODO: hire to make pass spec? _vp_ 2023-03-07
   def add_tag tag
-    if WpTag == tag.class
-      self[:wp_term_ids] = self[:wp_term_ids].push(tag.id).uniq
-      self.save!
+    case tag.class.name
+    when 'WpTag'
+      ;
+    when 'String'
+      tag = WpTag.emailtag(tag)
     else
-      throw "#add_tag expects a WpTag as the only parameter."
+      throw "#add_tag expects a WpTag or string (eg WpTag::EMAILTAG_INBOX) as the only parameter."
     end
+    puts! tag, 'tag'
+    self[:wp_term_ids] = ( [ tag.id ] + self[:wp_term_ids] ).uniq
+    self.save!
   end
 
   def remove_tag tag
@@ -52,6 +57,11 @@ class Office::EmailConversation
 
   def self.in_inbox
     ::Office::EmailConversation.where( :wp_term_ids => WpTag.email_inbox_tag.id ).order_by( latest_at: :desc )
+  end
+
+  def self.in_no_trash
+    trash_id = WpTag.emailtag('trash').id
+    return ::Office::EmailConversation.where( :wp_term_ids.ne => trash_id ).order_by( latest_at: :desc )
   end
 
   def self.in_emailtag which

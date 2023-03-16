@@ -54,6 +54,18 @@ class Office::EmailConversation
     ::Office::EmailConversation.where( :wp_term_ids => WpTag.email_inbox_tag.id ).order_by( latest_at: :desc )
   end
 
+  def self.in_emailtag which
+    case which.class.name
+    when 'String'
+      tag_id = WpTag.emailtag(which).id
+    when 'WpTag'
+      tag_id = which.id
+    else
+      throw "unsupported in #in_emailtag: #{which}"
+    end
+    return ::Office::EmailConversation.where( :wp_term_ids => tag_id ).order_by( latest_at: :desc )
+  end
+
 end
 # EmailConversation = Office::EmailConversation
 Conv = Office::EmailConversation

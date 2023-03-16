@@ -17,18 +17,20 @@ class Office::EmailConversation
     Lead.find( lead_ids )
   end
 
-  field :term_ids, type: :array, default: []
-  def tags
-    WpTag.find( term_ids )
-  end
+
 
   has_many :email_messages
   def email_messages
     Office::EmailMessage.where( email_conversation_id: self.id )
   end
 
+  def tags
+    WpTag.find( wp_term_ids )
+  end
+
   ## Copied from email_message
   field :wp_term_ids, type: Array, default: []
+
   ## Tested manually ok, does not pass the spec. @TODO: hire to make pass spec? _vp_ 2023-03-07
   def add_tag tag
     if WpTag == tag.class
@@ -38,6 +40,7 @@ class Office::EmailConversation
       throw "#add_tag expects a WpTag as the only parameter."
     end
   end
+
   def remove_tag tag
     if WpTag == tag.class
       self[:wp_term_ids].delete( tag.id )
@@ -45,6 +48,10 @@ class Office::EmailConversation
     else
       throw "#remove_tag expects a WpTag as the only parameter."
     end
+  end
+
+  def self.in_inbox
+    ::Office::EmailConversation.where( :wp_term_ids => WpTag.email_inbox_tag.id ).order_by( latest_at: :desc )
   end
 
 end

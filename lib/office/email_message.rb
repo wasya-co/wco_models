@@ -101,26 +101,3 @@ class Office::EmailMessage
 
 end
 ::Msg = Office::EmailMessage
-
-
-
-  ## trash _vp_ 2023-03-07
-  # def process
-  #   Aws.config[:credentials] = Aws::Credentials.new(
-  #     ::S3_CREDENTIALS[:access_key_id],
-  #     ::S3_CREDENTIALS[:secret_access_key]
-  #   )
-  #   s3 = Aws::S3::Client.new
-  #   obj = s3.get_object({
-  #     bucket: 'ish-ses',
-  #     key: self.object_key
-  #   })
-  #   obj2 = obj.body.read
-  #   mail        = Mail.read_from_string( obj2 )
-  #   self.from    = mail.from
-  #   self.to      = mail.to
-  #   self.subject = mail.subject
-  #   self.date    = mail.date
-  #   self.raw     = obj2
-  #   self.save
-  # end

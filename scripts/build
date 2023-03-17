@@ -20,11 +20,11 @@ cat ish_models.gemspec-template | \
 
 bundle > /dev/null
 
-gem build ish_models.gemspec
-gem push ish_models-$version.gem
-
 git add .
 git commit -m 'autobuild `date "+%Y%m%d"`'
 git push
+
+gem build ish_models.gemspec
+gem push ish_models-$version.gem
 
 echo "ish_models build ok"

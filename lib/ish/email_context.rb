@@ -73,18 +73,12 @@ class ::Ish::EmailContext
   end
 
 
-  field :lead_id
+  field :lead_id, type: :integer
   def lead
     Lead.find lead_id
   end
-  ## @deprecated: use self.lead
-  field :to_email
   def to_email
-    if self[:lead_id]
-      return lead[:email]
-    else
-      return self[:to_email]
-    end
+    return lead[:email]
   end
 
 
@@ -99,3 +93,5 @@ class ::Ish::EmailContext
   end
 
 end
+Ctx = ::Ish::EmailContext
+

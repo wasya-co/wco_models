@@ -21,7 +21,22 @@ class ::Ish::EmailTemplate
 
   field :subject
   field :body
+
+  FROM_EMAILS = [
+    'Infinite Shelter <hello@infiniteshelter.com>',
+    'Infinite Shelter <no-reply@infiniteshelter.com>',
+    'Victor Piousbox <piousbox@gmail.com>',
+    'Victor Piousbox <victor@piousbox.com>',
+    'Victor Piousbox <no-reply@piousbox.com>',
+    'Victor Piousbox <admin@wasya.co>',
+    'WasyaCo Consulting <hello@wasya.co>',
+    'WasyaCo Consulting <no-reply@wasya.co>',
+    'Victor Piousbox <victor@wasya.co>',
+  ];
   field :from_email
+  def self.from_email_list
+    [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
+  end
 
   ## 2023-03-04 _vp_ This works!
   def get_binding

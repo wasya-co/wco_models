@@ -19,9 +19,13 @@ class Office::ScheduledEmailAction
   scope :active, ->{ where( state: STATE_ACTIVE ) }
 
   belongs_to :email_action, class_name: '::Office::EmailAction'
-  has_many :email_contexts, class_name: '::Ish::EmailContext'
+  def act; email_action; end
 
-  field :perform_at, type: :timestamp
+  has_many :email_contexts, class_name: '::Ish::EmailContext'
+  def ctxs; email_contexts; end
+
+  field :perform_at, type: :time
+
 
 end
 ::Sch = Office::ScheduledEmailAction

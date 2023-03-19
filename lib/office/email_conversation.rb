@@ -41,18 +41,21 @@ class Office::EmailConversation
     else
       throw "#add_tag expects a WpTag or string (eg WpTag::EMAILTAG_INBOX) as the only parameter."
     end
-    puts! tag, 'tag'
     self[:wp_term_ids] = ( [ tag.id ] + self[:wp_term_ids] ).uniq
     self.save!
   end
 
   def remove_tag tag
-    if WpTag == tag.class
-      self[:wp_term_ids].delete( tag.id )
-      self.save!
+    case tag.class.name
+    when 'WpTag'
+      ;
+    when 'String'
+      tag = WpTag.emailtag(tag)
     else
-      throw "#remove_tag expects a WpTag as the only parameter."
+      throw "#remove_tag expects a WpTag or string (eg WpTag::EMAILTAG_INBOX) as the only parameter."
     end
+    self[:wp_term_ids].delete( tag.id )
+    self.save!
   end
 
   def self.in_inbox

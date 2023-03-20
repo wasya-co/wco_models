@@ -8,9 +8,6 @@ require 'kaminari/mongoid'
 
 class Gameui; end
 
-module Iro; end
-
-
 module Ish; end
 class Ish::InputError < RuntimeError; end
 

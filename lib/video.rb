@@ -16,6 +16,7 @@ class Video
 
   field :name, :type => String
   field :descr, :type => String, :as => :description
+  field :subhead ## still need it... 2023-03-24
 
   field :is_trash, :type => Boolean, :default => false
   def is_trash
@@ -93,7 +94,7 @@ end
 
 =begin
   field :issue
-  field :subhead
+
   field :is_feature, :type => Boolean, :default => false
   field :lang, :type => String, :default => 'en'
 =end

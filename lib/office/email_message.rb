@@ -64,7 +64,7 @@ class Office::EmailMessage
     email_conversation
   end
 
-  ## @TODO: reimplement, look at footer instead.
+  ## @TODO: reimplement
   def name
     return 'associate'
     # from[0].split('@')[0].upcase
@@ -77,23 +77,12 @@ class Office::EmailMessage
   def apply_filter filter
     case filter.kind
     when ::Office::EmailFilter::KIND_SKIP_INBOX
-      self.remove_tag( ::WpTag.email_inbox_tag )
+      self.remove_tag( WpTag::INBOX )
     when ::Office::EmailFilter::KIND_AUTORESPOND
       Ish::EmailContext.create({
         email_template: ::Tmpl.find_by_slug( filter.email_template_slug ),
         lead: lead,
       })
-    # when 'autorespond-remind'
-    #   Office::EmailAction.create({
-    #     tmpl_slug: 'require-sign-nda',
-    #     next_in_days: -> { rand(1..5) },
-    #     next_at_time: ->{ rand(8..16).hours + rand(1..59).minutes },
-    #     next_action: 're-remind-sign-nda',
-    #   })
-    #   Ish::EmailContext.create({
-    #     email_template: ::Tmpl.find_by_slug( filter.email_template_slug ),
-    #     lead: lead,
-    #   })
     else
       raise "unknown filter kind: #{filter.kind}"
     end

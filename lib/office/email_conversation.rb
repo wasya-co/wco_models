@@ -54,9 +54,11 @@ class Office::EmailConversation
     else
       throw "#remove_tag expects a WpTag or string (eg WpTag::EMAILTAG_INBOX) as the only parameter."
     end
-    self[:wp_term_ids].delete( tag.id )
-    self.save!
+    self[:wp_term_ids] = self[:wp_term_ids] - [ tag.id ]
+    out = self.save!
+    out
   end
+  def rmtag tag; remove_tag tag; end
 
   def self.not_in_emailtag which
     case which.class.name

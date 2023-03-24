@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.207)
+    ish_models (0.0.33.208)
       aws-sdk-s3
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)
@@ -38,8 +38,8 @@ GEM
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.730.0)
-    aws-sdk-core (3.170.1)
+    aws-partitions (1.734.0)
+    aws-sdk-core (3.171.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -47,7 +47,7 @@ GEM
     aws-sdk-kms (1.63.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.119.1)
+    aws-sdk-s3 (1.119.2)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)

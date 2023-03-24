@@ -41,23 +41,34 @@ class Office::EmailMessage
 
   ## Copied to email_conversation
   field :wp_term_ids, type: Array, default: []
+
   ## Tested manually ok, does not pass the spec. @TODO: hire to make pass spec? _vp_ 2023-03-07
   def add_tag tag
-    if WpTag == tag.class
-      self[:wp_term_ids] = self[:wp_term_ids].push(tag.id).uniq
-      self.save!
+    case tag.class.name
+    when 'WpTag'
+      ;
+    when 'String'
+      tag = WpTag.emailtag(tag)
     else
-      throw "#add_tag expects a WpTag as the only parameter."
+      throw "#add_tag2 expects a WpTag or string (eg WpTag::INBOX) as the only parameter."
     end
+    self[:wp_term_ids] = ( [ tag.id ] + self[:wp_term_ids] ).uniq
+    self.save!
   end
   def remove_tag tag
-    if WpTag == tag.class
-      self[:wp_term_ids].delete( tag.id )
-      self.save!
+    case tag.class.name
+    when 'WpTag'
+      ;
+    when 'String'
+      tag = WpTag.emailtag(tag)
     else
-      throw "#remove_tag expects a WpTag as the only parameter."
+      throw "#remove_tag2 expects a WpTag or string (eg WpTag::INBOX) as the only parameter."
     end
+    self[:wp_term_ids] = self[:wp_term_ids] - [ tag.id ]
+    out = self.save!
+    out
   end
+  def rmtag tag; remove_tag tag; end
 
   belongs_to :email_conversation
   def conv
@@ -74,10 +85,12 @@ class Office::EmailMessage
     from[0].split('@')[1]
   end
 
+  ## @TODO: move to email_conversation _vp_ 2023-03-24
   def apply_filter filter
     case filter.kind
     when ::Office::EmailFilter::KIND_SKIP_INBOX
       self.remove_tag( WpTag::INBOX )
+      self.conv.remove_tag( WpTag::INBOX )
     when ::Office::EmailFilter::KIND_AUTORESPOND
       Ish::EmailContext.create({
         email_template: ::Tmpl.find_by_slug( filter.email_template_slug ),

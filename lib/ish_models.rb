@@ -67,6 +67,7 @@ require 'report'
 require 'video'
 
 require 'office/email_action'
+require 'office/email_action_tie'
 require 'office/email_conversation'
 require 'office/email_filter'
 require 'office/email_message'

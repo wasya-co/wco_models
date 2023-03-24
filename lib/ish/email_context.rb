@@ -49,6 +49,9 @@ class ::Ish::EmailContext
     Ish::EmailContext.where({ :send_at.lte => Time.now  })
   end
 
+  def self.from_email_list
+    Ish::EmailCampaign.from_email_list
+  end
 
   field :lead_id, type: :integer
   def lead; Lead.find( lead_id ); end

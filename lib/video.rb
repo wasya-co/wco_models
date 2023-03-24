@@ -27,13 +27,10 @@ class Video
   end
 
   field :is_public, :type => Boolean, :default => false
-  field :is_feature, :type => Boolean, :default => false
 
   field :x, type: Float
   field :y, type: Float
   field :z, type: Float
-
-  field :lang, :type => String, :default => 'en'
 
   field :youtube_id
   validates_uniqueness_of :youtube_id, allow_blank: true, case_sensitive: false
@@ -41,13 +38,11 @@ class Video
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos
 
+  index({ is_trash: 1, user_profile_id: 1, created_at: 1 }, { name: 'idx1' })
+
   def self.list
     [['', nil]] + Video.unscoped.order_by( :created_at => :desc ).map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
-
-
-  field :issue
-  field :subhead
 
   has_mongoid_attached_file :video,
     # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
@@ -94,3 +89,11 @@ class Video
 
 
 end
+
+
+=begin
+  field :issue
+  field :subhead
+  field :is_feature, :type => Boolean, :default => false
+  field :lang, :type => String, :default => 'en'
+=end

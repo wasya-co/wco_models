@@ -10,7 +10,7 @@ class Office::EmailMessage
 
   field :message_id,  type: :string # MESSAGE-ID
   validates_uniqueness_of :message_id
-  index({ message_id: 1 }, { unique: true, name: "message_id_idx" })
+  index({ message_id: 1 }, { unique: true, name: "id_idx" })
 
   field :in_reply_to_id, type: :string
 

@@ -11,7 +11,7 @@ class ::Ish::EmailContext
 
   field :preview_str, type: :string
   def preview_str
-    if self[:preview_str].presence?
+    if self[:preview_str].presence
       return self[:preview_str]
     else
       return tmpl.preview_str

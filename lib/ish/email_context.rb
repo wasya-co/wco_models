@@ -18,6 +18,15 @@ class ::Ish::EmailContext
     end
   end
 
+  field :body
+  def body
+    if self[:body].presence
+      return self[:body]
+    else
+      return tmpl.body
+    end
+  end
+
   PAGE_PARAM_NAME = 'email_contexts_page'
 
   field :from_email
@@ -26,7 +35,7 @@ class ::Ish::EmailContext
   field :subject
   # validates_presence_of :subject
 
-  field :body
+
 
   belongs_to :email_template
   def tmpl; email_template; end

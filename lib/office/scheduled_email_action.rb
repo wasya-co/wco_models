@@ -20,6 +20,8 @@ class Office::ScheduledEmailAction
 
   belongs_to :email_action, class_name: '::Office::EmailAction'
   def act; email_action; end
+  def act= a; email_action= a; end
+  validates :email_action, uniqueness: { scope: :lead_id }
 
   has_many :email_contexts, class_name: '::Ish::EmailContext'
   def ctxs; email_contexts; end

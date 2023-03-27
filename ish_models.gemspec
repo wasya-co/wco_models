@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'ish_models'
-  s.version     = '0.0.33.215'
+  s.version     = '0.0.33.217'
   s.date        = '2017-05-10'
   s.summary     = 'models of ish'
   s.description = 'models of ish'
@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'kaminari-mongoid', '~> 1.0.1'
   s.add_runtime_dependency 'devise', '> 0'
   s.add_runtime_dependency 'aws-sdk-s3'
+  s.add_runtime_dependency 'rails', '~> 6.1.0' ## only for ActionView in email_message model. _vp_ 2023-03-27
 
   # s.add_runtime_dependency 'mysql2', '~> 0.5.4'
-  s.add_runtime_dependency 'rails', '~> 6.1.0'
 
 end

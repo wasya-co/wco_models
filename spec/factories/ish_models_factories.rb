@@ -9,6 +9,9 @@ FactoryBot.define do
   sequence :handle do |n|
     "handle-#{n}"
   end
+  sequence :message_id do |n|
+    "message-id-#{n}"
+  end
   sequence :name do |n|
     "name-#{n}"
   end
@@ -35,6 +38,14 @@ FactoryBot.define do
 
   factory :email_conversation, class: ::Office::EmailConversation do
     latest_at { Time.now }
+    after :create do |convo|
+      create( :email_message, email_conversation: convo )
+    end
+  end
+
+  factory :email_message, class: Office::EmailMessage do
+    message_id { generate(:message_id) }
+    subject { "Some Subject" }
   end
 
   factory :email_template, class: ::Ish::EmailTemplate do

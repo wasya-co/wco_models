@@ -1,4 +1,6 @@
 
+require 'action_view'
+
 ##
 ## When I receive one.
 ##
@@ -99,6 +101,13 @@ class Office::EmailMessage
     else
       raise "unknown filter kind: #{filter.kind}"
     end
+  end
+
+  def preview_str
+    body = part_html || part_html || 'Neither part_html nor part_txt!'
+    body = ::ActionView::Base.full_sanitizer.sanitize( body ).gsub(/\s+/, ' ')
+    body = body[0..200]
+    body
   end
 
 end

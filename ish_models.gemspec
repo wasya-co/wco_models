@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'aws-sdk-s3'
 
   # s.add_runtime_dependency 'mysql2', '~> 0.5.4'
-  # s.add_runtime_dependency 'rails', '~> 6.1.0'
+  s.add_runtime_dependency 'rails', '~> 6.1.0'
 
 end

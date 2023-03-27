@@ -113,7 +113,7 @@ class Ish::UserProfile
 
     profile = Ish::UserProfile.where( email: email ).first
     if profile
-      puts! profile, "UserProfile#generate, already exists"
+      puts!( profile, "UserProfile#generate, already exists" ) if !Rails.env.test?
       return
     end
 

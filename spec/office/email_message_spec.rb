@@ -18,6 +18,12 @@ describe Office::EmailMessage do
     msg.wp_term_ids.should eql([ tag.id ])
   end
 
+  it '#preview_str' do
+    convo = create(:email_conversation)
+    m = create(:email_message, email_conversation: convo)
+    m.preview_str.length.should > 0
+  end
+
 end
 
 

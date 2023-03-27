@@ -64,7 +64,7 @@ class ::Ish::EmailContext
 
   field :lead_id, type: :integer
   def lead; Lead.find( lead_id ); end
-  def to_email; lead[:email]; end
+  def to_email; lead[:email]; end ## @TODO: remove, just use the lead. _vp_ 2023-03-27
 
 
   ##

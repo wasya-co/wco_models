@@ -32,6 +32,9 @@ FactoryBot.define do
     from_email { 'from@email.com' }
   end
 
+  factory :email_campaign_lead, class: ::Ish::EmailCampaignLead do
+  end
+
   factory :email_context, class: ::Ish::EmailContext do
 
   end
@@ -51,6 +54,7 @@ FactoryBot.define do
   factory :email_template, class: ::Ish::EmailTemplate do
     slug { generate(:slug) }
     subject { 'xxSome Subjectxx' }
+    body { 'Email Template Body' }
   end
 
   factory :gallery do

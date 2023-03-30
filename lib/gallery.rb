@@ -2,6 +2,7 @@
 class Gallery
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
+  include Ish::PremiumItem
   include Ish::Utils
 
   PER_PAGE = 6
@@ -16,13 +17,6 @@ class Gallery
 
   field :is_trash,   type: Boolean, default: false
   field :is_done,    type: Boolean, default: false
-
-  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
-  def is_premium
-    premium_tier > 0
-  end
-  def premium?; is_premium; end
-  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
 
   default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
 

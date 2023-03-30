@@ -53,19 +53,6 @@ class Ish::UserProfile
   has_many :videos,    inverse_of: :user_profile
   has_many :newsitems, inverse_of: :profile
 
-  has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
-  def bookmarks
-    bookmarked_locations
-  end
-
-  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
-  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
-
-  field :n_unlocks, type: Integer, default: 0
-  def n_coins # @deprecated, do not use
-    n_unlocks
-  end
-
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
   end
@@ -77,18 +64,14 @@ class Ish::UserProfile
     [['', nil]] + out.map { |item| [ "#{item.email} :: #{item.name}", item.id ] }
   end
 
-  ##
-  ## GameUI
-  ##
-  field :n_stars, type: Integer, default: 0
-  has_many :premium_purchases, :class_name => '::Gameui::PremiumPurchase'
-  def has_premium_purchase item
-    item.premium_purchases.where( user_profile_id: self.id ).exists?
-  end
-  def premium_purchases
-    ::Gameui::PremiumPurchase.where( user_profile_id: self.id )
-  end
+  field :n_unlocks, type: Integer, default: 0
+
+  has_many :payments, :class_name => '::Ish::Payment'
+
   field :is_purchasing, type: Boolean, default: false
+
+  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
 
   # used in rake tasks
   def self.generate delta
@@ -98,7 +81,6 @@ class Ish::UserProfile
 
     profile = Ish::UserProfile.where( email: email ).first
     if profile
-      puts!( profile, "UserProfile#generate, already exists" ) if !Rails.env.test?
       return
     end
 

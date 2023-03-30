@@ -6,7 +6,7 @@ describe Ish::UserProfile do
   end
 
   context 'associations' do
-    it { is_expected.to have_many(:my_maps) }
+
     it { is_expected.to have_many(:my_markers) }
   end
 

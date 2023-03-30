@@ -7,6 +7,7 @@ class Video
   include Mongoid::Timestamps
   include Mongoid::Paperclip
   include Mongoid::Paranoia
+  include Ish::PremiumItem
   include Ish::Utils
 
   include Mongoid::Votable
@@ -75,26 +76,8 @@ class Video
     s3_region: ::S3_CREDENTIALS[:region]
   validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
 
-  ## copy-paste
-  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
-  def is_premium
-    premium_tier > 0
-  end
-  def premium?; is_premium; end
-  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
-
   def export_fields
     %w| name descr |
   end
 
-
-
 end
-
-
-=begin
-  field :issue
-
-  field :is_feature, :type => Boolean, :default => false
-  field :lang, :type => String, :default => 'en'
-=end

@@ -27,16 +27,15 @@ FactoryBot.define do
     email_template { create( 'email_template' ) }
   end
 
-  factory :email_campaign, class: ::Ish::EmailCampaign do
-    subject { 'xxSome Subjectxx' }
-    from_email { 'from@email.com' }
-  end
+  # factory :email_campaign, class: ::Ish::EmailCampaign do
+  #   subject { 'xxSome Subjectxx' }
+  #   from_email { 'from@email.com' }
+  # end
 
-  factory :email_campaign_lead, class: ::Ish::EmailCampaignLead do
-  end
+  # factory :email_campaign_lead, class: ::Ish::EmailCampaignLead do
+  # end
 
   factory :email_context, class: ::Ish::EmailContext do
-
   end
 
   factory :email_conversation, class: ::Office::EmailConversation do
@@ -101,9 +100,6 @@ FactoryBot.define do
 
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
-  end
-
-  factory :premium_purchase, aliases: [ :purchase ], class: Gameui::PremiumPurchase do
   end
 
   factory :report do

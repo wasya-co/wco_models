@@ -69,7 +69,7 @@ class Ish::UserProfile
   has_many :payments, :class_name => '::Ish::Payment'
 
   def has_premium_purchase item
-    payments.where( item: item ).exists?
+    payments.confirmed.where( item: item ).exists?
   end
 
   field :is_purchasing, type: Boolean, default: false

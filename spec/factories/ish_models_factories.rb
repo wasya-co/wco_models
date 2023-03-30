@@ -102,7 +102,7 @@ FactoryBot.define do
     email { generate(:email) }
   end
 
-  factory :purchase, class: 'Ish::Purchase' do
+  factory :purchase, class: 'Ish::Payment' do
   end
 
   factory :report do

@@ -14,7 +14,11 @@ class Ish::Payment
   field :client_secret
   field :payment_intent_id
 
-  field :status, type: Symbol
+  STATUS_CONFIRMED = 'confirmed'
+  STATUS_PENDING = 'pending'
+  STATUSES = %w| active pending |
+  field :status, type: Symbol, default: STATUS_PENDING
+  scope :confirmed, ->{ where( status: STATUS_CONFIRMED ) }
 
   after_create :compute_paid_invoice_amount
   def compute_paid_invoice_amount

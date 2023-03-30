@@ -31,3 +31,5 @@ master   2022-03-12 - import/export of maps
          2022-11-10 - and bugfix, allow videos with empty youtube_id
                     - adding from_email
          2022-11-14 - important fix of youtube_id
+2.2.0  - 2023-03-29 - lets not touch anything, actually. just make payments work.
+

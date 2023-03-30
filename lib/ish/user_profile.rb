@@ -2,7 +2,9 @@
 require 'ish/utils'
 require 'mongoid/votable'
 
-## @TODO: rename to Ish::Profile
+##
+## It explicitly doesn't have a relation to user! Use email as key.
+##
 class Ish::UserProfile
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -38,48 +40,31 @@ class Ish::UserProfile
   ROLE_ADMIN   = :admin
   field :role_name, :type => Symbol, default: :guy
 
-  has_one :profile_photo, :class_name => 'Photo', :inverse_of => :profile_city
-
-  # belongs_to :user
-  # validates_presence_of :user
-
-  belongs_to :current_city, :class_name => 'City', :inverse_of => :current_users, :optional => true
-  belongs_to :guide_city,   :class_name => 'City', :inverse_of => :guide,         :optional => true
-
-  has_many :galleries, :inverse_of => :user_profile
-  has_and_belongs_to_many :shared_galleries, :inverse_of => :shared_profiles, class_name: 'Gallery'
-  has_and_belongs_to_many :shared_markers,   :inverse_of => :shared_profiles, class_name: 'Gameui::Marker'
-  has_many :my_markers,   :inverse_of => :creator_profile, class_name: 'Gameui::Marker'
-  has_and_belongs_to_many :shared_locations, :inverse_of => :shared_profiles, class_name: 'Gameui::Map'
-  has_many :my_maps, :inverse_of => :creator_profile, class_name: 'Gameui::Map'
-
-  has_many :invoices,                             :class_name => '::Ish::Invoice'
+  has_one :profile_photo,                    inverse_of: :profile_city,    class_name: 'Photo'
+  has_many :galleries,                       inverse_of: :user_profile
+  has_and_belongs_to_many :shared_galleries, inverse_of: :shared_profiles, class_name: 'Gallery'
+  has_and_belongs_to_many :shared_markers,   inverse_of: :shared_profiles, class_name: 'Gameui::Marker'
+  has_and_belongs_to_many :shared_locations, inverse_of: :shared_profiles, class_name: 'Gameui::Map'
+  has_many :my_markers,                      inverse_of: :creator_profile, class_name: 'Gameui::Marker'
+  has_many :my_locations,                    inverse_of: :creator_profile, class_name: 'Gameui::Map'
+  has_many :invoices,                                                      class_name: '::Ish::Invoice'
   has_many :photos
-  has_many :reports,   inverse_of: :user_profile
-
-  ## @TODO: do something about this.
-  # has_many :stock_watches,  class_name: 'IronWarbler::StockWatch'
-  # has_many :option_watches, class_name: 'IronWarbler::OptionWatch'
-
+  has_many :reports,                         inverse_of: :user_profile
   has_many :videos,    inverse_of: :user_profile
-  has_many :newsitems, inverse_of: :profile # @TODO: remove? denorm handle over here?
+  has_many :newsitems, inverse_of: :profile
 
   has_and_belongs_to_many :bookmarked_locations, class_name: '::Gameui::Map', inverse_of: :bookmarked_profile
   def bookmarks
     bookmarked_locations
   end
 
-  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', :inverse_of => :friendeds
-  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', :inverse_of => :friends
+  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
 
   field :n_unlocks, type: Integer, default: 0
   def n_coins # @deprecated, do not use
     n_unlocks
   end
-
-  ## preferences
-  ## @TODO: better naming convention, or remove this
-  field :videos_embed, :type => Boolean, :default => false
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
@@ -89,7 +74,7 @@ class Ish::UserProfile
   ## @TODO: check this, this is shit. _vp_ 20170527
   def self.list
     out = self.all.order_by( :domain => :asc, :lang => :asc )
-    [['', nil]] + out.map { |item| [ item.name, item.id ] }
+    [['', nil]] + out.map { |item| [ "#{item.email} :: #{item.name}", item.id ] }
   end
 
   ##

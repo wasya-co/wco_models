@@ -20,4 +20,4 @@ class Office::EmailMessageStub
   field :wp_term_ids, type: :array, default: []
 
 end
-EMS = Office::EmailMessageStub
+MsgStub = EMS = Office::EmailMessageStub

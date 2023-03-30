@@ -1,6 +1,7 @@
 class Report
   include ::Mongoid::Document
   include ::Mongoid::Timestamps
+  include Ish::PremiumItem
   include Ish::Utils
 
   field :name, :type => String
@@ -82,14 +83,6 @@ class Report
       self.unscoped.each { |r| r.remove }
     end
   end
-
-  ## copy-paste
-  field :premium_tier, type: Integer, default: 0 # how many stars need to spend, to get access? 0 = free
-  def is_premium
-    premium_tier > 0
-  end
-  def premium?; is_premium; end
-  has_many :premium_purchases, class_name: '::Gameui::PremiumPurchase', as: :item
 
   def export_fields
     %w| name descr |

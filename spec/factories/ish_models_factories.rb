@@ -102,6 +102,9 @@ FactoryBot.define do
     email { generate(:email) }
   end
 
+  factory :purchase, class: 'Ish::Purchase' do
+  end
+
   factory :report do
     name { 'Report Name' }
   end

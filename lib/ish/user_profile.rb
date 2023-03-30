@@ -68,6 +68,10 @@ class Ish::UserProfile
 
   has_many :payments, :class_name => '::Ish::Payment'
 
+  def has_premium_purchase item
+    payments.where( item: item ).exists?
+  end
+
   field :is_purchasing, type: Boolean, default: false
 
   has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds

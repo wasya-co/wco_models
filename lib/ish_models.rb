@@ -8,9 +8,6 @@ require 'kaminari/mongoid'
 
 class Gameui; end
 
-class Iro; end
-class Iro::OptionPriceItem; end
-
 module Ish; end
 class Ish::InputError < RuntimeError; end
 

@@ -47,5 +47,10 @@ class ::Ish::EmailTemplate
   has_many :email_actions, class_name: '::Office::EmailAction'
   has_many :email_contexts, class_name: '::Ish::EmailContext'
 
+  SLUG_BLANK = 'blank'
+  def self.blank_template
+    out = Tmpl.find_or_create_by({ slug: SLUG_BLANK })
+  end
+
 end
 ::Tmpl = ::Ish::EmailTemplate

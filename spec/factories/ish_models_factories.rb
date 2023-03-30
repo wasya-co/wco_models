@@ -27,13 +27,10 @@ FactoryBot.define do
     email_template { create( 'email_template' ) }
   end
 
-  # factory :email_campaign, class: ::Ish::EmailCampaign do
-  #   subject { 'xxSome Subjectxx' }
-  #   from_email { 'from@email.com' }
-  # end
-
-  # factory :email_campaign_lead, class: ::Ish::EmailCampaignLead do
-  # end
+  factory :email_campaign, class: ::Ish::EmailCampaign do
+    subject { 'xxSome Subjectxx' }
+    from_email { 'from@email.com' }
+  end
 
   factory :email_context, class: ::Ish::EmailContext do
   end

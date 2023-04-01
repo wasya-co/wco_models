@@ -15,5 +15,10 @@ describe ::Ish::EmailContext do
     flag.should eql true
   end
 
+  it '#notsent' do
+    Ctx.notsent.should_not eql nil
+    Ctx.new.notsent.should_not eql nil
+  end
+
 end
 

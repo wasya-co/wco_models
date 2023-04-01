@@ -1,6 +1,8 @@
 
+##
+## for alerting
+##
 class Iro::OptionWatch
-
   include Mongoid::Document
   include Mongoid::Timestamps
   store_in collection: 'iro_option_watches'

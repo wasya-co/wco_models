@@ -49,14 +49,18 @@ class ::Ish::EmailContext
   field :send_at, type: DateTime
 
 
-  def self.unsent; new.unsent; end
-  def unsent; Ish::EmailContext.where( sent_at: nil ); end
+  def notsent
+    Ish::EmailContext.where( sent_at: nil )
+  end
+  def self.notsent; new.notsent; end
 
-  def self.scheduled; new.scheduled; end
+
   def scheduled
     # or({ :send_at.lte => Time.now }, { :send_at => nil }) ## This won't work b/c I need draft state!
     Ish::EmailContext.where({ :send_at.lte => Time.now  })
   end
+  def self.scheduled; new.scheduled; end
+
 
   def self.from_email_list
     Ish::EmailCampaign.from_email_list

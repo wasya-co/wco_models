@@ -6,13 +6,12 @@ require 'kaminari/mongoid'
 
 ::S3_CREDENTIALS ||= {}
 
-class Gameui; end
-
+module Gameui; end
+module Iro; end
 module Ish; end
 class Ish::InputError < RuntimeError; end
 
-# I need this thing for permissions???
-class Manager; end
+module Manager; end
 
 module Office; end
 
@@ -41,8 +40,7 @@ require 'gameui/asset3d'
 require 'gameui/map'
 require 'gameui/marker'
 
-# require 'iro/option_price_item'
-
+require 'iro/option_watch'
 
 require 'ish/cache_key'
 require 'ish/crawler'

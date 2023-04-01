@@ -17,6 +17,7 @@ class Ish::UserProfile
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
 
+
   field :name
 
   def export_fields
@@ -57,10 +58,12 @@ class Ish::UserProfile
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
   end
 
-  ## manager uses it.
-  ## @TODO: check this, this is shit. _vp_ 20170527
   def self.list
-    out = self.all.order_by( :domain => :asc, :lang => :asc )
+    out = self.all
+    [['', nil]] + out.map { |item| [ item.email, item.id ] }
+  end
+  def self.list_lg
+    out = self.all
     [['', nil]] + out.map { |item| [ "#{item.email} :: #{item.name}", item.id ] }
   end
 

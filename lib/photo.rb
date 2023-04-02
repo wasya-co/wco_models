@@ -15,7 +15,6 @@ class Photo
   belongs_to :user_profile,  :class_name => 'Ish::UserProfile',  :inverse_of => :profile_photo, :optional => true
 
   belongs_to :report,   :optional => true
-  belongs_to :feature,  :optional => true
   belongs_to :gallery,  :optional => true
   belongs_to :newsitem, :optional => true
 
@@ -36,7 +35,7 @@ class Photo
 
   field :is_public, :type => Boolean, :default => true
   field :is_trash,  :type => Boolean, :default => false # @TODO: nuke this boolean _vp_ 20170515
-  default_scope ->{ where({ :is_trash => false }) } # @TODO: nuke default scopes
+  default_scope ->{ where({ :is_trash => false }) }
 
   has_mongoid_attached_file :photo,
                             :styles => {

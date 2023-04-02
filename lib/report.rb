@@ -27,9 +27,7 @@ class Report
 
   field :is_public, :type => Boolean, :default => true
   index({ :is_public => 1 })
-  scope :public, ->{
-    where({ is_public: true })
-  }
+  scope :public, ->{ where({ is_public: true }) }
 
   field :is_feature, :type => Boolean, :default => false
   index({ :is_feature => 1 })
@@ -58,10 +56,6 @@ class Report
   field :n_upvotes, :default => 0
   field :n_spamvotes, :default => 0
 
-  default_scope ->{
-    where({ is_public: true, is_trash: false }).order_by({ created_at: :desc })
-  }
-
   has_many :newsitems
 
   def self.list conditions = { :is_trash => false }
@@ -72,10 +66,6 @@ class Report
   PER_PAGE = 10
   def self.paginates_per
     self::PER_PAGE
-  end
-
-  def self.all
-    self.where( :is_public => true, :is_trash => false ).order_by( :created_at => :desc )
   end
 
   def self.clear

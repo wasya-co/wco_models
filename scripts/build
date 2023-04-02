@@ -26,5 +26,6 @@ git push
 
 gem build ish_models.gemspec
 gem push ish_models-$version.gem
+rm ish_models-$version.gem
 
 echo "ish_models build ok"

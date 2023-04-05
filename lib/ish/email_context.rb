@@ -43,6 +43,8 @@ class ::Ish::EmailContext
   belongs_to :scheduled_email_action, class_name: '::Office::ScheduledEmailAction', optional: true
   def sch; scheduled_email_action; end
 
+  belongs_to :email_campaign, class_name: 'Ish::EmailCampaign', optional: true
+
   field :rendered_str
 
   field :sent_at, type: DateTime

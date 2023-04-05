@@ -7,30 +7,27 @@
 class Ish::EmailCampaign
   include Mongoid::Document
   include Mongoid::Timestamps
+  store_in collection: 'ish_email_campaigns'
 
-  field :title
-  def slug
-    title
-  end
+  field :slug
+  validates_uniqueness_of :slug, allow_nil: true
 
   PAGE_PARAM_NAME = 'email_contexts_page'
 
-  FROM_EMAILS = %w| hello@infiniteshelter.com no-reply@infiniteshelter.com
-    piousbox@gmail.com hello@piousbox.com no-reply@piousbox.com victor@piousbox.com
-    admin@wasya.co hello@wasya.co no-reply@wasya.co victor@wasya.co |
+  FROM_EMAILS = %w|    hello@infiniteshelter.com no-reply@infiniteshelter.com
+    piousbox@gmail.com hello@piousbox.com        no-reply@piousbox.com        victor@piousbox.com
+    admin@wasya.co     hello@wasya.co            no-reply@wasya.co            victor@wasya.co |
   field :from_email
   validates_presence_of :from_email
   def self.from_email_list
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end
 
-  field :subject
-  validates_presence_of :subject
-
-  field :body
-  # validates_presence_of :body
-
   belongs_to :email_template
+  def tmpl; email_template; end
+
+  field :subject
+  field :body
 
   field :sent_at, type: DateTime
   field :send_at, type: DateTime

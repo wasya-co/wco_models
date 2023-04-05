@@ -91,7 +91,7 @@ class Office::EmailMessage
   def apply_filter filter
     case filter.kind
     when ::Office::EmailFilter::KIND_SKIP_INBOX
-      self.remove_tag( WpTag::INBOX )
+      # self.remove_tag( WpTag::INBOX )
       self.conv.remove_tag( WpTag::INBOX )
     when ::Office::EmailFilter::KIND_AUTORESPOND
       Ish::EmailContext.create({

@@ -7,6 +7,7 @@ class Office::EmailFilter
   include Mongoid::Timestamps
 
   field :from_regex
+  field :subject_regex
   field :body_regex
 
   KIND_SKIP_INBOX = 'skip-inbox'

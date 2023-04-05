@@ -42,6 +42,10 @@ FactoryBot.define do
     end
   end
 
+  factory :email_filter, class: Office::EmailFilter do
+    from_regex { 'abba' }
+  end
+
   factory :email_message, class: Office::EmailMessage do
     message_id { generate(:message_id) }
     subject { "Some Subject" }

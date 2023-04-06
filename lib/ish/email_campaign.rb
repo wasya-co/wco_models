@@ -44,4 +44,16 @@ class Ish::EmailCampaign
   ##
   attr_reader :tid
 
+  def do_send
+    leads.each do |lead|
+      ctx = Ctx.create!({
+        email_template: tmpl,
+        from_email:     tmpl.from_email,
+        lead_id:        lead.id,
+        send_at:        Time.now,
+        subject:        tmpl.subject,
+      })
+    end
+  end
+
 end

@@ -33,7 +33,9 @@ class ::Ish::EmailContext
   # validates_presence_of :from_email
 
   field :subject
-  # validates_presence_of :subject
+  def subject
+    self[:subject].presence || tmpl.subject
+  end
 
   belongs_to :email_template
   def tmpl; email_template; end

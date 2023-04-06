@@ -35,8 +35,6 @@ class ::Ish::EmailContext
   field :subject
   # validates_presence_of :subject
 
-
-
   belongs_to :email_template
   def tmpl; email_template; end
 
@@ -81,6 +79,16 @@ class ::Ish::EmailContext
   def get_binding
     @lead = lead()
     binding()
+  end
+
+  def self.summary
+    pipeline = [
+      { '$group' => {
+        '_id' => { '$dateToString' => { 'format' => "%Y-%m-%d", 'date' => "$sent_at" } }, 'total' => { '$sum' => 1 }
+      } }
+    ]
+    outs = Ish::EmailContext.collection.aggregate( pipeline )
+    outs.to_a
   end
 
 end

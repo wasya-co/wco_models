@@ -15,7 +15,6 @@ class Office::EmailMessageStub
   validates_presence_of :object_key
 
   field :object_path, type: :string ## A routable s3 url ## @TODO: remove this field. _vp_ 2023-03-07
-  # validates_presence_of :object_path ## only need object_key == message_id
 
   field :wp_term_ids, type: :array, default: []
 

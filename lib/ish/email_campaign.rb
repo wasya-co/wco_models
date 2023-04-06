@@ -1,9 +1,8 @@
 
-#
-# Sends a campaign.
-# _vp_ 2023-02-02
-#
-
+##
+## Sends a campaign.
+## _vp_ 2023-02-02
+##
 class Ish::EmailCampaign
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -14,11 +13,11 @@ class Ish::EmailCampaign
 
   PAGE_PARAM_NAME = 'email_contexts_page'
 
+  field :from_email
+  validates_presence_of :from_email
   FROM_EMAILS = %w|    hello@infiniteshelter.com no-reply@infiniteshelter.com
     piousbox@gmail.com hello@piousbox.com        no-reply@piousbox.com        victor@piousbox.com
     admin@wasya.co     hello@wasya.co            no-reply@wasya.co            victor@wasya.co |
-  field :from_email
-  validates_presence_of :from_email
   def self.from_email_list
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end
@@ -40,23 +39,9 @@ class Ish::EmailCampaign
     campaign_leads&.map { |p| p.lead }
   end
 
-
-  # ##
-  # ## For templating:
-  # ##
-  # ## commonly: name, companyName
-  # field :tmpl, type: Hash, default: {}
-  # def body_templated
-  #   out = email_template.body
-  #   tmpl.each do |k, v|
-  #     out.gsub!("{#{k}}", v)
-  #   end
-  #   out
-  # end
-
-  #
-  # For tracking
-  #
+  ##
+  ## For tracking
+  ##
   attr_reader :tid
 
 end

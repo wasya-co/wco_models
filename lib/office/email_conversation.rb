@@ -17,8 +17,6 @@ class Office::EmailConversation
     Lead.find( lead_ids )
   end
 
-
-
   has_many :email_messages
   def email_messages
     Office::EmailMessage.where( email_conversation_id: self.id )
@@ -85,5 +83,4 @@ class Office::EmailConversation
   end
 
 end
-# EmailConversation = Office::EmailConversation
 Conv = Office::EmailConversation

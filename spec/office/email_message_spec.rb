@@ -20,19 +20,19 @@ describe Office::EmailMessage do
 
   it '#preview_str' do
     convo = create(:email_conversation)
-    m = create(:email_message, email_conversation: convo)
+    m     = create(:email_message, email_conversation: convo)
     m.preview_str.length.should > 0
   end
 
   describe '#apply_filter' do
     it 'skip inbox' do
-      convo = create(:email_conversation)
-      msg= create(:email_message, email_conversation: convo, wp_term_ids: [ WpTag.emailtag('inbox').id ] )
-      filter = create(:email_filter, subject_regex: 'abba', kind: Office::EmailFilter::KIND_SKIP_INBOX )
+      convo  = create(:email_conversation, wp_term_ids: [ WpTag.emailtag('inbox').id ] )
+      msg    = create(:email_message,      email_conversation: convo, wp_term_ids: [ WpTag.emailtag('inbox').id ] )
+      filter = create(:email_filter,       subject_regex: 'abba', kind: Office::EmailFilter::KIND_SKIP_INBOX )
 
       msg.apply_filter( filter )
 
-      msg.wp_term_ids.include?( WpTag.emailtag('inbox').id ).should eql false
+      msg.conv.wp_term_ids.include?( WpTag.emailtag('inbox').id ).should eql false
     end
   end
 

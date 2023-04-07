@@ -12,7 +12,7 @@ class ::Ish::EmailTemplate
   field :layout, type: :string, default: 'plain'
   LAYOUTS = %w| plain
     m20221201react m20221222merryxmas
-    marketing_react_1 marketing_react_2
+    marketing_react_1 marketing_react_2 marketing_react_3
     marketing_ror_1 marketing_ror_2
     marketing_wordpres_1 marketing_wordpress_2
     piousbox_roundborders

@@ -87,7 +87,8 @@ class ::Ish::EmailContext
     pipeline = [
       { '$group' => {
         '_id' => { '$dateToString' => { 'format' => "%Y-%m-%d", 'date' => "$sent_at" } }, 'total' => { '$sum' => 1 }
-      } }
+      } },
+      { '$sort' => { '_id': -1 } },
     ]
     outs = Ish::EmailContext.collection.aggregate( pipeline )
     outs.to_a

@@ -108,6 +108,8 @@ class Ish::UserProfile
     end
   end
 
+  field :per_page, type: Integer, default: 100
+
 end
 
 Profile = Ish::UserProfile

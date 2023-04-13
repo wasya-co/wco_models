@@ -35,6 +35,7 @@ class ::Gameui::Map
 
   # shareable, nonpublic
   field :is_public, type: Boolean, default: true
+  scope :public, ->{ where( is_public: true ) }
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_locations
 
   field :version, type: String, default: '0.0.0'

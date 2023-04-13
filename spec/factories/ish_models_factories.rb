@@ -3,6 +3,9 @@ FactoryBot.define do
 
   # alphabetized : )
 
+  sequence :email do |n|
+    "test-#{n}@email.com"
+  end
 
   sequence :handle do |n|
     "handle-#{n}"

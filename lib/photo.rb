@@ -8,15 +8,12 @@ class Photo
   include Mongoid::Paperclip
   include Ish::Utils
 
-  belongs_to :user_profile,  :class_name => 'Ish::UserProfile',               :optional => true
-  def user
-    user_profile
-  end
-  belongs_to :user_profile,  :class_name => 'Ish::UserProfile',  :inverse_of => :profile_photo, :optional => true
-
-  belongs_to :report,   :optional => true
-  belongs_to :gallery,  :optional => true
-  belongs_to :newsitem, :optional => true
+  belongs_to :user_profile,  :optional => true, :class_name => 'Ish::UserProfile'
+  belongs_to :user_profile,  :optional => true, :class_name => 'Ish::UserProfile',     :inverse_of => :profile_photo
+  belongs_to :email_message, :optional => true, :class_name => 'Office::EmailMessage'
+  belongs_to :report,        :optional => true
+  belongs_to :gallery,       :optional => true
+  belongs_to :newsitem,      :optional => true
 
   # photo.photo.to_s.split('/').last.split('?').first
   field :name,   :type => String
@@ -52,6 +49,7 @@ class Photo
                             :s3_protocol => 'https',
                             :validate_media_type => false,
                             s3_region: ::S3_CREDENTIALS[:region]
+  validates_attachment_content_type :photo, :content_type => ["image/webp", "image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
 
   def self.n_per_manager_gallery
     25
@@ -66,7 +64,23 @@ class Photo
     |
   end
 
-  validates_attachment_content_type :photo, :content_type => ["image/webp", "image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
+  ## From: https://gist.github.com/WizardOfOgz/1012107?permalink_comment_id=1442486
+  attr_accessor :content_type, :image_data, :original_filename
+  def decode_base64_image
+    if image_data && content_type && original_filename
+      decoded_data = Base64.decode64(image_data)
+
+      data = StringIO.new(decoded_data)
+      data.class_eval do
+        attr_accessor :content_type, :original_filename
+      end
+
+      data.content_type = content_type
+      data.original_filename = File.basename(original_filename)
+
+      self.photo = data
+    end
+  end
 
 end
 

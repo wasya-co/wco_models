@@ -23,18 +23,21 @@ class Office::EmailMessage
   field :subject
   field :part_txt
   field :part_html
-  # attachments ?
+  field :preamble
+  field :epilogue
+
+  has_many :attachments, class_name: 'Photo'
 
   def lead
     Lead.find_by email: from
   end
 
-  field :from,  type: :string
-  field :froms, type: Array, default: []
-  field :to,    type: :string
-  field :tos,   type: Array, default: []
-  field :ccs,   type: Array, default: []
-  field :bccs,  type: Array, default: []
+  field :from,   type: :string
+  field :froms,  type: Array, default: []
+  field :to,     type: :string
+  field :tos,    type: Array, default: []
+  field :ccs,    type: Array, default: []
+  field :bccs,   type: Array, default: []
 
   field :date, type: DateTime
   def received_at

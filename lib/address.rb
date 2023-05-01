@@ -4,7 +4,9 @@ class Address
   include Mongoid::Timestamps
 
   belongs_to :profile, :class_name => '::Ish::UserProfile'
-  validates :profile, :presence => true
+  # validates :profile, :presence => true
+
+  field :lead_id, type: :integer
 
   field :name
   field :address_1

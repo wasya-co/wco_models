@@ -9,6 +9,8 @@ class Gallery
 
   field :name
   validates :name, :uniqueness => true
+  index({ :name => -1 }, { :unique => true })
+
   field :subhead
   field :descr,   :as => :description
 

@@ -17,6 +17,7 @@ class ::Ish::EmailTemplate
     marketing_wordpres_1 marketing_wordpress_2
     piousbox_roundborders
     plain
+    tracking_footer
     wasyaco_roundborders |
 
   field :subject

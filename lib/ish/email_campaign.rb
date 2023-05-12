@@ -36,7 +36,7 @@ class Ish::EmailCampaign
   end
 
   def leads
-    campaign_leads&.map { |p| p.lead }
+    ::Lead.joins( :email_campaign_leads ).where( 'email_campaign_leads.email_campaign_id' => self.id.to_s )
   end
 
   ##

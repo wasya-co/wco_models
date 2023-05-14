@@ -68,6 +68,7 @@ class ::Ish::EmailContext
     Ish::EmailCampaign.from_email_list
   end
 
+  ## like belongs_to to_lead , but Lead is SQL to just the lead_id
   field :lead_id, type: :integer
   def lead; Lead.find( lead_id ); end
   def to_email; lead[:email]; end ## @TODO: remove, just use the lead. _vp_ 2023-03-27

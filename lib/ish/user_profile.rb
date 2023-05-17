@@ -46,6 +46,7 @@ class Ish::UserProfile
   has_and_belongs_to_many :shared_galleries, inverse_of: :shared_profiles, class_name: 'Gallery'
   has_and_belongs_to_many :shared_markers,   inverse_of: :shared_profiles, class_name: 'Gameui::Marker'
   has_and_belongs_to_many :shared_locations, inverse_of: :shared_profiles, class_name: 'Gameui::Map'
+  has_and_belongs_to_many :shared_videos,    inverse_of: :shared_profiles, class_name: '::Video'
   has_many :my_markers,                      inverse_of: :creator_profile, class_name: 'Gameui::Marker'
   has_many :my_locations,                    inverse_of: :creator_profile, class_name: 'Gameui::Map'
   has_many :invoices,                                                      class_name: '::Ish::Invoice'

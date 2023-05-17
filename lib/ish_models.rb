@@ -4,8 +4,6 @@ require 'ish/configuration'
 require 'aws-sdk-s3'
 require 'kaminari/mongoid'
 
-::S3_CREDENTIALS ||= {}
-
 module Gameui; end
 module Iro; end
 module Ish; end

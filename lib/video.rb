@@ -38,7 +38,9 @@ class Video
   validates_uniqueness_of :youtube_id, allow_blank: true, case_sensitive: false
   before_save { youtube_id.present? || youtube_id = nil }
 
-  belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile', :inverse_of => :videos
+  belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
+  has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos
+
 
   index({ is_trash: 1, user_profile_id: 1, created_at: 1 }, { name: 'idx1' })
 

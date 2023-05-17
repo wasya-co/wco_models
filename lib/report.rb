@@ -35,6 +35,7 @@ class Report
   field :z, :type => Float
 
   belongs_to :user_profile, :optional => true, :class_name => 'Ish::UserProfile'
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_reports
 
   has_one :photo
 

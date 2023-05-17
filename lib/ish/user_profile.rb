@@ -41,19 +41,20 @@ class Ish::UserProfile
   ROLE_ADMIN   = :admin
   field :role_name, :type => Symbol, default: :guy
 
-  has_one :profile_photo,                    inverse_of: :profile_city,    class_name: 'Photo'
+  has_one  :profile_photo,                   inverse_of: :profile_city,    class_name: 'Photo'
   has_many :galleries,                       inverse_of: :user_profile
   has_and_belongs_to_many :shared_galleries, inverse_of: :shared_profiles, class_name: 'Gallery'
   has_and_belongs_to_many :shared_markers,   inverse_of: :shared_profiles, class_name: 'Gameui::Marker'
   has_and_belongs_to_many :shared_locations, inverse_of: :shared_profiles, class_name: 'Gameui::Map'
+  has_and_belongs_to_many :shared_reports,   inverse_of: :shared_profiles, class_name: '::Report'
   has_and_belongs_to_many :shared_videos,    inverse_of: :shared_profiles, class_name: '::Video'
   has_many :my_markers,                      inverse_of: :creator_profile, class_name: 'Gameui::Marker'
   has_many :my_locations,                    inverse_of: :creator_profile, class_name: 'Gameui::Map'
   has_many :invoices,                                                      class_name: '::Ish::Invoice'
   has_many :photos
   has_many :reports,                         inverse_of: :user_profile
-  has_many :videos,    inverse_of: :user_profile
-  has_many :newsitems, inverse_of: :profile
+  has_many :videos,                          inverse_of: :user_profile
+  has_many :newsitems,                       inverse_of: :profile
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )

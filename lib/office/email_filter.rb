@@ -7,19 +7,36 @@ class Office::EmailFilter
   include Mongoid::Timestamps
 
   field :from_regex
+  field :from_exact
   field :subject_regex
+  field :subject_exact
   field :body_regex
+  field :body_exact
 
-  KIND_SKIP_INBOX = 'skip-inbox'
-  KIND_AUTORESPOND = 'autorespond'
-  KINDS = [ nil, KIND_SKIP_INBOX, KIND_AUTORESPOND ]
+  KIND_AUTORESPOND      = 'autorespond' # @deprecated, DO NOT USE!
+  KIND_AUTORESPOND_TMPL = 'autorespond-template'
+  KIND_AUTORESPOND_EACT = 'autorespond-email-action'
+  KIND_REMOVE_TAG  = 'remove-tag'
+  KIND_ADD_TAG     = 'add-tag'
+  KIND_DELETE      = 'delete' # @obsolete, use add-tag
+  KIND_SKIP_INBOX  = 'skip-inbox' # @obsolete, use remove-tag
+
+  KINDS = [ nil, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_SKIP_INBOX, KIND_ADD_TAG, KIND_REMOVE_TAG]
   field :kind
 
-  STATE_ACTIVE = 'active'
+  STATE_ACTIVE   = 'active'
   STATE_INACTIVE = 'inactive'
   STATES = [ STATE_ACTIVE, STATE_INACTIVE ]
   field :state, type: :string, default: STATE_ACTIVE
   scope :active, ->{ where( state: STATE_ACTIVE ) }
+
+  belongs_to :email_template, class_name: 'Ish::EmailTemplate', optional: true
+  belongs_to :email_action,   class_name: 'Office::EmailAction', optional: true
+
+  field :wp_term_id, type: :integer
+  def category
+    self.wp_term_id && WpTag.find( self.wp_term_id )
+  end
 
 end
 

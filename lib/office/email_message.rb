@@ -93,14 +93,33 @@ class Office::EmailMessage
   ## @TODO: move to email_conversation _vp_ 2023-03-24
   def apply_filter filter
     case filter.kind
+
+    ## @deprecated, use KIND_REMOVE_TAG
     when ::Office::EmailFilter::KIND_SKIP_INBOX
       # self.remove_tag( WpTag::INBOX )
       self.conv.remove_tag( WpTag::INBOX )
-    when ::Office::EmailFilter::KIND_AUTORESPOND
+
+    when ::Office::EmailFilter::KIND_ADD_TAG
+      self.conv.add_tag( filter.wp_term_id )
+
+    when ::Office::EmailFilter::KIND_REMOVE_TAG
+      self.conv.remove_tag( filter.wp_term_id )
+
+    when ::Office::EmailFilter::KIND_AUTORESPOND_TMPL
       Ish::EmailContext.create({
-        email_template: ::Tmpl.find_by_slug( filter.email_template_slug ),
-        lead: lead,
+        email_template: filter.email_template,
+        lead_id: lead.id,
+        send_at: Time.now + 22.minutes,
       })
+
+    when ::Office::EmailFilter::KIND_AUTORESPOND_EACT
+      ::Sch.create({
+        email_action: filter.email_action,
+        state: ::Sch::STATE_ACTIVE,
+        lead_id: lead.id,
+        perform_at: Time.now + 22.minutes,
+      })
+
     else
       raise "unknown filter kind: #{filter.kind}"
     end

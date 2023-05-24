@@ -45,8 +45,9 @@ class ::Ish::EmailTemplate
     binding()
   end
 
-  has_many :email_actions, class_name: '::Office::EmailAction'
+  has_many :email_actions,  class_name: '::Office::EmailAction'
   has_many :email_contexts, class_name: '::Ish::EmailContext'
+  has_many :email_filters,  class_name: '::Office::EmailFilter', inverse_of: :email_template
 
   SLUG_BLANK = 'blank'
   def self.blank_template

@@ -22,5 +22,7 @@ class Office::EmailAction
   has_many :prev_ties, class_name: '::Office::EmailActionTie', inverse_of: :next_email_action
   accepts_nested_attributes_for :ties
 
+  has_many :email_filters, class_name: 'Office::EmailFilter', inverse_of: :email_action
+
 end
 EAct = Office::EmailAction

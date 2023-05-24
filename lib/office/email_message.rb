@@ -94,11 +94,6 @@ class Office::EmailMessage
   def apply_filter filter
     case filter.kind
 
-    ## @deprecated, use KIND_REMOVE_TAG
-    when ::Office::EmailFilter::KIND_SKIP_INBOX
-      # self.remove_tag( WpTag::INBOX )
-      self.conv.remove_tag( WpTag::INBOX )
-
     when ::Office::EmailFilter::KIND_ADD_TAG
       self.conv.add_tag( filter.wp_term_id )
 

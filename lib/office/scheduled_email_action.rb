@@ -15,7 +15,8 @@ class Office::ScheduledEmailAction
 
   STATE_ACTIVE   = 'active'
   STATE_INACTIVE = 'inactive'
-  STATES         = [ STATE_ACTIVE, STATE_INACTIVE ]
+  STATE_TRASH    = 'trash'
+  STATES         = [ STATE_ACTIVE, STATE_INACTIVE, STATE_TRASH ]
   field :state, type: :string
   scope :active, ->{ where( state: STATE_ACTIVE ) }
 

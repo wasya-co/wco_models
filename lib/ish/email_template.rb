@@ -53,6 +53,7 @@ class ::Ish::EmailTemplate
   def self.blank_template
     out = Tmpl.find_or_create_by({ slug: SLUG_BLANK })
   end
+  def self.blank; self.blank_template; end
 
 end
 ::Tmpl = ::Ish::EmailTemplate

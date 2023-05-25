@@ -23,23 +23,20 @@ class Newsitem
 
   field :name
   field :descr
-  def description
-    descr
-  end
+  def description; descr; end
   field :subhead
-
-  field :image_path
-  field :link_path
-  field :username
-  field :partial_name
 
   field :weight,           :type => Integer, :default => 10
   field :n_upvotes,        :type => Integer, :default => 0
   field :n_downvotes,      :type => Integer, :default => 0
   field :upvoting_users,   :type => Array, :default => []
   field :downvoting_users, :type => Array, :default => []
-  field :is_feature,       :type => Boolean, :default => false
 
+  field :image_path # @deprecated ?
+  field :link_path  # @deprecated ?
+  field :iframe_src
+
+  ## This is used.
   TYPE_GALLERY = :type_gallery
   TYPE_PHOTO   = :type_photo
   TYPE_REPORT  = :type_report
@@ -50,9 +47,6 @@ class Newsitem
     return TYPE_REPORT  if report_id
     return TYPE_VIDEO   if video_id
   end
-
-
-  PER_PAGE = 6
 
   default_scope ->{ order_by({ :created_at => :desc }) }
 
@@ -77,11 +71,13 @@ class Newsitem
   def export_fields
     %w|
       descr
-      gallery_id
+      name
+
       image_path
       link_path
+
       map_id
-      name
+      gallery_id
       photo_id
       report_id
       video_id

@@ -30,6 +30,13 @@ class ::Ish::EmailContext
   PAGE_PARAM_NAME = 'email_contexts_page'
 
   field :from_email
+  def from_email
+    if self[:from_email].presence
+      return self[:from_email]
+    else
+      return tmpl.from_email
+    end
+  end
   # validates_presence_of :from_email
 
   field :subject

@@ -94,8 +94,19 @@ class Office::EmailMessage
   def apply_filter filter
     case filter.kind
 
+    when ::Office::EmailFilter::KIND_DESTROY_SCHS
+      self.conv.add_tag( ::WpTag::TRASH )
+      self.conv.remove_tag( ::WpTag::INBOX )
+      tmp_lead = ::Lead.where( email: self.part_txt.split("\n")[1] ).first
+      if tmp_lead
+        tmp_lead.schs.each { |sch| sch.update_attributes({ state: ::Sch::STATE_TRASH }) }
+      end
+
     when ::Office::EmailFilter::KIND_ADD_TAG
       self.conv.add_tag( filter.wp_term_id )
+      if ::WpTag::TRASH == ::WpTag.find( filter.wp_term_id ).slug
+        self.conv.remove_tag(::WpTag::INBOX )
+      end
 
     when ::Office::EmailFilter::KIND_REMOVE_TAG
       self.conv.remove_tag( filter.wp_term_id )

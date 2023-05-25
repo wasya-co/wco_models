@@ -18,12 +18,13 @@ class Office::EmailFilter
   KIND_AUTORESPOND_EACT = 'autorespond-email-action'
   KIND_REMOVE_TAG       = 'remove-tag'
   KIND_ADD_TAG          = 'add-tag'
+  KIND_DESTROY_SCHS     = 'destroy-schs'
 
   KIND_AUTORESPOND = 'autorespond' # @deprecated, DO NOT USE!
   KIND_DELETE      = 'delete'      # @deprecated, use add-tag
   KIND_SKIP_INBOX  = 'skip-inbox'  # @deprecated, use remove-tag
 
-  KINDS = [ nil, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG]
+  KINDS = [ nil, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS]
   field :kind
 
   STATE_ACTIVE   = 'active'

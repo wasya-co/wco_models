@@ -87,7 +87,7 @@ class ::Ish::EmailContext
   def self.summary
     pipeline = [
       { '$group' => {
-        '_id' => { '$dateToString' => { 'format' => "%Y-%m-%d", 'date' => "$sent_at" } }, 'total' => { '$sum' => 1 }
+        '_id' => { '$dateToString' => { 'format' => "%Y-%m-%d", 'date' => "$sent_at", 'timezone' => 'America/Chicago' } }, 'total' => { '$sum' => 1 }
       } },
       { '$sort' => { '_id': -1 } },
     ]

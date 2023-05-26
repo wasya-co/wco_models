@@ -88,6 +88,12 @@ class ::Ish::EmailContext
 
   def get_binding
     @lead = lead()
+    @utm_tracking_str = {
+      'cid'          => lead.id,
+      'utm_campaign' => tmpl.slug,
+      'utm_medium'   => 'email',
+      'utm_source'   => tmpl.slug,
+    }.map { |k, v| "#{k}=#{v}" }.join("&")
     binding()
   end
 

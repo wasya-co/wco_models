@@ -24,15 +24,42 @@ class ::Ish::EmailTemplate
   field :body
 
   FROM_EMAILS = [
+    'Annesque Studio <hello@annesque.studio>',
+    'Annesque Studio <no-reply@annesque.studio>',
+
+    'BJJCollective <hello@bjjcollective.com>',
+    'BJJCollective <no-reply@bjjcollective.com>',
+
+    'DemmiTV <hello@demmi.tv>',
+    'DemmiTV <no-reply@demmi.tv>',
+
     'Infinite Shelter <hello@infiniteshelter.com>',
     'Infinite Shelter <no-reply@infiniteshelter.com>',
+
+    'Oquaney Splicing <hello@oquaney-splicing.com>',
+    'Oquaney Splicing <no-reply@oquaney-splicing.com>',
+
     'Victor Piousbox <piousbox@gmail.com>',
     'Victor Piousbox <victor@piousbox.com>',
     'Victor Piousbox <no-reply@piousbox.com>',
-    'Victor Piousbox <admin@wasya.co>',
+    'Victor Pudeyev <victor@pudeyev.com>',
+
+    'WasyaCo Consulting <admin@wasya.co>',
+    'Alex <alex@wasya.co>',
+    'Bailey <bailey@wasya.co>',
+    'Cameron <cameron@wasya.co>',
     'WasyaCo Consulting <hello@wasya.co>',
+    'Jess <jess@wasya.co>',
     'WasyaCo Consulting <no-reply@wasya.co>',
     'Victor Piousbox <victor@wasya.co>',
+
+    'WasyaCo Consulting <admin@wasyaco.com>',
+    'Alex <alex@wasyaco.com>',
+    'Bailey <bailey@wasyaco.com>',
+    'Cameron <cameron@wasyaco.com>',
+    'WasyaCo Consulting <hello@wasyaco.com>',
+    'WasyaCo Consulting <no-reply@wasyaco.com>',
+    'Victor <victor@wasyaco.com>',
   ];
   field :from_email
   def self.from_email_list

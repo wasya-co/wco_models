@@ -13,6 +13,8 @@ module Manager; end
 
 module Office; end
 
+module Wco; end
+
 module IshModels
 
   class << self
@@ -71,6 +73,10 @@ require 'office/email_filter'
 require 'office/email_message'
 require 'office/email_message_stub'
 require 'office/scheduled_email_action'
+
+require 'wco/organization'
+require 'wco/product'
+require 'wco/subscription'
 
 
 

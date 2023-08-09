@@ -55,6 +55,9 @@ class Ish::UserProfile
   has_many :reports,                         inverse_of: :user_profile
   has_many :videos,                          inverse_of: :user_profile
   has_many :newsitems,                       inverse_of: :profile
+  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
+  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
+  belongs_to :organization, class_name: '::Wco::Organization', inverse_of: :profile
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
@@ -79,8 +82,6 @@ class Ish::UserProfile
 
   field :is_purchasing, type: Boolean, default: false
 
-  has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
-  has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
 
   # used in rake tasks
   def self.generate delta

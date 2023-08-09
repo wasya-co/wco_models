@@ -9,7 +9,7 @@ class Ish::Invoice
   include Mongoid::Timestamps
   include Mongoid::Autoinc
 
-  store_in :collection => 'ish_invoice'
+  store_in collection: 'ish_invoice'
 
   field :email, :type => String
 
@@ -22,5 +22,7 @@ class Ish::Invoice
   field :paid_amount, :type => Integer, :default => 0
 
   field :description, :type => String
+
+  field :items, type: Array
 
 end

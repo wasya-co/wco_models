@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.257)
+    ish_models (0.0.33.258)
       aws-sdk-s3
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)
@@ -74,8 +74,8 @@ GEM
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.798.0)
-    aws-sdk-core (3.180.1)
+    aws-partitions (1.800.0)
+    aws-sdk-core (3.180.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -136,10 +136,10 @@ GEM
       net-smtp
     marcel (1.0.2)
     method_source (1.0.0)
-    mime-types (3.4.1)
+    mime-types (3.5.0)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2023.0218.1)
-    mini_mime (1.1.2)
+    mime-types-data (3.2023.0808)
+    mini_mime (1.1.5)
     mini_portile2 (2.8.1)
     minitest (5.17.0)
     mongo (2.18.2)

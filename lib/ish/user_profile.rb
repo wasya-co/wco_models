@@ -17,7 +17,6 @@ class Ish::UserProfile
   validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates_uniqueness_of :email
 
-
   field :name
 
   def export_fields
@@ -34,11 +33,16 @@ class Ish::UserProfile
   field :fb_expires_in
 
   field :lang, default: 'en'
+  field :leadset_id, type: Integer
+  def organization_name
+    'Some Org'
+    # ::Leadset.find( leadset_id )&.name
+  end
 
-  ROLES = [ :guy, :manager, :admin ]
   ROLE_GUY     = :guy
   ROLE_MANAGER = :manager
   ROLE_ADMIN   = :admin
+  ROLES        = [ :guy, :manager, :admin ]
   field :role_name, :type => Symbol, default: :guy
 
   has_one  :profile_photo,                   inverse_of: :profile_city,    class_name: 'Photo'
@@ -57,7 +61,6 @@ class Ish::UserProfile
   has_many :newsitems,                       inverse_of: :profile
   has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
   has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
-  belongs_to :organization, class_name: '::Wco::Organization', inverse_of: :profile
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )

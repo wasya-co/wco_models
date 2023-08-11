@@ -11,17 +11,24 @@ class Ish::Invoice
 
   store_in collection: 'ish_invoice'
 
-  field :email, :type => String
+  field :email, type: String
 
-  field :number, :type => Integer
+  field :invoice_id, type: String # stripe
+
+  field :leadset_id, type: Integer
+  def leadset
+    Leadset.find leadset_id
+  end
+
+  field :number, type: Integer
   increments :number
 
-  field :amount, :type => Integer
+  field :amount, type: Integer
 
   has_many :payments, :class_name => 'Ish::Payment'
-  field :paid_amount, :type => Integer, :default => 0
+  field :paid_amount, type: Integer, :default => 0
 
-  field :description, :type => String
+  field :description, type: String
 
   field :items, type: Array
 

@@ -9,6 +9,7 @@ class Wco::Product
   field :price_id   # stripe
 
   field :price_cents, type: Integer
+
   INTERVALS = [ nil, 'day', 'week', 'month', 'year' ]
   field :interval, type: String
 

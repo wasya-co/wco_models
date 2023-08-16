@@ -85,6 +85,7 @@ class Ish::UserProfile
 
   field :is_purchasing, type: Boolean, default: false
 
+  field :customer_id # stripe
 
   # used in rake tasks
   def self.generate delta

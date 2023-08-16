@@ -14,7 +14,7 @@ class Office::EmailConversation
 
   field :lead_ids, type: :array, default: []
   def leads
-    Lead.find( lead_ids )
+    Lead.find( lead_ids.compact )
   end
 
   has_many :email_messages

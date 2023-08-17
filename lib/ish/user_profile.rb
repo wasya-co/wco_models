@@ -78,6 +78,7 @@ class Ish::UserProfile
   field :n_unlocks, type: Integer, default: 0
 
   has_many :payments, :class_name => '::Ish::Payment'
+  has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :profile
 
   def has_premium_purchase item
     payments.confirmed.where( item: item ).exists?
@@ -86,6 +87,22 @@ class Ish::UserProfile
   field :is_purchasing, type: Boolean, default: false
 
   field :customer_id # stripe
+
+  def customer_id
+    if !self[:customer_id]
+      # return nil if !email
+      existing = Stripe::Customer.search({ query: "email: '#{email}'" })
+      # puts! existing, 'existing'
+      if existing.data.present?
+        update_attributes( customer_id: existing.data[0][:id] )
+      else
+        customer = Stripe::Customer.create({ email: email })
+        # puts! customer, 'customer'
+        update_attributes( customer_id: customer[:id] )
+      end
+    end
+    self[:customer_id]
+  end
 
   # used in rake tasks
   def self.generate delta

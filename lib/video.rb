@@ -30,6 +30,8 @@ class Video
 
   field :is_public, :type => Boolean, :default => false
 
+  field :lead_id, type: :integer
+
   field :x, type: Float
   field :y, type: Float
   field :z, type: Float

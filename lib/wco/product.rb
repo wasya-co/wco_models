@@ -16,7 +16,7 @@ class Wco::Product
   has_many :subscriptions, class_name: '::Wco::Subscription', inverse_of: :subscription
 
   def self.list
-    [ [nil,nil] ] + self.all.map { |i| [i.name, i.price_id] }
+    [ [nil,nil] ] + self.all.map { |i| [i.name, i.id] }
   end
 
 end

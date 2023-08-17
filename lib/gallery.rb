@@ -28,6 +28,7 @@ class Gallery
 
   field :lang,    :default => 'en'
   field :username
+  field :lead_id, type: :integer
 
   field :slug
   index({ :slug => -1 }, { :unique => true })

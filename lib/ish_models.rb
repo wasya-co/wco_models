@@ -74,7 +74,7 @@ require 'office/email_message'
 require 'office/email_message_stub'
 require 'office/scheduled_email_action'
 
-# require 'wco/organization' ## Use leadset. _vp_ 2023-08-09
+require 'wco/appliance'
 require 'wco/product'
 require 'wco/subscription'
 

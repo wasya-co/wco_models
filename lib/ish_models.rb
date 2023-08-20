@@ -76,6 +76,7 @@ require 'office/scheduled_email_action'
 
 require 'wco/appliance'
 require 'wco/product'
+require 'wco/serverhost'
 require 'wco/subscription'
 
 

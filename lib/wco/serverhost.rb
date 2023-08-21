@@ -1,15 +1,20 @@
 
-require 'autoinc'
+# require 'autoinc'
 
 class Wco::Serverhost
   include Mongoid::Document
   include Mongoid::Timestamps
+  # include Mongoid::Autoinc
+
+  field :name, type: :string
+  validates :name, uniqueness: { scope: :leadset_id }, presence: true
 
   field :next_port, type: :integer, default: 8000
-  increments :next_port
+  # increments :next_port
 
-  def initialize config={}
-  end
+  field :leadset_id, type: :integer
+
+  has_many :appliances, class_name: 'Wco::Appliance'
 
   def nginx_add_site rendered_str=nil, config={}
     # puts! config, '#nginx_add_site'

@@ -36,7 +36,14 @@ class Ish::UserProfile
   field :leadset_id, type: Integer
   def organization_name
     'Some Org'
-    # ::Leadset.find( leadset_id )&.name
+    # ::Leadset.find( leadset_id )&.name || 'Some Org'
+  end
+  # def leadset
+  #   ::Leadset.find( leadset_id )
+  # end
+  # @TODO: change _vp_ 2023-08-21
+  def next_serverhost
+    Wco::Serverhost.where({ leadset_id: leadset_id }).first
   end
 
   ROLE_GUY     = :guy

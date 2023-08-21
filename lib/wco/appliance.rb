@@ -4,6 +4,7 @@ class Wco::Appliance
   include Mongoid::Timestamps
 
   field :name
+  validates :name, uniqueness: { scope: :leadset_id }, presence: true
   field :kind
   field :environment
 
@@ -14,9 +15,12 @@ class Wco::Appliance
   end
 
   field :leadset_id
-  belongs_to :profile, class_name: 'Ish::UserProfile', optional: true
+  def leadset
+    Leadset.find leadset_id
+  end
 
-  KIND_CORPHOME1  = 'corphome1'
-  KIND_HELLOWORLD = 'helloworld'
-  KINDS = [ 'SMT', 'EmailCRM', KIND_CORPHOME1, KIND_HELLOWORLD, 'Drupal', 'Odoo', 'Mautic', 'IroWor', 'eCommStore1' ]
+  belongs_to :serverhost, class_name: 'Wco::Serverhost'
+
 end
+
+

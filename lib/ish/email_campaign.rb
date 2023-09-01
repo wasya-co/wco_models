@@ -15,9 +15,12 @@ class Ish::EmailCampaign
 
   field :from_email
   validates_presence_of :from_email
-  FROM_EMAILS = %w|    hello@infiniteshelter.com no-reply@infiniteshelter.com
-    piousbox@gmail.com hello@piousbox.com        no-reply@piousbox.com        victor@piousbox.com
-    admin@wasya.co     hello@wasya.co            no-reply@wasya.co            victor@wasya.co |
+  FROM_EMAILS = %w|        hello@infiniteshelter.com no-reply@infiniteshelter.com
+    piousbox@gmail.com
+                           hello@piousbox.com        no-reply@piousbox.com        victor@piousbox.com
+    admin@wasya.co         hello@wasya.co            no-reply@wasya.co            victor@wasya.co
+    admin@mail.wasyaco.com hello@mail.wasyaco.com    no-reply@mail.wasyaco.com    victor@mail.wasyaco.com
+  |;
   def self.from_email_list
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end

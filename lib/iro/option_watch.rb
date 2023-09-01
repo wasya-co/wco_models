@@ -12,9 +12,10 @@ class Iro::OptionWatch
 
   field :symbol # like NVDA_021822C230
 
-  KIND_OPTION = 'option'
-  KIND_STOCK  = 'stock'
-  KINDS       = [ KIND_OPTION, KIND_STOCK ]
+  KIND_OPTION     = 'option'
+  KIND_STOCK      = 'stock'
+  KIND_GET_CHAINS = 'get-chains'
+  KINDS       = [ KIND_OPTION, KIND_STOCK, KIND_GET_CHAINS ]
   field :kind, type: String
   validates :kind, presence: true
   def self.kinds_list

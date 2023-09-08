@@ -7,11 +7,18 @@ class Wco::Subscription
   field :price_id,    type: :string # stripe
 
   field :leadset_id
+  def leadset
+    Leadset.find leadset_id
+  end
 
-  belongs_to :product,      class_name: '::Wco::Product',      inverse_of: :subscriptions
+  field :quantity, type: :integer
 
-  belongs_to :profile, class_name: '::Ish::UserProfile', optional: true, inverse_of: :subscriptions
+  belongs_to :product, class_name: '::Wco::Product', inverse_of: :subscriptions
+  belongs_to :price,   class_name: '::Wco::Price',   inverse_of: :subscriptions, foreign_key: :wco_price_id
 
+  ## This was for ACL on wco dashboard? Should that be the same class?
+  ## @TODO: optional ?!
+  belongs_to :profile, class_name: '::Ish::UserProfile', inverse_of: :subscriptions, optional: true
 
 end
 

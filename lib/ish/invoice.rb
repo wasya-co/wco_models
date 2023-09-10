@@ -23,10 +23,15 @@ class Ish::Invoice
     Leadset.find leadset_id
   end
 
-  field :number, type: Integer, default: 100
-  increments :number
+  field :number, type: Integer
 
   field :month_on, type: Date
+
+  has_one :asset, class_name: '::Gameui::Asset3d'
+
+  def filename
+    "invoice-#{number}.pdf"
+  end
 
   # field :amount_cents, type: Integer
   # has_many :payments, :class_name => 'Ish::Payment'
@@ -38,7 +43,7 @@ class Ish::Invoice
 
   ## Prawn/pdf unit of measure is 1/72"
   ## Canvas width: 612, height: 792
-  def generate_monthly_invoice month_on
+  def generate_monthly_invoice
     tree_img_url      = "#{Rails.root.join('public')}/tree-1.jpg"
     wasya_co_logo_url = "#{Rails.root.join('public')}/259x66-WasyaCo-logo.png"
 
@@ -76,7 +81,7 @@ class Ish::Invoice
 
       pdf.bounding_box( [4.5*72, 8.25*72], width: 3.25*72, height: 0.75*72 ) do
         pdf.text "Notes:"
-        pdf.text "Support & various tasks, for the month of #{ month_on }."
+        pdf.text "Support & various tasks, for the month of #{ month_on.strftime('%B') }."
       end
 
       lineitems_with_header = [

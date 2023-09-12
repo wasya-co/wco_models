@@ -27,17 +27,16 @@ class Ish::Invoice
 
   field :month_on, type: Date
 
-  has_one :asset, class_name: '::Gameui::Asset3d'
+  has_one :asset, class_name: '::Gameui::Asset3d' ## the pdf
 
   def filename
     "invoice-#{number}.pdf"
   end
 
   # field :amount_cents, type: Integer
-  # has_many :payments, :class_name => 'Ish::Payment'
-  # field :paid_amount_cents, type: Integer, :default => 0 ## @TODO: unused? _vp_ 2023-08-18
-  # field :description, type: String
-  # field :items, type: Array
+
+  field :description, type: String
+  field :items,       type: Array   # used by stripe
 
 
 

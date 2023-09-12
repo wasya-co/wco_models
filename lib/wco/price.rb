@@ -18,7 +18,7 @@ class Wco::Price
 
   field :price_id   # stripe
 
-  def to_s
+  def name
     "$#{ amount_cents.to_f/100 } / #{interval}"
   end
 

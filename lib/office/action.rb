@@ -1,10 +1,13 @@
 
+##
+## 2023-09-13 _vp_ I don't know if it's even used.
+##
 class Office::Action
   include Mongoid::Document
   include Mongoid::Timestamps
   store_in collection: 'office_actions'
 
-  field :slug, type: :string
+  field     :slug, type: :string
   validates :slug, uniqueness: true, allow_nil: true
 
   field :descr, type: :string ## optional

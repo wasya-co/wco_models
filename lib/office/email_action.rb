@@ -1,7 +1,7 @@
 
 ##
 ## 2023-03-04 _vp_ When I receive one.
-## 2023-03-04 _vp_ Also when I send one, forever.
+## 2023-03-04 _vp_ When I send one, forever.
 ##
 class Office::EmailAction
   include Mongoid::Document

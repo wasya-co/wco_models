@@ -16,7 +16,7 @@ class Newsitem
     self.gallery_id ? Gallery.unscoped.find( self.gallery_id ) : nil
   end
   belongs_to :map,     optional: true, class_name: '::Gameui::Map'
-  belongs_to :profile, optional: true, class_name: 'Ish::UserProfile'
+  belongs_to :profile, optional: true, class_name: '::Ish::UserProfile'
   belongs_to :photo,   optional: true
   belongs_to :report,  optional: true
   belongs_to :video,   optional: true

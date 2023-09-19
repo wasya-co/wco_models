@@ -34,6 +34,8 @@ class Ish::EmailCampaign
   field :sent_at, type: DateTime
   field :send_at, type: DateTime
 
+  has_many :unsubscribes, class_name: '::Ish::EmailUnsubscribe', inverse_of: :campaign
+
   def campaign_leads
     return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
   end

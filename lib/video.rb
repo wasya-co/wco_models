@@ -29,6 +29,9 @@ class Video
   end
 
   field :is_public, :type => Boolean, :default => false
+  def public
+    where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc })
+  end
 
   field :lead_id, type: :integer
 

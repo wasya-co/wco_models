@@ -37,7 +37,6 @@ class ::Ish::EmailContext
       return tmpl.from_email
     end
   end
-  # validates_presence_of :from_email
 
   field :subject
   def subject

@@ -13,10 +13,11 @@ class Office::ScheduledEmailAction
     Lead.find( lead_id )
   end
 
-  STATE_ACTIVE   = 'active'
-  STATE_INACTIVE = 'inactive'
-  STATE_TRASH    = 'trash'
-  STATES         = [ STATE_ACTIVE, STATE_INACTIVE, STATE_TRASH ]
+  STATE_ACTIVE       = 'active'
+  STATE_INACTIVE     = 'inactive'
+  STATE_TRASH        = 'trash'
+  STATE_UNSUBSCRIBED = 'unsubscribed'
+  STATES             = [ STATE_ACTIVE, STATE_INACTIVE, STATE_UNSUBSCRIBED, STATE_TRASH ]
   field :state, type: :string
   scope :active, ->{ where( state: STATE_ACTIVE ) }
 

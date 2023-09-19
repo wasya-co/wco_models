@@ -12,6 +12,7 @@ class ::Ish::EmailTemplate
   field :layout, type: :string, default: 'plain'
   LAYOUTS = %w| plain
     m20221201react m20221222merryxmas
+    m202309_feedback
     marketing_node_1
     marketing_react_1 marketing_react_2 marketing_react_3
     marketing_ror_1 marketing_ror_2
@@ -23,6 +24,8 @@ class ::Ish::EmailTemplate
 
   field :subject
   field :body
+  field :can_unsubscribe, type: :boolean, default: true
+  field :config_exe, default: ""
 
   FROM_EMAILS = [
     'Annesque Studio <hello@annesque.studio>',
@@ -75,7 +78,8 @@ class ::Ish::EmailTemplate
 
   has_many :email_actions,  class_name: '::Office::EmailAction'
   has_many :email_contexts, class_name: '::Ish::EmailContext'
-  has_many :email_filters,  class_name: '::Office::EmailFilter', inverse_of: :email_template
+  has_many :email_filters,  class_name: '::Office::EmailFilter',   inverse_of: :email_template
+  has_many :unsubscribes,   class_name: '::Ish::EmailUnsubscribe', inverse_of: :template
 
   SLUG_BLANK = 'blank'
   def self.blank_template

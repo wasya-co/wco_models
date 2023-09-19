@@ -14,13 +14,15 @@ class Gallery
   field :subhead
   field :descr,   :as => :description
 
-  field :is_public,  type: Boolean, default: false
+  field :is_public, type: Boolean, default: false
   has_and_belongs_to_many :shared_profiles, :class_name => 'Ish::UserProfile', :inverse_of => :shared_galleries
 
   field :is_trash,   type: Boolean, default: false
   field :is_done,    type: Boolean, default: false
 
-  default_scope ->{ where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc }) }
+  def public
+    where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc })
+  end
 
   field :x,       :type => Float
   field :y,       :type => Float

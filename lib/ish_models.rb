@@ -65,6 +65,7 @@ require 'video'
 
 require 'office/action'
 require 'office/action_tie'
+require 'office/admin_message'
 require 'office/email_action'
 require 'office/email_action_tie'
 require 'office/email_conversation'

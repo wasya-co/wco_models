@@ -70,10 +70,6 @@ class ::Ish::EmailContext
   def self.scheduled; new.scheduled; end
 
 
-  def self.from_email_list
-    Ish::EmailCampaign.from_email_list
-  end
-
   ## like belongs_to to_lead , but Lead is SQL to just the lead_id
   field :lead_id, type: :integer
   def lead; Lead.find( lead_id ); end
@@ -93,6 +89,7 @@ class ::Ish::EmailContext
       'utm_medium'   => 'email',
       'utm_source'   => tmpl.slug,
     }.map { |k, v| "#{k}=#{v}" }.join("&")
+    eval( tmpl.config_exe )
     binding()
   end
 

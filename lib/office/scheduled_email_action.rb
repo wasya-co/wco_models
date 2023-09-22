@@ -33,27 +33,25 @@ class Office::ScheduledEmailAction
 
   def send_and_roll
     sch = self
-    sch.update_attributes({ state: Sch::STATE_INACTIVE })
+    sch.update({ state: Sch::STATE_INACTIVE })
 
     # send now
     ctx = Ctx.create!({
-      email_template_id: sch.act.tmpl.id,
-      lead_id: sch.lead.id,
-      send_at: Time.now,
-      subject: sch.act.tmpl.subject,
-      from_email: sch.act.tmpl.from_email,
+      email_template_id:         sch.act.tmpl.id,
+      from_email:                sch.act.tmpl.from_email,
+      lead_id:                   sch.lead.id,
       scheduled_email_action_id: sch.act.id,
+      send_at:                   Time.now,
+      subject:                   sch.act.tmpl.subject,
     })
 
     # schedule next actions & update the action
     sch.act.ties.each do |tie|
-      next_act = tie.next_email_action
-      next_at  = eval(tie.next_at_exe)
       next_sch = Sch.find_or_initialize_by({
-        lead_id: sch.lead_id,
-        email_action_id: next_act.id,
+        lead_id:         sch.lead_id,
+        email_action_id: tie.next_email_action.id,
       })
-      next_sch.perform_at = next_at
+      next_sch.perform_at = eval(tie.next_at_exe)
       next_sch.state      = Sch::STATE_ACTIVE
       next_sch.save!
     end

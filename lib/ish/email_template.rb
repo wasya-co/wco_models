@@ -13,6 +13,7 @@ class ::Ish::EmailTemplate
   LAYOUTS = %w| plain
     m20221201react m20221222merryxmas
     m202309_feedback
+    m202309_ror4
     marketing_node_1
     marketing_react_1 marketing_react_2 marketing_react_3
     marketing_ror_1 marketing_ror_2
@@ -25,7 +26,8 @@ class ::Ish::EmailTemplate
   field :subject
   field :body
   field :can_unsubscribe, type: :boolean, default: true
-  field :config_exe, default: ""
+  field :config_exe,                      default: ""      ## used a lot.
+  field :config_json,     type: Object,   default: '{}'
 
   FROM_EMAILS = [
     'Annesque Studio <hello@annesque.studio>',
@@ -64,6 +66,8 @@ class ::Ish::EmailTemplate
     'WasyaCo Consulting <hello@wasyaco.com>',
     'WasyaCo Consulting <no-reply@wasyaco.com>',
     'Victor <victor@wasyaco.com>',
+
+    'Wasya Co Mailer <no-reply@wco.com.de>',
   ];
   field :from_email
   def self.from_email_list

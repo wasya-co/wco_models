@@ -29,7 +29,7 @@ FactoryBot.define do
   end
 
   factory :email_campaign, class: ::Ish::EmailCampaign do
-    subject { 'xxSome Subjectxx' }
+    subject    { 'xxSome Subjectxx' }
     from_email { 'from@email.com' }
   end
 
@@ -53,15 +53,15 @@ FactoryBot.define do
   end
 
   factory :email_template, class: ::Ish::EmailTemplate do
-    slug { generate(:slug) }
+    slug    { generate(:slug) }
     subject { 'xxSome Subjectxx' }
-    body { 'Email Template Body' }
+    body    { 'Email Template Body' }
   end
 
   factory :gallery do
-    name { generate(:slug) }
-    slug { generate(:slug) }
-    is_trash { false }
+    name      { generate(:slug) }
+    slug      { generate(:slug) }
+    is_trash  { false }
     is_public { true }
     after :build do |g|
       g.slug ||= name
@@ -73,11 +73,11 @@ FactoryBot.define do
   end
 
   factory :map, class: Gameui::Map do
-    config { "{}" }
+    config          { "{}" }
     creator_profile { create(:profile) }
-    labels { "{}" }
-    name { 'name' }
-    slug { generate(:slug) }
+    labels          { "{}" }
+    name            { 'name' }
+    slug            { generate(:slug) }
     after :build do |map|
       ## I need both: location_id and map.image ?! _vp_ 2022-09-17
       map.image = create(:image_asset, location_id: map.id)
@@ -85,7 +85,7 @@ FactoryBot.define do
   end
 
   factory :marker, class: Gameui::Marker do
-    name { generate(:name) }
+    name      { generate(:name) }
     item_type { ::Gameui::Marker::ITEM_TYPES[0] }
     after :build do |marker|
       marker.creator_profile ||= create(:profile)
@@ -112,12 +112,13 @@ FactoryBot.define do
   end
 
   factory :user do
-    email { generate(:email) }
+    email    { generate(:email) }
     password { '1234567890' }
   end
 
   factory :video do
-    name { 'some-name' }
+    name         { 'some-name' }
+    user_profile { create(:profile) }
   end
 
 

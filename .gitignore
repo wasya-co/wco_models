@@ -1,4 +1,5 @@
 
+config/initializers/00_s3.rb
 .DS_Store
 *~
 *trash

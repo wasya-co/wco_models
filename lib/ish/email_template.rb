@@ -68,6 +68,7 @@ class ::Ish::EmailTemplate
     'Victor <victor@wasyaco.com>',
 
     'Wasya Co Mailer <no-reply@wco.com.de>',
+    'Wasya Co Mailer <wasyacomailer@gmail.com>',
   ];
   field :from_email
   def self.from_email_list

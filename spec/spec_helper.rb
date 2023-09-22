@@ -14,6 +14,8 @@ require 'w/wp_tag'
 require 'w/wp_term_taxonomy'
 require 'mysql2'
 
+require_relative '../config/initializers/00_s3.rb'
+
 require_relative '../lib/mongoid/votable.rb'
 require_relative '../lib/mongoid/voter.rb'
 

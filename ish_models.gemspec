@@ -23,6 +23,10 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'aws-sdk-s3'
   s.add_runtime_dependency 'rails', '~> 6.1.0' ## only for ActionView in email_message model. _vp_ 2023-03-27
   s.add_runtime_dependency 'net-ssh', '~> 7.1.0'
+  s.add_runtime_dependency 'prawn', '~> 2.4.0'
+  s.add_runtime_dependency 'prawn-table', '~> 0.2.1'
+  s.add_runtime_dependency 'net-scp', '~> 4.0.0'
+
 
   # s.add_runtime_dependency 'mysql2', '~> 0.5.4'
 

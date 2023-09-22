@@ -1,7 +1,7 @@
 
 class Gallery
-  include ::Mongoid::Document
-  include ::Mongoid::Timestamps
+  include Mongoid::Document
+  include Mongoid::Timestamps
   include Ish::PremiumItem
   include Ish::Utils
 
@@ -20,7 +20,7 @@ class Gallery
   field :is_trash,   type: Boolean, default: false
   field :is_done,    type: Boolean, default: false
 
-  def public
+  def published
     where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc })
   end
 

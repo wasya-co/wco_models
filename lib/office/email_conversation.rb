@@ -13,23 +13,20 @@ class Office::EmailConversation
   field :latest_at
   index({ latest_at: -1 })
 
-  has_many :email_conversation_leads, class_name: 'Office::EmailConversationLead'
+  field :from_emails, type: :array, default: []
+
+  has_many :lead_ties, class_name: 'Office::EmailConversationLead'
   # def lead_ids
   #   email_conversation_leads.map( &:lead_id )
   # end
-  field :lead_ids, type: :array, default: []
+  # field :lead_ids, type: :array, default: []
   def leads
-    Lead.find( lead_ids.compact )
+    Lead.find( lead_ties.map( &:lead_id ) )
   end
 
-  has_many :email_messages
-  def email_messages
-    Office::EmailMessage.where( email_conversation_id: self.id )
-  end
+  has_many :email_messages, class_name: 'Office::EmailMessage'
 
-  ##
-  ## A `tags` concern
-  ##
+
 
   has_many :email_conversation_tags, class_name: 'Office::EmailConversationTag'
 

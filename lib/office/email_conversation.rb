@@ -59,6 +59,7 @@ class Office::EmailConversation
       wp_term_id:            tag.id,
     }).first&.delete
   end
+  def rmtag which; remove_tag which; end
 
   def in_emailtag? which
     tag = WpTag.iso_get( which )

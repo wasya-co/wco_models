@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.275)
+    ish_models (0.0.33.276)
       aws-sdk-s3
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)

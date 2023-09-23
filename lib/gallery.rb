@@ -9,7 +9,7 @@ class Gallery
 
   field :name
   validates :name, :uniqueness => true
-  index({ :name => -1 }, { :unique => true })
+  index({ :name => -1 }) ## 2023-09-23 removed uniqueness
 
   field :subhead
   field :descr,   :as => :description

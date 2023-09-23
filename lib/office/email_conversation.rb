@@ -5,13 +5,18 @@ class Office::EmailConversation
   include Mongoid::Paranoia
 
   STATE_UNREAD = 'state_unread'
-  STATE_READ = 'state_read'
-  STATES = [ STATE_UNREAD, STATE_READ ]
+  STATE_READ   = 'state_read'
+  STATES       = [ STATE_UNREAD, STATE_READ ]
   field :state
 
   field :subject
   field :latest_at
+  index({ latest_at: -1 })
 
+  has_many :email_conversation_leads, class_name: 'Office::EmailConversationLead'
+  # def lead_ids
+  #   email_conversation_leads.map( &:lead_id )
+  # end
   field :lead_ids, type: :array, default: []
   def leads
     Lead.find( lead_ids.compact )
@@ -22,69 +27,100 @@ class Office::EmailConversation
     Office::EmailMessage.where( email_conversation_id: self.id )
   end
 
-  def tags
-    WpTag.find( wp_term_ids )
+  ##
+  ## A `tags` concern
+  ##
+
+  has_many :email_conversation_tags, class_name: 'Office::EmailConversationTag'
+
+  def wp_term_ids ## @TODO: remove _vp_ 2023-09-23
+    email_conversation_tags.map( &:wp_term_id )
   end
 
-  ## Copied from email_message
-  field :wp_term_ids, type: Array, default: []
+  def tags
+    WpTag.find( email_conversation_tags.map( &:wp_term_id ) )
+  end
 
   ## Tested manually ok, does not pass the spec. @TODO: hire to make pass spec? _vp_ 2023-03-07
-  def add_tag tag
-    case tag.class.name
-    when 'Integer'
-      tag = WpTag.find( tag )
-    when 'WpTag'
-      ; # tag is WpTag
-    when 'String'
-      tag = WpTag.emailtag(tag)
-    else
-      throw "#add_tag expects a WpTag or string (eg WpTag::INBOX) or id as the only parameter."
-    end
-    self[:wp_term_ids] = ( [ tag.id ] + self[:wp_term_ids] ).uniq
-    self.save!
+  def add_tag which
+    tag = WpTag.iso_get which
+    # puts!( tag.slug, "Adding tag" ) if DEBUG
+    Office::EmailConversationTag.find_or_create_by!({
+      email_conversation_id: id,
+      wp_term_id:            tag.id,
+    })
   end
 
-  def remove_tag tag
-    case tag.class.name
-    when 'Integer'
-      tag = WpTag.find( tag )
-    when 'String'
-      tag = WpTag.emailtag( tag )
-    when 'WpTag'
-      ; # tag is WpTag
-    else
-      throw "#remove_tag expects a WpTag or string (eg WpTag::INBOX) or id as the only parameter."
-    end
-    self[:wp_term_ids] = self[:wp_term_ids] - [ tag.id ]
-    out = self.save!
-    out
+  def remove_tag which
+    tag = WpTag.iso_get which
+    # puts!( tag.slug, "Removing tag" ) if DEBUG
+    Office::EmailConversationTag.where({
+      email_conversation_id: id,
+      wp_term_id:            tag.id,
+    }).first&.delete
   end
-  def rmtag tag; remove_tag tag; end
 
-  def self.not_in_emailtag which
-    case which.class.name
-    when 'String'
-      tag_id = WpTag.emailtag(which).id
-    when 'WpTag'
-      tag_id = which.id
-    else
-      throw "unsupported in #not_in_emailtag: #{which}"
-    end
-    return ::Office::EmailConversation.where( :wp_term_ids.ne => tag_id ).order_by( latest_at: :desc )
+  def in_emailtag? which
+    tag = WpTag.iso_get( which )
+    email_conversation_tags.where({ wp_term_id: tag.id }).present?
   end
 
   def self.in_emailtag which
-    case which.class.name
-    when 'String'
-      tag_id = WpTag.emailtag(which).id
-    when 'WpTag'
-      tag_id = which.id
-    else
-      throw "unsupported in #in_emailtag: #{which}"
-    end
-    return ::Office::EmailConversation.where( :wp_term_ids => tag_id ).order_by( latest_at: :desc )
+    tag = WpTag.iso_get( which )
+    email_conversation_tags = Office::EmailConversationTag.where({ wp_term_id: tag.id })
+    where({ :id.in => email_conversation_tags.map(&:email_conversation_id) })
   end
+
+  def self.not_in_emailtag which
+    tag = WpTag.iso_get( which )
+    email_conversation_tags = Office::EmailConversationTag.where({ wp_term_id: tag.id })
+    where({ :id.nin => email_conversation_tags.map(&:email_conversation_id) })
+  end
+
+
+  def apply_filter filter
+    case filter.kind
+
+    when ::Office::EmailFilter::KIND_DESTROY_SCHS
+      add_tag    ::WpTag::TRASH
+      remove_tag ::WpTag::INBOX
+      tmp_lead = ::Lead.where( email: self.part_txt.split("\n")[1] ).first
+      if tmp_lead
+        tmp_lead.schs.each do |sch|
+          sch.update_attributes({ state: ::Sch::STATE_TRASH })
+        end
+      end
+
+    when ::Office::EmailFilter::KIND_ADD_TAG
+      add_tag filter.wp_term_id
+      if ::WpTag::TRASH == ::WpTag.find( filter.wp_term_id ).slug
+        remove_tag ::WpTag::INBOX
+      end
+
+    when ::Office::EmailFilter::KIND_REMOVE_TAG
+      remove_tag filter.wp_term_id
+
+    when ::Office::EmailFilter::KIND_AUTORESPOND_TMPL
+      Ish::EmailContext.create({
+        email_template: filter.email_template,
+        lead_id:        lead.id,
+        send_at:        Time.now + 22.minutes,
+      })
+
+    when ::Office::EmailFilter::KIND_AUTORESPOND_EACT
+      ::Sch.create({
+        email_action: filter.email_action,
+        state:        ::Sch::STATE_ACTIVE,
+        lead_id:      lead.id,
+        perform_at:   Time.now + 22.minutes,
+      })
+
+    else
+      raise "unknown filter kind: #{filter.kind}"
+    end
+  end
+
+
 
 end
 Conv = Office::EmailConversation

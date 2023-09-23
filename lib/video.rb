@@ -29,7 +29,8 @@ class Video
   end
 
   field :is_public, :type => Boolean, :default => false
-  def public
+
+  def published
     where({ :is_public => true, :is_trash => false }).order_by({ :created_at => :desc })
   end
 

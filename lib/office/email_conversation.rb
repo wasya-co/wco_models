@@ -24,10 +24,7 @@ class Office::EmailConversation
     Lead.find( lead_ties.map( &:lead_id ) )
   end
 
-  has_many :email_messages, class_name: 'Office::EmailMessage'
-
-
-
+  has_many :email_messages,          class_name: 'Office::EmailMessage'
   has_many :email_conversation_tags, class_name: 'Office::EmailConversationTag'
 
   def wp_term_ids ## @TODO: remove _vp_ 2023-09-23

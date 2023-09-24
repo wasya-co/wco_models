@@ -44,7 +44,7 @@ class Office::EmailMessage
     date
   end
 
-  belongs_to :email_conversation
+  belongs_to :email_conversation, class_name: 'Office::EmailConversation'
   def conv
     email_conversation
   end

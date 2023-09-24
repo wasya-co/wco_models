@@ -50,6 +50,9 @@ class ::Ish::EmailTemplate
     'Victor Piousbox <no-reply@piousbox.com>',
     'Victor Pudeyev <victor@pudeyev.com>',
 
+    'Sender Sbs <hello@sender.sbs>',
+    'Sender Sbs <no-reply@sender.sbs>',
+
     'WasyaCo Consulting <admin@wasya.co>',
     'Alex <alex@wasya.co>',
     'Bailey <bailey@wasya.co>',

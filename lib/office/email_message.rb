@@ -16,7 +16,7 @@ class Office::EmailMessage
 
   field :in_reply_to_id, type: :string
 
-  field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix
+  field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix. I need this!
   # validates_presence_of :object_key
   field :object_path, type: :string ## A routable s3 url
 
@@ -36,7 +36,9 @@ class Office::EmailMessage
   field :froms,  type: Array, default: []
   field :to,     type: :string
   field :tos,    type: Array, default: []
+  field :cc,     type: :string
   field :ccs,    type: Array, default: []
+  field :bcc,    type: :string
   field :bccs,   type: Array, default: []
 
   field :date, type: DateTime

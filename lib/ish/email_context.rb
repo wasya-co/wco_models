@@ -53,12 +53,13 @@ class ::Ish::EmailContext
 
   field :rendered_str
 
-  field :sent_at, type: DateTime
-  field :send_at, type: DateTime
+  field :sent_at,         type: DateTime
+  field :send_at,         type: DateTime
+  field :unsubscribed_at, type: DateTime
 
 
   def notsent
-    Ish::EmailContext.where( sent_at: nil )
+    Ish::EmailContext.where( sent_at: nil, unsubscribed_at: nil )
   end
   def self.notsent; new.notsent; end
 

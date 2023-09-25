@@ -73,47 +73,6 @@ class Office::EmailConversation
   end
 
 
-  def apply_filter filter
-    case filter.kind
-
-    when ::Office::EmailFilter::KIND_DESTROY_SCHS
-      add_tag    ::WpTag::TRASH
-      remove_tag ::WpTag::INBOX
-      tmp_lead = ::Lead.where( email: self.part_txt.split("\n")[1] ).first
-      if tmp_lead
-        tmp_lead.schs.each do |sch|
-          sch.update_attributes({ state: ::Sch::STATE_TRASH })
-        end
-      end
-
-    when ::Office::EmailFilter::KIND_ADD_TAG
-      add_tag filter.wp_term_id
-      if ::WpTag::TRASH == ::WpTag.find( filter.wp_term_id ).slug
-        remove_tag ::WpTag::INBOX
-      end
-
-    when ::Office::EmailFilter::KIND_REMOVE_TAG
-      remove_tag filter.wp_term_id
-
-    when ::Office::EmailFilter::KIND_AUTORESPOND_TMPL
-      Ish::EmailContext.create({
-        email_template: filter.email_template,
-        lead_id:        lead.id,
-        send_at:        Time.now + 22.minutes,
-      })
-
-    when ::Office::EmailFilter::KIND_AUTORESPOND_EACT
-      ::Sch.create({
-        email_action: filter.email_action,
-        state:        ::Sch::STATE_ACTIVE,
-        lead_id:      lead.id,
-        perform_at:   Time.now + 22.minutes,
-      })
-
-    else
-      raise "unknown filter kind: #{filter.kind}"
-    end
-  end
 
 
 

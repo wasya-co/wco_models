@@ -26,7 +26,7 @@ class ::Ish::EmailTemplate
   field :subject
   field :body
   field :can_unsubscribe, type: :boolean, default: true
-  field :config_exe,                      default: ""      ## used a lot.
+  field :config_exe,                      default: ""      ## unused! _vp_ 2023-09-24
   field :config_json,     type: Object,   default: '{}'
 
   FROM_EMAILS = [

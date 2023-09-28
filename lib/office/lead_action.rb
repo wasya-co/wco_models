@@ -7,6 +7,9 @@ class Office::LeadAction
   include Mongoid::Timestamps
 
   belongs_to :lead_action_template, class_name: '::Office::LeadActionTemplate', inverse_of: :lead_actions, foreign_key: :tmpl_id
+  def tmpl
+    lead_action_template
+  end
 
   field     :lead_id, type: :integer
   validates :lead_id, presence: true
@@ -14,7 +17,7 @@ class Office::LeadAction
     Lead.find( lead_id )
   end
 
-  field :params, type: Object
+  field :params, type: Object, default: '{}'
 
 
 end

@@ -5,7 +5,7 @@ class ::Ish::EmailTemplate
 
   field :slug
   validates_uniqueness_of :slug
-  validates_presence_of :slug
+  validates_presence_of   :slug
 
   field :preview_str, type: :string
 
@@ -94,6 +94,10 @@ class ::Ish::EmailTemplate
     out = Tmpl.find_or_create_by({ slug: SLUG_BLANK })
   end
   def self.blank; self.blank_template; end
+
+  def to_s
+    "Tmpl:#{slug}"
+  end
 
 end
 ::Tmpl = ::Ish::EmailTemplate

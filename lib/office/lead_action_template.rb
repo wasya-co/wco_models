@@ -20,6 +20,9 @@ class Office::LeadActionTemplate
   KIND_UNSUBSCRIBE_CAMPAIGN = 'kind-unsubscribe-campaign'
   KINDS                     = [ KIND_UNSUBSCRIBE_TEMPLATE, KIND_UNSUBSCRIBE_CAMPAIGN ]
 
+  def to_s
+    "OLAT:#{slug}"
+  end
 
   def unsubscribe_from_campaign
   end
@@ -35,6 +38,10 @@ class Office::LeadActionTemplate
     })
   end
 
+  def self.list
+    [ [nil,nil] ] + all.map { |i| [ i.slug, i.id.to_s ] }
+  end
+
 
 end
-
+OLAT = Office::LeadActionTemplate

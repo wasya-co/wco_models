@@ -94,7 +94,7 @@ class Ish::Invoice
       total = 0
       leadset.subscriptions.each do |i|
         subtotal = (i.price.amount_cents * i.quantity).to_f/100
-        lineitems_with_header.push([ i.price.product.name, i.price.to_s, i.quantity, subtotal ])
+        lineitems_with_header.push([ i.price.product.name, i.price.name_simple, i.quantity, subtotal ])
         total += subtotal
       end
 

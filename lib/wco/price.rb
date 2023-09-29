@@ -21,6 +21,9 @@ class Wco::Price
   def name
     "$#{ amount_cents.to_f/100 } / #{interval}"
   end
+  def name_simple
+    "$#{ amount_cents.to_f/100 }"
+  end
 
 end
 

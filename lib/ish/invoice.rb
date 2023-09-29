@@ -42,8 +42,13 @@ class Ish::Invoice
 
   ## Prawn/pdf unit of measure is 1/72"
   ## Canvas width: 612, height: 792
+  ##
+  ## tree image: 896 x 1159
+  ## tree image: 791 x 1024
+  ## tree image: 964 x 1248
+  ##
   def generate_monthly_invoice
-    tree_img_url      = "#{Rails.root.join('public')}/tree-1.jpg"
+    tree_img_url      = "#{Rails.root.join('public')}/tree-#{number}.jpg"
     wasya_co_logo_url = "#{Rails.root.join('public')}/259x66-WasyaCo-logo.png"
 
     ## canvas width: 612, height: 792

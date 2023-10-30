@@ -29,6 +29,7 @@ class ::Ish::EmailTemplate
   field :config_exe,                      default: ""      ## unused! _vp_ 2023-09-24
   field :config_json,     type: Object,   default: '{}'
 
+  DEFAULT_FROM_EMAIL = 'Victor Pudeyev <victor@wasya.co>'
   FROM_EMAILS = [
     'Annesque Studio <hello@annesque.studio>',
     'Annesque Studio <no-reply@annesque.studio>',
@@ -45,30 +46,30 @@ class ::Ish::EmailTemplate
     'Oquaney Splicing <hello@oquaney-splicing.com>',
     'Oquaney Splicing <no-reply@oquaney-splicing.com>',
 
-    'Victor Piousbox <piousbox@gmail.com>',
-    'Victor Piousbox <victor@piousbox.com>',
-    'Victor Piousbox <no-reply@piousbox.com>',
+    'Victor Pudeyev <piousbox@gmail.com>',
+    'Victor Pudeyev <victor@piousbox.com>',
+    'Victor Pudeyev <no-reply@piousbox.com>',
     'Victor Pudeyev <victor@pudeyev.com>',
 
-    'Sender Sbs <hello@sender.sbs>',
-    'Sender Sbs <no-reply@sender.sbs>',
+    'Sender SBS <hello@sender.sbs>',
+    'Sender SBS <no-reply@sender.sbs>',
 
     'WasyaCo Consulting <admin@wasya.co>',
-    'Alex <alex@wasya.co>',
-    'Bailey <bailey@wasya.co>',
-    'Cameron <cameron@wasya.co>',
+    'Alex WCo <alex@wasya.co>',
+    'Bailey WCo <bailey@wasya.co>',
+    'Cameron WCo <cameron@wasya.co>',
     'WasyaCo Consulting <hello@wasya.co>',
-    'Jess <jess@wasya.co>',
+    'Jess WCo <jess@wasya.co>',
     'WasyaCo Consulting <no-reply@wasya.co>',
-    'Victor Piousbox <victor@wasya.co>',
+    'Victor Pudeyev <victor@wasya.co>',
 
     'WasyaCo Consulting <admin@wasyaco.com>',
-    'Alex <alex@wasyaco.com>',
-    'Bailey <bailey@wasyaco.com>',
-    'Cameron <cameron@wasyaco.com>',
+    'Alex WCo <alex@wasyaco.com>',
+    'Bailey WCo <bailey@wasyaco.com>',
+    'Cameron WCo <cameron@wasyaco.com>',
     'WasyaCo Consulting <hello@wasyaco.com>',
     'WasyaCo Consulting <no-reply@wasyaco.com>',
-    'Victor <victor@wasyaco.com>',
+    'Victor Pudeyev <victor@wasyaco.com>',
 
     'Wasya Co Mailer <no-reply@wco.com.de>',
     'Wasya Co Mailer <wasyacomailer@gmail.com>',
@@ -77,6 +78,15 @@ class ::Ish::EmailTemplate
   def self.from_email_list
     [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
   end
+
+  SIGNATURE = <<~AOL
+    <div>
+    <div><br></div>
+    <div>Regards,</div>
+    <div>-=----- &gt;8 --</div>
+    <div>Victor Pudeyev<br>Director of Engineering<br><a href="mailto:victor@piousbox.com" target="_blank">victor@piousbox.com</a> | <a href="https://tidycal.com/wasya-co/30min" target="_blank">Book a chat</a><br></div>
+    </div><hr /><br /><br /><br />
+  AOL
 
   ## 2023-03-04 _vp_ This works!
   def get_binding

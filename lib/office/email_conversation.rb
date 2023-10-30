@@ -53,6 +53,7 @@ class Office::EmailConversation
       wp_term_id:            tag.id,
     }).first&.delete
   end
+  ## @deprecated, do not use. _vp_ 2023-10-29
   def rmtag which; remove_tag which; end
 
   def in_emailtag? which

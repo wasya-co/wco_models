@@ -1,6 +1,5 @@
 
 require 'net/scp'
-# require 'autoinc'
 
 class Wco::Serverhost
   include Mongoid::Document
@@ -11,7 +10,6 @@ class Wco::Serverhost
   validates :name, uniqueness: { scope: :leadset_id }, presence: true
 
   field :next_port, type: :integer, default: 8000
-  # increments :next_port
 
   field :leadset_id, type: :integer
 
@@ -50,24 +48,42 @@ class Wco::Serverhost
 
   end
 
-  def docker_add_service rendered_str=nil, config={}
-    # puts! config, '#docker_add_service'
-    File.write( "/Users/piousbox/projects/docker_demo/dc-#{config[:service_name]}.yml", rendered_str )
-    out = ` mkdir /Users/piousbox/projects/docker_demo/#{config[:service_name]}_data `
-    puts! out, 'out'
-    out = ` cd /Users/piousbox/projects/docker_demo/ ; \
+  WORKDIR = "/Users/piousbox/projects/docker_wco"
+
+  def add_docker_service rendered_str=nil, config={}
+    puts! config, '#docker_add_service'
+
+    File.write( "#{WORKDIR}/dc-#{config[:service_name]}.yml", rendered_str )
+    out = ` cd #{WORKDIR} ; \
       docker compose -f dc-#{config[:service_name]}.yml up -d #{config[:service_name]} ; \
-      echo ok
+      echo ok #add_docker_service
     `;
     puts! out, 'out'
   end
 
-  def load_data rendered_str=nil, config={}
-    File.write( "/Users/piousbox/projects/docker_demo/#{config[:service_name]}_data/index.html", rendered_str )
+  def create_volume config={}
+    puts! config, '#create_volume'
+
+    out = ` cd #{WORKDIR} ; \
+      [ ! -e #{config[:kind]}__prototype.zip ] && wget #{config.tmpl.volume_zip} ; \
+      [ ! -e #{config[:kind]}__prototype     ] && unzip #{config[:kind]}__prototype.zip ; \
+      mv  #{config[:kind]}__prototype #{config[:service_name]}_data ; \
+      echo ok #create_volume
+    `;
+    puts! out, 'out'
   end
 
 
 end
+
+
+
+
+
+
+
+
+
 
 # class Instance
 #   def chmod

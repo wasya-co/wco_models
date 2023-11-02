@@ -5,6 +5,8 @@ class Wco::Leadset
 
   field :name
 
+  field :domains, type: :string, default: 'orbital.city'
+
   has_many :serverhosts, class_name: 'Wco::Serverhost', inverse_of: :wco_leadset
   def next_serverhost
     serverhosts.first

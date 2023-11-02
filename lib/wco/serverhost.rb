@@ -7,16 +7,19 @@ class Wco::Serverhost
   # include Mongoid::Autoinc
 
   field :name, type: :string
-  validates :name, uniqueness: { scope: :leadset_id }, presence: true
+  # validates :name, uniqueness: { scope: :leadset_id }, presence: true
+  validates :name, uniqueness: { scope: :wco_leadset }, presence: true
+
+  # field :leadset_id, type: :integer
+  # has_and_belongs_to_many :leadsets, class_name: 'Wco::Leadset', inverse_of: :serverhosts
+  belongs_to :wco_leadset, class_name: 'Wco::Leadset'
 
   field :next_port, type: :integer, default: 8000
 
-  field :leadset_id, type: :integer
-
   ## net-ssh, sshkit
   field :ssh_host
-  field :ssh_username
-  field :ssh_key
+  # field :ssh_username
+  # field :ssh_key
   field :nginx_root, default: '/opt/nginx'
 
   has_many :appliances, class_name: 'Wco::Appliance'
@@ -48,67 +51,50 @@ class Wco::Serverhost
 
   end
 
-  WORKDIR = "/Users/piousbox/projects/docker_wco"
+  WORKDIR = "/opt/projects/docker"
 
-  def add_docker_service rendered_str=nil, config={}
-    puts! config, '#docker_add_service'
+  def add_docker_service app={}
+    puts! app, '#add_docker_service'
 
-    File.write( "#{WORKDIR}/dc-#{config[:service_name]}.yml", rendered_str )
-    out = ` cd #{WORKDIR} ; \
-      docker compose -f dc-#{config[:service_name]}.yml up -d #{config[:service_name]} ; \
-      echo ok #add_docker_service
-    `;
-    puts! out, 'out'
+    ac   = ActionController::Base.new
+    ac.instance_variable_set( :@app, app )
+    ac.instance_variable_set( :@workdir, WORKDIR )
+    rendered_str = ac.render_to_string("docker-compose/dc-#{app[:kind]}")
+    puts '+++ add_docker_service rendered_str:'
+    print rendered_str
+
+    file = Tempfile.new('prefix')
+    file.write rendered_str
+    file.close
+    puts! file.path, 'file.path'
+
+    `scp #{file.path} #{ssh_host}:#{WORKDIR}/dc-#{app[:service_name]}.yml`
+    `ssh #{ssh_host} 'cd #{WORKDIR} ; \
+      docker compose -f dc-#{app[:service_name]}.yml up -d #{app[:service_name]} ; \
+      echo ok #add_docker_service ' `
   end
 
-  def create_volume config={}
-    puts! config, '#create_volume'
+  def create_volume app={}
+    # puts! app, '#create_volume'
 
-    out = ` cd #{WORKDIR} ; \
-      [ ! -e #{config[:kind]}__prototype.zip ] && wget #{config.tmpl.volume_zip} ; \
-      [ ! -e #{config[:kind]}__prototype     ] && unzip #{config[:kind]}__prototype.zip ; \
-      mv  #{config[:kind]}__prototype #{config[:service_name]}_data ; \
-      echo ok #create_volume
-    `;
-    puts! out, 'out'
+    ac   = ActionController::Base.new
+    ac.instance_variable_set( :@app, app )
+    ac.instance_variable_set( :@workdir, WORKDIR )
+    rendered_str = ac.render_to_string("scripts/create_volume")
+    # puts '+++ create_volume rendered_str:'
+    # print rendered_str
+
+    file = Tempfile.new('prefix')
+    file.write rendered_str
+    file.close
+    # puts! file.path, 'file.path'
+
+    `scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume`
+    `ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
+      #{WORKDIR}/scripts/create_volume ' `
   end
+  # alias_method :create_volume, :create_volume_2
 
 
 end
-
-
-
-
-
-
-
-
-
-
-# class Instance
-#   def chmod
-#     start do |ssh|
-#       ssh.exec "sudo chmod +x /tmp/provision.sh"
-#       # other operations on ssh
-#     end
-#   end
-#   private
-#   def start
-#     Net::SSH.start(ip, 'ubuntu', keys: "mykey.pem" ) do |ssh|
-#       yield ssh
-#     end
-#   end
-# end
-
-
-## works:
-# nginx_root = '/opt/nginx'
-# config = { service_name: 'abba', }
-# Net::SSH.start( "18.209.12.11", "ubuntu", keys: "access/mac_id_rsa_3.pem" ) do |ssh|
-#   out = ssh.scp.upload! "tmp/#{config[:service_name]}", "/opt/tmp/two.txt" do |ch, name, sent, total|
-#     puts "#{name}: #{sent}/#{total}"
-#   end
-#   puts! out, 'out'
-# end
-
 

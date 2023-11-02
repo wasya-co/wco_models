@@ -81,6 +81,7 @@ require 'office/scheduled_email_action'
 
 require 'wco/appliance'
 require 'wco/appliance_tmpl'
+require 'wco/leadset'
 require 'wco/price'
 require 'wco/product'
 require 'wco/serverhost'

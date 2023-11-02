@@ -28,8 +28,15 @@ class Wco::Appliance
   end
 
   belongs_to :serverhost,     class_name: 'Wco::Serverhost'
+  belongs_to :wco_leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
+
   # field :ip
   field :port
+
+  STATE_PENDING = 'state-pending'
+  STATE_LIVE    = 'state-live'
+  STATE_TERM    = 'state-term'
+  field :state, default: STATE_PENDING
 
 end
 

@@ -24,5 +24,11 @@ class Office::EmailAction
 
   has_many :email_filters, class_name: 'Office::EmailFilter', inverse_of: :email_action
 
+  field :deleted_at, default: nil, type: :time
+
+  def self.list
+    [[nil,nil]] + Office::EmailAction.where({ :deleted_at => nil }).map { |a| [ a.slug, a.id ] }
+  end
+
 end
 EAct = Office::EmailAction

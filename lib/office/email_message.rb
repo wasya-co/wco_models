@@ -51,6 +51,8 @@ class Office::EmailMessage
     email_conversation
   end
 
+  has_many :email_attachments, class_name: 'Office::EmailAttachment', inverse_of: :email_message
+
   def preview_str
     body = part_html || part_html || 'Neither part_html nor part_txt!'
     body = ::ActionView::Base.full_sanitizer.sanitize( body ).gsub(/\s+/, ' ')

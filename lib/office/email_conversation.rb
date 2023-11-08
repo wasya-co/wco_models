@@ -10,10 +10,13 @@ class Office::EmailConversation
   field :state
 
   field :subject
+  index({ subject: -1 })
+
   field :latest_at
   index({ latest_at: -1 })
 
   field :from_emails, type: :array, default: []
+  index({ from_emails: -1 })
 
   has_many :lead_ties, class_name: 'Office::EmailConversationLead'
   # def lead_ids

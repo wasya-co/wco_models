@@ -26,7 +26,6 @@ class Office::EmailMessage
   field :preamble
   field :epilogue
 
-  has_many :attachments, class_name: 'Photo'
 
   def lead
     Lead.find_by email: from
@@ -52,6 +51,7 @@ class Office::EmailMessage
   end
 
   has_many :email_attachments, class_name: 'Office::EmailAttachment', inverse_of: :email_message
+  has_many :attachments,       class_name: 'Photo'
 
   def preview_str
     body = part_html || part_html || 'Neither part_html nor part_txt!'
@@ -97,6 +97,82 @@ class Office::EmailMessage
 
     else
       raise "unknown filter kind: #{filter.kind}"
+    end
+  end
+
+  ## From: https://stackoverflow.com/questions/24672834/how-do-i-remove-emoji-from-string/24673322
+  def self.strip_emoji(text)
+    text = text.force_encoding('utf-8').encode
+    clean = ""
+
+    # symbols & pics
+    regex = /[\u{1f300}-\u{1f5ff}]/
+    clean = text.gsub regex, ""
+
+    # enclosed chars
+    regex = /[\u{2500}-\u{2BEF}]/ # I changed this to exclude chinese char
+    clean = clean.gsub regex, ""
+
+    # emoticons
+    regex = /[\u{1f600}-\u{1f64f}]/
+    clean = clean.gsub regex, ""
+
+    #dingbats
+    regex = /[\u{2702}-\u{27b0}]/
+    clean = clean.gsub regex, ""
+  end
+
+  ## For recursive parts of type `related`.
+  ## Content dispositions:
+  # "inline; creation-date=\"Tue, 11 Apr 2023 19:39:42 GMT\"; filename=image005.png; modification-date=\"Tue, 11 Apr 2023 19:47:53 GMT\"; size=14916",
+  #
+  ## Content Types:
+  # "application/pdf; name=\"Securities Forward Agreement -- HaulHub Inc -- Victor Pudeyev -- 2021-10-26.docx.pdf\""
+  # "image/jpeg; name=TX_DL_2.jpg"
+  # "image/png; name=image005.png"
+  # "multipart/alternative; boundary=_000_BL0PR10MB2913C560ADE059F0AB3A6D11829A9BL0PR10MB2913namp_",
+  # "text/html; charset=utf-8"
+  # "text/plain; charset=UTF-8"
+  # "text/calendar; charset=utf-8; method=REQUEST"
+  def churn_subpart part
+    if part.content_disposition&.include?('attachment')
+      ## @TODO: attachments !
+      ;
+    else
+      if part.content_type.include?("multipart/related") ||
+        part.content_type.include?("multipart/alternative")
+
+        part.parts.each do |subpart|
+          churn_subpart( subpart )
+        end
+      else
+        attachment = Office::EmailAttachment.new({
+          content:       part.decoded,
+          content_type:  part.content_type,
+          email_message: self,
+        })
+        attachment.save
+
+        if part.content_type.include?('text/html')
+          part_html = part.decoded
+
+        elsif part.content_type.include?("text/plain")
+          part_txt = part.decoded
+
+        elsif part.content_type.include?("text/calendar")
+          ;
+        elsif part.content_type.include?("application/pdf")
+          ;
+        elsif part.content_type.include?("image/jpeg")
+          ;
+        elsif part.content_type.include?("image/png")
+          ;
+
+        else
+          puts! part.content_type, '444 No action for a part with this content_type'
+
+        end
+      end
     end
   end
 

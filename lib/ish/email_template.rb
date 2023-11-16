@@ -40,6 +40,8 @@ class ::Ish::EmailTemplate
     'DemmiTV <hello@demmi.tv>',
     'DemmiTV <no-reply@demmi.tv>',
 
+    'Victor Pudeyev <victor@fedfis.com>',
+
     'Infinite Shelter <hello@infiniteshelter.com>',
     'Infinite Shelter <no-reply@infiniteshelter.com>',
 
@@ -84,7 +86,7 @@ class ::Ish::EmailTemplate
     <div><br></div>
     <div>Regards,</div>
     <div>-=----- &gt;8 --</div>
-    <div>Victor Pudeyev<br>Director of Engineering<br><a href="mailto:victor@piousbox.com" target="_blank">victor@piousbox.com</a> | <a href="https://tidycal.com/wasya-co/30min" target="_blank">Book a chat</a><br></div>
+    <div>Victor Pudeyev<br>Director of Engineering<br><a href="mailto:victor@wasya.co" target="_blank">victor@wasya.co</a> | <a href="https://tidycal.com/wasya-co/30min" target="_blank">Book a chat</a><br></div>
     </div><hr /><br /><br /><br />
   AOL
 

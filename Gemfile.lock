@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (0.0.33.295)
+    ish_models (0.0.33.296)
       aws-sdk-s3
       devise (> 0)
       kaminari-mongoid (~> 1.0.1)
@@ -78,7 +78,7 @@ GEM
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.850.0)
+    aws-partitions (1.851.0)
     aws-sdk-core (3.186.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -182,7 +182,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     net-ssh (7.1.0)
-    nio4r (2.5.9)
+    nio4r (2.6.0)
     nokogiri (1.14.1)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)

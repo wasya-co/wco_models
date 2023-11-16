@@ -40,6 +40,8 @@ class Office::EmailMessage
   field :bcc,    type: :string
   field :bccs,   type: Array, default: []
 
+  field :logs, type: Array, default: []
+
   field :date, type: DateTime
   def received_at
     date
@@ -146,12 +148,12 @@ class Office::EmailMessage
           churn_subpart( subpart )
         end
       else
-        attachment = Office::EmailAttachment.new({
-          content:       part.decoded,
-          content_type:  part.content_type,
-          email_message: self,
-        })
-        attachment.save
+        # attachment = Office::EmailAttachment.new({
+        #   content:       part.decoded,
+        #   content_type:  part.content_type,
+        #   email_message: self,
+        # })
+        # attachment.save
 
         if part.content_type.include?('text/html')
           part_html = part.decoded

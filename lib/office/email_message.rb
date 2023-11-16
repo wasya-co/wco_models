@@ -9,6 +9,9 @@ class Office::EmailMessage
   include Mongoid::Timestamps
 
   field :raw,         type: :string
+  def the_mail
+    Mail.new( raw )
+  end
 
   field :message_id,  type: :string # MESSAGE-ID
   validates_uniqueness_of :message_id
@@ -21,11 +24,8 @@ class Office::EmailMessage
   field :object_path, type: :string ## A routable s3 url
 
   field :subject
-  field :part_txt
   field :part_html
-  field :preamble
-  field :epilogue
-
+  field :part_txt
 
   def lead
     Lead.find_by email: from
@@ -37,6 +37,7 @@ class Office::EmailMessage
   field :tos,    type: Array, default: []
   field :cc,     type: :string
   field :ccs,    type: Array, default: []
+  def all_ccs; (tos||[]) + (ccs||[]) + (froms||[]); end
   field :bcc,    type: :string
   field :bccs,   type: Array, default: []
 
@@ -55,12 +56,6 @@ class Office::EmailMessage
   has_many :email_attachments, class_name: 'Office::EmailAttachment', inverse_of: :email_message
   has_many :attachments,       class_name: 'Photo'
 
-  def preview_str
-    body = part_html || part_html || 'Neither part_html nor part_txt!'
-    body = ::ActionView::Base.full_sanitizer.sanitize( body ).gsub(/\s+/, ' ')
-    body = body[0..200]
-    body
-  end
 
 
   def apply_filter filter
@@ -176,6 +171,14 @@ class Office::EmailMessage
         end
       end
     end
+  end
+
+
+  def body_sanitized
+    ActionView::Base.full_sanitizer.sanitize( part_html||'' ).squish
+  end
+  def preview_str
+    body.sanitized[0..200]
   end
 
 

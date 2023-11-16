@@ -18,6 +18,8 @@ class Office::EmailConversation
   field :from_emails, type: :array, default: []
   index({ from_emails: -1 })
 
+  field :preview, default: ''
+
   has_many :lead_ties, class_name: 'Office::EmailConversationLead'
   # def lead_ids
   #   email_conversation_leads.map( &:lead_id )

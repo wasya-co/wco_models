@@ -178,7 +178,7 @@ class Office::EmailMessage
     ActionView::Base.full_sanitizer.sanitize( part_html||'' ).squish
   end
   def preview_str
-    body.sanitized[0..200]
+    body_sanitized[0..200]
   end
 
 

@@ -54,6 +54,7 @@ class Office::EmailMessage
   end
 
   has_many :email_attachments, class_name: 'Office::EmailAttachment', inverse_of: :email_message
+  has_many :asset3ds,          class_name: 'Gameui::Asset3d',         inverse_of: :email_message
   has_many :attachments,       class_name: 'Photo'
 
 

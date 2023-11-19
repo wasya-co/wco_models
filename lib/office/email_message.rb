@@ -100,6 +100,7 @@ class Office::EmailMessage
 
   ## From: https://stackoverflow.com/questions/24672834/how-do-i-remove-emoji-from-string/24673322
   def self.strip_emoji(text)
+    text = '' if text.blank?
     text = text.force_encoding('utf-8').encode
     clean = ""
 

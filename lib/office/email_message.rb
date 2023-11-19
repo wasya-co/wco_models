@@ -152,10 +152,10 @@ class Office::EmailMessage
         # attachment.save
 
         if part.content_type.include?('text/html')
-          part_html = part.decoded
+          self.part_html = part.decoded
 
         elsif part.content_type.include?("text/plain")
-          part_txt = part.decoded
+          self.part_txt = part.decoded
 
         elsif part.content_type.include?("text/calendar")
           ;
@@ -167,7 +167,7 @@ class Office::EmailMessage
           ;
 
         else
-          puts! part.content_type, '444 No action for a part with this content_type'
+          self.logs.push "444 No action for a part with content_type #{part.content_type}"
 
         end
       end

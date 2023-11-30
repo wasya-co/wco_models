@@ -3,17 +3,24 @@ class Wco::Appliance
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :kind
+  validates :kind, presence: true
+
+  field :environment
+
   field :name
   validates :name, uniqueness: { scope: :leadset_id }, presence: true
 
-  field :kind
+  # field :service_name
+  def service_name
+    # "#{@appliance[:kind]}_#{@appliance[:environment]}_#{@appliance[:name]}"
+    "#{kind}_#{environment}_#{name}"
+  end
 
-  field :service_name
-  field :environment
 
   field :subdomain
   field :domain
-  def host
+  def origin
     "#{subdomain}.#{domain}"
   end
 
@@ -30,13 +37,17 @@ class Wco::Appliance
   belongs_to :serverhost,     class_name: 'Wco::Serverhost'
   belongs_to :wco_leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
 
-  # field :ip
   field :port
 
   STATE_PENDING = 'state-pending'
   STATE_LIVE    = 'state-live'
   STATE_TERM    = 'state-term'
+  STATES = %w| state-pending state-live state-term |
   field :state, default: STATE_PENDING
+
+  def route53_zone
+    Wco::DnsDomain.find_by({ name: domain })[0].route53_zone
+  end
 
 end
 

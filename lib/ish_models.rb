@@ -76,6 +76,8 @@ require 'office/email_conversation_tag'
 require 'office/email_filter'
 require 'office/email_message'
 require 'office/email_message_stub'
+require 'office/emailtag'
+require 'office/emailtag_email_conversation'
 require 'office/lead_action'
 require 'office/lead_action_template'
 require 'office/obfuscated_redirect'
@@ -84,11 +86,14 @@ require 'office/scheduled_email_action'
 
 require 'wco/appliance'
 require 'wco/appliance_tmpl'
+require 'wco/dns_domain'
+require 'wco/email_conversation_lead'
 require 'wco/leadset'
 require 'wco/price'
 require 'wco/product'
 require 'wco/serverhost'
 require 'wco/subscription'
+
 
 
 

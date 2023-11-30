@@ -32,4 +32,5 @@ master   2022-03-12 - import/export of maps
                     - adding from_email
          2022-11-14 - important fix of youtube_id
 2.2.0  - 2023-03-29 - minimal refactor. Let's make payments work.
+3.0.0 :: 2023-11-30 :: removing sql from the CRM. a major, breaking change but let's do it.
 

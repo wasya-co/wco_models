@@ -16,50 +16,37 @@ class Wco::Serverhost
 
   field :next_port, type: :integer, default: 8000
 
+  field :nginx_root, default: '/opt/nginx'
+  field :public_ip
+
   ## net-ssh, sshkit
   field :ssh_host
   # field :ssh_username
   # field :ssh_key
-  field :nginx_root, default: '/opt/nginx'
 
   has_many :appliances, class_name: 'Wco::Appliance'
 
   # def nginx_add_site rendered_str=nil, config={}
-  #   # puts! config, '#nginx_add_site'
-  #   File.write( "/usr/local/etc/nginx/sites-available/#{config[:service_name]}", rendered_str )
-  #   out = `sudo nginx enable-site #{config[:service_name]} ; \
-  #     nginx -s reload ; \
-  #     echo ok
-  #   `;
-  #   puts! out, 'out'
+  #   puts! rendered_str, '#nginx_add_site // rendered_str'
+  #   puts! config, '#nginx_add_site // config'
+  #   File.write( "tmp/#{config[:service_name]}", rendered_str )
+  #   Net::SSH.start( ssh_host, ssh_username, keys: ssh_key ) do |ssh|
+  #     out = ssh.scp.upload! "tmp/#{config[:service_name]}", "#{nginx_root}/conf/sites-available/"
+  #     puts! out, 'out'
+  #     out = ssh.exec! "#{nginx_root}/nginx enable-site #{config[:service_name]} ; #{nginx_root}/nginx -s reload"
+  #     puts! out, 'out'
+  #   end
   # end
-
-  def nginx_add_site rendered_str=nil, config={}
-    puts! rendered_str, '#nginx_add_site // rendered_str'
-    puts! config, '#nginx_add_site // config'
-
-    File.write( "tmp/#{config[:service_name]}", rendered_str )
-    Net::SSH.start( ssh_host, ssh_username, keys: ssh_key ) do |ssh|
-
-      out = ssh.scp.upload! "tmp/#{config[:service_name]}", "#{nginx_root}/conf/sites-available/"
-      puts! out, 'out'
-
-      out = ssh.exec! "#{nginx_root}/nginx enable-site #{config[:service_name]} ; #{nginx_root}/nginx -s reload"
-      puts! out, 'out'
-
-    end
-
-  end
 
   WORKDIR = "/opt/projects/docker"
 
-  def add_docker_service app={}
+  def add_docker_service app
     puts! app, '#add_docker_service'
 
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )
-    rendered_str = ac.render_to_string("docker-compose/dc-#{app[:kind]}")
+    rendered_str = ac.render_to_string("docker-compose/dc-#{app.kind}")
     puts '+++ add_docker_service rendered_str:'
     print rendered_str
 
@@ -68,14 +55,21 @@ class Wco::Serverhost
     file.close
     puts! file.path, 'file.path'
 
-    `scp #{file.path} #{ssh_host}:#{WORKDIR}/dc-#{app[:service_name]}.yml`
-    `ssh #{ssh_host} 'cd #{WORKDIR} ; \
-      docker compose -f dc-#{app[:service_name]}.yml up -d #{app[:service_name]} ; \
-      echo ok #add_docker_service ' `
+    cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/dc-#{app.service_name}.yml "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'cd #{WORKDIR} ; \
+      docker compose -f dc-#{app.service_name}.yml up -d #{app.service_name} ; \
+      echo ok #add_docker_service ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    puts "ok '#add_docker_service'"
   end
 
   def create_volume app={}
-    # puts! app, '#create_volume'
+    puts! app, '#create_volume'
 
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
@@ -89,11 +83,17 @@ class Wco::Serverhost
     file.close
     # puts! file.path, 'file.path'
 
-    `scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume`
-    `ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
-      #{WORKDIR}/scripts/create_volume ' `
+    cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume"
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
+      #{WORKDIR}/scripts/create_volume ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    puts 'ok #create_volume'
   end
-  # alias_method :create_volume, :create_volume_2
 
 
 end

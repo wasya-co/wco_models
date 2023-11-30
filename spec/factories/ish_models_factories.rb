@@ -102,6 +102,9 @@ FactoryBot.define do
 
   factory :profile, aliases: [ :user_profile ], :class => Ish::UserProfile do
     email { generate(:email) }
+    after :build do |profile|
+      profile.wco_leadset = Wco::Leadset.find_or_create_by({ company_url: profile.email.split('@')[1] })
+    end
   end
 
   factory :purchase, class: 'Ish::Payment' do

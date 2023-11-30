@@ -43,7 +43,7 @@ class Ish::UserProfile
   # end
   # @TODO: change _vp_ 2023-08-21
   def next_serverhost
-    Wco::Serverhost.where({ leadset_id: leadset_id }).first
+    ::Wco::Serverhost.where({ leadset_id: leadset_id }).first
   end
 
   ROLE_GUY     = :guy
@@ -69,6 +69,10 @@ class Ish::UserProfile
   has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
   has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
 
+  belongs_to :wco_leadset, class_name: '::Wco::Leadset'
+
+  has_many :wco_lead_ties, class_name: '::Wco::EmailConversationLead'
+
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
   end
@@ -85,7 +89,7 @@ class Ish::UserProfile
   field :n_unlocks, type: Integer, default: 0
 
   has_many :payments, :class_name => '::Ish::Payment'
-  has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :profile
+  has_many :subscriptions, class_name: '::Wco::Subscription', inverse_of: :profile
 
   def has_premium_purchase item
     payments.confirmed.where( item: item ).exists?
@@ -143,4 +147,5 @@ class Ish::UserProfile
 
 end
 
-Profile = Ish::UserProfile
+Profile   = Ish::UserProfile
+Wco::Lead = Ish::UserProfile

@@ -10,8 +10,8 @@ require 'rubygems'
 require 'active_record'
 
 require 'active_record'
-require 'w/wp_tag'
-require 'w/wp_term_taxonomy'
+require_relative './w/wp_tag'
+require_relative './w/wp_term_taxonomy'
 require 'mysql2'
 
 require_relative '../config/initializers/00_s3.rb'

@@ -135,23 +135,13 @@ class Office::EmailMessage
   # "text/calendar; charset=utf-8; method=REQUEST"
   def churn_subpart part
     if part.content_disposition&.include?('attachment')
-      ## @TODO: attachments !
-      ;
+      save_attachment( part, filename: "subpart-attachment" )
     else
-      if part.content_type.include?("multipart/related") ||
-        part.content_type.include?("multipart/alternative")
-
+      if part.content_type.include?("multipart")
         part.parts.each do |subpart|
           churn_subpart( subpart )
         end
       else
-        # attachment = Office::EmailAttachment.new({
-        #   content:       part.decoded,
-        #   content_type:  part.content_type,
-        #   email_message: self,
-        # })
-        # attachment.save
-
         if part.content_type.include?('text/html')
           self.part_html = part.decoded
 
@@ -159,15 +149,19 @@ class Office::EmailMessage
           self.part_txt = part.decoded
 
         elsif part.content_type.include?("text/calendar")
-          ;
+          save_attachment( part, filename: 'subpart-calendar.ics' )
+
         elsif part.content_type.include?("application/pdf")
-          ;
+          save_attachment( part, filename: 'subpart.pdf' )
+
         elsif part.content_type.include?("image/jpeg")
-          ;
+          save_attachment( part, filename: 'subpart.jpg' )
+
         elsif part.content_type.include?("image/png")
-          ;
+          save_attachment( part, filename: 'subpart.png' )
 
         else
+          save_attachment( part, filename: 'subpart-unspecified' )
           self.logs.push "444 No action for a part with content_type #{part.content_type}"
 
         end
@@ -175,6 +169,49 @@ class Office::EmailMessage
     end
   end
 
+  def save_attachment att, filename: "no-filename-specified"
+    content_type = att.content_type.split(';')[0]
+    if content_type.include? 'image'
+      photo = Photo.new({
+        content_type:      content_type,
+        email_message_id:  @message.id,
+        image_data:        att.body.encoded,
+        original_filename: att.content_type_parameters[:name],
+      })
+      photo.decode_base64_image
+      photo.save
+    else
+
+      filename   = CGI.escape( att.filename || filename )
+      attachment = Office::EmailAttachment.new({
+        content:       att.body.decoded,
+        content_type:  att.content_type,
+        email_message: @message,
+        filename:      filename,
+      })
+      begin
+        attachment.save
+      rescue Encoding::UndefinedConversionError
+        @message.logs.push "Could not save an attachment"
+        @message.save
+      end
+
+      sio = StringIO.new att.body.decoded
+      File.open("/tmp/#{filename}", 'w:UTF-8:ASCII-8BIT') do |f|
+        f.puts(sio.read)
+      end
+      asset3d = ::Gameui::Asset3d.new({
+        email_message: @message,
+        filename:      filename,
+        object:        File.open("/tmp/#{filename}"),
+      })
+      if !asset3d.save
+        @message.logs.push "Could not save an asset3d"
+        @message.save
+      end
+
+    end
+  end
 
   def body_sanitized
     ActionView::Base.full_sanitizer.sanitize( part_html||'' ).squish

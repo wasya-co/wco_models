@@ -8,6 +8,8 @@ class ::Gameui::Asset3d
   include Mongoid::Paperclip
   include Ish::Utils
 
+  field :filename
+
   belongs_to :marker,        class_name: 'Gameui::Marker', optional: true
   belongs_to :invoice,       class_name: 'Ish::Invoice',   optional: true
   belongs_to :email_message, class_name: 'Office::EmailMessage', optional: true, inverse_of: :asset3ds

@@ -174,7 +174,7 @@ class Office::EmailMessage
     if content_type.include? 'image'
       photo = Photo.new({
         content_type:      content_type,
-        email_message_id:  @message.id,
+        email_message_id:  self.id,
         image_data:        att.body.encoded,
         original_filename: att.content_type_parameters[:name],
       })
@@ -186,14 +186,14 @@ class Office::EmailMessage
       attachment = Office::EmailAttachment.new({
         content:       att.body.decoded,
         content_type:  att.content_type,
-        email_message: @message,
+        email_message: self,
         filename:      filename,
       })
       begin
         attachment.save
       rescue Encoding::UndefinedConversionError
-        @message.logs.push "Could not save an attachment"
-        @message.save
+        self.logs.push "Could not save an attachment"
+        self.save
       end
 
       sio = StringIO.new att.body.decoded
@@ -201,13 +201,13 @@ class Office::EmailMessage
         f.puts(sio.read)
       end
       asset3d = ::Gameui::Asset3d.new({
-        email_message: @message,
+        email_message: self,
         filename:      filename,
         object:        File.open("/tmp/#{filename}"),
       })
       if !asset3d.save
-        @message.logs.push "Could not save an asset3d"
-        @message.save
+        self.logs.push "Could not save an asset3d"
+        self.save
       end
 
     end

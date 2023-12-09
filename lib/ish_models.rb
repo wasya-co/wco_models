@@ -40,7 +40,7 @@ require 'gameui/asset3d'
 require 'gameui/map'
 require 'gameui/marker'
 
-require 'iro/option_watch'
+# require 'iro/alert'
 
 require 'ish/cache_key'
 require 'ish/crawler'

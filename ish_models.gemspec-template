@@ -1,33 +1,30 @@
 
-Gem::Specification.new do |s|
-  s.name        = 'ish_models'
-  s.version     = '$version'
-  s.date        = '2017-05-10'
-  s.summary     = 'models of ish'
-  s.description = 'models of ish'
-  s.authors     = [ 'piousbox' ]
-  s.email       = 'victor@wasya.co'
-  s.files       = Dir[ "lib/*", "lib/**/*" ]
-  s.homepage    = 'https://wasya.co'
-  s.license     = 'Proprietary'
+Gem::Specification.new do |spec|
+  spec.name        = 'ish_models'
+  spec.version     = '$version'
+  spec.date        = '2017-05-10'
+  spec.summary     = 'models of ish'
+  spec.description = 'models of ish'
+  spec.authors     = [ 'piousbox' ]
+  spec.email       = 'victor@wasya.co'
+  spec.files       = Dir[ "lib/*", "lib/**/*" ]
+  spec.homepage    = 'https://wasya.co'
+  spec.license     = 'Proprietary'
 
   ##
   ## edit the template, not the gemspec!
   ##
-  s.add_runtime_dependency 'mongoid', '~> 7.3.0'
-  s.add_runtime_dependency 'mongoid_paranoia'
-  s.add_runtime_dependency 'mongoid-autoinc', '~> 6.0'
-  s.add_runtime_dependency 'mongoid-paperclip'
-  s.add_runtime_dependency 'kaminari-mongoid', '~> 1.0.1'
-  s.add_runtime_dependency 'devise', '> 0'
-  s.add_runtime_dependency 'aws-sdk-s3'
-  s.add_runtime_dependency 'rails', '~> 6.1.0' ## only for ActionView in email_message model. _vp_ 2023-03-27
-  s.add_runtime_dependency 'net-ssh', '~> 7.1.0'
-  s.add_runtime_dependency 'prawn', '~> 2.4.0'
-  s.add_runtime_dependency 'prawn-table', '~> 0.2.1'
-  s.add_runtime_dependency 'net-scp', '~> 4.0.0'
-
-
-  # s.add_runtime_dependency 'mysql2', '~> 0.5.4'
+  spec.add_dependency 'mongoid', '~> 7.3.0'
+  spec.add_dependency 'mongoid_paranoia'
+  spec.add_dependency 'mongoid-autoinc', '~> 6.0'
+  spec.add_dependency 'mongoid-paperclip'
+  spec.add_dependency 'kaminari-mongoid', '~> 1.0.1'
+  spec.add_dependency 'devise', '> 0'
+  spec.add_dependency 'aws-sdk-s3'
+  spec.add_dependency 'rails', '~> 6.1.0' ## only for ActionView in email_message model. _vp_ 2023-03-27
+  spec.add_dependency 'net-ssh', '~> 7.1.0'
+  spec.add_dependency 'prawn', '~> 2.4.0'
+  spec.add_dependency 'prawn-table', '~> 0.2.1'
+  spec.add_dependency 'net-scp', '~> 4.0.0'
 
 end

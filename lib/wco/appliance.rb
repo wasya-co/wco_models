@@ -24,10 +24,8 @@ class Wco::Appliance
     "#{subdomain}.#{domain}"
   end
 
-  field :leadset_id
-  def leadset
-    Leadset.find leadset_id
-  end
+  field :leadset_id # old sql
+  belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
 
   belongs_to :appliance_tmpl, class_name: 'Wco::ApplianceTmpl'
   def tmpl
@@ -35,7 +33,7 @@ class Wco::Appliance
   end
 
   belongs_to :serverhost,     class_name: 'Wco::Serverhost'
-  belongs_to :wco_leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
+
 
   field :port
 

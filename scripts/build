@@ -14,9 +14,7 @@ else
 fi
 
 ./scripts/version_bump
-version=`cat VERSION`
-cat ish_models.gemspec-template | \
-  sed -e "s/\$version/$version/g" > ish_models.gemspec
+./scripts/update_gemspec
 
 bundle > /dev/null
 
@@ -25,7 +23,8 @@ git commit -m 'autobuild `date "+%Y%m%d"`'
 git push
 
 gem build ish_models.gemspec
-gem push ish_models-$version.gem
-rm ish_models-$version.gem
+gem push  ish_models-$version.gem
+rm        ish_models-$version.gem
 
+set +ex
 echo "ish_models build ok"

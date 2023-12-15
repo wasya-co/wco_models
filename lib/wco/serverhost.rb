@@ -26,17 +26,34 @@ class Wco::Serverhost
 
   has_many :appliances, class_name: 'Wco::Appliance'
 
-  # def nginx_add_site rendered_str=nil, config={}
-  #   puts! rendered_str, '#nginx_add_site // rendered_str'
-  #   puts! config, '#nginx_add_site // config'
-  #   File.write( "tmp/#{config[:service_name]}", rendered_str )
-  #   Net::SSH.start( ssh_host, ssh_username, keys: ssh_key ) do |ssh|
-  #     out = ssh.scp.upload! "tmp/#{config[:service_name]}", "#{nginx_root}/conf/sites-available/"
-  #     puts! out, 'out'
-  #     out = ssh.exec! "#{nginx_root}/nginx enable-site #{config[:service_name]} ; #{nginx_root}/nginx -s reload"
-  #     puts! out, 'out'
-  #   end
-  # end
+  def add_nginx_site app
+    ac   = ActionController::Base.new
+    ac.instance_variable_set( :@app, app )
+    rendered_str = ac.render_to_string("scripts/nginx_site.conf")
+    puts '+++ add_nginx_site rendered_str:'
+    print rendered_str
+
+    file = Tempfile.new('prefix')
+    file.write rendered_str
+    file.close
+
+    cmd = "scp #{file.path} #{ssh_host}:/etc/nginx/sites-available/#{app.service_name}.conf "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'ln -s /etc/nginx/sites-available/#{app.service_name}.conf /etc/nginx/sites-enabled/#{app.service_name}.conf ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'nginx -s reload ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'certbot run -d #{app.origin} --nginx -n ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+  end
 
   WORKDIR = "/opt/projects/docker"
 
@@ -68,9 +85,32 @@ class Wco::Serverhost
     puts "ok '#add_docker_service'"
   end
 
-  def create_volume app={}
-    puts! app, '#create_volume'
+  def create_wordpress_volume app
+    ac   = ActionController::Base.new
+    ac.instance_variable_set( :@app, app )
+    ac.instance_variable_set( :@workdir, WORKDIR )
+    rendered_str = ac.render_to_string("scripts/create_volume")
+    # puts '+++ create_volume rendered_str:'
+    # print rendered_str
 
+    file = Tempfile.new('prefix')
+    file.write rendered_str
+    file.close
+    # puts! file.path, 'file.path'
+
+    cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume"
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
+      #{WORKDIR}/scripts/create_volume ' "
+    puts! cmd, 'cmd'
+    `#{cmd}`
+
+    puts 'ok #create_volume'
+  end
+
+  def create_volume app
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )

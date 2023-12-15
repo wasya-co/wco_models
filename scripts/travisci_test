@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -ex
-
-cp config/mongoid.yml-example config/mongoid.yml
-
-bundle exec rspec spec
-

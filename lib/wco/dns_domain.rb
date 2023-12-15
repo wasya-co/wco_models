@@ -16,4 +16,8 @@ class Wco::DnsDomain
   STATES = [ 'active', 'inactive' ]
   field :state, default: STATE_ACTIVE
 
+  def self.list
+    [[nil,nil]] + all.where({ state: STATE_ACTIVE }).map { |i| [i.name, i.name ] }
+  end
+
 end

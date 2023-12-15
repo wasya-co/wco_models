@@ -28,23 +28,24 @@ class Ish::UserProfile
 
   field :scratchpad, default: ''
 
-  field :fb_access_token
-  field :fb_long_access_token
-  field :fb_expires_in
-
   field :lang, default: 'en'
-  field :leadset_id, type: Integer
-  def organization_name
-    'Some Org'
-    # ::Leadset.find( leadset_id )&.name || 'Some Org'
-  end
-  # def leadset
-  #   ::Leadset.find( leadset_id )
+
+  field :leadset_id, type: Integer ## old sql
+  belongs_to :leadset, class_name: '::Wco::Leadset'
+
+  ##
+  ## PiousboxCRM, Email:
+  ##
+  # has_many :lead_ties, class_name: '::Wco::EmailConversationLead' ## need to name it better.
+
+  ##
+  ## wco hosting:
+  ##
+
+  ## 2023-08-21 _vp_ @TODO: change:
+  # def next_serverhost
+  #   ::Wco::Serverhost.where({ leadset_id: leadset_id }).first
   # end
-  # @TODO: change _vp_ 2023-08-21
-  def next_serverhost
-    ::Wco::Serverhost.where({ leadset_id: leadset_id }).first
-  end
 
   ROLE_GUY     = :guy
   ROLE_MANAGER = :manager
@@ -69,9 +70,6 @@ class Ish::UserProfile
   has_and_belongs_to_many :friends,   :class_name => '::Ish::UserProfile', inverse_of: :friendeds
   has_and_belongs_to_many :friendeds, :class_name => '::Ish::UserProfile', inverse_of: :friends
 
-  belongs_to :wco_leadset, class_name: '::Wco::Leadset'
-
-  has_many :wco_lead_ties, class_name: '::Wco::EmailConversationLead'
 
   def sudoer?
     %w( piousbox@gmail.com victor@wasya.co ).include?( self.email )
@@ -81,10 +79,10 @@ class Ish::UserProfile
     out = self.all
     [['', nil]] + out.map { |item| [ item.email, item.id ] }
   end
-  def self.list_lg
-    out = self.all
-    [['', nil]] + out.map { |item| [ "#{item.email} :: #{item.name}", item.id ] }
-  end
+  # def self.list_lg
+  #   out = self.all
+  #   [['', nil]] + out.map { |item| [ "#{item.email} :: #{item.name}", item.id ] }
+  # end
 
   field :n_unlocks, type: Integer, default: 0
 

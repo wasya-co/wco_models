@@ -1,0 +1,23 @@
+
+version: '3.2'
+
+services:
+
+  # dev and prod, the same.
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8077:8080
+
+
+  mongo_development:
+    image: mongodb/mongodb-community-server:5.0.7-ubuntu2004
+    ports:
+      - 27037:27017
+    volumes:
+      - type: bind
+        source: ./volumes/mongo_development_data
+        target: /data/db
+    restart: always
+

@@ -5,4 +5,6 @@ class Wco::Profile
 
   field :email
 
+  field :per_page, type: :integer, default: 25
+
 end

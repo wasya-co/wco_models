@@ -1,3 +1,3 @@
 module IshModels
-  VERSION = '3.1.0.0'
+  VERSION = File.read 'VERSION'
 end

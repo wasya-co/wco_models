@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+v = File.read('VERSION').split('.').map( &:to_i )
+v[v.length-1] = v[v.length-1] + 1
+v = v.join '.'
+File.write('VERSION', v)

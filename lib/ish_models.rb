@@ -7,5 +7,6 @@ module IshModels; end
 module Wco; end
 
 require 'wco/profile'
+require 'wco/tag'
 
 

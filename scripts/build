@@ -6,7 +6,7 @@ else
   ssh-add ~/.ssh/mac_id_rsa_2
 fi
 
-version=`cat VERSION`
+export version=`cat VERSION`
 set -ex
 
 ./scripts/version_bump

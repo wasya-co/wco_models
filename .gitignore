@@ -1,6 +1,6 @@
 
 *trash
-test/dummy/config/mongoid.yml
+# test/dummy/config/mongoid.yml
 
 vendor
 

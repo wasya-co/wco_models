@@ -1,9 +1,5 @@
 #!/bin/bash
 
-##
-## This scriptdoesn't necessarily build master!
-##
-
 set -x
 set -e
 
@@ -14,9 +10,7 @@ else
 fi
 
 ./scripts/version_bump
-version=`cat VERSION`
-cat ish_models.gemspec-template | \
-  sed -e "s/\$version/$version/g" > ish_models.gemspec
+./scripts/update_gemspec
 
 bundle > /dev/null
 
@@ -28,4 +22,4 @@ gem build ish_models.gemspec
 gem push ish_models-$version.gem
 rm ish_models-$version.gem
 
-echo "ish_models build ok"
+echo "wco_models build ok"

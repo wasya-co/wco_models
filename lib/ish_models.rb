@@ -13,6 +13,7 @@ require 'wco/profile'
 require 'wco/tag'
 
 require 'wco_email/conversation'
+require 'wco_email/email_filter'
 require 'wco_email/message_template'
 
 require 'wco_hosting/appliance'

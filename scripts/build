@@ -6,7 +6,6 @@ else
   ssh-add ~/.ssh/mac_id_rsa_2
 fi
 
-export version=`cat VERSION`
 set -ex
 
 ./scripts/version_bump
@@ -19,7 +18,7 @@ git commit -m 'autobuild `date "+%Y%m%d"`'
 git push
 
 gem build ish_models.gemspec
-gem push ish_models-$version.gem
-rm ish_models-$version.gem
+gem push ish_models-`cat VERSION`.gem
+rm ish_models-`cat VERSION`.gem
 
 echo "wco_models build ok"

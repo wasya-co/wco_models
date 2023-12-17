@@ -14,6 +14,7 @@ require 'wco/office_action'
 require 'wco/profile'
 require 'wco/tag'
 
+require 'wco_email/campaign'
 require 'wco_email/context'
 require 'wco_email/conversation'
 require 'wco_email/email_filter'

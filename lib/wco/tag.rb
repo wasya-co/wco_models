@@ -11,5 +11,6 @@ class Wco::Tag
 
   # parent-child
 
+  has_and_belongs_to_many :email_conversations, class_name: 'WcoEmail::Conversation'
 
 end

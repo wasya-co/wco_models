@@ -27,23 +27,22 @@ class WcoEmail::Conversation
   #   email_conversation_leads.map( &:lead_id )
   # end
   # field :lead_ids, type: :array, default: []
-  def leads
-    Lead.find( lead_ties.map( &:lead_id ) )
-  end
+  # def leads
+  #   Lead.find( lead_ties.map( &:lead_id ) )
+  # end
 
   # has_many :email_messages,          class_name: 'Office::EmailMessage'
   # has_many :email_conversation_tags, class_name: 'Office::EmailConversationTag'
 
-  # has_and_belongs_to_many :tags, class_name: 'WcoEmail::Tag'
+  has_and_belongs_to_many :tags, class_name: 'Wco::Tag'
 
-  ## @TODO: test, rspec
-  def self.in_tag tag
-    case tag.class
-    when String
-      tag = WcoEmail::Tag.find_by slug: tag
-    end
-    where( :tag_ids => tag.id )
-  end
+  # def self.in_tag tag
+  #   case tag.class
+  #   when String
+  #     tag = Wco::Tag.find_by slug: tag
+  #   end
+  #   where( :tag_ids => tag.id )
+  # end
 
 end
 Conv = WcoEmail::Conversation

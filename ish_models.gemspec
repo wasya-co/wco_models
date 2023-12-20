@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |spec|
   spec.name        = "ish_models"
-  spec.version     = "3.1.0.13"
+  spec.version     = "3.1.0.14"
   spec.authors     = ["mac_a2141"]
   spec.email       = ["victor@piousbox.com"]
   spec.homepage    = "https://wasya.co"

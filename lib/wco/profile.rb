@@ -12,4 +12,8 @@ class Wco::Profile
 
   belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :profile, optional: true
 
+  def self.list
+    all.map { |p| [ p.email, p.id ] }
+  end
+
 end

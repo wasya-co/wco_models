@@ -22,6 +22,7 @@ git push
 
 gem build ish_models.gemspec
 gem push ish_models-$version.gem
-# rm ish_models-`cat VERSION`.gem
+
+rm ish_models-`cat VERSION`.gem
 
 echo "wco_models build ok"

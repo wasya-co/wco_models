@@ -7,13 +7,10 @@ class WcoHosting::Serverhost
   # include Mongoid::Autoinc
   store_in collection: 'wco_serverhosts'
 
-  field :name, type: :string
-  # validates :name, uniqueness: { scope: :leadset_id }, presence: true
-  validates :name, uniqueness: { scope: :wco_leadset }, presence: true
+  field     :name, type: :string
+  validates :name, uniqueness: { scope: :leadset }, presence: true
 
-  # field :leadset_id, type: :integer
-  # has_and_belongs_to_many :leadsets, class_name: 'Wco::Leadset', inverse_of: :serverhosts
-  belongs_to :wco_leadset, class_name: 'Wco::Leadset'
+  belongs_to :leadset, class_name: 'Wco::Leadset'
 
   field :next_port, type: :integer, default: 8000
 
@@ -136,5 +133,9 @@ class WcoHosting::Serverhost
     puts 'ok #create_volume'
   end
 
+  def self.list
+    [[nil,nil]] + all.map { |s| [s.name, s.id] }
+    # all.map { |s| [s.name, s.id] }
+  end
 
 end

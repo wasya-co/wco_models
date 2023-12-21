@@ -47,7 +47,7 @@ class WcoHosting::ApplianceTmpl
     KIND_JENKINS, KIND_MATOMO, KIND_MOODLE, KIND_PRESTASHOP, KIND_SMT,
     KIND_WORDPRESS ]
 
-  has_many :appliances, class_name: 'Wco::Appliance'
+  has_many :appliances, class_name: 'WcoHosting::Appliance'
 
   def self.latest_of kind
     where({ kind: kind }).order_by({ version: :desc }).first

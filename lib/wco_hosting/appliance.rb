@@ -27,13 +27,12 @@ class WcoHosting::Appliance
     "#{subdomain}.#{domain}"
   end
 
-  belongs_to :appliance_tmpl, class_name: 'Wco::ApplianceTmpl'
+  belongs_to :appliance_tmpl, class_name: 'WcoHosting::ApplianceTmpl'
   def tmpl
     appliance_tmpl
   end
 
-  belongs_to :serverhost,     class_name: 'Wco::Serverhost'
-  belongs_to :wco_leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
+  belongs_to :serverhost,  class_name: 'WcoHosting::Serverhost'
 
   # field :ip
   field :port

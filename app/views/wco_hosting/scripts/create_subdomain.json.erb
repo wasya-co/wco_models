@@ -1,0 +1,16 @@
+
+
+{
+  "Comment": "optional",
+  "Changes": [
+    {
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "<%= @app.origin %>",
+        "Type": "A",
+        "TTL": 3600,
+        "ResourceRecords": [{ "Value": "<%= @app.serverhost.public_ip %>" }]
+      }
+    }
+  ]
+}

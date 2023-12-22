@@ -18,7 +18,7 @@ require "rails/test_unit/railtie"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-require "ish_models"
+# require "ish_models"
 
 module Dummy
   class Application < Rails::Application
@@ -32,4 +32,9 @@ module Dummy
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
   end
+end
+
+def puts! a, b=''
+  puts "+++ +++ #{b}:"
+  puts a.inspect
 end

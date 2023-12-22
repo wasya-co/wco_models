@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -ex
+
+cd <%= @workdir %>
+rm -rf __MACOSX
+
+## cache/overwrite
+[ ! -e <%= @app.kind %>__prototype.zip ] && curl <%= @app.tmpl.volume_zip %> > <%= @app.kind %>__prototype.zip
+#                                           curl <%= @app.tmpl.volume_zip %> > <%= @app.kind %>__prototype.zip
+
+## cache/overwrite
+[ ! -e <%= @app.kind %>__prototype     ] && rm -rf <%= @app.kind %>__prototype && unzip <%= @app.kind %>__prototype.zip
+#                                           rm -rf <%= @app.kind %>__prototype && unzip <%= @app.kind %>__prototype.zip
+
+mv  <%= @app.kind %>__prototype ./volumes/<%= @app.service_name %>_data
+
+set +ex
+echo ok #create_volume
+
+

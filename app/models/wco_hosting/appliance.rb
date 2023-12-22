@@ -4,21 +4,14 @@ class WcoHosting::Appliance
   include Mongoid::Timestamps
   store_in collection: 'wco_appliances'
 
-  field :name
-  validates :name, uniqueness: { scope: :leadset }, presence: true
-  before_validation :set_name, on: :create, unless: ->{ name }
-  def set_name
-    name = "#{Time.now.strftime('%Y%m%d')}-#{(0...8).map { (65 + rand(26)).chr }.join}"
-  end
-
   belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
 
-
-
-
-  field :kind
-
   field :service_name
+  before_validation :set_service_name, on: :create, unless: ->{ service_name }
+  def set_service_name
+    self[:service_name] = host.gsub(".", "_")
+  end
+
   field :environment
 
   field :subdomain
@@ -30,6 +23,9 @@ class WcoHosting::Appliance
   belongs_to :appliance_tmpl, class_name: 'WcoHosting::ApplianceTmpl'
   def tmpl
     appliance_tmpl
+  end
+  def kind
+    tmpl.kind
   end
 
   belongs_to :serverhost,  class_name: 'WcoHosting::Serverhost'

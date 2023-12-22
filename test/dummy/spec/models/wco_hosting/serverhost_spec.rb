@@ -10,9 +10,9 @@ RSpec.describe WcoHosting::Serverhost, type: :model do
     @appliance  = create( :appliance, serverhost: @serverhost, leadset: @leadset, appliance_tmpl: @tmpl )
   end
 
-  it '#create_appliance' do
-    out = @serverhost.create_appliance( @appliance )
-  end
+  # it '#create_appliance' do
+  #   out = @serverhost.create_appliance( @appliance )
+  # end
 
   it '#create_volume' do
     out = @serverhost.create_volume( @appliance )

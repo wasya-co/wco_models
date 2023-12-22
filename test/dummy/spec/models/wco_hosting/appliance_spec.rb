@@ -11,7 +11,6 @@ RSpec.describe WcoHosting::Appliance, type: :model do
 
     app = WcoHosting::Appliance.create( subdomain: 'a', domain: 'b',
       serverhost: @serverhost, leadset: @leadset, appliance_tmpl: @tmpl )
-    puts! app.errors.messages
     app.persisted?.should eql true
     app.service_name.should eql "a_b"
   end

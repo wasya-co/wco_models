@@ -138,7 +138,7 @@ class WcoHosting::Serverhost
   end
 
   def create_volume app
-    puts! app.service_name, 'Serverhost#create_volume'
+    # puts! app.service_name, 'Serverhost#create_volume'
 
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )

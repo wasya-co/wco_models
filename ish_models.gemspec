@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |spec|
   spec.name        = "ish_models"
-  spec.version     = "3.1.0.15"
+  spec.version     = "3.1.0.16"
   spec.authors     = ["mac_a2141"]
   spec.email       = ["victor@piousbox.com"]
   spec.homepage    = "https://wasya.co"
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://wasya.co"
   spec.metadata["changelog_uri"] = "https://wasya.co"
 
-  spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.files = Dir["{app,config,db,lib}/**/*", "Rakefile", "README.txt"]
 
   spec.add_dependency "rails", "~> 6.1.0"
   spec.add_dependency 'mongoid', '~> 7.3.0'

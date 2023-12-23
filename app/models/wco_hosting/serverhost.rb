@@ -13,7 +13,7 @@ class WcoHosting::Serverhost
   field     :name, type: :string
   validates :name, uniqueness: { scope: :leadset }, presence: true
 
-  belongs_to :leadset, class_name: 'Wco::Leadset'
+  has_and_belongs_to_many :leadsets, class_name: 'Wco::Leadset'
 
   field :next_port, type: :integer, default: 8000
 

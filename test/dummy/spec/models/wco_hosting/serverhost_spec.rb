@@ -4,7 +4,8 @@ RSpec.describe WcoHosting::Serverhost, type: :model do
   before do
     Wco::Leadset.destroy_all
     @leadset    = create( :leadset )
-    @serverhost = create( :vbox1, leadset: @leadset )
+    WcoHosting::Serverhost.destroy_all
+    @serverhost = create( :vbox1, leadsets: [ @leadset ] )
     WcoHosting::ApplianceTmpl.destroy_all
     @tmpl       = create( :hw0_tmpl )
     @appliance  = create( :appliance, serverhost: @serverhost, leadset: @leadset, appliance_tmpl: @tmpl )

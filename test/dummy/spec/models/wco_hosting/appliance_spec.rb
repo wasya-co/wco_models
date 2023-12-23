@@ -2,13 +2,17 @@
 
 RSpec.describe WcoHosting::Appliance, type: :model do
 
-  it 'set_service_name' do
+  before do
     Wco::Leadset.destroy_all
     @leadset    = create( :leadset )
-    @serverhost = create( :serverhost, leadset: @leadset )
+    WcoHosting::Serverhost.destroy_all
+    @serverhost = create( :vbox1, leadsets: [ @leadset ] )
     WcoHosting::ApplianceTmpl.destroy_all
-    @tmpl       = create( :appliance_tmpl )
+    @tmpl       = create( :hw0_tmpl )
+    @appliance  = create( :appliance, serverhost: @serverhost, leadset: @leadset, appliance_tmpl: @tmpl )
+  end
 
+  it 'set_service_name' do
     app = WcoHosting::Appliance.create( subdomain: 'a', domain: 'b',
       serverhost: @serverhost, leadset: @leadset, appliance_tmpl: @tmpl )
     app.persisted?.should eql true

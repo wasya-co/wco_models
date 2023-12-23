@@ -13,8 +13,7 @@ version=`cat VERSION`
 cat ish_models.gemspec-template | \
   sed -e "s/\$version/$version/g" > ish_models.gemspec
 
-
-bundle > /dev/null
+bundle
 
 git add .
 git commit -m 'autobuild `date "+%Y%m%d"`'

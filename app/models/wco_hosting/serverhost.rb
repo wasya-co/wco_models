@@ -34,27 +34,27 @@ class WcoHosting::Serverhost
     add_docker_service( app )
     add_nginx_site(     app )
     # load_database( app )
-
-    ##
-    ## DNS add_subdomain
-    ##
-    # ac   = ActionController::Base.new
-    # ac.instance_variable_set( :@app, app )
-    # rendered_str = ac.render_to_string("wco_hosting/scripts/create_subdomain.json")
-    # # puts '+++ add_subdomain rendered_str:'; print rendered_str
-
-    # file = Tempfile.new('prefix')
-    # file.write rendered_str
-    # file.close
-
-    # cmd = "aws route53 change-resource-record-sets \
-    #   --hosted-zone-id <%= app.route53_zone %> \
-    #   --change-batch file://<%= file.path %> "
-    # puts! cmd, 'cmd'
-    # `#{cmd}`
+    add_subdomain(      app )
 
     update({ next_port: app.serverhost.next_port + 1 })
   end
+
+  def add_subdomain app
+    ac   = ActionController::Base.new
+    ac.instance_variable_set( :@app, app )
+    rendered_str = ac.render_to_string("wco_hosting/scripts/create_subdomain.json")
+    # puts '+++ add_subdomain rendered_str:'; print rendered_str
+
+    file = Tempfile.new('prefix')
+    file.write rendered_str
+    file.close
+
+    cmd = "aws route53 change-resource-record-sets \
+      --hosted-zone-id <%= app.route53_zone %> \
+      --change-batch file://<%= file.path %> "
+    do_exec( cmd )
+  end
+
 
   def add_nginx_site app
     ac   = ActionController::Base.new

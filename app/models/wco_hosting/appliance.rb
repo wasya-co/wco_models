@@ -19,9 +19,8 @@ class WcoHosting::Appliance
   def host
     "#{subdomain}.#{domain}"
   end
-  def route53_zone
-    WcoHosting::Domain.find_by( name: domain ).route53_zone
-  end
+
+  field :n_retries, type: :integer, default: 3
 
   belongs_to :appliance_tmpl, class_name: 'WcoHosting::ApplianceTmpl'
   def tmpl

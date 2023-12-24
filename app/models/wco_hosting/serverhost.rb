@@ -32,8 +32,6 @@ class WcoHosting::Serverhost
     # puts! app, 'Serverhost#create_appliance'
 
     create_subdomain(   app )
-    sleep 5
-
     create_volume(      app )
     add_docker_service( app )
     add_nginx_site(     app )
@@ -91,10 +89,6 @@ class WcoHosting::Serverhost
     `#{cmd}`
 
     cmd = "ssh #{ssh_host} 'nginx -s reload ' "
-    puts! cmd, 'cmd'
-    `#{cmd}`
-
-    cmd = "ssh #{ssh_host} 'certbot run -d #{app.host} --nginx -n ' "
     puts! cmd, 'cmd'
     `#{cmd}`
   end
@@ -189,6 +183,7 @@ class WcoHosting::Serverhost
 
     puts! cmd, '#do_exec'
     stdout, stderr, status = Open3.capture3(cmd)
+    status = status.to_s.split.last.to_i
     puts "+++ +++ stdout"
     puts stdout
     # @messages.push( stdout )
@@ -196,7 +191,7 @@ class WcoHosting::Serverhost
     puts stderr
     # @errors.push( stderr )
     puts! status, 'status'
-    # @statuses.push( status.to_s.split.last.to_i )
+    # @statuses.push( status )
   end
 
   def done_exec

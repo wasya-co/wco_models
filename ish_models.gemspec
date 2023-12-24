@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |spec|
   spec.name        = "ish_models"
-  spec.version     = "3.1.0.23"
+  spec.version     = "3.1.0.24"
   spec.authors     = ["mac_a2141"]
   spec.email       = ["victor@piousbox.com"]
   spec.homepage    = "https://wasya.co"
@@ -24,5 +24,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'net-ssh', "~> 7.2.0"
   spec.add_dependency 'net-scp', "~> 4.0.0"
+  spec.add_dependency 'droplet_kit', "~> 3.20.0"
 
 end

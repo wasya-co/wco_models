@@ -1,6 +1,7 @@
 
 require 'net/scp'
 require 'open3'
+require 'droplet_kit'
 
 class WcoHosting::Serverhost
   include Mongoid::Document
@@ -40,6 +41,17 @@ class WcoHosting::Serverhost
   end
 
   def create_subdomain app
+    client = DropletKit::Client.new(access_token: DO_TOKEN_1)
+    record = DropletKit::DomainRecord.new(
+      type: 'A',
+      name: app.subdomain,
+      data: app.serverhost.public_ip,
+    )
+    client.domain_records.create(record, for_domain: app.domain )
+  end
+
+  ## obsolete _vp_ 2023-12-23
+  def aws_create_subdomain app
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     rendered_str = ac.render_to_string("wco_hosting/scripts/create_subdomain.json")

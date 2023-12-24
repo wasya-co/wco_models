@@ -51,7 +51,8 @@ class WcoHosting::Serverhost
 
     cmd = "aws route53 change-resource-record-sets \
       --hosted-zone-id #{ app.route53_zone } \
-      --change-batch file://#{ file.path } "
+      --change-batch file://#{ file.path } \
+      --profile route53 "
     do_exec( cmd )
   end
 

@@ -19,6 +19,9 @@ class WcoHosting::Appliance
   def host
     "#{subdomain}.#{domain}"
   end
+  def route53_zone
+    WcoHosting::Domain.find_by( name: domain ).route53_zone
+  end
 
   belongs_to :appliance_tmpl, class_name: 'WcoHosting::ApplianceTmpl'
   def tmpl
@@ -30,7 +33,6 @@ class WcoHosting::Appliance
 
   belongs_to :serverhost,  class_name: 'WcoHosting::Serverhost'
 
-  # field :ip
   field :port
 
   STATE_PENDING = 'state-pending'

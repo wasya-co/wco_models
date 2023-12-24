@@ -31,11 +31,13 @@ class WcoHosting::Serverhost
   def create_appliance app
     # puts! app, 'Serverhost#create_appliance'
 
+    create_subdomain(   app )
+    sleep 5
+
     create_volume(      app )
     add_docker_service( app )
     add_nginx_site(     app )
     # load_database( app )
-    create_subdomain(   app )
 
     update({ next_port: app.serverhost.next_port + 1 })
   end
@@ -44,6 +46,12 @@ class WcoHosting::Serverhost
     client = DropletKit::Client.new(access_token: DO_TOKEN_1)
     record = DropletKit::DomainRecord.new(
       type: 'A',
+      name: app.subdomain,
+      data: app.serverhost.public_ip,
+    )
+    client.domain_records.create(record, for_domain: app.domain )
+    record = DropletKit::DomainRecord.new(
+      type: 'AAAA',
       name: app.subdomain,
       data: app.serverhost.public_ip,
     )

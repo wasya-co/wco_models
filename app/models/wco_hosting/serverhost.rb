@@ -50,12 +50,6 @@ class WcoHosting::Serverhost
       data: app.serverhost.public_ip,
     )
     client.domain_records.create(record, for_domain: app.domain )
-    record = DropletKit::DomainRecord.new(
-      type: 'AAAA',
-      name: app.subdomain,
-      data: app.serverhost.public_ip,
-    )
-    client.domain_records.create(record, for_domain: app.domain )
   end
 
   ## obsolete _vp_ 2023-12-23

@@ -5,6 +5,6 @@ server {
   location / {
     proxy_pass http://127.0.0.1:<%= @app.port %>/;
   }
-  # ssl_certificate /etc/letsencrypt/live/<%= @app.host %>/fullchain.pem; # managed by Certbot
-  # ssl_certificate_key /etc/letsencrypt/live/<%= @app.host %>/privkey.pem; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/<%= @app.host %>/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/<%= @app.host %>/privkey.pem; # managed by Certbot
 }

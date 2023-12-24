@@ -50,8 +50,8 @@ class WcoHosting::Serverhost
     file.close
 
     cmd = "aws route53 change-resource-record-sets \
-      --hosted-zone-id <%= app.route53_zone %> \
-      --change-batch file://<%= file.path %> "
+      --hosted-zone-id #{ app.route53_zone } \
+      --change-batch file://#{ file.path } "
     do_exec( cmd )
   end
 
@@ -168,23 +168,26 @@ class WcoHosting::Serverhost
   end
 
   def do_exec cmd
-    @messages ||= []
-    @errors   ||= []
-    @statuses ||= []
+    # @messages ||= []
+    # @errors   ||= []
+    # @statuses ||= []
 
     puts! cmd, '#do_exec'
     stdout, stderr, status = Open3.capture3(cmd)
     puts "+++ +++ stdout"
     puts stdout
-    @messages.push( stdout )
+    # @messages.push( stdout )
     puts "+++ +++ stderr"
     puts stderr
-    @errors.push( stderr )
+    # @errors.push( stderr )
     puts! status, 'status'
-    @statuses.push( status.to_s.split.last.to_i )
+    # @statuses.push( status.to_s.split.last.to_i )
   end
 
   def done_exec
+    @messages ||= []
+    @errors   ||= []
+    @statuses ||= []
     OpenStruct.new( statuses: @statuses, errors: @errors, messages: @messages )
   end
 

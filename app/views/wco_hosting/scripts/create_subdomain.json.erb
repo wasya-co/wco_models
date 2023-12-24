@@ -6,7 +6,7 @@
     {
       "Action": "CREATE",
       "ResourceRecordSet": {
-        "Name": "<%= @app.origin %>",
+        "Name": "<%= @app.host %>",
         "Type": "A",
         "TTL": 3600,
         "ResourceRecords": [{ "Value": "<%= @app.serverhost.public_ip %>" }]

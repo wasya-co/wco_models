@@ -34,16 +34,16 @@ class WcoHosting::Serverhost
     add_docker_service( app )
     add_nginx_site(     app )
     # load_database( app )
-    add_subdomain(      app )
+    create_subdomain(   app )
 
     update({ next_port: app.serverhost.next_port + 1 })
   end
 
-  def add_subdomain app
+  def create_subdomain app
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     rendered_str = ac.render_to_string("wco_hosting/scripts/create_subdomain.json")
-    # puts '+++ add_subdomain rendered_str:'; print rendered_str
+    # puts '+++ create_subdomain rendered_str:'; print rendered_str
 
     file = Tempfile.new('prefix')
     file.write rendered_str

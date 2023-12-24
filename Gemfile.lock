@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ish_models (3.1.0.24)
+    ish_models (3.1.0.25)
       droplet_kit (~> 3.20.0)
       kaminari-mongoid (~> 1.0.1)
       mongoid (~> 7.3.0)

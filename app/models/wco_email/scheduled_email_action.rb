@@ -60,5 +60,5 @@ class WcoEmail::ScheduledEmailAction
   end
 
 end
-::Sch = WcoEmail::ScheduledEmailAction
+Sch = WcoEmail::ScheduledEmailAction
 

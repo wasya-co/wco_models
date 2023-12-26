@@ -10,8 +10,8 @@ set -ex
 
 ./scripts/version_bump
 version=`cat VERSION`
-cat ish_models.gemspec-template | \
-  sed -e "s/\$version/$version/g" > ish_models.gemspec
+cat wco_models.gemspec-template | \
+  sed -e "s/\$version/$version/g" > wco_models.gemspec
 
 bundle
 
@@ -19,9 +19,9 @@ git add .
 git commit -m 'autobuild `date "+%Y%m%d"`'
 git push
 
-gem build ish_models.gemspec
-gem push ish_models-$version.gem
+gem build wco_models.gemspec
+gem push wco_models-$version.gem
 
-rm ish_models-`cat VERSION`.gem
+rm wco_models-`cat VERSION`.gem
 
 echo "wco_models build ok"

@@ -2,23 +2,24 @@
 %html
   %head
     %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
-    %title Wco Models
+    %title WcoModels TestDummy
     = csrf_meta_tags
     = csp_meta_tag
     = javascript_include_tag "wco/application"
     -# = stylesheet_link_tag    "wco_hosting/application", media: "all"
   %body
 
-    %h2 Wco Models
+    %h2 WcoModels TestDummy
     %nav.flex-row
       %ul
-        %li= link_to 'ROOT', '/'
+        %li= link_to 'ROOT',     '/'
+        %li= link_to '/email',   '/email'
         %li= link_to '/hosting', '/hosting'
-        %li= link_to '/email', '/email'
+        %li= link_to '/wco',     '/wco'
       %ul
         -# %li= link_to 'ApplianceTmpl`s', appliance_tmpls_path
         -# %li= link_to 'Appliances', appliances_path
-        %li= link_to 'Products', products_path
+        -# %li= link_to 'Products', products_path
         -# %li= link_to 'Serverhosts', serverhosts_path
     %hr
 

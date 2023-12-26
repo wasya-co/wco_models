@@ -1,0 +1,22 @@
+/*
+ *= require_tree .
+ *= require_self
+**/
+
+/* body {
+  &:before {
+    content: 'wco_models/application.css';
+    color: red;
+  }
+} */
+
+/* body {
+  color: red;
+} */
+
+/* .min-w-100px {
+  min-width: 100px;
+}
+.min-w-40px {
+  min-width: 40px;
+} */

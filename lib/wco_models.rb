@@ -1,4 +1,6 @@
 
+require 'cancancan'
+require 'devise'
 require 'haml'
 
 ## Fix for:

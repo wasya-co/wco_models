@@ -1,24 +1,23 @@
 
+.bundle
+.byebug_history
+
+/config/initializers/05_stripe.rb
+
 *gem
 
-*trash
-# test/dummy/config/mongoid.yml
-
-vendor
-
 node_modules
-
-/.bundle/
-
-/doc/
 
 /log/*.log
 
 /pkg/
 
 /tmp/
+/test/dummy/config/initializers/05_stripe.rb
 /test/dummy/log/*.log
 /test/dummy/tmp/
+*trash
 
-.byebug_history
+
+vendor
 

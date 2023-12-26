@@ -1,0 +1,10 @@
+
+%ol
+  - products.each do |product|
+    %li
+      = link_to '[~]', edit_product_path( product )
+      #{product.name} // $#{product.price_cents.to_f/100}/#{product.interval.presence || 'onetime'}
+      - if product.product_id
+        .ml-5 <b>product_id:</b> #{product.product_id}
+      - if product.price_id
+        .ml-5 <b>price_id:</b> #{product.price_id}

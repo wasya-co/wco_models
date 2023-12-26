@@ -1,3 +1,4 @@
+
 Rails.application.routes.draw do
-  mount IshModels::Engine => "/ish_models"
+  mount Wco::Engine => "/wco"
 end

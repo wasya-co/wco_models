@@ -1,6 +1,6 @@
 #!/bin/bash
 
 export version=`cat VERSION`
-cat ish_models.gemspec-template | \
-  sed -e "s/\$version/$version/g" > ish_models.gemspec
+cat wco_models.gemspec-template | \
+  sed -e "s/\$version/$version/g" > wco_models.gemspec
 

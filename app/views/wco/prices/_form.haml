@@ -1,0 +1,9 @@
+
+- url = price.new_record? ? prices_path : price_path( price )
+.products--prices-form.inline-block
+  = form_for price, as: :price, url: url do |f|
+    = hidden_field_tag 'price[product_id]', price.product_id
+
+    %label amount cents
+    = f.number_field :amount_cents
+    = f.submit '>'

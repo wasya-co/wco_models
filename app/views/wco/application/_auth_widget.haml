@@ -1,0 +1,8 @@
+
+.application--auth-widget
+  - if current_user
+    = current_user.email
+    = button_to 'Sign Out', "/users/sign_out", method: :delete, data: { confirm: 'Are you sure?' }
+  - else
+    -# = link_to 'Login', new_user_session_path
+    = button_to "Login", "/users/auth/keycloakopenid"

@@ -1,4 +1,7 @@
 
-class Wco::Engine < ::Rails::Engine
-  isolate_namespace Wco
+module Wco
+  class Engine < ::Rails::Engine
+    isolate_namespace Wco
+  end
 end
+

@@ -1,2 +1,3 @@
-IshModels::Engine.routes.draw do
+
+Wco::Engine.routes.draw do
 end

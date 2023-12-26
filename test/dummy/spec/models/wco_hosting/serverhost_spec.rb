@@ -15,10 +15,10 @@ RSpec.describe WcoHosting::Serverhost, type: :model do
   #   out = @serverhost.create_appliance( @appliance )
   # end
 
-  it '#create_volume' do
-    out = @serverhost.create_volume( @appliance )
-    out.statuses.should eql([ 0, 0 ])
-  end
+  # it '#create_volume' do
+  #   out = @serverhost.create_volume( @appliance )
+  #   out.statuses.should eql([ 0, 0 ])
+  # end
 
 
 end

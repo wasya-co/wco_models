@@ -14,13 +14,14 @@
       %ol
         - @stripe_products.each do |product_id, product|
           %li
-            = link_to '[~]', edit_product_path( product.id )
-            .inline-block= button_to '[x]', product_path( product.id ), :method => :delete, :data => { :confirm => 'Are you sure?' }
-            %span.gray= product.id
-            - if product[:wco_product]
-              = link_to product.name, product_path( product )
-            - else
-              = product.name
+            .flex-row
+              = button_to '[x]', product_path( product.id ), method: :delete, data: { :confirm => 'Are you sure?' }
+              = link_to '[~]', edit_product_path( product.id )
+              %span.gray= product.id
+              - if product[:wco_product]
+                = link_to product.name, product_path( product )
+              - else
+                = product.name
             %ul
               %li
                 New price:

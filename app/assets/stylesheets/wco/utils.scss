@@ -3,10 +3,8 @@
 //   display: block;
 // }
 
-.code,
-.monospace {
-  font-family: monospace;
-  font-size: 0.8em;
+hr {
+  border-top: 1px solid red;
 }
 
 textarea {
@@ -18,18 +16,7 @@ textarea {
   min-height: 300px;
 }
 
-.flex-row {
-  display: flex;
-}
-
-.maxwidth {
-  max-width: 1000px;
-  margin: auto;
-}
-.padded {
-  margin: 0.5em;
-}
-
+/* B */
 table.bordered {
 
   border: 1px solid gray;
@@ -48,6 +35,33 @@ table.bordered {
 
 }
 
-hr {
-  border-top: 1px solid red;
+/* C */
+
+.code,
+.monospace {
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
+
+/* F */
+.flex-row {
+  display: flex;
+}
+
+/* G */
+.gray,
+.grey {
+  color: grey;
+}
+
+/* M */
+.maxwidth {
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* P */
+.padded {
+  margin: 0.5em;
 }

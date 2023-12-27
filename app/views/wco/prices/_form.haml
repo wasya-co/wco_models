@@ -1,9 +1,17 @@
 
-- url = price.new_record? ? prices_path : price_path( price )
-.products--prices-form.inline-block
-  = form_for price, as: :price, url: url do |f|
+-# - url = price.new_record? ? prices_path : price_path( price )
+.products--prices-form
+
+  = form_for price, as: :price, html: { class: 'flex-row' } do |f|
     = hidden_field_tag 'price[product_id]', price.product_id
 
-    %label amount cents
-    = f.number_field :amount_cents
+    .field
+      %label amount cents
+      = f.number_field :amount_cents
+
+    .field
+      %label interval
+      = f.select :interval, options_for_select( Wco::Price::INTERVALS, selected: price.interval ), class: 'select2'
+
+    .actions
     = f.submit '>'

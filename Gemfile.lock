@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.1.0.35)
+    wco_models (3.1.0.36)
       aws-sdk-s3
       cancancan (~> 3.5.0)
       devise (~> 4.9.3)

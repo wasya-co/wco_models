@@ -1,6 +1,7 @@
 
 require 'net/scp'
 require 'open3'
+require 'sidekiq'
 
 class WcoHosting::CertbotJob
   include Sidekiq::Job

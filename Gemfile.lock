@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.1.0.31)
+    wco_models (3.1.0.32)
       aws-sdk-s3
       cancancan (~> 3.5.0)
       devise (~> 4.9.3)
@@ -84,7 +84,7 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
     aws-eventstream (1.3.0)
-    aws-partitions (1.873.0)
+    aws-partitions (1.875.0)
     aws-sdk-core (3.190.1)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)

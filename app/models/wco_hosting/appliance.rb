@@ -4,7 +4,8 @@ class WcoHosting::Appliance
   include Mongoid::Timestamps
   store_in collection: 'wco_appliances'
 
-  belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :appliances
+  belongs_to :leadset,      class_name: 'Wco::Leadset', inverse_of: :appliances
+  belongs_to :subscription, class_name: 'Wco::Subscription' # , inverse_of: :appliance
 
   field :service_name
   before_validation :set_service_name, on: :create, unless: ->{ service_name }

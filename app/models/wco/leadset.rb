@@ -5,7 +5,6 @@ class Wco::Leadset
   store_in collection: 'wco_leadsets'
 
   field :company_url
-  def domain; company_url; end ## @TODO: remove
   validates :company_url, presence: true, uniqueness: true
   index({ company_url: 1 }, { name: 'company_url' })
 

@@ -9,6 +9,8 @@ class Wco::Product
 
   has_many :prices,        class_name: 'Wco::Price', inverse_of: :product
 
+  has_many :subscriptions, as: :product
+
   def self.list
     [ [nil,nil] ] + self.all.order_by({ name: :asc }).map { |i| [i.name, i.id] }
   end

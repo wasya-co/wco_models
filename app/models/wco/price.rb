@@ -3,10 +3,18 @@ class Wco::Price
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :product,     class_name: 'Wco::Product',      inverse_of: :prices
+  # belongs_to :product,     class_name: 'Wco::Product',      inverse_of: :prices
+  ## Wco::Product, WcoHosting::ApplianceTmpl:
+  belongs_to :product, polymorphic: true # , foreign_key: :wco_price_id
+
   has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :price, foreign_key: :wco_price_id
 
   field :amount_cents, type: Integer
+
+  def to_s
+    price = self
+    "$#{ price[:amount_cents].to_f/100 }/#{ price.interval||'onetime' }"
+  end
 
   INTERVAL_DAY   = 'day'
   INTERVAL_WEEK  = 'week'
@@ -17,11 +25,8 @@ class Wco::Price
 
   field :price_id   # stripe
 
-  def name
-    "$#{ amount_cents.to_f/100 } / #{interval}"
-  end
-  def name_simple
-    "$#{ amount_cents.to_f/100 }"
+  def self.list
+    [[nil,nil]] + all.map { |p| [ "#{p.product.name} :: #{p.amount_cents.to_f/100}/#{p.interval||'onetime'}", p.id ] }
   end
 
 end

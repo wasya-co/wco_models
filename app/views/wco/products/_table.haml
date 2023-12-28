@@ -16,5 +16,5 @@
           %ul
             - product.prices.each do |price|
               %li
-                $#{ price.amount_cents.to_f/100 } / #{price.interval}
+                = price
                 .gray= price.price_id

@@ -2,7 +2,7 @@
 require 'net/scp'
 require 'open3'
 
-class CertbotJob
+class WcoHosting::CertbotJob
   include Sidekiq::Job
   sidekiq_options queue: 'wasya_co_rb'
 

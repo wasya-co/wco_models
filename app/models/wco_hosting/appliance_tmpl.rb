@@ -1,3 +1,4 @@
+# require_relative '../wco/subscription'
 
 class WcoHosting::ApplianceTmpl
   include Mongoid::Document
@@ -11,6 +12,9 @@ class WcoHosting::ApplianceTmpl
   validates :version, uniqueness: { scope: :kind }, presence: true
   index({ kind: -1, version: -1 }, { name: :kind_version })
 
+  def name
+    "#{kind} #{version}"
+  end
   field :descr, type: :string
 
   field :image
@@ -42,16 +46,30 @@ class WcoHosting::ApplianceTmpl
   KIND_PRESTASHOP = 'prestashop'
   KIND_SMT        = 'smt'
   KIND_WORDPRESS  = 'wordpress'
+  KIND_TRASH      = 'trash'
+  KIND_TMP        = 'tmp'
 
-  KINDS = [ KIND_CRM, KIND_DRUPAL, KIND_HELLOWORLD, KIND_IROWOR,
+  KINDS = [ nil, KIND_CRM, KIND_DRUPAL, KIND_HELLOWORLD, KIND_IROWOR,
     KIND_JENKINS, KIND_MATOMO, KIND_MOODLE, KIND_PRESTASHOP, KIND_SMT,
-    KIND_WORDPRESS ]
+    KIND_WORDPRESS, KIND_TRASH, KIND_TMP ]
 
-  has_many :appliances, class_name: 'WcoHosting::Appliance'
+  def self.list
+    # [[nil,nil]] + all.map { |t| [t.kind, t.id] }
+    KINDS
+  end
 
   def self.latest_of kind
     where({ kind: kind }).order_by({ version: :desc }).first
   end
+
+  has_many :appliances, class_name: 'WcoHosting::Appliance'
+
+  has_many :subscriptions, as: :product, class_name: 'Wco::Subscription'
+
+  # belongs_to :price, class_name: 'Wco::Price', foreign_key: :wco_price_id
+  has_one :price, as: :product, class_name: 'Wco::Price'
+  field :price_id # stripe
+
 
 end
 AppTmpl = WcoHosting::ApplianceTmpl

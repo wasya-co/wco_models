@@ -17,9 +17,9 @@ class Wco::ApplicationController < ActionController::Base
     @current_profile ||= Wco::Profile.find_by( email: current_user.email )
   end
 
-  # def current_leadset
-  #   @current_leadset ||= current_profile.leadset
-  # end
+  def current_leadset
+    @current_leadset ||= current_profile.leadset
+  end
 
   def flash_alert what
     flash[:alert] ||= []

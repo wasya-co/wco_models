@@ -29,16 +29,16 @@
               - product[:prices].each do |price_id, price|
                 %li
                   %span.gray= price.id
-                  - price_str = "$#{ price[:unit_amount].to_f/100 }/#{ (price[:recurring]||{})[:interval]||'onetime' }"
                   - if @wco_prices_hash[price.id]
-                    = link_to price_str, price_path( @wco_prices_hash[price.id] )
+                    = link_to "#{price.unit_amount.to_f/100}/#{price.type}", price_path( @wco_prices_hash[price.id] )
                   - else
-                    = price_str
+                    = "#{price.unit_amount.to_f/100}/#{price.type}"
+
       %hr
 
     .col-md-6
       %h5.collapse-expand#wcoProducts
         Wco::Product`s (#{@wco_products.length}):
-      = render 'index_table', products: @wco_products
-      -# = render 'index_list', products: @wco_products
+      = render 'table', products: @wco_products
+      -# = render 'list', products: @wco_products
 

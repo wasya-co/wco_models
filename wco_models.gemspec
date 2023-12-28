@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.33"
+  spec.version     = "3.1.0.34"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"

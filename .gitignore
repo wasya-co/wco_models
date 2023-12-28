@@ -18,6 +18,4 @@ node_modules
 /test/dummy/tmp/
 *trash
 
-
-vendor
-
+/vendor/bundle

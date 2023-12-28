@@ -5,6 +5,7 @@
 class WcoEmail::EmailFilter
   include Mongoid::Document
   include Mongoid::Timestamps
+  store_in collection: 'wco_email_email_filter'
 
   field :from_regex
   field :from_exact

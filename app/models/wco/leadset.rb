@@ -4,14 +4,15 @@ class Wco::Leadset
   include Mongoid::Timestamps
   store_in collection: 'wco_leadsets'
 
-  field :company_url
+  field     :company_url
   validates :company_url, presence: true, uniqueness: true
   index({ company_url: 1 }, { name: 'company_url' })
 
   field :email
   index({ email: 1 }, { name: 'email' })
-  validates :email, presence: true # , uniqueness: true ## @TODO: should it be unique? _vp_ 2023-12-22
+  validates :email, presence: true, uniqueness: true
 
+  has_many :leads,         class_name: 'Wco::Lead'
   has_many :profiles,      class_name: 'Wco::Profile',           inverse_of: :leadset
   has_many :appliances,    class_name: 'WcoHosting::Appliance',  inverse_of: :leadset
   has_many :subscriptions, class_name: 'Wco::Subscription',      inverse_of: :leadset

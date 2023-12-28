@@ -17,6 +17,7 @@ textarea {
 }
 
 /* B */
+
 table.bordered {
 
   border: 1px solid gray;
@@ -44,24 +45,35 @@ table.bordered {
 }
 
 
+/* D */
+
+.descr {
+  border: 1px solid red;
+  padding: 0.5em;
+}
+
 /* F */
+
 .flex-row {
   display: flex;
 }
 
 /* G */
+
 .gray,
 .grey {
   color: grey;
 }
 
 /* M */
+
 .maxwidth {
   max-width: 1000px;
   margin: auto;
 }
 
 /* P */
+
 .padded {
   margin: 0.5em;
 }

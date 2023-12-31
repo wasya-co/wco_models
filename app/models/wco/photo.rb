@@ -8,17 +8,17 @@ class Wco::Photo
   include Mongoid::Paperclip
   include Wco::Utils
 
-  # belongs_to :email_message, :optional => true, :class_name => 'Office::EmailMessage'
+  belongs_to :email_message, class_name: 'WcoEmail::Message', optional: true
+  belongs_to :gallery,       class_name: 'Wco::Gallery',      optional: true
   # belongs_to :report,        :optional => true
-  belongs_to :gallery, class_name: 'Wco::Gallery', :optional => true
   # belongs_to :newsitem,      :optional => true
 
-  # photo.photo.to_s.split('/').last.split('?').first
-  field :name,   :type => String
+  field :name
   def name
-    return self[:name] if self[:name]
-    update_attribute(:name, self.photo.to_s.split('/').last.split('?').first)
-    name
+    if !self[:name]
+      update_attribute(:name, self.photo.to_s.split('/').last.split('?').first)
+    end
+    self[:name]
   end
 
   field :ordering, type: :integer

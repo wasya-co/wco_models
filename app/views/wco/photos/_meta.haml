@@ -1,0 +1,7 @@
+
+.photos-meta.row
+  .meta
+    On #{ pretty_date photo.created_at }
+    - unless photo.gallery.blank?
+      In #{ link_to photo.gallery.name, gallery_path(photo.gallery.slug, 0) }
+  = photo.name unless photo.name.blank?

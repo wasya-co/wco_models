@@ -10,14 +10,8 @@ class WcoEmail::Message
   include Mongoid::Timestamps
   store_in collection: 'wco_email_message'
 
-
-  field :raw,         type: :string
-  def the_mail
-    Mail.new( raw )
-  end
-
   field :message_id # MESSAGE-ID
-  validates_uniqueness_of :message_id
+  validates :message_id, presence: true, uniqueness: true
   index({ message_id: 1 }, { unique: true, name: "id_idx" })
 
   field :in_reply_to_id, type: :string
@@ -35,6 +29,7 @@ class WcoEmail::Message
       img['src'] = 'missing'
     end
     doc.search('script').remove
+    doc.search('meta').remove
     doc
   end
 
@@ -53,20 +48,13 @@ class WcoEmail::Message
   field :logs, type: Array, default: []
 
   field :date, type: DateTime
-  def received_at
-    date
-  end
+  def received_at ; date ; end
 
-  belongs_to :email_conversation, class_name: 'WcoEmail::Conversation'
-  def conv
-    email_conversation
-  end
+  belongs_to :conversation, class_name: 'WcoEmail::Conversation'
+  def conv ; email_conversation ; end
 
-  # has_many :email_attachments, class_name: 'WcoEmail::Attachment', inverse_of: :email_message
-  # has_many :assets,          class_name: 'Wco::Asset',         inverse_of: :email_message
-  # has_many :photos,       class_name: 'Photo'
-
-
+  has_many :assets, class_name: 'Wco::Asset'
+  has_many :photos, class_name: 'Wco::Photo'
 
   def apply_filter filter
     case filter.kind
@@ -181,7 +169,7 @@ class WcoEmail::Message
   def save_attachment att, filename: "no-filename-specified"
     content_type = att.content_type.split(';')[0]
     if content_type.include? 'image'
-      photo = Photo.new({
+      photo = Wco::Photo.new({
         content_type:      content_type,
         email_message_id:  self.id,
         image_data:        att.body.encoded,
@@ -189,36 +177,22 @@ class WcoEmail::Message
       })
       photo.decode_base64_image
       photo.save
+
     else
-
       filename   = CGI.escape( att.filename || filename )
-      attachment = Office::EmailAttachment.new({
-        content:       att.body.decoded,
-        content_type:  att.content_type,
-        email_message: self,
-        filename:      filename,
-      })
-      begin
-        attachment.save
-      rescue Encoding::UndefinedConversionError
-        self.logs.push "Could not save an attachment"
-        self.save
-      end
-
       sio = StringIO.new att.body.decoded
       File.open("/tmp/#{filename}", 'w:UTF-8:ASCII-8BIT') do |f|
         f.puts(sio.read)
       end
-      asset3d = ::Gameui::Asset3d.new({
+      asset = Wco::Asset.new({
         email_message: self,
         filename:      filename,
         object:        File.open("/tmp/#{filename}"),
       })
-      if !asset3d.save
-        self.logs.push "Could not save an asset3d"
+      if !asset.save
+        self.logs.push "Could not save an asset3d: #{asset.errors.full_messages.join(", ")}"
         self.save
       end
-
     end
   end
 

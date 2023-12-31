@@ -1,0 +1,34 @@
+
+.publishers-index.padded
+  %h5
+    Publishers
+    = link_to '[+]', wco.new_publisher_path
+
+  %table.bordered
+    %tr
+      %th &nbsp;
+      %th
+        name
+        %br
+        site
+      %th
+        context_eval
+        %br
+        post_body_eval
+    - @publishers.each do |item|
+      %tr
+        %td
+          .flex-row
+            = button_to '[x]',   wco.publisher_path(item), method: :delete, data: { confirm: 'Are you sure?' }
+            = link_to '[~]',     wco.edit_publisher_path(item)
+            = button_to '[run]', wco.do_run_publisher_path( item ), data: { confirm: 'Are you sure?' }
+        %td
+          = item.name
+          %hr
+          = item.to_site.origin
+        %td
+          %pre.monospace
+            = item.context_eval
+          %hr
+          %pre.monospace
+            = item.post_body_tmpl

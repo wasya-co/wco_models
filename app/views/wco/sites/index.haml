@@ -1,0 +1,21 @@
+
+.sites-index.maxwidth
+  %h5
+    Sites
+    = link_to '[+]', new_site_path
+
+  %table.bordered
+    %tr
+      %th &nbsp;
+      %th kind
+      %th origin
+      %th post_path
+    - @sites.each do |s|
+      %tr
+        %td
+          .flex-row
+            = button_to '[x]', site_path(s), method: :delete, data: { confirm: 'Are you sure?' }
+            = link_to '[~]', edit_site_path(s)
+        %td= s.kind
+        %td= s.origin
+        %td= s.post_path

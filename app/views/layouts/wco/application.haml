@@ -8,21 +8,16 @@
     = javascript_include_tag "wco/application"
     = stylesheet_link_tag    "wco/application", media: "all"
   %body
+    = render 'wco/main_header'
 
-    %h2 Wco Models
-    %nav.flex-row
-      %ul
-        %li= link_to 'ROOT', '/'
-        %li= link_to '/hosting', '/hosting'
-        %li= link_to '/email', '/email'
-      %ul
-        -# %li= link_to 'ApplianceTmpl`s', appliance_tmpls_path
-        -# %li= link_to 'Appliances', appliances_path
-        %li= link_to 'Products', products_path
-        -# %li= link_to 'Serverhosts', serverhosts_path
-    %hr
+    -# %nav.flex-row
+    -#   %ul
+    -#     %li= link_to 'ApplianceTmpl`s', appliance_tmpls_path
+    -#     %li= link_to 'Appliances', appliances_path
+    -#     %li= link_to 'Serverhosts', serverhosts_path
+    -# %hr
 
-    = render '/wco/application/alerts_notices'
+    = render '/wco/alerts_notices'
     %hr
 
     = yield

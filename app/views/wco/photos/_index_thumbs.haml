@@ -1,0 +1,7 @@
+
+.photos--index-thumbs
+  .flex-row.items
+    - photos.each do |photo|
+      .item
+        = render 'wco/photos/meta_manager', photo: photo
+        = image_tag photo.photo.url( :thumb )

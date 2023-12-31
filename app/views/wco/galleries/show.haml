@@ -1,0 +1,43 @@
+-#
+-# wco / galleries / show
+-#
+
+.galleries-show.padded
+  .row
+    .col-md-6
+      = render 'title', :gallery => @gallery
+    .col-md-6
+      = render 'wco/photos/multinew', :gallery => @gallery
+
+  .row-deleted
+    %p.collapse-expand#rowDeleted Deleted
+    = render 'wco/photos/index_thumbs', photos: @deleted_photos
+
+  .row-mini
+    %p.collapse-expand#rowMinis Mini's
+    .flex-row
+      - @photos.each do |photo|
+        .item
+          = link_to image_tag(photo.photo.url( :mini ), :alt => ''), "#large_#{photo.id}"
+
+  .row-thumbs
+    %p.collapse-expand#rowThumbs Thumbs
+    .orderable-items{ data: { id: @gallery.id.to_s, slug: @gallery.slug, token: form_authenticity_token } }
+      .flex-row.items
+        - @photos.each do |photo|
+          .itemW
+            %a.mvLeft &lt;
+            %a.mvRight &gt;
+            .item{ data: { id: photo.id.to_s } }
+              = render 'wco/photos/meta_manager', photo: photo
+              = image_tag photo.photo.url( :thumb )
+      = button_tag 'Save ordering', class: 'save-ordering'
+
+  .row-large
+    %p.collapse-expand#rowLarge Large
+    .a
+      - @photos.each do |photo|
+        .item
+          %a{id: "large_#{photo.id}" }
+          = render 'wco/photos/meta_manager', photo: photo
+          .wrapper{ style: "background-image: url('#{photo.photo.url( :large )}')" }

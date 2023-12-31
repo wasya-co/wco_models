@@ -1,0 +1,8 @@
+
+
+- param_name ||= resource.klass::PAGE_PARAM_NAME
+
+- if resource.respond_to? :total_pages
+  = paginate resource, param_name: param_name, views_prefix: 'wco'
+- else
+  -# %label Not paginated.

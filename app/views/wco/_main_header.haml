@@ -1,0 +1,21 @@
+
+.application--main-header.main-header{ class: "#{ENV['RAILS_ENV']} #{ENV['RAILS_ENV'][0...3]=="dev" ? "development" : ''}" }
+
+  -# %i.fa.fa-compress.collapse-expand#collapseHeaderMain
+  -#   Wco Suite
+  .maxwidth
+
+    %i.fa.fa-compress.collapse-expand#collapseHeaderEmail
+      Wco Suite
+    .flex-row
+      %ul
+        %li= link_to 'ROOT', '/'
+        %li= link_to '/hosting', '/hosting'
+        %li= link_to '/email', '/email'
+
+      %ul
+        %li= link_to 'Sites',      wco.sites_path
+        %li= link_to 'Products',   wco.products_path
+        %li= link_to 'Publishers', wco.publishers_path
+        %li= link_to 'Galleries',  wco.galleries_path
+    .c

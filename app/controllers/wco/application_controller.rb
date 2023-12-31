@@ -1,5 +1,6 @@
 
 class Wco::ApplicationController < ActionController::Base
+  include Wco::ApplicationHelper
 
   before_action :current_profile
 

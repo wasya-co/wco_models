@@ -11,6 +11,7 @@ class Wco::Tag
   # parent-child
 
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
+  has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
 
   INBOX = 'inbox'
   TRASH = 'trash'

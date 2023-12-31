@@ -12,5 +12,7 @@ group :development, :test do
   gem "omniauth-keycloak",              "~> 1.5.1"
   gem "omniauth-rails_csrf_protection", "~> 1.0.1"
 
+  gem 'irb', '>= 1.2.8'
+
 end
 

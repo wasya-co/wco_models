@@ -17,5 +17,7 @@ class WcoEmail::MessageStub
   field :object_key
   validates :object_key, presence: true, uniqueness: true
 
+  has_and_belongs_to_many :tags,  class_name: 'Wco::Tag'
+
 end
 ::MsgStub = WcoEmail::MessageStub

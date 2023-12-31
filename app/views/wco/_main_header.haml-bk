@@ -1,0 +1,109 @@
+
+.application--main-header.main-header{ class: "#{ENV['RAILS_ENV']} #{ENV['RAILS_ENV'][0...3]=="dev" ? "development" : ''}" }
+
+  %i.fa.fa-compress.collapse-expand#collapseHeaderMain
+    Wco Suite
+  .container
+
+    %i.fa.fa-compress.collapse-expand#collapseHeaderOffice
+      Wco Email & CRM
+    .a
+      %ul
+        %li= link_to 'Tags', tags_path
+        -# %li
+        -#   = link_to "#{WpTag::INBOX} (#{Office::EmailConversation.in_emailtag(WpTag::INBOX).length})", email_conversations_in_path(WpTag::INBOX), class: 'chip'
+        -#   = link_to '[+]', new_email_context_path
+        %li
+          = link_to "Tmpls (#{WcoEmail::EmailTemplate.all.length})", email_templates_path
+          = link_to '[+]', new_email_template_path
+        %li
+          = link_to "Companies (#{Leadset.kept.length})", leadsets_path
+          .inline-search
+            = form_tag leadsets_path, method: :get do
+              = text_field_tag :q
+          = link_to '[+]', new_leadset_path
+        %li
+          = link_to "EActions", email_actions_path
+          = link_to '[+]', new_email_action_path
+      %ul
+        %li
+          = link_to "Filters (#{Office::EmailFilter.active.length})", email_filters_path
+          = link_to '[+]', new_email_filter_path
+        %li
+          = link_to "Ctxs (#{Ctx.notsent.length})", email_contexts_path({ sent: false })
+          = link_to '[+]', new_email_context_path
+          %br
+          = link_to 'summary', email_contexts_summary_path( format: :html )
+          = link_to '[csv]', email_contexts_summary_path( format: :csv )
+
+        %li
+          = link_to "Leads (#{Lead.kept.length})", leads_path
+          .inline-search
+            = form_tag leads_path, method: :get do
+              = text_field_tag :q
+          = link_to '[+]', new_lead_path
+        %li
+          = link_to "Schs (#{Sch.active.length})", scheduled_email_actions_path
+          = link_to '[+]', new_scheduled_email_action_path
+
+      %ul
+        %li
+          = link_to 'OLATs', lead_action_templates_path
+          = link_to '[+]', new_lead_action_template_path
+          = link_to 'Lead Actions', lead_actions_path
+
+
+        %li
+          = link_to "Campaigns (#{Ish::EmailCampaign.all.length})", email_campaigns_path
+          = link_to '[+]', new_email_campaign_path
+        %li
+          = link_to "OActions (#{Office::Action.all.length})", office_actions_path
+          = link_to '[+]', new_office_action_path
+        %li
+          = link_to 'Unsubs', unsubscribes_path
+          = link_to 'Analytics', analytics_path
+
+    .c
+
+    %i.fa.fa-compress.collapse-expand#collapseHeaderWco
+      Wasya Co Rb
+    .a
+      %ul
+        %li
+          = link_to 'ApplianceTmpl\'s', appliance_tmpls_path
+        %li
+          = link_to 'Appliance\'s', appliances_path
+        %li
+          = link_to 'Serverhost\'s', serverhosts_path
+      %ul
+        %li
+          = link_to 'Products & Prices', products_path
+        %li
+          = link_to 'Subscriptions', subscriptions_path
+          = link_to '[+]', new_wco_subscription_path
+        %li
+          = link_to 'Wco::Leadset\'s', wco_leadsets_path
+
+
+    .c
+
+
+
+    -# %i.fa.fa-compress.collapse-expand#collapseHeaderIro Iro Wor
+    -# .a
+    -#   %ul
+    -#     %li
+    -#       = link_to 'Alerts', iro_alerts_path
+    -#       = link_to 'Watchers', iro_watchers_path
+    -#     %li
+    -#       = link_to 'Plots', 'http://localhost:3000/iron_warbler/NOPE-1', target: '_blank'
+    -#     %li
+    -#       = link_to 'Purses', iro_purses_path
+    -#       - Iro::Purse.all.map do |p|
+    -#         = "[#{p.id}"
+    -#         = link_to "show", iro_purse_path(p)
+    -#         = link_to "gui", iro_purse_path({ id: p.id, kind: 'show_gameui' })
+    -#         = "]"
+    -#       = link_to '[+]', new_iro_purse_path
+    -# .c
+

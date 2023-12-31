@@ -1,0 +1,6 @@
+
+.photos-show.padded
+  .header
+    %h5.title= @photo.photo.original_filename
+
+  = image_tag @photo.photo.url( :original )

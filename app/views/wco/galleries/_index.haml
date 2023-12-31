@@ -1,0 +1,41 @@
+-#
+-# wco / galleries / _index.haml
+-#
+-# _vp_ 2022-09-25 :: Small styling revision
+-#
+
+- n_thumbs ||= 12
+
+.galleries--index.maxwidth
+  .max-width
+    = render '/wco/galleries/menu', count: galleries.count
+  %hr
+
+  .padded
+    - if galleries.length > 0
+
+      - if galleries.respond_to? :total_pages
+        = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'
+
+      .row
+        - galleries.each do |g|
+          .col-sm-12.col-md-6
+            .Card
+              %h5
+                = link_to '[~]', edit_gallery_path( g )
+                = link_to g.name, gallery_path(g.slug)
+                (#{g.photos.length})
+              = render 'meta', item: g
+              - if g.photos.length == 0
+                No Photos
+              - else
+                .flex-row
+                  - g.photos.limit( n_thumbs ).each do |photo|
+                    = link_to image_tag(photo.photo.url(:thumb), :alt => g.name), gallery_path(g.slug)
+
+      - if galleries.respond_to? :total_pages
+        = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'
+
+    - else
+      %h5 No Galleries
+

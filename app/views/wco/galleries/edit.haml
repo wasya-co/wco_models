@@ -1,0 +1,6 @@
+
+.galleries-edit.max-width
+  = render 'title', :gallery => @gallery
+  = render 'form', :gallery => @gallery, :url => gallery_path( @gallery )
+  = render 'thumbs', :gallery => @gallery
+  = render 'wco/photos/multinew', :gallery => @gallery

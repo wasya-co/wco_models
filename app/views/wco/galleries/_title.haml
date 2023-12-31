@@ -1,0 +1,16 @@
+
+.galleries--title
+  %h2
+    Gallery
+    = link_to gallery.name, gallery_path(gallery)
+    (#{gallery.photos.length})
+    = link_to '[~]', edit_gallery_path( gallery )
+    [x]
+    - if gallery.is_public && !gallery.is_trash && !gallery.is_done
+      %i.material-icons visibility
+    - else
+      %i.material-icons visibility_off
+  %ul
+    %li slug :: #{gallery.slug}
+    %li subhead :: #{gallery.subhead}
+    %li= render 'meta', :item => gallery

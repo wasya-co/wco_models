@@ -1,0 +1,12 @@
+
+.galleries--menu-secondary
+  %ul
+    %li{ class: "#{params[:render_type] == 'index_titles' ? 'active' : ''}" }
+      = link_to 'titles list', galleries_index_titles_path( :render_type => Gallery::RENDER_THUMBS )
+    %li{ class: "#{params[:render_type] == 'index_thumbs' ? 'active' : ''}" }
+      = link_to 'thumbs list', galleries_index_thumbs_path( :render_type => Gallery::RENDER_TITLES )
+    %li{ class: "#{params[:render_type] == 'index_thumbs' ? 'active' : ''}" }
+      = link_to 'shared with me (thumbs)', galleries_shared_path( :render_type => Gallery::RENDER_THUMBS )
+    %li{ class: "#{params[:render_type] == 'index_titles' ? 'active' : ''}" }
+      = link_to 'shared with me (titles)', galleries_shared_titles_path
+

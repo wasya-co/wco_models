@@ -10,7 +10,7 @@ class Wco::Leadset
 
   field :email
   index({ email: 1 }, { name: 'email' })
-  validates :email, presence: true, uniqueness: true
+  validates :email, uniqueness: true # presence: true
 
   has_many :leads,         class_name: 'Wco::Lead'
   has_many :profiles,      class_name: 'Wco::Profile',           inverse_of: :leadset

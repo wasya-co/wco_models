@@ -29,6 +29,10 @@ FactoryBot.define do
 
   end
 
+  factory :email_conversation, class: 'WcoEmail::Conversation' do
+    subject { 'test-subject-1' }
+  end
+
   factory :leadset, class: 'Wco::Leadset' do
     email { generate(:email) }
 

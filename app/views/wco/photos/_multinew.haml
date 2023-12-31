@@ -1,0 +1,6 @@
+
+.photos--multinew
+  %h3 Add Photos
+  .errors
+  %ul{ :id => 'photos', :class => 'thumbnails' }
+  %input{ :id => 'fileupload', :type => 'file', :name => 'photo[photo]', 'data-url' => gallery_multiadd_path( gallery.id ), :multiple => '' }

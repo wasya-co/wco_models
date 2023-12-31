@@ -1,0 +1,9 @@
+
+%hr
+.row
+  - gallery.photos.each do |photo|
+    .col.s3
+      %br
+      = button_to '[x]', photo_path( photo ), :method => :delete, :data => { :confirm => 'Are you sure?' }
+      .thumb= image_tag( photo.photo.url( :thumb ), :alt => '' )
+%hr

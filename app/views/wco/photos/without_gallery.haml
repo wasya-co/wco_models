@@ -1,0 +1,11 @@
+
+.row
+  .large-12.columns
+    %h5 Photos without gallery
+
+    - @photos.each do |photo|
+      .box.left
+        = image_tag photo.photo.url(:thumb)
+        = link_to '[x]', manager_photo_path( photo.id ), :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+    .c

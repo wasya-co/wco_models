@@ -6,8 +6,12 @@ class WcoEmail::Conversation
 
   STATUS_UNREAD = 'status_unread'
   STATUS_READ   = 'status_read'
-  STATUSS       = [ STATUS_UNREAD, STATUS_READ ]
+  STATUSES      = [ STATUS_UNREAD, STATUS_READ ]
   field :status
+  scope :unread, ->{ where( status: WcoEmail::Conversation::STATUS_UNREAD ) }
+  def unread?
+    status == STATUS_UNREAD
+  end
 
   field :subject
   index({ subject: -1 })
@@ -20,7 +24,7 @@ class WcoEmail::Conversation
 
   field :preview, default: ''
 
-  has_many :messages,            class_name: 'WcoEmail::Message'
+  has_many :messages,             class_name: '::WcoEmail::Message'
 
   has_and_belongs_to_many :tags,  class_name: 'Wco::Tag'
   has_and_belongs_to_many :leads, class_name: 'Wco::Lead'

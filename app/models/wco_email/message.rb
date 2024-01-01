@@ -12,16 +12,18 @@ class WcoEmail::Message
 
   field :message_id # MESSAGE-ID
   validates :message_id, presence: true, uniqueness: true
-  index({ message_id: 1 }, { unique: true, name: "id_idx" })
+  index({ message_id: 1 }, { unique: true, name: "message_id_idx" })
 
   field :in_reply_to_id, type: :string
 
   field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix. I need this!
-  # validates_presence_of :object_key
+  validates :object_key, presence: true, uniqueness: true
+  index({ object_key: 1 }, { unique: true, name: "object_key_idx" })
 
   field :subject
 
   field :part_html
+
   def part_html_sanitized
     doc = Nokogiri::HTML part_html
     images = doc.search('img')
@@ -30,7 +32,16 @@ class WcoEmail::Message
     end
     doc.search('script').remove
     doc.search('meta').remove
-    doc
+    # doc.xpath('//@style').remove
+    doc.to_s.gsub('http', '').gsub('href="s://', 'href="https://')
+  end
+
+  def part_html_fully_sanitized
+    ActionView::Base.full_sanitizer.sanitize( part_html||'' ).squish
+  end
+
+  def preview_str
+    part_html_fully_sanitized[0..200]
   end
 
   field :part_txt
@@ -52,6 +63,8 @@ class WcoEmail::Message
 
   belongs_to :conversation, class_name: 'WcoEmail::Conversation'
   def conv ; email_conversation ; end
+
+  belongs_to :stub, class_name: 'WcoEmail::MessageStub'
 
   has_many :assets, class_name: 'Wco::Asset'
   has_many :photos, class_name: 'Wco::Photo'
@@ -117,6 +130,9 @@ class WcoEmail::Message
     regex = /[\u{2702}-\u{27b0}]/
     clean = clean.gsub regex, ""
   end
+  def strip_emoji text
+    WcoEmail::Message.strip_emoji text
+  end
 
   ## For recursive parts of type `related`.
   ## Content dispositions:
@@ -140,7 +156,7 @@ class WcoEmail::Message
         end
       else
         if part.content_type.include?('text/html')
-          self.part_html = part.decoded
+          self.part_html = strip_emoji( part.decoded )
 
         elsif part.content_type.include?("text/plain")
           self.part_txt = part.decoded
@@ -167,6 +183,12 @@ class WcoEmail::Message
   end
 
   def save_attachment att, filename: "no-filename-specified"
+    config = JSON.parse(stub.config)
+    if defined?( config['process_images'] ) &&
+      false == config['process_images']
+      return
+    end
+
     content_type = att.content_type.split(';')[0]
     if content_type.include? 'image'
       photo = Wco::Photo.new({
@@ -190,17 +212,10 @@ class WcoEmail::Message
         object:        File.open("/tmp/#{filename}"),
       })
       if !asset.save
-        self.logs.push "Could not save an asset3d: #{asset.errors.full_messages.join(", ")}"
+        self.logs.push "Could not save a wco asset: #{asset.errors.full_messages.join(", ")}"
         self.save
       end
     end
-  end
-
-  def body_sanitized
-    ActionView::Base.full_sanitizer.sanitize( part_html||'' ).squish
-  end
-  def preview_str
-    body_sanitized[0..200]
   end
 
 

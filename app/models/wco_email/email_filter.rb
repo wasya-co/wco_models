@@ -5,7 +5,7 @@
 class WcoEmail::EmailFilter
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'wco_email_email_filter'
+  store_in collection: 'wco_email_email_filters'
 
   field :from_regex
   field :from_exact
@@ -34,8 +34,8 @@ class WcoEmail::EmailFilter
   field :state, type: :string, default: STATE_ACTIVE
   scope :active, ->{ where( state: STATE_ACTIVE ) }
 
-  belongs_to :email_template, class_name: 'Ish::EmailTemplate', optional: true
-  belongs_to :email_action,   class_name: 'Office::EmailAction', optional: true
+  belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate', optional: true
+  belongs_to :email_action,   class_name: 'WcoEmail::EmailAction',   optional: true
 
   field :wp_term_id, type: :integer
   def category

@@ -44,13 +44,13 @@ class WcoEmail::Context
     self[:subject].presence || tmpl.subject
   end
 
-  belongs_to :email_template
+  belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
   def tmpl; email_template; end
 
-  belongs_to :scheduled_email_action, class_name: '::Office::ScheduledEmailAction', optional: true
+  belongs_to :scheduled_email_action, class_name: 'WcoEmail::ScheduledEmailAction', optional: true
   def sch; scheduled_email_action; end
 
-  belongs_to :email_campaign, class_name: 'Ish::EmailCampaign', optional: true
+  belongs_to :email_campaign, class_name: 'WcoEmail::EmailCampaign', optional: true
 
   field :rendered_str
 
@@ -60,14 +60,14 @@ class WcoEmail::Context
 
 
   def notsent
-    Ish::EmailContext.where( sent_at: nil, unsubscribed_at: nil )
+    WcoEmail::EmailContext.where( sent_at: nil, unsubscribed_at: nil )
   end
   def self.notsent; new.notsent; end
 
 
   def scheduled
     # or({ :send_at.lte => Time.now }, { :send_at => nil }) ## This won't work b/c I need draft state!
-    Ish::EmailContext.where({ :send_at.lte => Time.now  })
+    WcoEmail::EmailContext.where({ :send_at.lte => Time.now  })
   end
   def self.scheduled; new.scheduled; end
 
@@ -105,7 +105,7 @@ class WcoEmail::Context
       } },
       { '$sort' => { '_id': -1 } },
     ]
-    outs = Ish::EmailContext.collection.aggregate( pipeline )
+    outs = WcoEmail::EmailContext.collection.aggregate( pipeline )
     outs.to_a
   end
 

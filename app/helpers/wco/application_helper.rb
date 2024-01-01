@@ -1,6 +1,10 @@
 
 module Wco::ApplicationHelper
 
+  def my_truthy? which
+    ["1", "t", "T", "true"].include?( which )
+  end
+
   def pretty_date date
     # date.to_s[0, 10]
     date&.strftime('%Y-%m-%d')

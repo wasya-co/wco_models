@@ -13,11 +13,18 @@ class WcoEmail::MessageStub
   STATUS_FAILED    = 'status_failed'
   STATUSES         = [ STATUS_PENDING, STATUS_PROCESSED ]
   field :status, default: STATUS_PENDING
+  scope :pending, ->{ where( status: 'status_pending' ) }
 
-  field :object_key
+  field     :object_key
   validates :object_key, presence: true, uniqueness: true
+  index({ object_key: 1 }, { unique: true, name: "object_key_idx" })
+
+  has_one :message,               class_name: 'WcoEmail::Message'
 
   has_and_belongs_to_many :tags,  class_name: 'Wco::Tag'
 
+  field :config, type: Object, default: <<~AOL
+    {}
+  AOL
+
 end
-::MsgStub = WcoEmail::MessageStub

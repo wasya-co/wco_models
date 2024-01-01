@@ -23,12 +23,12 @@ class WcoEmail::ScheduledEmailAction
   field :state, type: :string
   scope :active, ->{ where( state: STATE_ACTIVE ) }
 
-  belongs_to :email_action, class_name: '::Office::EmailAction'
+  belongs_to :email_action, class_name: 'WcoEmail::EmailAction'
   validates  :email_action, uniqueness: { scope: :lead_id }
   def act;    email_action;    end
   def act= a; email_action= a; end
 
-  has_many :email_contexts, class_name: '::Ish::EmailContext'
+  has_many :email_contexts, class_name: 'WcoEmail::Context'
   def ctxs; email_contexts; end
 
   field :perform_at, type: :time
@@ -60,5 +60,4 @@ class WcoEmail::ScheduledEmailAction
   end
 
 end
-Sch = WcoEmail::ScheduledEmailAction
 

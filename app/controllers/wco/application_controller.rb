@@ -44,4 +44,8 @@ class Wco::ApplicationController < ActionController::Base
     flash[:notice] << str
   end
 
+  def my_truthy? which
+    ["1", "t", "T", "true"].include?( which )
+  end
+
 end

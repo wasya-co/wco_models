@@ -12,4 +12,8 @@ class Wco::Lead
 
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
 
+  def self.list
+    all.map { |p| [ p.id, p.email ] }
+  end
+
 end

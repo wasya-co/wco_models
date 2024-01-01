@@ -9,6 +9,7 @@ Wco::Engine.routes.draw do
     post 'multiadd', :to => 'photos#j_create', :as => :multiadd
   end
 
+  get 'leads/:id', to: 'leads#show', id: /[^\/]+/
   resources :leads
   resources :leadsets
 

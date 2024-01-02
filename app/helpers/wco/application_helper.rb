@@ -5,6 +5,14 @@ module Wco::ApplicationHelper
     ["1", "t", "T", "true"].include?( which )
   end
 
+  def obfuscate link
+    # puts! link, 'obfuscate helper' if DEBUG
+    obf = WcoEmail::ObfuscatedRedirect.find_or_create_by({ to: link })
+    return WcoEmail::Engine.routes.url_helpers.obf_url( obf.id, {
+      host: Rails.application.routes.default_url_options[:host],
+    })
+  end
+
   def pretty_date date
     # date.to_s[0, 10]
     date&.strftime('%Y-%m-%d')

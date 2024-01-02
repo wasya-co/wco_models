@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   ##
   spec.add_dependency "rails",      "~> 6.1.0"
   spec.add_dependency "haml",       "~> 6.3.0"
-  spec.add_dependency 'sass-rails', '~> 5.0'
+  spec.add_dependency 'sass-rails', '~> 6.0'
 
   spec.add_dependency 'devise',    "~> 4.9.3"
   spec.add_dependency "cancancan", "~> 3.5.0"

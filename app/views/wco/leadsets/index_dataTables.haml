@@ -1,0 +1,33 @@
+
+.leadsets-index
+  %h5
+    = link_to 'Leadsets', leadsets_path
+    (#{Leadset.kept.length})
+    (trash: #{Leadset.discarded.length})
+    = link_to raw("<i class='fa fa-plus-square'></i>"), new_leadset_path
+
+  .actions
+    %label.select-all
+      = check_box_tag :select_all
+      select all
+    %label.n-selected -
+    = button_tag 'Delete', method: :delete, class: 'delete-btn'
+
+  %table.data-table.compact
+    %thead
+      %tr
+        %th &nbsp;
+        %th created at
+        %th Name
+        %th Tag
+        %th.company-url Company Url
+        %th Location
+    %tbody
+      - @leadsets.each do |leadset|
+        %tr
+          %td= check_box_tag 'leadset_ids[]', leadset.id, nil, { class: 'i-sel' }
+          %td= leadset.created_at.strftime("%Y-%m-%d %H:%M")
+          %td= link_to leadset.name, leadset_path( leadset )
+          %td= leadset.tag
+          %td= link_to leadset.company_url, leadset.company_url
+          %td= leadset.location

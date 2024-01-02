@@ -1,9 +1,87 @@
 
-.leads-show.maxwidth
+.leads-show.padded
 
-  %h5 Lead `#{@lead.email}`
+  .header
+    %h2.title
+      Lead ##{@lead.id}
+      = link_to '[~]', edit_lead_path(@lead)
 
-  %ul
-    %li <b>Leadset:</b> #{@lead.leadset}
+  .row
+    .col-md-6
+      %ul
+        %li Name: #{@lead.name}
+        %li Email: #{@lead.email}
+        %li
+          Company (leadset): #{ link_to @lead.company.company_url, leadset_path(@lead.company) }
+          (#{@lead.m3_leadset_id})
+        %li Rating: #{@lead.rating}
+        - if @lead.phone
+          %li Phone: #{@lead.phone}
+        - if @lead.address
+          %li Address: #{@lead.address}
+        - if @lead.shoe_size
+          %li Shoe size: #{@lead.shoe_size}
+        - if @lead.comment
+          %li Comment: #{raw @lead.comment}
+        - if @lead.photo
+          %li
+            = image_tag Photo.find( @lead.photo_id ).photo.url(:small)
 
-  = @lead.inspect
+    .col-md-6
+      %h5 Tags
+      %ul
+        - @lead.lead_tags.each do |lt|
+          %li
+            = link_to category_path(lt.wp_tag.id) do
+              = "##{lt.wp_tag.id} - #{lt.wp_tag.name}"
+
+  .row
+    .col-md-6.ctxs
+      %h5
+        Email Contexts (#{@ctxs.length})
+        = link_to '[+]', '#'
+      %ul
+        - @ctxs.each do |ctx|
+          %li
+            = pp_date( ctx.sent_at ) || 'not sent'
+            = link_to ctx.subject.presence||"No Subj?!", email_context_path(ctx)
+
+    .col-md-6.schs
+      %h5
+        Scheduled actions (#{@schs.length})
+        -# = link_to '[+]', '#'
+        \[+]
+      %ul
+        - @schs.each do |sch|
+          %li
+            = link_to sch.email_action.slug, edit_scheduled_email_action_path(sch)
+            = sch.state
+            (#{link_to 'proto-action', edit_email_action_path(sch.email_action)})
+            = sch.perform_at
+
+      %hr
+      %h5
+        Invoices (?)
+        = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @lead.m3_leadset_id })
+        = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @lead.m3_leadset_id })
+      %ul
+        %li None?
+
+
+
+  .row
+    .col-md-12.msgs
+      %h5 Email Conversations (#{@convs.length})
+      %ul
+        - @convs.each do |conv|
+          %li
+            = link_to conv.subject, email_conversation_path( conv )
+
+  .row
+    .col-md-6
+      = render 'ish_manager/galleries/index', galleries: @galleries
+    .col-md-6
+      = render 'ish_manager/videos/index', videos: @videos
+
+
+

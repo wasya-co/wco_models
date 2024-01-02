@@ -1,0 +1,45 @@
+
+- url = lead.new_record? ? leads_path : lead_path( lead.id )
+
+= form_for lead, html: { multipart: true }, as: :lead, url: url do |f|
+
+  .field
+    = f.label :name
+    = f.text_field :name
+
+  .field
+    = f.label :email
+    = f.text_field :email
+
+  .field
+    = f.label :phone
+    = f.text_field :phone
+
+  .field
+    = f.label :address
+    = f.text_field :address
+
+  .field
+    = f.label "Leadset (company)"
+    = f.select :m3_leadset_id, options_for_select(@leadsets_list, selected: lead.m3_leadset_id), { include_blank: true }, { class: :select2 }
+
+  .field
+    %label Rating
+    = f.number_field :rating
+
+  .field
+    = f.label :comment
+    = f.text_area :comment, class: :tinymce
+
+  .field
+    = f.label "Tags"
+    = lead.wp_tags.inspect
+    = f.select :lead_tags, options_for_select(@tags_list, selected: lead.wp_tags.map(&:term_id) ), {}, { class: :select2, multiple: true }
+
+  .field
+    = f.label :photo
+    = f.file_field :photo
+
+  .actions
+    = f.submit
+

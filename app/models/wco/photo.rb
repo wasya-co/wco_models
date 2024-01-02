@@ -10,7 +10,7 @@ class Wco::Photo
 
   belongs_to :email_message, class_name: 'WcoEmail::Message', optional: true
   belongs_to :gallery,       class_name: 'Wco::Gallery',      optional: true
-  # belongs_to :report,        :optional => true
+  belongs_to :lead,          class_name: 'Wco::Lead',         optional: true
   # belongs_to :newsitem,      :optional => true
 
   field :name

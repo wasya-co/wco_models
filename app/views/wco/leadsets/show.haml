@@ -1,0 +1,57 @@
+
+.leadsets-show.padded
+  .header
+    %h2.title
+      Leadset `#{@leadset.name}`
+      = link_to '[~]', edit_leadset_path( @leadset )
+
+  %ul
+    %li <b>Email:</b> #{@leadset.email}
+    %li <b>company_url</b>: #{@leadset.company_url}
+    %li <b>customer_id</b>: #{@leadset.customer_id}
+
+
+  %h5.collapse-expand#leads Leads
+  = render 'ish_manager/leads/index', leads: @employees
+  %hr
+
+  -# .row
+  -#   .col-md-6
+  -#     = render 'ish_manager/serverhosts/index', serverhosts: @leadset.serverhosts
+  -#   .col-md-6
+  -#     = render 'ish_manager/appliances/index', appliances: @leadset.appliances
+
+  .row
+    .col-md-6
+      %h5.collapse-expand#invoicesList
+        Invoices  (#{@leadset.invoices.length})
+        = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
+        = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
+
+      = render 'ish_manager/invoices/index_list', invoices: @invoices
+
+      %p Next invoice number: #{@leadset.next_invoice_number}
+
+      = form_tag create_monthly_invoice_for_leadset_path({ leadset_id: @leadset.id }) do
+        %label Create invoice for month
+        = text_field_tag 'month_on', nil, placeholder: 'YYYY-MM-DD'
+        %label (replace ?)
+        = check_box_tag 'replace'
+        = submit_tag 'Go >', data: { confirm: 'Are you sure?' }
+      %hr
+
+    .col-md-6
+      %h5.collapse-expand#subscriptionsList
+        Subscriptions (#{@subscriptions.length})
+        = link_to '[+wco]', new_wco_subscription_path({ customer_id: @leadset.customer_id })
+      %table.bordered
+        %thead
+          %tr
+            %th Name
+            %th Price
+        - @subscriptions.each do |i|
+          %tr
+            %td= i.product.name
+            %td= i.price
+      %hr
+

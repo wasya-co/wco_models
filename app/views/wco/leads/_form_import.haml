@@ -1,0 +1,11 @@
+
+.Card
+  = form_tag leads_import_path, multipart: true do
+    .doc
+      %pre= Lead.import_v1_fields
+    .field
+      %label File
+      = file_field_tag :csv_file
+
+    .actions
+      = submit_tag 'Submit'

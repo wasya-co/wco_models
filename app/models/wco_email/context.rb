@@ -44,6 +44,8 @@ class WcoEmail::Context
     self[:subject].presence || tmpl.subject
   end
 
+  has_and_belongs_to_many :leads,      class_name: 'Wco::Lead'
+
   belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
   def tmpl; email_template; end
 
@@ -72,14 +74,12 @@ class WcoEmail::Context
   def self.scheduled; new.scheduled; end
 
 
-  ## like belongs_to to_lead , but Lead is SQL to just the lead_id
-  field :lead_id, type: :integer
-  def lead; Lead.find( lead_id ); end
-  def to_email; lead[:email]; end ## @TODO: remove, just use the lead. _vp_ 2023-03-27
-  # ## no `to` field b/c that's the lead
-  # field :tos, type: :array, default: []
-  field :cc,  type: :string
-  field :ccs, type: :array, default: []
+  belongs_to :lead,      class_name: 'Wco::Lead'
+
+  field :cc,   type: :string
+  field :ccs,  type: :array, default: []
+  field :bcc,  type: :string
+  field :bccs, type: :array, default: []
 
   ##
   ## For tracking / utm

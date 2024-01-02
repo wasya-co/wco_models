@@ -2,6 +2,8 @@
 Wco::Engine.routes.draw do
   root to: 'application#home'
 
+  get 'application/tinymce', to: 'application#tinymce'
+
   resources :assets
   # get 'assets/:id', to: 'assets#show', as: :asset
 
@@ -9,7 +11,9 @@ Wco::Engine.routes.draw do
     post 'multiadd', :to => 'photos#j_create', :as => :multiadd
   end
 
-  get 'leads/:id', to: 'leads#show', id: /[^\/]+/
+  get 'leads/:id',     to: 'leads#show', id: /[^\/]+/
+  post 'leads/bulkop', to: 'leads#bulkop'
+  post 'leads/import', to: 'leads#import', as: :leads_import
   resources :leads
   resources :leadsets
 

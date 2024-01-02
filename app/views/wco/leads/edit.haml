@@ -1,0 +1,22 @@
+
+.leads-edit.max-width
+  .header
+    %h2.title Edit lead #{ link_to @lead.name, lead_path(@lead) }
+
+  = render 'form', :lead => @lead
+
+  -# %hr
+  -# %h1 Email Campaigns:
+  -# %ul
+  -#   - @lead.email_campaign_leads.each do |x|
+  -#     %li
+  -#       <b>Sent on ::</b> #{x.sent_at.to_s[0..10]}
+  -#       <b>Slug ::</b> #{x.email_campaign.slug}
+
+  -# %hr
+  -# %h1 Single Emails:
+  -# %ul
+  -#   - @lead.email_contexts.each do |x|
+  -#     %li
+  -#       <b>Sent at ::</b> #{x.sent_at.to_s[0..10]}
+  -#       <b>Subject ::</b> #{x.subject}

@@ -2,7 +2,7 @@
 class WcoEmail::EmailTemplate
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'wco_email_email_templates'
+  store_in collection: 'ish_email_templates'
 
   field :slug
   validates :slug, presence: true, uniqueness: true
@@ -36,6 +36,7 @@ class WcoEmail::EmailTemplate
   field :can_unsubscribe, type: :boolean, default: true
   field :config_exe,                      default: ""      ## unused! _vp_ 2023-09-24
   field :config_json,     type: Object,   default: '{}'
+  field :layout, default: 'plain'
 
   DEFAULT_FROM_EMAIL = 'Victor Pudeyev <victor@wasya.co>'
   FROM_EMAILS = [
@@ -106,8 +107,8 @@ class WcoEmail::EmailTemplate
 
   has_many :email_actions,  class_name: 'WcoEmail::EmailAction'
   has_many :email_contexts, class_name: 'WcoEmail::EmailContext'
-  has_many :email_filters,  class_name: 'WcoEmail::EmailFilter',      inverse_of: :email_template
-  has_many :unsubscribes,   class_name: 'WcoEmail::EmailUnsubscribe', inverse_of: :email_template
+  has_many :email_filters,  class_name: 'WcoEmail::EmailFilter'
+  has_many :unsubscribes,   class_name: 'WcoEmail::Unsubscribe'
 
   SLUG_BLANK = 'blank'
   def self.blank_template

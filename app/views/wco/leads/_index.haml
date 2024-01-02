@@ -1,0 +1,75 @@
+
+-#
+-# receives locals: leads , search_path
+-#
+-# - email_contexts ||= {}
+
+.leads--index.padded
+  .header
+    %h2.title
+      Leads
+      - if !defined?( skip_pagination ) || !skip_pagination
+        (#{leads.total_count})
+      - else
+        (#{leads.length})
+      = link_to raw("<i class='fa fa-plus-square'></i>"), new_lead_path
+
+  - if defined?( search_path )
+    .float-right= render 'wco/search', path: search_path
+  = form_tag leads_bulkop_path do
+    = label_tag 'Act on Selected:'
+    = select_tag :op, options_for_select( [[nil,nil]] + Wco::Lead::OPS )
+    = select_tag :email_campaign_id, options_for_select( @email_campaigns_list )
+    = submit_tag 'Go'
+
+    - if !defined?( skip_pagination ) || !skip_pagination
+      = paginate leads, param_name: :leads_page
+    %table.bordered
+      %thead
+        %tr
+          %th= check_box_tag :selectAll
+          %th Name/Email
+          %th
+          %th.company Company
+          %th Phone, address
+          %th Tag
+          %th created_at
+          %th.ctxs Ctxs
+          %th Sch
+
+      %tbody
+        - leads.each do |lead|
+          %tr
+            %td= check_box_tag 'lead_ids[]', lead.id
+            %td
+              = link_to '[~]', edit_lead_path( lead )
+              = link_to "#{lead.name} <#{lead.email}>", lead_path( lead )
+            %td
+              = image_tag lead.photo.url(:thumb) if lead.photo
+            %td.company
+              = lead.leadset.company_url
+            %td
+              .a= lead.phone   if lead.phone.present?
+              .a= lead.address if lead.address.present?
+            %td
+            %td= lead.created_at.to_s[0..10]
+            %td.ctxs
+              = lead.contexts.length
+              -## without the N+1 but unfinished and messy:
+              -# = email_contexts[lead.id] || '-'
+
+            %td.sch
+              = lead.scheduled_email_actions.length
+              = link_to '[+]', wco_email.new_scheduled_email_action_path( lead_id: lead.id )
+              -# %ul
+              -#   - lead.scheduled_email_actions.map do |sch_a|
+              -#     %li
+              -#       = link_to sch_a.email_action.slug, edit_scheduled_email_action_path( sch_a )
+              -#       [x]
+
+    - if !defined?( skip_pagination ) || !skip_pagination
+      = paginate leads, param_name: :leads_page
+
+
+
+

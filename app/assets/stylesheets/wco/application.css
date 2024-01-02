@@ -5,20 +5,27 @@
  *= require_self
 **/
 
-table.bordered {
-  table-layout:fixed;
-  width: 100%;
-  word-wrap: break-word;
 
-  .latest-at {
-    width: 100px;
-  }
-  .froms,
-  .leads {
-    width: 200px;
-  }
-
+.wco--alerts-notices {
+  border-bottom: 1px solid red;
 }
+
+.main-footer {
+  border-top: 1px solid red;
+}
+
+.main-header {
+  // border-bottom: 1px solid red;
+
+  li {
+    display: flex;
+
+    input[name='q'] {
+      width: 20px;
+    }
+  }
+}
+
 
 /* .min-w-100px {
   min-width: 100px;

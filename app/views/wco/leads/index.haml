@@ -1,0 +1,7 @@
+
+.leads-index.maxwidth
+  = form_tag leads_path, method: :get do
+    = select_tag :q_tag_ids, options_for_select(@tags_list, selected: params[:q_tag_ids]), { class: :select2, multiple: true }
+    = submit_tag 'tag-search'
+  %hr
+  = render 'index', leads: @leads, search_path: leads_path

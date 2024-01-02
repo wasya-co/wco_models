@@ -33,6 +33,8 @@ class WcoEmail::ScheduledEmailAction
 
   field :perform_at, type: :time
 
+  has_and_belongs_to_many :leads,      class_name: 'Wco::Lead'
+
   def send_and_roll
     sch = self
     sch.update({ state: Sch::STATE_INACTIVE })

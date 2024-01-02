@@ -18,7 +18,11 @@ textarea {
 
 /* B */
 
+
 table.bordered {
+  table-layout:fixed;
+  width: 100%;
+  word-wrap: break-word;
 
   border: 1px solid gray;
   border-bottom: 0;
@@ -33,7 +37,13 @@ table.bordered {
     border-top: 0;
     border-left: 0;
   }
-
+  .latest-at {
+    width: 100px;
+  }
+  .froms,
+  .leads {
+    width: 200px;
+  }
 }
 
 /* C */

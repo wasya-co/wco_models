@@ -1,0 +1,11 @@
+
+.leads--index-rows
+  - leads.each do |lead|
+    .item
+      = link_to lead.email, lead_path(lead)
+      \(#{lead.scheduled_email_actions.length} sch
+      %span.expand-next [+]
+      .expand-hide= render 'ish_manager/scheduled_actions/form_mini'
+      \)
+      %span.expand-next [reply]
+      .expand-hide= render 'ish_manager/email_contexts/form_reply', lead: lead

@@ -16,4 +16,8 @@ class Wco::Tag
   INBOX = 'inbox'
   TRASH = 'trash'
 
+  def self.list
+    [[nil,nil]] + all.map { |p| [ p.id, p.slug ] }
+  end
+
 end

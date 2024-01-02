@@ -25,15 +25,9 @@ class WcoEmail::Campaign
   field :sent_at, type: DateTime
   field :send_at, type: DateTime
 
-  has_many :unsubscribes, class_name: '::Ish::EmailUnsubscribe', inverse_of: :campaign
+  has_many :unsubscribes, class_name: 'WcoEmail::Unsubscribe', inverse_of: :campaign
+  has_and_belongs_to_many :leads, class_name: 'Wco::Lead'
 
-  def campaign_leads
-    return ::EmailCampaignLead.where( email_campaign_id: self.id.to_s ).includes( :lead )
-  end
-
-  def leads
-    ::Lead.joins( :email_campaign_leads ).where( 'email_campaign_leads.email_campaign_id' => self.id.to_s )
-  end
 
   ##
   ## For tracking

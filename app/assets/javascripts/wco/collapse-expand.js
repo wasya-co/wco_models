@@ -1,6 +1,7 @@
 
 
 $(function () {
+
   console.log('Loaded wco/collapse-expand.js')
 
   $(".collapse-expand").each(function() {

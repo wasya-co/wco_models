@@ -28,10 +28,7 @@ class WcoEmail::Campaign
   has_many :unsubscribes, class_name: 'WcoEmail::Unsubscribe', inverse_of: :campaign
   has_and_belongs_to_many :leads, class_name: 'Wco::Lead'
 
-
-  ##
   ## For tracking
-  ##
   attr_reader :tid
 
   def do_send
@@ -44,6 +41,10 @@ class WcoEmail::Campaign
         subject:        tmpl.subject,
       })
     end
+  end
+
+  def self.list
+    [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
   end
 
 end

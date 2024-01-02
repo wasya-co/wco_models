@@ -1,9 +1,8 @@
 
-.leadsets-index
+.leadsets-index.maxwidth
   %h5
     = link_to 'Leadsets', leadsets_path
-    (#{Leadset.kept.length})
-    (trash: #{Leadset.discarded.length})
+    (#{Wco::Leadset.all.length})
     = link_to raw("<i class='fa fa-plus-square'></i>"), new_leadset_path
 
   .actions
@@ -13,70 +12,34 @@
       .n-selected -
     = button_tag 'Delete', method: :delete, class: 'delete-btn'
 
-  .float-right= render 'search', path: leadsets_path
-  = paginate @leadsets, :param_name => :leadsets_page, :views_prefix => 'ish_manager'
+  .float-right= render '/wco/search', path: leadsets_path
+  = paginate @leadsets, :param_name => :leadsets_page, :views_prefix => 'wco'
   %table.bordered
     %thead
       %tr
         %th &nbsp;
-        %th &nbsp;
         %th.company-url Company Url
         %th Tags
-        %th +
-        %th.employees Employees
-        %th.leads Leads
+        %th Leads
+
     %tbody
       - @leadsets.each_with_index do |leadset, idx1|
         %tr
-          %td= check_box_tag 'leadset_ids[]', leadset.id, nil, { class: 'i-sel' }
-          %td= link_to '[~]', edit_leadset_path( leadset )
-          %td= link_to leadset.company_url, leadset_path(leadset)
+          %td
+            = check_box_tag 'leadset_ids[]', leadset.id, nil, { class: 'i-sel' }
+
+          %td
+            = link_to '[~]', edit_leadset_path( leadset )
+            = link_to leadset.company_url, leadset_path(leadset)
 
           %td.tags
-            - leadset.wp_tags.each_with_index do |tag, idx2|
+            - leadset.tags.each_with_index do |tag, idx2|
               .chip
                 = tag.name
 
-          %td.tags-add
-            %i.fa.fa-plus.expand-next
-            = form_tag leadset_tags_path, { class: 'tags--form-mini form-mini', style: 'display: none' } do
-              .header
-                %h5 Add a Tag
-              = hidden_field_tag :leadset_id, leadset.id.to_s
-              = select_tag :term_id, options_for_select( @tags_list ), class: [ 'select2' ]
-              .actions
-                = submit_tag 'Add'
+          %td.leads
+            = leadset.leads.length
 
-          %td.employees
-            = leadset.employees.length
-            -# - leadset.employees.each do |lead|
-            -#   .item
 
-            -#     .chip
-            -#       -# = lead.email
-            -#       = link_to lead.name, lead_path( lead )
-
-            -#     .relative
-            -#       %a.chip{ href: email_contexts_for_lead_path( lead ) }
-            -#         \(
-            -#         = lead.email_contexts.count
-            -#         %i.fa.fa-envelope
-            -#         \)
-
-            -#     .relative
-            -#       %i.fa.fa-pencil.expand-next
-            -#       %form.form-mini{ style: 'display: none' }
-            -#         Editing...
-
-            -#     .relative
-            -#       %i.fa.fa-clock-o.expand-next
-            -#       .expand-hide= render 'ish_manager/scheduled_email_actions/form', scheduled_email_action: Sch.new({ lead_id: lead.id })
-
-            -#     -# .scheduled
-            -#     -#   - lead.scheduled_emails.each do |sch|
-            -#     -#     .chip
-            -#     -#       -# .interval= sch.interval
-            -#     -#       -# .tmpl= sch.email_template.slug
-
-  = paginate @leadsets, :param_name => :leadsets_page, :views_prefix => 'ish_manager'
+  = paginate @leadsets, :param_name => :leadsets_page, :views_prefix => 'wco'
 

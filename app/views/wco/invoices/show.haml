@@ -1,0 +1,23 @@
+
+- i = @invoice
+
+.invoices-show.max-width
+  %h5 Invoice ##{i.number}
+
+  %ul
+    %li email: #{i.email}
+    %li leadset: #{link_to i.leadset.name, leadset_path( i.leadset) }
+    %li invoice_id: #{i.invoice_id}
+    %li items: #{i.items}
+
+    -# = @invoice.inspect
+
+  %hr
+  %h5
+    Stripe Invoice
+    = link_to 'pdf', @stripe_invoice[:invoice_pdf], target: :_blank
+    .inline-block= button_to 'stripe-send', send_invoice_stripe_path( i.id ), data: { confirm: 'Are you sure?' }
+
+  -# %pre
+  -#   = @stripe_invoice.inspect
+

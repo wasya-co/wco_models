@@ -1,0 +1,50 @@
+
+- invoice = @new_invoice
+- url = invoice.persisted? ? invoice_path( invoice.id ) : create_invoice_stripe_path
+
+
+.invoices-new.max-width
+
+  .row
+    .col.s12.col.m6.col-md-offset-3
+      %h5 New Stripe Invoice for `#{link_to @leadset&.name, leadset_path(@leadset)}`:
+
+      = form_for invoice, :as => :invoice, :url => url do |f|
+        = hidden_field_tag 'invoice[leadset_id]', @leadset.id
+
+        .input-field
+          %label Email
+          = @leadset.email
+          -# - if @leadset.email
+          -#   = f.text_field :email, value: @leadset.email
+          -# - elsif @leadset.employees.length == 1
+          -#   = f.text_field :email, value: @leadset.employees[0].email
+          -# - else
+          -#   = f.select :email, options_for_select([[nil,nil]] + @leadset.employees.map { |i| [ i.email, i.email ] } )
+
+        .input-row
+          %label item (product)
+          = select_tag 'invoice[items][][product_id]', options_for_select( @products_list ), class: 'products select2'
+
+          %label price
+          = select_tag 'invoice[items][][price_id]'
+
+          %label quantity
+          = number_field_tag 'invoice[items][][quantity]'
+
+        -# .input-field
+        -#   %label number
+        -#   = f.number_field :number
+
+        -# .input-field
+        -#   %label Description
+        -#   = f.text_area :description
+
+        .input-field
+          %label Send now?
+          = check_box_tag :do_send
+
+        .actions
+
+          = f.submit 'Create', data: { confirm: 'Are you sure?' }
+

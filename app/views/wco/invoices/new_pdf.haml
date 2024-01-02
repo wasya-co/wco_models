@@ -1,0 +1,18 @@
+
+.invoices-new.max-width
+
+  .row
+    .col.s12.col.m6.col-md-offset-3
+
+      %h5 New PDF Invoice for `#{link_to @leadset&.name, leadset_path(@leadset)}`:
+      = form_for @new_invoice, as: :invoice, url: create_invoice_pdf_path do |f|
+        .input-field
+          %label Email
+          = f.text_field :email
+        .input-field
+          invoice month, description
+        .input-field
+          lineitems
+        .actions
+          = f.submit 'Submit'
+

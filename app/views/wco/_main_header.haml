@@ -20,6 +20,6 @@
         %li= link_to 'Publishers', wco.publishers_path
         %li= link_to 'Galleries',  wco.galleries_path
       %ul
-        %li= link_to 'Leadsets',  wco.leadsets_path
-        %li= link_to 'Leads',     wco.leads_path
+        %li= render '/wco/leadsets/header'
+        %li= render '/wco/leads/header'
     .c

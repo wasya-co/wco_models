@@ -12,7 +12,7 @@ class WcoEmail::Unsubscribe
 
   belongs_to :campaign, class_name: 'WcoEmail::Campaign',      optional: true
   belongs_to :template, class_name: 'WcoEmail::EmailTemplate', optional: true
-  belonds_to :lead,     class_name: 'Wco::Lead'
+  belongs_to :lead,     class_name: 'Wco::Lead'
 
 
 end

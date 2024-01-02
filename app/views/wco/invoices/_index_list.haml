@@ -1,0 +1,13 @@
+
+.invoices--list
+  %ul
+    - invoices.each do |i|
+      %li
+        = link_to '[view]', invoice_path( i )
+        = i.month_on
+        \::
+        - if i.asset
+          = link_to i.number, i.asset.object.url(:original)
+          .inline-block= button_to 'Send', send_invoice_path(i), data: { confirm: 'Are you sure?' }
+        - else
+          = i.number

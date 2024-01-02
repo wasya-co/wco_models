@@ -54,7 +54,7 @@
             %td
             %td= lead.created_at.to_s[0..10]
             %td.ctxs
-              = lead.contexts.length
+              = lead.email_contexts.length
               -## without the N+1 but unfinished and messy:
               -# = email_contexts[lead.id] || '-'
 

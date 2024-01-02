@@ -16,6 +16,10 @@ class Wco::Leadset
   has_many :profiles,      class_name: 'Wco::Profile',           inverse_of: :leadset
   has_many :appliances,    class_name: 'WcoHosting::Appliance',  inverse_of: :leadset
   has_many :subscriptions, class_name: 'Wco::Subscription',      inverse_of: :leadset
+  has_and_belongs_to_many :tags, class_name: 'Wco::Tag'
+
+  has_many :invoices,     class_name: 'Wco::Invoice'
+  field :next_invoice_number, type: :integer, default: 100
 
   has_and_belongs_to_many :serverhosts, class_name: 'WcoHosting::Serverhost' # , inverse_of: :leadset
   def next_serverhost

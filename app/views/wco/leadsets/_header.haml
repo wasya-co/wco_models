@@ -1,0 +1,6 @@
+
+= link_to "Leadsets (#{Wco::Leadset.all.length})", wco.leadsets_path
+.inline-search
+  = form_tag wco.leadsets_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_leadset_path

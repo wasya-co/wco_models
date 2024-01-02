@@ -12,6 +12,7 @@ class Wco::Tag
 
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
   has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
+  has_and_belongs_to_many :leadsets,      class_name: 'Wco::Leadset'
 
   INBOX = 'inbox'
   TRASH = 'trash'

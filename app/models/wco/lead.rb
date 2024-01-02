@@ -15,10 +15,10 @@ class Wco::Lead
   belongs_to :leadset, class_name: 'Wco::Leadset'
   has_one :photo,      class_name: 'Wco::Photo'
 
-  has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
-  has_many :contexts,      class_name: 'WcoEmail::Context'
-  has_and_belongs_to_many :scheduled_email_actions,      class_name: 'WcoEmail::ScheduledEmailAction'
-  has_and_belongs_to_many :email_campaigns, class_name: 'WcoEmail::Campaign'
+  has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation'
+  has_many                :email_contexts,          class_name: '::WcoEmail::Context'
+  has_and_belongs_to_many :scheduled_email_actions, class_name: '::WcoEmail::ScheduledEmailAction'
+  has_and_belongs_to_many :email_campaigns,         class_name: '::WcoEmail::Campaign'
 
   def self.list
     all.map { |p| [ p.id, p.email ] }
@@ -28,7 +28,7 @@ class Wco::Lead
   OP_ADD_TO_CAMPAIGN = 'add_to_campaign'
   OPS = [ OP_DELETE, OP_ADD_TO_CAMPAIGN ]
 
-  has_many :unsubscribes, class_name: 'WcoEmail::Unsubscribe'
+  has_many :unsubscribes, class_name: '::WcoEmail::Unsubscribe'
   field :unsubscribe_token
   def unsubscribe_token
     if !self[:unsubscribe_token]

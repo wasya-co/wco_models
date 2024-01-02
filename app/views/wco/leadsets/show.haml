@@ -2,7 +2,7 @@
 .leadsets-show.padded
   .header
     %h2.title
-      Leadset `#{@leadset.name}`
+      Leadset `#{@leadset.company_url}`
       = link_to '[~]', edit_leadset_path( @leadset )
 
   %ul
@@ -12,14 +12,8 @@
 
 
   %h5.collapse-expand#leads Leads
-  = render 'ish_manager/leads/index', leads: @employees
+  = render '/wco/leads/index', leads: @leads
   %hr
-
-  -# .row
-  -#   .col-md-6
-  -#     = render 'ish_manager/serverhosts/index', serverhosts: @leadset.serverhosts
-  -#   .col-md-6
-  -#     = render 'ish_manager/appliances/index', appliances: @leadset.appliances
 
   .row
     .col-md-6
@@ -28,7 +22,7 @@
         = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
         = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
 
-      = render 'ish_manager/invoices/index_list', invoices: @invoices
+      = render '/wco/invoices/index_list', invoices: @invoices
 
       %p Next invoice number: #{@leadset.next_invoice_number}
 
@@ -43,7 +37,7 @@
     .col-md-6
       %h5.collapse-expand#subscriptionsList
         Subscriptions (#{@subscriptions.length})
-        = link_to '[+wco]', new_wco_subscription_path({ customer_id: @leadset.customer_id })
+        = link_to '[+wco]', new_subscription_path({ customer_id: @leadset.customer_id })
       %table.bordered
         %thead
           %tr

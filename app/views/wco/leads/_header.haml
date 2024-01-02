@@ -1,0 +1,7 @@
+
+
+= link_to "Leads (#{Wco::Lead.all.length})", wco.leads_path
+.inline-search
+  = form_tag wco.leads_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_lead_path

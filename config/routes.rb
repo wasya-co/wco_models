@@ -11,6 +11,8 @@ Wco::Engine.routes.draw do
     post 'multiadd', :to => 'photos#j_create', :as => :multiadd
   end
 
+  resources :headlines
+
   post 'invoices/send/:id',         to: 'invoices#email_send',         as: :send_invoice
   post 'invoices/cr-m/:leadset_id', to: 'invoices#create_monthly_pdf', as: :create_monthly_invoice_for_leadset
   post 'invoices/create-pdf',       to: 'invoices#create_pdf',         as: :create_invoice_pdf
@@ -26,6 +28,7 @@ Wco::Engine.routes.draw do
   resources :leads
   resources :leadsets
 
+  post 'office_action_templates', to: 'office_action_templates#update'
   resources :office_action_templates
   resources :office_actions
 
@@ -35,6 +38,8 @@ Wco::Engine.routes.draw do
   post 'publishers/:id/do-run', to: 'publishers#do_run', as: :do_run_publisher
   resources :publishers
   resources :photos
+
+  resources :reports
 
   resources :sites
   resources :subscriptions

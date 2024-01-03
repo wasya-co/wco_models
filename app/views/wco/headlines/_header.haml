@@ -1,0 +1,6 @@
+
+= link_to "Headlines (#{Wco::Headline.all.length})", wco.headlines_path
+.inline-search
+  = form_tag wco.headlines_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_headline_path

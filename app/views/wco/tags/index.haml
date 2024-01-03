@@ -1,0 +1,11 @@
+
+.tags-index.maxwidth
+  .header
+    %h5.title Tags
+
+  %ul
+    - @tags.each do |tag|
+      %li
+        = link_to tag.slug, tag_path(tag)
+  %hr
+  = render 'form', tag: Wco::Tag.new

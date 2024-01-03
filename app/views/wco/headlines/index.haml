@@ -1,0 +1,11 @@
+
+.headlines-index
+  %ul
+    - @headlines.each do |headline|
+      %li
+        = link_to '[~]', edit_headline_path(headline)
+        = headline.name
+        %ul
+          %li <b>Tags:</b> #{headline.tags.map { |ttt| ttt.slug } }
+
+

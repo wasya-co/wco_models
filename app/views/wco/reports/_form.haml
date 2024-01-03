@@ -1,0 +1,21 @@
+
+.reports--form
+  = form_for report do |f|
+    .field
+      %label Slug
+      = f.text_field :slug
+
+      = f.label :kind
+      = f.select :kind, options_for_select( Wco::Report.kinds_list, selected: report.kind )
+    .field
+      = f.label :origin
+      = f.text_field :origin
+      = f.label :post_path
+      = f.text_field :post_path
+    .field
+      = f.label :username
+      = f.text_field :username
+      = f.label :password
+      = f.text_field :password
+    .actions
+      = f.submit

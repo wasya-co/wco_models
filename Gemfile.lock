@@ -4,6 +4,7 @@ PATH
     wco_models (3.1.0.37)
       aws-sdk-s3
       cancancan (~> 3.5.0)
+      capybara
       devise (~> 4.9.3)
       droplet_kit (~> 3.20.0)
       haml (~> 6.3.0)
@@ -11,11 +12,12 @@ PATH
       mongoid (~> 7.3.0)
       mongoid-autoinc (~> 6.0)
       mongoid-paperclip
-      mongoid_paranoia
+      mongoid_paranoia (~> 0.6.0)
       net-scp (~> 4.0.0)
       net-ssh (~> 7.2.0)
       rails (~> 6.1.0)
       sass-rails (~> 6.0)
+      selenium-webdriver (~> 4.9.0)
       sidekiq (~> 7.2.0)
       stripe (~> 10.4.0)
 
@@ -111,6 +113,15 @@ GEM
     builder (3.2.4)
     byebug (11.1.3)
     cancancan (3.5.0)
+    capybara (3.39.2)
+      addressable
+      matrix
+      mini_mime (>= 0.1.3)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     climate_control (0.2.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -191,6 +202,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    matrix (0.4.2)
     method_source (1.0.0)
     mime-types (3.5.1)
       mime-types-data (~> 3.2015)
@@ -291,6 +303,7 @@ GEM
       psych (>= 4.0.0)
     redis-client (0.19.1)
       connection_pool
+    regexp_parser (2.8.3)
     reline (0.4.1)
       io-console (~> 0.5)
     resource_kit (0.1.8)
@@ -298,6 +311,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rexml (3.2.6)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -316,6 +330,7 @@ GEM
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
     ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -326,6 +341,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selenium-webdriver (4.9.0)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     sidekiq (7.2.0)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -359,9 +378,12 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
     warden (1.2.9)
       rack (>= 2.0.9)
+    websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    xpath (3.2.0)
+      nokogiri (~> 1.8)
     zeitwerk (2.6.12)
 
 PLATFORMS

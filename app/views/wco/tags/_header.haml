@@ -1,0 +1,6 @@
+
+= link_to "Tags (#{Wco::Tag.all.length})", wco.tags_path
+.inline-search
+  = form_tag wco.tags_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_tag_path

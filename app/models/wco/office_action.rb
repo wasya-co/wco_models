@@ -1,28 +1,24 @@
 
-##
-## 2023-09-13 _vp_ I don't know if it's even used.
-##
 class Wco::OfficeAction
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'office_actions'
+  store_in collection: 'wco_office_actions'
 
   field     :slug, type: :string
   validates :slug, uniqueness: true, allow_nil: true
 
-  field :descr, type: :string ## optional
+  # field :descr, type: :string ## optional
 
+  belongs_to :office_action_template
+  def tmpl
+    office_action_template
+  end
 
-  STATE_ACTIVE   = 'active'
-  STATE_INACTIVE = 'inactive'
-  STATES         = [ STATE_ACTIVE, STATE_INACTIVE ]
-  field :state, type: :string
-  scope :active, ->{ where( state: STATE_ACTIVE ) }
-
-
-  has_many :ties,      class_name: '::Office::ActionTie', inverse_of: :office_action
-  has_many :prev_ties, class_name: '::Office::ActionTie', inverse_of: :next_office_action
-  accepts_nested_attributes_for :ties
+  STATUS_ACTIVE   = 'active'
+  STATUS_INACTIVE = 'inactive'
+  STATUSS         = [ STATUS_ACTIVE, STATUS_INACTIVE ]
+  field :status, type: :string
+  scope :active, ->{ where( status: STATUS_ACTIVE ) }
 
   field :action_exe, type: :string
 

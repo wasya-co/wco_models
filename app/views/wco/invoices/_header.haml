@@ -1,0 +1,6 @@
+
+= link_to "Invoices (#{Wco::Invoice.all.length})", wco.invoices_path
+.inline-search
+  = form_tag wco.invoices_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_invoice_path

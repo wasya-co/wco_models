@@ -6,6 +6,7 @@ class Wco::Photo
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Mongoid::Paranoia
   include Wco::Utils
 
   belongs_to :email_message, class_name: 'WcoEmail::Message', optional: true

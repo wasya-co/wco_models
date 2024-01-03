@@ -13,9 +13,15 @@ class Wco::Site
     [nil] + KINDS
   end
 
-  has_many :publishers, class_name: 'Wco::Publisher'
+  has_many :publishers # , class_name: 'Wco::Publisher'
+  has_many :headlines # , class_name: 'Wco::Newstitle'
+
+  field :slug
+  validates :slug, presence: true, uniqueness: true
 
   field :origin # http://pi.local
+  validates :origin, presence: true, uniqueness: true
+
   field :post_path # /node?_format=hal_json
   field :username
   field :password

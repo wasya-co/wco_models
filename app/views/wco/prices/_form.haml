@@ -1,6 +1,6 @@
 
 -# - url = price.new_record? ? prices_path : price_path( price )
-.products--prices-form
+.prices--form
 
   = form_for price, as: :price, html: { class: 'flex-row' } do |f|
     = hidden_field_tag 'price[product_id]', price.product_id

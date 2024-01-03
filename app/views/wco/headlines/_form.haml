@@ -1,0 +1,17 @@
+
+.headlines--form
+  = form_for headline do |f|
+    .field
+      %label Name
+      = f.text_field :name
+
+    .field
+      %label Site
+      = f.select :site, options_for_select( @sites_list, selected: headline.site ), {}, class: 'select2'
+
+    .field
+      %label Tags
+      = f.select :tag_ids, options_for_select( @tags_list, selected: headline.tags ), { }, { class: 'select2', multiple: true }
+
+    .actions
+      = f.submit

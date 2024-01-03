@@ -1,0 +1,10 @@
+
+.tags--form
+  = form_for tag do |f|
+
+    .field
+      %label slug
+      = f.text_field :slug
+
+    .actions
+      = f.submit

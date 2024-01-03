@@ -3,5 +3,20 @@
   .header
     %h5.title Office Action Templates
 
+  %ul
+    - @oats.each do |oat|
+      %li
+        = link_to '[~]', edit_office_action_template_path(oat)
+        .d-inline-block= button_to 'x', office_action_template_path(oat), method: :delete, html: { confirm: 'Are you sure?' }
+        = link_to oat.slug, office_action_template_path(oat)
+        %br
+        %ul
+          - oat.ties.each do |tie|
+            %li
+              = tie.next_at_exe
+              %br
+              = tie.next.slug
+        -# = oat.inspect
+
   %hr
-  = render 'form', oat: OAT.new
+  = render 'form', oat: @new_oat

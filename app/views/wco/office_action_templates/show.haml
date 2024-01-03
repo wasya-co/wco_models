@@ -1,0 +1,11 @@
+
+.oat-show.maxwidth
+
+  %h5
+    OAT `#{@oat.slug}`
+    = link_to '[~]', edit_office_action_template_path(@oat)
+
+  %label Exe
+  %pre.mono.descr= @oat.exe
+
+  = @oat.inspect

@@ -7,6 +7,7 @@
   %table.bordered
     %tr
       %th &nbsp;
+      %th slug
       %th kind
       %th origin
       %th post_path
@@ -16,6 +17,7 @@
           .flex-row
             = button_to '[x]', site_path(s), method: :delete, data: { confirm: 'Are you sure?' }
             = link_to '[~]', edit_site_path(s)
+        %td= s.slug
         %td= s.kind
         %td= s.origin
         %td= s.post_path

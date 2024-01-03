@@ -1,0 +1,19 @@
+
+.office-actions-index.maxwidth
+
+  %h5 Office actions (#{@oas.length})
+
+  %ul
+    - @oas.each do |oa|
+      %li
+        = link_to '[~]', edit_office_action_path(oa)
+        = link_to oa.slug, office_action_path(oa)
+        %ul
+          %li <b>status:</b> #{oa.status}
+          %li <b>tmpl:</b> #{oa.tmpl}
+          %li <b>perform_at:</b> #{oa.perform_at}
+
+
+  %hr
+  = render 'form', oa: OA.new
+

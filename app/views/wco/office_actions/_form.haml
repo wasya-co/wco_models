@@ -1,0 +1,18 @@
+
+.office-actions--form
+  = form_for oa, as: :oa do |f|
+
+    .field
+      %label Slug
+      = f.text_field :slug
+
+    .field
+      %label perform_at
+      = f.text_field :perform_at
+
+    .field
+      %label Tmpl
+      = f.select :office_action_template_id, options_for_select( @oats_list, selected: oa.office_action_template_id ), {}, { class: 'select2' }
+
+    .actions
+      = f.submit

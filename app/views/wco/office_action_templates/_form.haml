@@ -1,82 +1,46 @@
 
 .oat--form
-  = form_for oat do |f|
+  = form_for oat, as: :oat do |f|
+    .actions
+      = f.submit
+
     .field.flex-row
+
       %label Slug
-      = f.text_field :slug
-      %label Period
-      = f.select :period, options_for_select( [nil, 'daily'], selected: oat.period )
-      %label Kind
-      = f.select :kind, options_for_select( [nil, 'daily-image', 'report'], selected: oat.kind )
+      = f.text_field :slug, class: 'w-100'
+
+    .field
+      %label Exe
+      = f.text_area :exe
+
     .field.flex-row
       %label From
       = f.select :from_type, options_for_select( @from_types_list, selected: params[:from_type] || oat.from_type )
       = f.select :from_id, options_for_select( @from_ids_list ), {}, class: 'select2'
+
     .field.flex-row
       %label Publisher
       = f.select :publisher, options_for_select( @publishers_list, selected: oat.publisher ), {}, class: 'select2'
+
+    .row
+      .col-md-4
+        &nbsp;
+      .col-md-8
+        .field
+          %label Next Office Action Templates
+          .eg rand(1..5).business_days.from_now.to_date + rand(8..16).hours + rand(1..59).minutes
+          .eg This is not an interval! But you can do Time.now + 30.seconds
+          %br
+
+          = f.fields_for :ties do |next_f|
+            .flex-row.field
+              = next_f.label :next_at_exe
+              = next_f.text_field :next_at_exe, class: 'flex-grow'
+            .flex-row.field
+              = next_f.label :to_delete
+              = next_f.check_box :to_delete
+              = next_f.select :next_office_action_template_id, options_for_select( @oats_list, selected: next_f.object.next_office_action_template_id ), { }, { class: 'select2' }
+            %br
+
     .actions
       = f.submit
-
-  .flex-row
-    .a
-      %h5 An email campaign
-      %ul
-        %li with this email template
-        %li for leads in this tag
-        %li publish to email
-        %li
-          schedule next action:
-          %ul
-            %li with the next email template
-            %li for the same leads
-            %li publish to email
-            %li
-              schedule the next action
-              %ul
-                %li with the next email template
-
-
-    .a
-      %h5 A daily report
-      %ul
-        %li
-          Get a prompt, somehow.
-          %ul
-            %li this could be metadata of a "node" (video/report/gallery aka gallery)
-        %li write an article about it
-        %li on this site
-        %li
-          post it as a report
-          %ul
-            %li with these tags
-            %li in this issue
-            %li published.
-
-    .a
-      %h5 A daily pic
-      %ul
-        %li From this gallery
-        %li every day
-        %li take an image, mark it as deleted
-        %li on this site
-        %li
-          post it
-          %ul
-            %li with these tags
-            %li in this issue
-            %li published?
-
-    .a
-      %h5 A daily news report
-      %ul
-        %li From this tag
-        %li every day
-        %li take a report, mark it as deleted
-        %li on this site
-        %li
-          post it
-          %ul
-            %li with these tags
-            %li in this issue
-            %li published?

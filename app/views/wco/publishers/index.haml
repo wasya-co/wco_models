@@ -8,7 +8,7 @@
     %tr
       %th &nbsp;
       %th
-        name
+        slug
         %br
         site
       %th
@@ -23,9 +23,9 @@
             = link_to '[~]',     wco.edit_publisher_path(item)
             = button_to '[run]', wco.do_run_publisher_path( item ), data: { confirm: 'Are you sure?' }
         %td
-          = item.name
+          = item.slug
           %hr
-          = item.to_site.origin
+          = item.site.origin
         %td
           %pre.monospace
             = item.context_eval

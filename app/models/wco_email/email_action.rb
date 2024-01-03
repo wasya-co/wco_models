@@ -20,6 +20,8 @@ class WcoEmail::EmailAction
   field :status, type: :string
   scope :active, ->{ where( status: STATUS_ACTIVE ) }
 
+  belongs_to :lead, class_name: 'Wco::Lead'
+
   belongs_to :email_action_template, class_name: 'WcoEmail::EmailActionTemplate'
   validates  :email_action_template, uniqueness: { scope: :lead }
   def tmpl; email_action_template; end
@@ -30,8 +32,6 @@ class WcoEmail::EmailAction
 
   field :perform_at, type: :time
 
-  belongs_to :lead, class_name: 'Wco::Lead'
-  # has_and_belongs_to_many :leads,      class_name: 'Wco::Lead'
 
   def send_and_roll
     sch = self
@@ -58,6 +58,11 @@ class WcoEmail::EmailAction
       next_sch.save!
     end
   end
+
+  def self.list
+    [[nil,nil]] + all.map { |p| [ "#{p.lead.email} :: #{p.tmpl.slug}", p.id ] }
+  end
+
 
 end
 

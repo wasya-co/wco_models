@@ -24,7 +24,7 @@ class Wco::PublishersController < Wco::ApplicationController
   def do_run
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
-    @site = @publisher.to_site
+    @site = @publisher.site
     puts! @site, '@site'
 
     @ctx = OpenStruct.new

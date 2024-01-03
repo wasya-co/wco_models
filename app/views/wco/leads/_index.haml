@@ -59,8 +59,8 @@
               -# = email_contexts[lead.id] || '-'
 
             %td.sch
-              = lead.scheduled_email_actions.length
-              = link_to '[+]', wco_email.new_scheduled_email_action_path( lead_id: lead.id )
+              = lead.email_actions.length
+              = link_to '[+]', wco_email.new_email_action_path( lead_id: lead.id )
               -# %ul
               -#   - lead.scheduled_email_actions.map do |sch_a|
               -#     %li

@@ -20,6 +20,10 @@ class Wco::Site
   field :username
   field :password
 
+  def to_s
+    origin
+  end
+
   def self.list
     [[nil,nil]] + all.map { |s| [ s.origin, s.id ] }
   end

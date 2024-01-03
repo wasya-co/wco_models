@@ -2,17 +2,19 @@
 .publishers--form
   = form_for publisher do |f|
     .field
-      = f.label :name
-      = f.text_field :name
-    .field
-      = f.label :frequency
-      Daily
+      = f.label :slug
+      = f.text_field :slug
+
+    -## this is unnecessary b/c I use eval() :
+    -# .field
+    -#   kind?!
     -# .field
     -#   = f.label :from_gallery
     -#   = f.select :from_gallery, options_for_select( @galleries_list, selected: publisher.from_gallery ), class: 'select2'
+
     .field
-      %label to_site
-      = f.select :to_site_id, options_for_select( @sites_list, selected: publisher.to_site_id ), class: 'select2'
+      %label site
+      = f.select :site, options_for_select( @sites_list, selected: publisher.site ), {}, class: 'select2'
     .field
       %label.d-block context_eval
       = f.text_area :context_eval, class: 'monospace'

@@ -1,5 +1,5 @@
 
-.leadsets-show.padded
+.leadsets-show.container
   .header
     %h2.title
       Leadset `#{@leadset.company_url}`
@@ -11,8 +11,6 @@
     %li <b>customer_id</b>: #{@leadset.customer_id}
 
 
-  %h5.collapse-expand#leads Leads
-  = render '/wco/leads/index', leads: @leads
   %hr
 
   .row
@@ -48,4 +46,7 @@
             %td= i.product.name
             %td= i.price
       %hr
+  .row
+    %h5.collapse-expand#leads Leads
+    = render '/wco/leads/index', leads: @leads
 

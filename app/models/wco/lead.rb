@@ -16,10 +16,17 @@ class Wco::Lead
   has_one :photo,      class_name: 'Wco::Photo'
 
   has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation'
+  def convs; conversations; end
   has_many                :email_contexts,          class_name: '::WcoEmail::Context'
-  has_many                :email_actions,          class_name: '::WcoEmail::EmailAction'
-  has_and_belongs_to_many :scheduled_email_actions, class_name: '::WcoEmail::ScheduledEmailAction'
+  def ctxs; email_contexts; end
+  has_many                :email_actions,           class_name: '::WcoEmail::EmailAction'
+  # has_and_belongs_to_many :scheduled_email_actions, class_name: '::WcoEmail::ScheduledEmailAction'
+  def schs; email_actions; end
   has_and_belongs_to_many :email_campaigns,         class_name: '::WcoEmail::Campaign'
+  has_and_belongs_to_many :tags,                    class_name: '::Wco::Tag'
+
+  # has_many :galleries, class_name: 'Wco::Gallery'
+  # has_many :videos, class_name: 'Wco::Video'
 
   def self.list
     all.map { |p| [ p.id, p.email ] }

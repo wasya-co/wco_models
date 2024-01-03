@@ -43,14 +43,13 @@ class Wco::Gallery
     [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
   end
 
-  # belongs_to :profile, class_name: 'Wco::Profile', inverse_of: :galleries
-
-  # has_many :newsitems, class_name: 'Wco::Newsitem'
   has_many :photos,    class_name: '::Wco::Photo', order: { weight: :asc }
 
   def export_fields
     %w| name subhead descr |
   end
+
+  has_many :oats, class_name: 'Wco::OfficeActionTemplate'
 
 end
 

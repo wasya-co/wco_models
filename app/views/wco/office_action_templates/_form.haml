@@ -1,5 +1,22 @@
 
 .oat--form
+  = form_for oat do |f|
+    .field.flex-row
+      %label Slug
+      = f.text_field :slug
+      %label Period
+      = f.select :period, options_for_select( [nil, 'daily'], selected: oat.period )
+      %label Kind
+      = f.select :kind, options_for_select( [nil, 'daily-image', 'report'], selected: oat.kind )
+    .field.flex-row
+      %label From
+      = f.select :from_type, options_for_select( @from_types_list, selected: params[:from_type] || oat.from_type )
+      = f.select :from_id, options_for_select( @from_ids_list ), {}, class: 'select2'
+    .field.flex-row
+      %label Publisher
+      = f.select :publisher, options_for_select( @publishers_list, selected: oat.publisher ), {}, class: 'select2'
+    .actions
+      = f.submit
 
   .flex-row
     .a

@@ -4,19 +4,28 @@ class Wco::Publisher
   include Mongoid::Timestamps
   store_in collection: 'wco_publishers'
 
-  field :name
+  field :slug
+  validates :slug, presence: true, uniqueness: true
 
   KIND_ARTICLE = 'article'
   KIND_IMAGE   = 'image'
   field :kind, type: :string
 
-  belongs_to :to_site,      class_name: 'Wco::Site'
+  belongs_to :site,      class_name: 'Wco::Site'
 
+  def to_s
+    "#{slug}: #{kind} => #{site}"
+  end
 
   field :context_eval
   field :post_body_tmpl
 
+  has_many :oats, class_name: 'Wco::OfficeActionTemplate'
 
+
+  def self.list
+    [[nil,nil]] + all.map { |p| [p, p.id] }
+  end
 
 end
 

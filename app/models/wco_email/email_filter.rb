@@ -5,7 +5,7 @@
 class WcoEmail::EmailFilter
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'wco_email_email_filters'
+  store_in collection: 'office_email_filters' # 'wco_email_email_filters'
 
   field :from_regex
   field :from_exact
@@ -28,19 +28,14 @@ class WcoEmail::EmailFilter
   KINDS = [ nil, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS]
   field :kind
 
-  STATE_ACTIVE   = 'active'
-  STATE_INACTIVE = 'inactive'
-  STATES = [ STATE_ACTIVE, STATE_INACTIVE ]
-  field :state, type: :string, default: STATE_ACTIVE
-  scope :active, ->{ where( state: STATE_ACTIVE ) }
+  STATUS_ACTIVE   = 'active'
+  STATUS_INACTIVE = 'inactive'
+  STATUSS = [ STATUS_ACTIVE, STATUS_INACTIVE ]
+  field :status, type: :string, default: STATUS_ACTIVE
+  scope :active, ->{ where( status: STATUS_ACTIVE ) }
 
-  belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate', optional: true
-  belongs_to :email_action,   class_name: 'WcoEmail::EmailAction',   optional: true
-
-  field :wp_term_id, type: :integer
-  def category
-    self.wp_term_id && WpTag.find( self.wp_term_id )
-  end
+  belongs_to :email_template,        class_name: 'WcoEmail::EmailTemplate',         optional: true
+  belongs_to :email_action_template, class_name: 'WcoEmail::EmailActionTemplate',   optional: true
 
 end
 

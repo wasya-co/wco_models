@@ -5,6 +5,10 @@
  *= require_self
 **/
 
+.select2 {
+  min-width: 200px;
+  width: 100%;
+}
 
 .wco--alerts-notices {
   border-bottom: 1px solid red;

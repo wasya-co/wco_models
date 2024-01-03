@@ -1,0 +1,6 @@
+
+= link_to "Office Actions (#{Wco::OfficeActionTemplate.all.length})", wco.office_action_templates_path
+.inline-search
+  = form_tag wco.office_action_templates_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_office_action_template_path

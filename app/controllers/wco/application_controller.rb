@@ -2,6 +2,8 @@
 class Wco::ApplicationController < ActionController::Base
   include Wco::ApplicationHelper
 
+  check_authorization
+
   before_action :current_profile
 
   def home

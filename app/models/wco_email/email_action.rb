@@ -1,33 +1,63 @@
 
+require 'mongoid-paranoia'
+
 ##
-## 2023-03-04 _vp_ When I receive one.
-## 2023-03-04 _vp_ When I send one, forever.
+## 2023-03-04 _vp_ An instance of an EmailAction.
+## 2023-03-04 _vp_ An instance of an EmailActionTemplate.
 ##
 class WcoEmail::EmailAction
   include Mongoid::Document
   include Mongoid::Timestamps
-  store_in collection: 'wco_email_email_actions'
+  include Mongoid::Paranoia
+  store_in collection: 'office_scheduled_email_actions'
 
-  field :slug, type: :string
-  validates :slug, uniqueness: true, allow_nil: true
-  index({ slug: 1 }, { unique: true, name: "slug_idx" })
 
-  belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
-  def tmpl; email_template; end
+  STATUS_ACTIVE       = 'active'
+  STATUS_INACTIVE     = 'inactive'
+  STATUS_TRASH        = 'trash'
+  STATUS_UNSUBSCRIBED = 'unsubscribed'
+  STATUSS             = [ STATUS_ACTIVE, STATUS_INACTIVE, STATUS_UNSUBSCRIBED, STATUS_TRASH ]
+  field :status, type: :string
+  scope :active, ->{ where( status: STATUS_ACTIVE ) }
 
-  has_many :scheduled_email_actions, class_name: 'WcoEmail::ScheduledEmailAction'
-  def schs; scheduled_email_actions; end
+  belongs_to :email_action_template, class_name: 'WcoEmail::EmailActionTemplate'
+  validates  :email_action_template, uniqueness: { scope: :lead }
+  def tmpl; email_action_template; end
+  def tmpl= k; email_action_template = k; end
 
-  has_many :ties,      class_name: 'WcoEmail::EmailActionTie', inverse_of: :email_action
-  has_many :prev_ties, class_name: 'WcoEmail::EmailActionTie', inverse_of: :next_email_action
-  accepts_nested_attributes_for :ties
+  has_many :email_contexts, class_name: 'WcoEmail::Context'
+  def ctxs; email_contexts; end
 
-  has_many :email_filters, class_name: 'WcoEmail::EmailFilter', inverse_of: :email_action
+  field :perform_at, type: :time
 
-  field :deleted_at, default: nil, type: :time
+  belongs_to :lead, class_name: 'Wco::Lead'
+  # has_and_belongs_to_many :leads,      class_name: 'Wco::Lead'
 
-  def self.list
-    [[nil,nil]] + WcoEmail::EmailAction.where({ :deleted_at => nil }).map { |a| [ a.slug, a.id ] }
+  def send_and_roll
+    sch = self
+    sch.update({ status: STATUS_INACTIVE })
+
+    # send now
+    ctx = Ctx.create!({
+      email_template_id:         sch.act.tmpl.id,
+      from_email:                sch.act.tmpl.from_email,
+      lead_id:                   sch.lead.id,
+      scheduled_email_action_id: sch.act.id,
+      send_at:                   Time.now,
+      subject:                   sch.act.tmpl.subject,
+    })
+
+    # schedule next actions & update the action
+    sch.act.ties.each do |tie|
+      next_sch = Sch.find_or_initialize_by({
+        lead_id:         sch.lead_id,
+        email_action_id: tie.next_email_action.id,
+      })
+      next_sch.perform_at = eval(tie.next_at_exe)
+      next_sch.status     = STATUS_ACTIVE
+      next_sch.save!
+    end
   end
 
 end
+

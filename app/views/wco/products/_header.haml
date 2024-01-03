@@ -1,0 +1,6 @@
+
+= link_to "Products (#{Wco::Product.all.length})", wco.products_path
+.inline-search
+  = form_tag wco.products_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_product_path

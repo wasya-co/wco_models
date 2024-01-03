@@ -29,4 +29,3 @@ class Wco::OfficeAction
   field :perform_at, type: :time
 
 end
-OAct = Wco::OfficeAction

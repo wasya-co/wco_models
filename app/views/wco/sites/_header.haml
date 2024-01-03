@@ -1,0 +1,6 @@
+
+= link_to "Sites (#{Wco::Site.all.length})", wco.sites_path
+.inline-search
+  = form_tag wco.sites_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_site_path

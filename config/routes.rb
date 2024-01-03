@@ -26,6 +26,9 @@ Wco::Engine.routes.draw do
   resources :leads
   resources :leadsets
 
+  resources :office_action_templates
+  resources :office_actions
+
   resources :prices
   resources :products
   resources :profiles

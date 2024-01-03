@@ -17,6 +17,7 @@ class Wco::Lead
 
   has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation'
   has_many                :email_contexts,          class_name: '::WcoEmail::Context'
+  has_many                :email_actions,          class_name: '::WcoEmail::EmailAction'
   has_and_belongs_to_many :scheduled_email_actions, class_name: '::WcoEmail::ScheduledEmailAction'
   has_and_belongs_to_many :email_campaigns,         class_name: '::WcoEmail::Campaign'
 

@@ -47,6 +47,8 @@ class Wco::PublishersController < Wco::ApplicationController
     })
     puts! out.response, 'out'
 
+    eval( @publisher.after_eval )
+
     redirect_to action: 'index'
   end
 

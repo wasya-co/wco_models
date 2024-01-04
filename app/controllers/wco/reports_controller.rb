@@ -38,6 +38,11 @@ class Wco::ReportsController < Wco::ApplicationController
     @new_report = Wco::Report.new
   end
 
+  def show
+    @report = Wco::Report.find params[:id]
+    authorize! :show, @report
+  end
+
   def update
     @report = Wco::Report.find params[:id]
     authorize! :update, @report

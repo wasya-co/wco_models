@@ -28,9 +28,11 @@ class Wco::AiWriter
   def run_headline headline
     prompt = "Rephrase the following article title using one sentence: #{headline.name}"
     new_title = self.class.prompt prompt
+    puts! new_title, 'new_title'
 
     prompt = "Write an article about the following topic: #{headline.name}"
     new_body = self.class.prompt prompt
+    puts! new_body[0...200], 'new_body'
 
     Wco::Report.create!({
       title: new_title,

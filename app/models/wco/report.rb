@@ -1,4 +1,9 @@
 
+##
+##
+##
+# @report.body.split("\n\n").map { |ttt| "<p>#{ttt}</p>" }.join
+#
 class Wco::Report
   include Mongoid::Document
   include Mongoid::Timestamps

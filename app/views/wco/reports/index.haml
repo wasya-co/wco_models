@@ -8,16 +8,10 @@
     %tr
       %th &nbsp;
       %th slug
-      %th kind
-      %th origin
-      %th post_path
-    - @reports.each do |s|
+    - @reports.each do |ttt|
       %tr
         %td
           .flex-row
-            = button_to '[x]', report_path(s), method: :delete, data: { confirm: 'Are you sure?' }
-            = link_to '[~]', edit_report_path(s)
-        %td= s.slug
-        %td= s.kind
-        %td= s.origin
-        %td= s.post_path
+            = button_to '[x]', report_path(ttt), method: :delete, data: { confirm: 'Are you sure?' }
+            = link_to '[~]', edit_report_path(ttt)
+        %td= link_to ttt.slug, report_path(ttt)

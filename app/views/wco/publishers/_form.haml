@@ -14,12 +14,15 @@
 
     .field
       %label site
-      = f.select :site, options_for_select( @sites_list, selected: publisher.site ), {}, class: 'select2'
+      = f.select :site, options_for_select( @sites_list, selected: publisher.site_id ), {}, class: 'select2'
     .field
       %label.d-block context_eval
       = f.text_area :context_eval, class: 'monospace'
     .field
       %label.d-block post_body_tmpl
       = f.text_area :post_body_tmpl, class: 'monospace'
+    .field
+      %label.d-block after_eval
+      = f.text_area :after_eval, class: 'monospace'
     .actions
       = f.submit

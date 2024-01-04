@@ -11,12 +11,19 @@ class Wco::HeadlinesController < Wco::ApplicationController
 
     @headline.date = Time.now.to_date
 
-
     if @headline.save
       flash_notice @headline
     else
       flash_alert @headline
     end
+    redirect_to action: :index
+  end
+
+  def destroy
+    @headline = Wco::Headline.find params[:id]
+    authorize! :delete, @headline
+    @headline.delete
+    flash_notice "Probably ok"
     redirect_to action: :index
   end
 

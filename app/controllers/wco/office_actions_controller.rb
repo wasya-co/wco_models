@@ -33,6 +33,11 @@ class Wco::OfficeActionsController < Wco::ApplicationController
     authorize! :new, @oa
   end
 
+  def show
+    @oa = OA.find params[:id]
+    authorize! :show, @oa
+  end
+
   def update
     @oa = OA.find params[:id]
     authorize! :update, @oa

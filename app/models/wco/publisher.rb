@@ -18,6 +18,7 @@ class Wco::Publisher
   end
 
   field :context_eval
+  field :after_eval
   field :post_body_tmpl
 
   has_many :oats, class_name: 'Wco::OfficeActionTemplate'

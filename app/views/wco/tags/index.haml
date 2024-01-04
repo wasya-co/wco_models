@@ -3,9 +3,7 @@
   .header
     %h5.title Tags
 
-  %ul
-    - @tags.each do |tag|
-      %li
-        = link_to tag.slug, tag_path(tag)
+  = render 'index', tags: @tags
+
   %hr
   = render 'form', tag: Wco::Tag.new

@@ -1,0 +1,8 @@
+
+.tags--index
+  %ul
+    - tags.each do |tag|
+      %li
+        = link_to tag.slug, tag_path(tag)
+        <b>N headlines:</b> #{tag.headlines.length}
+        <b>N reports:</b> #{tag.reports.length}

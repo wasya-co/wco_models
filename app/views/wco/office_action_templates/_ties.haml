@@ -1,0 +1,18 @@
+
+- oat ||= nil
+- depth ||= 5
+- depth = depth - 1
+
+- if ties.present? && depth >= 0
+  %ul
+    -# .blue= ties[0].length
+    - ties.each do |tie|
+      %li
+        = tie.next_at_exe
+        %br
+        = link_to '[~]', edit_office_action_template_path(tie.next_oat)
+        = link_to tie.next_oat, office_action_template_path(tie.next_oat)
+        - if tie.next_oat == oat
+          <b>[Same]</b>
+        - elsif tie.next_oat.ties.present?
+          = render '/wco/office_action_templates/ties', ties: tie.next_oat.ties, depth: depth, oat: tie.next_oat

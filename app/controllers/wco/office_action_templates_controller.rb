@@ -8,7 +8,7 @@ class Wco::OfficeActionTemplatesController < Wco::ApplicationController
 
   def edit
     @oat = OAT.find params[:id]
-    @oat.ties.push Wco::OfficeActionTemplateTie.new( next_office_action_template_id: nil )
+    @oat.ties.push Wco::OfficeActionTemplateTie.new
     authorize! :edit, @oat
   end
 
@@ -16,12 +16,12 @@ class Wco::OfficeActionTemplatesController < Wco::ApplicationController
     authorize! :index, OAT
     @oats = OAT.all
     @new_oat = OAT.new
-    @new_oat.ties.push Wco::OfficeActionTemplateTie.new( next_office_action_template_id: nil )
+    @new_oat.ties.push Wco::OfficeActionTemplateTie.new
   end
 
   def new
     @oat = OAT.new
-    @oat.ties.push Wco::OfficeActionTemplateTie.new( next_office_action_template_id: nil )
+    @oat.ties.push Wco::OfficeActionTemplateTie.new
     authorize! :new, @oat
   end
 

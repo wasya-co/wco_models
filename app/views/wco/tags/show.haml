@@ -4,7 +4,8 @@
   %h5 Tag `#{@tag.slug}`
 
   %ul
-    %li
-      <b>N headlines:</b> #{@tag.headlines.length}
+    %li.d-flex
+      <b>Headlines (#{@tag.headlines.length}):</b>
+      = render '/wco/headlines/index', headlines: @tag.headlines
     %li
       <b>N reports:</b> #{@tag.reports.length}

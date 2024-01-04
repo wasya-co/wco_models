@@ -39,6 +39,7 @@ class Wco::HeadlinesController < Wco::ApplicationController
   def index
     @headlines = Wco::Headline.all
     authorize! :index, Wco::Headline
+    render '_index'
   end
 
   def update

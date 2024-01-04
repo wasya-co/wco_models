@@ -1,4 +1,5 @@
 
 .office-actions-edit.maxwidth
-  %h5 Editing `#{@oa.slug}`
+  %h5 Editing `#{link_to @oa.slug, office_action_path(@oa)}`
   = render 'form', oa: @oa
+

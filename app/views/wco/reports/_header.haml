@@ -1,6 +1,14 @@
 
-= link_to "Reports (#{Wco::Report.all.length})", wco.reports_path
+- reports ||= @reports
+- reports ||= Wco::Report.all
+
+
+= link_to "Reports (#{reports.length})", wco.reports_path
 .inline-search
   = form_tag wco.reports_path, method: :get do
     = text_field_tag :q
 = link_to '[+]', wco.new_report_path
+- if params[:deleted]
+  [deleted]
+- else
+  = link_to '[deleted]', wco.deleted_reports_path

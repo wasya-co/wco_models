@@ -13,16 +13,70 @@ class Wco::Publisher
 
   belongs_to :site,      class_name: 'Wco::Site'
 
-  def to_s
-    "#{slug}: #{kind} => #{site}"
-  end
-
   field :context_eval
   field :after_eval
   field :post_body_tmpl
 
   has_many :oats, class_name: 'Wco::OfficeActionTemplate'
 
+  ## @TODO: move to PublisherDrupal
+  def do_run
+    @report = report
+
+    @ctx = OpenStruct.new
+    eval( context_eval )
+    puts! @ctx, '@ctx'
+
+    tmpl = ERB.new post_body_tmpl
+    body = JSON.parse tmpl.result(binding)
+    puts! body, 'body'
+
+    headers = {}
+    if Wco::Site::KIND_DRUPAL == site.kind
+      headers['Content-Type'] = 'application/hal+json'
+    end
+
+    out = Wco::HTTParty.post( "#{site.origin}#{site.post_path}", {
+      body: body.to_json,
+      headers: headers,
+      basic_auth: { username: site.username, password: site.password },
+    })
+    puts! out.response, 'out'
+
+    eval( after_eval )
+  end
+
+  def publish_report report
+    @report = report
+    @site   = site
+
+    @ctx = OpenStruct.new
+    eval( context_eval )
+    puts! @ctx, '@ctx'
+
+
+    tmpl = ERB.new post_body_tmpl
+    body = JSON.parse tmpl.result(binding)
+    puts! body, 'body'
+
+    headers = {}
+    if Wco::Site::KIND_DRUPAL == site.kind
+      headers['Content-Type'] = 'application/hal+json'
+    end
+
+    out = Wco::HTTParty.post( "#{site.origin}#{site.post_path}", {
+      body: body.to_json,
+      headers: headers,
+      basic_auth: { username: site.username, password: site.password },
+    })
+    puts! out.response, 'out'
+
+    eval( after_eval )
+  end
+
+  def to_s
+    "#{slug}: #{kind} => #{site}"
+  end
 
   def self.list
     [[nil,nil]] + all.map { |p| [p, p.id] }

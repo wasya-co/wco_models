@@ -1,10 +1,5 @@
 
-require 'httparty'
-
-class Wco::HTTParty
-  include HTTParty
-  debug_output STDOUT
-end
+# require 'httparty'
 
 class Wco::PublishersController < Wco::ApplicationController
 
@@ -24,30 +19,10 @@ class Wco::PublishersController < Wco::ApplicationController
   def do_run
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
-    @site = @publisher.site
-    puts! @site, '@site'
 
-    @ctx = OpenStruct.new
-    eval( @publisher.context_eval )
-    puts! @ctx, '@ctx'
+    @publisher.do_run binding
 
-    tmpl = ERB.new @publisher.post_body_tmpl
-    body = JSON.parse tmpl.result(binding)
-    puts! body, 'body'
-
-    headers = {}
-    if Wco::Site::KIND_DRUPAL == @site.kind
-      headers['Content-Type'] = 'application/hal+json'
-    end
-
-    out = Wco::HTTParty.post( "#{@site.origin}#{@site.post_path}", {
-      body: body.to_json,
-      headers: headers,
-      basic_auth: { username: @site.username, password: @site.password },
-    })
-    puts! out.response, 'out'
-
-    eval( @publisher.after_eval )
+    flash_notice "Probably ok"
 
     redirect_to action: 'index'
   end

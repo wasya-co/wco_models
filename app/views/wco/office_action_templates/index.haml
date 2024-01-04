@@ -10,12 +10,7 @@
         .d-inline-block= button_to 'x', office_action_template_path(oat), method: :delete, html: { confirm: 'Are you sure?' }
         = link_to oat.slug, office_action_template_path(oat)
         %br
-        %ul
-          - oat.ties.each do |tie|
-            %li
-              = tie.next_at_exe
-              %br
-              = tie.next.slug
+        = render '/wco/office_action_templates/ties', ties: oat.ties, oat: oat
         -# = oat.inspect
 
   %hr

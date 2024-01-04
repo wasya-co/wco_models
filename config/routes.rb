@@ -39,6 +39,7 @@ Wco::Engine.routes.draw do
   resources :publishers
   resources :photos
 
+  get 'reports/deleted', to: 'reports#index', as: :deleted_reports, defaults: { deleted: true }
   resources :reports
 
   resources :sites

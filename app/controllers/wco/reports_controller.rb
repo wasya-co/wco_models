@@ -1,7 +1,11 @@
 
 class Wco::ReportsController < Wco::ApplicationController
 
+  before_action :set_lists
+
   def create
+    params[:report][:tag_ids].delete ''
+
     @report = Wco::Report.new params[:report].permit!
     authorize! :create, @report
     if @report.save
@@ -24,13 +28,16 @@ class Wco::ReportsController < Wco::ApplicationController
   end
 
   def edit
-    @report = Wco::Report.find params[:id]
+    @report = Wco::Report.unscoped.find params[:id]
     authorize! :edit, @report
   end
 
   def index
     authorize! :index, Wco::Report
     @reports = Wco::Report.all
+    if params[:deleted]
+      @reports = Wco::Report.unscoped.where( :deleted_at.ne => nil )
+    end
   end
 
   def new
@@ -39,12 +46,14 @@ class Wco::ReportsController < Wco::ApplicationController
   end
 
   def show
-    @report = Wco::Report.find params[:id]
+    @report = Wco::Report.unscoped.find params[:id]
     authorize! :show, @report
   end
 
   def update
-    @report = Wco::Report.find params[:id]
+    params[:report][:tag_ids].delete ''
+
+    @report = Wco::Report.unscoped.find params[:id]
     authorize! :update, @report
     if @report.update params[:report].permit!
       flash_notice "updated report"
@@ -52,6 +61,15 @@ class Wco::ReportsController < Wco::ApplicationController
       flash_alert "Cannot update report: #{@report.errors.messages}"
     end
     redirect_to action: 'index'
+  end
+
+  ##
+  ## private
+  ##
+  private
+
+  def set_lists
+    @tags_list = Wco::Tag.list
   end
 
 end

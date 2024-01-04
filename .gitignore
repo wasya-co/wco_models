@@ -2,7 +2,7 @@
 .bundle
 .byebug_history
 
-/config/initializers/05_stripe.rb
+/config/initializers/0*
 
 *gem
 
@@ -13,7 +13,7 @@ node_modules
 /pkg/
 
 /tmp/
-/test/dummy/config/initializers/05_stripe.rb
+/test/dummy/config/initializers/0*
 /test/dummy/log/*.log
 /test/dummy/tmp/
 *trash

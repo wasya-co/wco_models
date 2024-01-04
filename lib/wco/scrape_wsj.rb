@@ -1,12 +1,10 @@
 
 require 'httparty'
-# require 'wco_models'
 
-class Wco::ScrapeTest2
+class Wco::ScrapeWsj
 
-  def initialize site:
-    # site = Wco::Site.find_by slug: 'wsj'
-    max_count = 2
+  def initialize site: nil, max_count: 2
+    site ||= Wco::Site.find_by slug: 'wsj'
 
     out = HTTParty.get( site.origin ).response.body
     out = Nokogiri::HTML(out)

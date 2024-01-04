@@ -5,7 +5,18 @@
     OAT `#{@oat.slug}`
     = link_to '[~]', edit_office_action_template_path(@oat)
 
-  %label Exe
-  %pre.mono.descr= @oat.exe
+  .a
+    %label action_exe
+    %pre.mono.descr= @oat.action_exe
+
+  .a
+    %label Ties (#{@oat.ties.length}):
+    = render '/wco/office_action_templates/ties', ties: @oat.ties, oat: @oat
+
+
+  .a
+    %label actions (#{@oat.actions.length}):
+    = render '/wco/office_actions/index', oas: @oat.actions
+
 
   = @oat.inspect

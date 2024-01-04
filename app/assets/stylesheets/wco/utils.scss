@@ -18,6 +18,9 @@ textarea {
 
 /* B */
 
+.blue {
+  color: blue;
+}
 
 table.bordered {
   table-layout:fixed;
@@ -49,9 +52,13 @@ table.bordered {
 /* C */
 
 .code,
+.mono,
 .monospace {
   font-family: monospace;
   font-size: 0.8em;
+}
+textarea.monospace {
+  padding: 0.6em;
 }
 
 
@@ -74,12 +81,24 @@ table.bordered {
 .flex-row {
   display: flex;
 }
+.field_with_errors {
+  flex-grow: 1;
+}
 
 /* G */
 
 .gray,
 .grey {
   color: grey;
+}
+
+.green {
+  color: green;
+}
+
+/* H */
+h5.title {
+  display: flex;
 }
 
 /* M */

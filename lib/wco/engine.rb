@@ -4,4 +4,3 @@ module Wco
     isolate_namespace Wco
   end
 end
-

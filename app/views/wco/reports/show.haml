@@ -2,7 +2,7 @@
 .reports-show.maxwidth
   %h5 Report `#{@report.slug}`
 
-  .descr= simple_format @report.body
+  .descr= raw @report.body
   -# %pre.descr= raw @report.body
 
   = @report.inspect

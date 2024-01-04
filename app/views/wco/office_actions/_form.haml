@@ -7,10 +7,14 @@
       = f.text_field :slug
 
     .field
+      %label Status
+      = f.select :status, options_for_select( STATUSES, selected: oa.status )
+
+    .field
       %label perform_at
       = f.text_field :perform_at
 
-    .field
+    .field.flex-row
       %label Tmpl
       = f.select :office_action_template_id, options_for_select( @oats_list, selected: oa.office_action_template_id ), {}, { class: 'select2' }
 

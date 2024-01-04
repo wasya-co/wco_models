@@ -1,0 +1,4 @@
+
+class Wco::OfficeWorker
+
+end

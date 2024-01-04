@@ -1,5 +1,5 @@
 
 .oa-show.maxwidth
   %h5 Office Action `#{@oa.slug}`
-
+  = render 'index', oas: [@oa]
   = @oa.inspect

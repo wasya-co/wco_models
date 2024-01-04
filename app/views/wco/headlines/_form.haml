@@ -7,11 +7,11 @@
 
     .field
       %label Site
-      = f.select :site, options_for_select( @sites_list, selected: headline.site ), {}, class: 'select2'
+      = f.select :site, options_for_select( @sites_list, selected: headline.site_id ), {}, class: 'select2'
 
     .field
       %label Tags
-      = f.select :tag_ids, options_for_select( @tags_list, selected: headline.tags ), { }, { class: 'select2', multiple: true }
+      = f.select :tag_ids, options_for_select( @tags_list, selected: headline.tag_ids ), { }, { class: 'select2', multiple: true }
 
     .actions
       = f.submit

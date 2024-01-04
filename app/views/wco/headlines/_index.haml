@@ -1,0 +1,20 @@
+
+- headlines ||= @headlines
+
+.headlines--index
+  %ul
+    - headlines.each do |headline|
+      %li
+        = link_to '[~]', edit_headline_path(headline)
+        .d-inline-block= button_to 'x', headline_path(headline), method: :delete, data: { confirm: 'Are you sure?' }
+        = headline.name
+        %ul
+          %li <b>Date:</b> #{headline.date.to_date}
+          %li
+            <b>Tags (#{headline.tags.length}):</b>&nbsp;
+            - headline.tags.each do |tag|
+              = link_to tag.slug, tag_path( tag )
+              \,&nbsp;
+
+
+

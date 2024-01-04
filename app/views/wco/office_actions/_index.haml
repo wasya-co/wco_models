@@ -1,0 +1,15 @@
+
+
+%ul
+  - oas.each do |oa|
+    %li.d-flex
+      = link_to '[~]', edit_office_action_path(oa)
+      &nbsp;
+      = link_to oa.slug, office_action_path(oa)
+      %ul
+        %li <b>status:</b> #{oa.status}
+        %li
+          <b>tmpl:</b>
+          = link_to '[~]', edit_office_action_template_path(oa.tmpl)
+          #{link_to oa.tmpl, office_action_template_path(oa.tmpl)}
+        %li <b>perform_at:</b> #{oa.perform_at}

@@ -1,0 +1,6 @@
+
+
+.tags--index-inline
+  - tags.each do |tag|
+    = link_to tag.slug, tag_path(tag)
+    \,&nbsp;

@@ -9,7 +9,7 @@ class Wco::OfficeAction
 
   # field :descr, type: :string ## optional
 
-  belongs_to :office_action_template
+  belongs_to :office_action_template, inverse_of: :office_action
   def tmpl
     office_action_template
   end
@@ -20,8 +20,11 @@ class Wco::OfficeAction
   field :status, type: :string
   scope :active, ->{ where( status: STATUS_ACTIVE ) }
 
-  field :action_exe, type: :string
-
   field :perform_at, type: :time
 
+  def to_s
+    slug
+  end
+
 end
+

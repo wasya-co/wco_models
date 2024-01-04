@@ -10,8 +10,8 @@
       = f.text_field :slug, class: 'w-100'
 
     .field
-      %label Exe
-      = f.text_area :exe
+      %label action_exe
+      = f.text_area :action_exe, class: :monospace
 
     .field.flex-row
       %label From
@@ -34,10 +34,10 @@
 
           = f.fields_for :ties do |next_f|
             .flex-row.field
-              = next_f.label :next_at_exe
-              = next_f.text_field :next_at_exe, class: 'flex-grow'
+              %label next_at_exe
+              = next_f.text_field :next_at_exe, class: 'flex-grow w-100'
             .flex-row.field
-              = next_f.label :to_delete
+              %label to_delete
               = next_f.check_box :to_delete
               = next_f.select :next_office_action_template_id, options_for_select( @oats_list, selected: next_f.object.next_office_action_template_id ), { }, { class: 'select2' }
             %br

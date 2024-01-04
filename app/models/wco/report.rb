@@ -43,6 +43,6 @@ class Wco::Report
     %w| name descr |
   end
 
-  # has_and_belongs_to_many :tags
+  has_and_belongs_to_many :tags
 
 end

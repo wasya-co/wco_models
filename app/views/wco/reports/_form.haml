@@ -1,21 +1,28 @@
 
 .reports--form
   = form_for report do |f|
-    .field
-      %label Slug
-      = f.text_field :slug
+    .actions
+      = f.submit
 
-      = f.label :kind
-      = f.select :kind, options_for_select( Wco::Report.kinds_list, selected: report.kind )
+    .field.flex-row
+      %label Title
+      = f.text_field :title, class: 'w-100'
+    .field.flex-row
+      %label Slug
+      = f.text_field :slug, class: 'w-100'
+
     .field
-      = f.label :origin
-      = f.text_field :origin
-      = f.label :post_path
-      = f.text_field :post_path
+      %label deleted_at
+      = f.text_field :deleted_at
+
     .field
-      = f.label :username
-      = f.text_field :username
-      = f.label :password
-      = f.text_field :password
+      %label Body
+      = f.text_area :body, class: 'p-2'
+
+    .field
+      %label Tags (#{report.tags.length}):
+      -# = render '/wco/tags/index', tags: report.tags
+      = f.select :tag_ids, options_for_select(@tags_list, selected: report.tag_ids), {}, { multiple: true, class: 'select2' }
+
     .actions
       = f.submit

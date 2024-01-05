@@ -1,0 +1,17 @@
+
+.logs--form
+  = form_for log do |f|
+    .field
+      %label Name
+      = f.text_field :name
+
+    .field
+      %label Site
+      = f.select :site, options_for_select( @sites_list, selected: log.site_id ), {}, class: 'select2'
+
+    .field
+      %label Tags
+      = f.select :tag_ids, options_for_select( @tags_list, selected: log.tag_ids ), { }, { class: 'select2', multiple: true }
+
+    .actions
+      = f.submit

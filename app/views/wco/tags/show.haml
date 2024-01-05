@@ -9,3 +9,7 @@
       = render '/wco/headlines/index', headlines: @tag.headlines
     %li
       <b>N reports:</b> #{@tag.reports.length}
+    %li
+      <b>N stubs:</b> #{@tag.message_stubs.length}
+      = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs
+

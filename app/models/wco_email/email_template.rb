@@ -2,6 +2,7 @@
 class WcoEmail::EmailTemplate
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'ish_email_templates'
 
   field :slug

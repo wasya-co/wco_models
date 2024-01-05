@@ -1,6 +1,8 @@
 
-= link_to "Galleries (#{Wco::Gallery.all.length})", wco.galleries_path
-.inline-search
+- galleries ||= Wco::Gallery.all
+
+= link_to "Galleries (#{galleries.length})", wco.galleries_path
+.d-inline-block
   = form_tag wco.galleries_path, method: :get do
     = text_field_tag :q
 = link_to '[+]', wco.new_gallery_path

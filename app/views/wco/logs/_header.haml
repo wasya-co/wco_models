@@ -1,0 +1,6 @@
+
+= link_to "Logs (#{Wco::Log.all.length})", wco.logs_path
+.inline-search
+  = form_tag wco.logs_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_log_path

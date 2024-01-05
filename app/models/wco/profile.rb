@@ -2,6 +2,7 @@
 class Wco::Profile
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'ish_user_profiles'
 
   field :email

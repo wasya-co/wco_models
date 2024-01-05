@@ -1,0 +1,17 @@
+
+- logs ||= @logs
+
+.logs--index
+  = form_tag logs_bulkop_path, method: :delete do
+    = hidden_field_tag :authenticity_token, form_authenticity_token
+    .d-flex-row
+      = select_tag :verb, options_for_select([nil, 'delete'])
+      = submit_tag '>', data: { confirm: 'Are you sure?' }
+    %ol
+      - logs.each do |log|
+        %li
+          = check_box_tag 'ids[]', log.id
+          = link_to '[view]', log_path(log)
+          .d-inline-block= button_to 'x', log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
+          = log.message
+

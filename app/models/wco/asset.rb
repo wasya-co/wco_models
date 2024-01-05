@@ -6,6 +6,7 @@ class Wco::Asset
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Mongoid::Paranoia
   include Wco::Utils
 
   field :filename

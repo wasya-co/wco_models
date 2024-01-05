@@ -3,6 +3,7 @@
 class WcoHosting::ApplianceTmpl
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_appliance_tmpls'
 
   field :kind

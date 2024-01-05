@@ -27,6 +27,8 @@ Wco::Engine.routes.draw do
   post 'leads/import', to: 'leads#import', as: :leads_import
   resources :leads
   resources :leadsets
+  delete 'logs/bulkop', to: 'logs#bulkop', as: :logs_bulkop
+  resources :logs
 
   post 'office_action_templates', to: 'office_action_templates#update'
   resources :office_action_templates

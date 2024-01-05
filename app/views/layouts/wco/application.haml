@@ -25,6 +25,7 @@
     = javascript_include_tag "wco/application"
     = stylesheet_link_tag    "wco/application", media: "all"
 
+    = csrf_meta_tags
     = csp_meta_tag
   %body
     = render 'wco/main_header'

@@ -2,6 +2,7 @@
 class Wco::Tag
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_tags'
 
   field :slug
@@ -16,6 +17,7 @@ class Wco::Tag
   has_and_belongs_to_many :leads # ,         class_name: 'Lead'
   has_and_belongs_to_many :leadsets # ,      class_name: 'Leadset'
   has_and_belongs_to_many :reports
+  has_and_belongs_to_many :logs
 
   INBOX = 'inbox'
   TRASH = 'trash'

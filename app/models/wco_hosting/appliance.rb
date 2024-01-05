@@ -2,6 +2,7 @@
 class WcoHosting::Appliance
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_appliances'
 
   belongs_to :leadset,      class_name: 'Wco::Leadset', inverse_of: :appliances

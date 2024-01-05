@@ -6,6 +6,7 @@
 class WcoEmail::EmailActionTemplate
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_email_email_actions'
 
   field :slug, type: :string

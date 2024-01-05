@@ -4,12 +4,11 @@
 -# _vp_ 2022-09-25 :: Small styling revision
 -#
 
-- n_thumbs ||= 12
+- n_thumbs  ||= 12
+- galleries ||= @galleries
 
 .galleries--index.maxwidth
-  .max-width
-    = render '/wco/galleries/menu', count: galleries.count
-  %hr
+  = render 'header', galleries: galleries
 
   .padded
     - if galleries.length > 0

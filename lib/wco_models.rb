@@ -1,11 +1,13 @@
 
+require 'aws-sdk-s3'
+
+
 require 'cancancan'
 require 'devise'
 require 'haml'
 require 'httparty'
 
-## Fix for:
-## wco_hosting_rb/test/dummy/app/models/user.rb:3:in `<class:User>': uninitialized constant User::Mongoid (NameError)
+require 'mail'
 require 'mongoid'
 require 'mongoid_paranoia'
 

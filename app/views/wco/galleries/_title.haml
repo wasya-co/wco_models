@@ -5,7 +5,7 @@
     = link_to gallery.name, gallery_path(gallery)
     (#{gallery.photos.length})
     = link_to '[~]', edit_gallery_path( gallery )
-    [x]
+    .d-inline-block= button_to 'x', gallery_path(gallery), method: :delete, data: { confirm: 'Are you sure?' }
     - if gallery.is_public && !gallery.is_trash && !gallery.is_done
       %i.material-icons visibility
     - else

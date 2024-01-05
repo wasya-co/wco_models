@@ -2,6 +2,8 @@
 class Wco::Product
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
+  store_in collection: 'wco_products'
 
   field :name
 

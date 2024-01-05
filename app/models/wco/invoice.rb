@@ -11,6 +11,7 @@ class Wco::Invoice
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Autoinc
+  include Mongoid::Paranoia
   store_in collection: 'ish_invoice'
 
   field :email, type: String

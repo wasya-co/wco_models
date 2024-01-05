@@ -7,6 +7,7 @@ require 'wco/ai_writer'
 class Wco::OfficeActionTemplate
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_office_action_templates'
 
   field :slug

@@ -2,6 +2,8 @@
 class Wco::Price
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
+  store_in collection: 'wco_prices'
 
   # belongs_to :product,     class_name: 'Wco::Product',      inverse_of: :prices
   ## Wco::Product, WcoHosting::ApplianceTmpl:

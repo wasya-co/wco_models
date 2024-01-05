@@ -8,6 +8,7 @@ require 'action_view'
 class WcoEmail::Message
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_email_message'
 
   field :message_id # MESSAGE-ID

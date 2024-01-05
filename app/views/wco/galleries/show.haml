@@ -5,9 +5,9 @@
 .galleries-show.padded
   .row
     .col-md-6
-      = render 'title', :gallery => @gallery
+      = render 'title', gallery: @gallery
     .col-md-6
-      = render 'wco/photos/multinew', :gallery => @gallery
+      = render 'wco/photos/multinew', gallery: @gallery
 
   .row-deleted
     %p.collapse-expand#rowDeleted Deleted

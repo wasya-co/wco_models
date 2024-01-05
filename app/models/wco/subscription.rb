@@ -2,6 +2,7 @@
 class Wco::Subscription
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_subscriptions'
 
   belongs_to :product, polymorphic: true # includes: Wco::Product , WcoHosting::ApplianceTmpl

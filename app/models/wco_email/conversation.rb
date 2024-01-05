@@ -2,6 +2,7 @@
 class WcoEmail::Conversation
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'office_email_conversations'
 
   STATUS_UNREAD = 'status_unread'

@@ -28,10 +28,9 @@ class Wco::GalleriesController < Wco::ApplicationController
 
   def destroy
     authorize! :destroy, @gallery
-    @gallery.is_trash = true
-    @gallery.save
-    flash[:notice] = 'Logically deleted gallery.'
-    redirect_to galleries_path
+    @gallery.delete
+    flash[:notice] = 'Marked the gallery deleted.'
+    redirect_to( request.referrer || galleries_path )
   end
 
   def edit
@@ -41,19 +40,16 @@ class Wco::GalleriesController < Wco::ApplicationController
   def index
     authorize! :index, Wco::Gallery
     @page_title = 'Galleries'
-    @galleries = Wco::Gallery.unscoped.where( ## This must be so for role `guy`. _vp_ 2022-10-03
-      # :is_done.in  => [false, nil],
-      :is_trash.in => [false, nil],
-      # :user_profile => @current_profile,
-    ).order_by( :created_at => :desc )
+    @galleries = Wco::Gallery.all.order_by( :created_at => :desc )
 
     if params[:q]
       q = URI.decode(params[:q])
       @galleries = @galleries.where({ :name => /#{q}/i })
     end
 
-    @galleries = @galleries.page( params[:galleries_page] ).per( 10 )
-    # render params[:render_type]
+    @galleries = @galleries.page( params[:galleries_page] ).per( current_profile.per_page )
+
+    render "_index"
   end
 
   def j_show

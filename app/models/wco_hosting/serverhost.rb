@@ -7,6 +7,7 @@ class WcoHosting::Serverhost
   include Mongoid::Document
   include Mongoid::Timestamps
   # include Mongoid::Autoinc
+  include Mongoid::Paranoia
   store_in collection: 'wco_serverhosts'
 
   WORKDIR = "/opt/projects/docker"

@@ -2,6 +2,7 @@
 class Wco::Leadset
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   store_in collection: 'wco_leadsets'
 
   field     :company_url

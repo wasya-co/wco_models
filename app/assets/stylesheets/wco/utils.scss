@@ -22,6 +22,10 @@ textarea {
   color: blue;
 }
 
+.border-right {
+  border-right: 1px solid red !important;
+}
+
 table.bordered {
   table-layout:fixed;
   width: 100%;

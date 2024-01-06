@@ -1,6 +1,8 @@
 
 
 .tags--index-inline
-  - tags.each do |tag|
+  <b>Tags:</b>
+  - tags.each_with_index do |tag, idx|
     = link_to tag.slug, tag_path(tag)
-    \,&nbsp;
+    - if idx+1 != tags.length
+      \,&nbsp;

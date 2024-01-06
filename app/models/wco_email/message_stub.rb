@@ -31,24 +31,27 @@ class WcoEmail::MessageStub
 
   ## This only saves a local messafe from mbox to s3.
   def do_process message
-    the_mail       = Mail.new(message)
-
-    flag = @client.put_object({ bucket: ::S3_CREDENTIALS[:bucket_ses],
-      key: the_mail.message_id,
-      body: message,
-    })
-    puts! flag, "saved s3 object"
+    the_mail = Mail.new(message)
+    key      = the_mail.message_id || "no-key-#{Time.now.to_i}.#{rand(1000)}"
 
     @stub = WcoEmail::MessageStub.create({
-      object_key:  the_mail.message_id,
+      object_key:  key,
       status:      WcoEmail::MessageStub::STATUS_PENDING,
       tags:        [ @tag ],
     })
-    if !@stub.persisted?
+    if @stub.persisted?
+      @client.put_object({ bucket: ::S3_CREDENTIALS[:bucket_ses],
+        key: key,
+        body: message,
+      })
+    else
+      msg = @stub.errors.full_messages.join(", ")
+      puts! msg
       Wco::Log.create({
-        message: "Stub duplicate object_key: #{the_mail.message_id}",
+        message:    "Stub duplicate object_key: #{key}",
         class_name: 'WcoEmail::MessageStub',
-        raw_json: @stub.attributes.to_json,
+        raw_json:   @stub.attributes.to_json,
+        tags:       [ @tag ],
       })
     end
   end
@@ -58,6 +61,7 @@ class WcoEmail::MessageStub
     self.new.mbox2stubs mbox_path, tagname: tagname, skip: skip
   end
   def mbox2stubs mbox_path, tagname:, skip:
+    puts 'Starting...'
     skip ||= 0
 
     @count = 1

@@ -42,8 +42,8 @@ class Wco::LogsController < Wco::ApplicationController
   end
 
   def index
-    @logs = Wco::Log.all
     authorize! :index, Wco::Log
+    @logs = Wco::Log.all.page( params[:logs_page] ).per( current_profile.per_page )
     render '_index'
   end
 

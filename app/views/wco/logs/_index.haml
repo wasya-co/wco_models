@@ -7,6 +7,7 @@
     .d-flex-row
       = select_tag :verb, options_for_select([nil, 'delete'])
       = submit_tag '>', data: { confirm: 'Are you sure?' }
+    = paginate logs, param_name: 'logs_page', views_prefix: 'wco'
     %ol
       - logs.each do |log|
         %li
@@ -14,4 +15,9 @@
           = link_to '[view]', log_path(log)
           .d-inline-block= button_to 'x', log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
           = log.message
+
+          .flex-row
+
+            = render '/wco/tags/index_inline', tags: log.tags
+    = paginate logs, param_name: 'logs_page', views_prefix: 'wco'
 

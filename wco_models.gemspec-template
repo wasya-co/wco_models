@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "httparty"
 
   spec.add_dependency 'kaminari-mongoid', '~> 1.0.1'
+  spec.add_dependency 'kaminari-actionview'
 
   spec.add_dependency 'mongoid',          '~> 7.3.0'
   spec.add_dependency 'mongoid_paranoia', '~> 0.6.0'

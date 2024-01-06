@@ -1,11 +1,15 @@
 
 require 'aws-sdk-s3'
 
-
 require 'cancancan'
+
 require 'devise'
+
 require 'haml'
 require 'httparty'
+
+require 'kaminari-mongoid'
+require 'kaminari-actionview'
 
 require 'mail'
 require 'mongoid'

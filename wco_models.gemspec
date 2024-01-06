@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.38"
+  spec.version     = "3.1.0.39"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "httparty"
 
   spec.add_dependency 'kaminari-mongoid', '~> 1.0.1'
+  spec.add_dependency 'kaminari-actionview'
 
   spec.add_dependency 'mongoid',          '~> 7.3.0'
   spec.add_dependency 'mongoid_paranoia', '~> 0.6.0'

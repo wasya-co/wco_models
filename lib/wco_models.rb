@@ -8,9 +8,6 @@ require 'devise'
 require 'haml'
 require 'httparty'
 
-require 'kaminari-mongoid'
-require 'kaminari-actionview'
-
 require 'mail'
 require 'mongoid'
 require 'mongoid_paranoia'

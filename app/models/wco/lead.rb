@@ -30,7 +30,7 @@ class Wco::Lead
   # has_many :videos, class_name: 'Wco::Video'
 
   def self.list
-    all.map { |p| [ p.id, p.email ] }
+    [[nil,nil]] + all.map { |p| [ p.email, p.id ] }
   end
 
   OP_DELETE = 'delete'

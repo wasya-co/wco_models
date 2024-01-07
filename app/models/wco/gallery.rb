@@ -5,7 +5,7 @@ class Wco::Gallery
   include Mongoid::Paranoia
   # include Wco::PremiumItem
   include Wco::Utils
-  store_in collection: 'wco_galleries'
+  store_in collection: 'galleries'
 
   PER_PAGE = 6
 

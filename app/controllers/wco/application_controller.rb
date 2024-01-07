@@ -7,6 +7,7 @@ class Wco::ApplicationController < ActionController::Base
   before_action :current_profile
 
   def home
+    authorize! :home, Wco
   end
 
   ##

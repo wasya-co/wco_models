@@ -1,0 +1,37 @@
+
+- videos ||= @videos
+- this_videos_path ||= videos_path
+
+.videos--index
+  .videos--menu
+    = link_to "Videos (#{videos.count})", this_videos_path
+
+    -# = render 'search', path: this_videos_path
+    .inline-search
+      = form_tag this_videos_path, method: :get do
+        = text_field_tag :q
+
+    = link_to '[+]', new_video_path
+    %hr
+
+  = paginate videos, param_name: :videos_page, views_prefix: 'wco'
+
+  .row
+    - videos.each do |video|
+      .col-md-4.item
+        .float-left
+          - if video.youtube_id.present?
+            %iframe{:allowfullscreen => "true", :frameborder => "0", :height => "150", :src => "//www.youtube.com/embed/#{video.youtube_id}", :width => "200"}
+          - else
+            .thumb= image_tag video.thumb.url(:thumb)
+        .title
+          = link_to video.name, video_path( video )
+        .meta-edit
+          .inline= button_to '[x]', video_path( video ), :method => :delete, :data => { :confirm => 'Are you sure?' }
+          = link_to '[~]', edit_video_path( video )
+
+        = render 'meta', item: video
+
+  = paginate videos, param_name: :videos_page, views_prefix: 'wco'
+
+

@@ -49,4 +49,6 @@ Wco::Engine.routes.draw do
 
   resources :tags
 
+  resources :videos
+
 end

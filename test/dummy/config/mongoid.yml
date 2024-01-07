@@ -2,7 +2,7 @@
 development:
   clients:
     default:
-      database: ish_production
+      database: ish_mac13_import
       hosts:
         - localhost:27017
 

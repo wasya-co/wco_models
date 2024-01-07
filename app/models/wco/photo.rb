@@ -8,7 +8,7 @@ class Wco::Photo
   include Mongoid::Paperclip
   include Mongoid::Paranoia
   include Wco::Utils
-  store_in collection: 'wco_photos'
+  store_in collection: 'photos'
 
   belongs_to :email_message, class_name: 'WcoEmail::Message', optional: true
   belongs_to :gallery,       class_name: 'Wco::Gallery',      optional: true

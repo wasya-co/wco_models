@@ -1,0 +1,25 @@
+
+- video ||= @video
+
+.videos-show.max-width
+  .row
+    = link_to '[Back]', videos_path
+
+  - if video.youtube_id.present?
+    %iframe{:allowfullscreen => "", :frameborder => "0", :height => "315", :src => "//www.youtube.com/embed/#{video.youtube_id}", :width => "560"}
+  - else
+    %iframe{:allowfullscreen => "true", :frameborder => "0", :height => "480", :src => "#{video.video.url}", :width => "640"}
+
+  .my-row
+    .a= image_tag video.thumb.url(:thumb)
+    .a
+      %h3
+        = video.name.blank? ? t('videos.no_title') : video.name
+        .meta-edit
+          .inline= button_to '[x]', video_path( video ), :method => :delete, :data => { :confirm => 'Are you sure?' }
+          = link_to '[~]', edit_video_path( video )
+
+      = render 'wco/application/metaline', :item => video
+  .flex-row
+    Download File:&nbsp;#{link_to video.video_file_name, video.video.url}
+

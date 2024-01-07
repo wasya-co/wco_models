@@ -1,0 +1,6 @@
+
+= link_to "Videos (#{Wco::Video.all.length})", wco.videos_path
+.inline-search
+  = form_tag wco.videos_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_video_path

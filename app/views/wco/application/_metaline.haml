@@ -1,0 +1,13 @@
+
+.meta
+
+  <b>On</b> #{item.created_at.to_s[0...10]}
+  -# - if item.user_profile
+  -#   <b>By</b>
+  -#   = link_to item.user_profile.name, edit_user_profile_path( item.user_profile )
+
+  -# - if item.tags.length > 0
+  -#   <b>Tags:</b> #{ item.tags.map(&:name).join(', ') }
+
+  -# - if defined?(item.premium_tier) && item.premium_tier > 0
+  -#   <b>Tier $#{item.premium_tier}</b>

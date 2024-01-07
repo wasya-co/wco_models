@@ -1,0 +1,39 @@
+
+= form_for video do |f|
+  .row
+    .col-sm-6
+      .field
+        = f.label :youtube_id
+        = f.text_field :youtube_id
+      .field
+        = f.label :name
+        = f.text_field :name
+      -# .input-group
+      -#   = f.label :premium_tier
+      -#   = f.number_field :premium_tier
+      -# .input-group
+      -#   = f.check_box :is_trash
+      -#   = f.label :is_trash
+      -# .field
+      -#   %label Lead
+      -#   = f.select :lead_id, options_for_select(@leads_list, selected: video.lead_id), {}, class: :select2
+    .col-sm-6
+      .field
+        = f.label :video
+        = f.file_field :video
+      .field
+        = f.label :thumb
+        = f.file_field :thumb
+
+
+  -# = render 'wco/application/form_nonpublic', f: f, model: video
+
+  .row
+    .col-md-6
+      .field
+        = f.label :descr
+        = f.text_area :descr, class: :tinymce
+
+
+  .action
+    = f.submit

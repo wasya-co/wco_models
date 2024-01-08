@@ -7,7 +7,7 @@ class Wco::Leadset
 
   field     :company_url
   validates :company_url, presence: true, uniqueness: true
-  index({ company_url: 1 }, { name: 'company_url' })
+  index({ company_url: 1 }, { unique: true, name: 'company_url' })
 
   field :email
   index({ email: 1 }, { name: 'email' })

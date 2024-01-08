@@ -16,5 +16,8 @@ class Ability
 
     end
 
+    can [ :open_permission ], Wco
+    # can [ :open_permission ], WcoEmail
+
   end
 end

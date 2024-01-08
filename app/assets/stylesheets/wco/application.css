@@ -2,8 +2,12 @@
  *= require vendor/bootstrap-4.6.2.min
  *
  *= require ./utils
- *= require_self
+ *= require_tree .
 **/
+
+/* body {
+  color: red !important;
+} */
 
 .select2 {
   min-width: 200px;
@@ -29,11 +33,3 @@
     }
   }
 }
-
-
-/* .min-w-100px {
-  min-width: 100px;
-}
-.min-w-40px {
-  min-width: 40px;
-} */

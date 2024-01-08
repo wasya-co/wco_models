@@ -9,11 +9,18 @@ FactoryBot.define do
     "name-#{n}"
   end
 
+  sequence :object_key do |n|
+    "object_key-#{n}"
+  end
+
   ##
   ## factories
   ##
 
   factory :appliance, class: 'WcoHosting::Appliance' do
+    after :build do |doc|
+      doc.subscription = create( :subscription, leadset: doc.leadset )
+    end
   end
 
   factory :appliance_tmpl, class: 'WcoHosting::ApplianceTmpl' do
@@ -33,6 +40,13 @@ FactoryBot.define do
     subject { 'test-subject-1' }
   end
 
+  factory :email_message, class: 'WcoEmail::Message' do
+    object_key { generate('object-key') }
+    after :build do |doc|
+      doc.stub = create( :message_stub )
+    end
+  end
+
   factory :leadset, class: 'Wco::Leadset' do
     email { generate(:email) }
 
@@ -41,6 +55,18 @@ FactoryBot.define do
       serverhost   = WcoHosting::Serverhost.all.first
       serverhost ||= create( :serverhost, leadset: doc )
       doc.serverhosts = [ serverhost ]
+    end
+  end
+
+  factory :message_stub, class: 'WcoEmail::MessageStub' do
+  end
+
+  factory :price, class: 'Wco::Price' do
+  end
+
+  factory :product, class: 'Wco::Product' do
+    after :build do |doc|
+      price = create( :price, product: doc )
     end
   end
 
@@ -59,6 +85,13 @@ FactoryBot.define do
     factory :vbox1 do
       name { 'vbox1' }
       ssh_host { 'vbox1' }
+    end
+  end
+
+  factory :subscription, class: 'Wco::Subscription' do
+    after :build do |doc|
+      doc.product = create( :product )
+      doc.price   = doc.product.prices[0]
     end
   end
 

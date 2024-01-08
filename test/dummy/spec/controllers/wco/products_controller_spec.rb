@@ -4,8 +4,9 @@ RSpec::describe Wco::ProductsController do
   routes { Wco::Engine.routes }
 
   before do
-    User.all.destroy_all
-    Wco::Profile.all.destroy_all
+    User.unscoped.map &:destroy!
+    Wco::Profile.unscoped.map &:destroy!
+    Wco::Leadset.unscoped.map &:destroy!
     @user = create( :user, email: 'piousbox@gmail.com' )
     sign_in @user
   end

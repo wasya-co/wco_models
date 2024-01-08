@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.1.0.46)
+    wco_models (3.1.0.47)
       aws-sdk-s3
       business_time
       cancancan (~> 3.5.0)
@@ -323,7 +323,7 @@ GEM
       psych (>= 4.0.0)
     redis-client (0.19.1)
       connection_pool
-    regexp_parser (2.8.3)
+    regexp_parser (2.9.0)
     reline (0.4.1)
       io-console (~> 0.5)
     resource_kit (0.1.8)

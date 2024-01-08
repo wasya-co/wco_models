@@ -7,7 +7,7 @@ class Wco::Lead
 
   field :email
   validates :email, presence: true, uniqueness: true
-  index({ email: -1 })
+  index({ email: -1 }, { unique: true })
 
   field :name
   field :phone

@@ -6,12 +6,12 @@ class WcoHosting::ApplianceTmpl
   include Mongoid::Paranoia
   store_in collection: 'wco_appliance_tmpls'
 
-  field :kind
+  field :kind, type: :string
   validates :kind, uniqueness: { scope: :version }, presence: true
 
   field :version, type: :string, default: '0.0.0'
   validates :version, uniqueness: { scope: :kind }, presence: true
-  index({ kind: -1, version: -1 }, { name: :kind_version })
+  index({ kind: -1, version: -1 }, { name: 'kind_version' })
 
   def name
     "#{kind} #{version}"

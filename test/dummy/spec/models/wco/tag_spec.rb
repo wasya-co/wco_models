@@ -3,7 +3,8 @@
 RSpec.describe Wco::Tag, type: :model do
 
   it 'sanity' do
-    m = Wco::Tag.create!
+    Wco::Tag.unscoped.map &:destroy!
+    m = Wco::Tag.create!( slug: 'test' )
     m.persisted?.should eql true
   end
 

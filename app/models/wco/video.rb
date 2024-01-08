@@ -1,4 +1,6 @@
 
+require 'mongoid_paperclip'
+
 class Wco::Video
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -12,7 +14,6 @@ class Wco::Video
   field :subhead ## still need it... 2023-03-24
 
   field :is_public, :type => Boolean, :default => false
-
   def published
     where({ :is_public => true }).order_by({ :created_at => :desc })
   end
@@ -27,13 +28,6 @@ class Wco::Video
 
   # belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
   # has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos
-
-
-  def self.list
-    [['', nil]] + self.unscoped.order_by( :created_at => :desc ).map do |item|
-      [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ]
-    end
-  end
 
   has_mongoid_attached_file :video,
     # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
@@ -67,6 +61,12 @@ class Wco::Video
 
   def export_fields
     %w| name descr |
+  end
+
+  def self.list
+    [['', nil]] + self.unscoped.order_by( :created_at => :desc ).map do |item|
+      [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ]
+    end
   end
 
 end

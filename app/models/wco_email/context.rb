@@ -45,8 +45,6 @@ class WcoEmail::Context
     self[:subject].presence || tmpl.subject
   end
 
-  has_and_belongs_to_many :leads,      class_name: 'Wco::Lead'
-
   belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
   def tmpl; email_template; end
 
@@ -76,6 +74,9 @@ class WcoEmail::Context
 
 
   belongs_to :lead,      class_name: 'Wco::Lead'
+  def to_email
+    lead.email
+  end
 
   field :cc,   type: :string
   field :ccs,  type: :array, default: []

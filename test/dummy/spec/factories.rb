@@ -53,7 +53,7 @@ FactoryBot.define do
     after :build do |doc|
       doc.company_url = doc.email.split('@')[1]
       serverhost   = WcoHosting::Serverhost.all.first
-      serverhost ||= create( :serverhost, leadset: doc )
+      serverhost ||= create( :serverhost, leadsets: [ doc ] )
       doc.serverhosts = [ serverhost ]
     end
   end

@@ -67,8 +67,8 @@ class WcoEmail::Message
 
   belongs_to :stub, class_name: 'WcoEmail::MessageStub'
 
-  has_many :assets, class_name: 'Wco::Asset'
-  has_many :photos, class_name: 'Wco::Photo'
+  has_many :assets, class_name: '::Wco::Asset'
+  has_many :photos, class_name: '::Wco::Photo'
 
   def apply_filter filter
     case filter.kind
@@ -192,7 +192,7 @@ class WcoEmail::Message
 
     content_type = att.content_type.split(';')[0]
     if content_type.include? 'image'
-      photo = Wco::Photo.new({
+      photo = ::Wco::Photo.new({
         content_type:      content_type,
         email_message_id:  self.id,
         image_data:        att.body.encoded,
@@ -207,7 +207,7 @@ class WcoEmail::Message
       File.open("/tmp/#{filename}", 'w:UTF-8:ASCII-8BIT') do |f|
         f.puts(sio.read)
       end
-      asset = Wco::Asset.new({
+      asset = ::Wco::Asset.new({
         email_message: self,
         filename:      filename,
         object:        File.open("/tmp/#{filename}"),

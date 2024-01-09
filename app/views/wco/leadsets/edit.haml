@@ -1,4 +1,4 @@
 
-.leadsets-edit.max-width
-  %h1 Edit leadset `#{link_to @leadset.name, leadset_path(@leadset)}`
-  = render 'form', :leadset => @leadset
+.leadsets-edit.maxwidth
+  %h1 Edit leadset `#{link_to @leadset.company_url, leadset_path(@leadset)}`
+  = render 'form', leadset: @leadset

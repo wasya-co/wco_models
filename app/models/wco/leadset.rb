@@ -33,7 +33,7 @@ class Wco::Leadset
   field :customer_id
   def customer_id
     if self[:customer_id].blank?
-      return nil if !email
+      return nil if !email.present?
       existing = Stripe::Customer.search({ query: "email: '#{email}'" })
       # puts! existing, 'existing'
       if existing.data.present?
@@ -45,6 +45,10 @@ class Wco::Leadset
       end
     end
     self[:customer_id]
+  end
+
+  def to_s
+    company_url
   end
 
 end

@@ -5,6 +5,10 @@ FactoryBot.define do
     "user-#{n}@company-#{n}.com"
   end
 
+  sequence :message_id do |n|
+    "message_id-#{n}"
+  end
+
   sequence :name do |n|
     "name-#{n}"
   end
@@ -12,6 +16,11 @@ FactoryBot.define do
   sequence :object_key do |n|
     "object_key-#{n}"
   end
+
+  sequence :slug do |n|
+    "slug-#{n}"
+  end
+
 
   ##
   ## factories
@@ -36,14 +45,30 @@ FactoryBot.define do
 
   end
 
+  factory :email_context, class: 'WcoEmail::Context' do
+  end
+
   factory :email_conversation, class: 'WcoEmail::Conversation' do
     subject { 'test-subject-1' }
   end
 
   factory :email_message, class: 'WcoEmail::Message' do
-    object_key { generate('object-key') }
+    object_key { generate('object_key') }
+    message_id { generate('message_id') }
     after :build do |doc|
       doc.stub = create( :message_stub )
+    end
+  end
+
+  factory :email_template, class: 'WcoEmail::EmailTemplate' do
+    slug { generate('slug') }
+  end
+
+  factory :lead, class: 'Wco::Lead' do
+    email { generate(:email) }
+    after :build do |doc|
+      doc.leadset   = Wco::Leadset.where( company_url: doc.email.split('@')[1] ).first
+      doc.leadset ||= create(:leadset, email: doc.email)
     end
   end
 
@@ -59,6 +84,7 @@ FactoryBot.define do
   end
 
   factory :message_stub, class: 'WcoEmail::MessageStub' do
+    object_key { generate('object_key') }
   end
 
   factory :price, class: 'Wco::Price' do
@@ -93,6 +119,10 @@ FactoryBot.define do
       doc.product = create( :product )
       doc.price   = doc.product.prices[0]
     end
+  end
+
+  factory :tag, class: 'Wco::Tag' do
+    slug { generate('slug') }
   end
 
   factory :task do

@@ -49,6 +49,8 @@ class WcoEmail::Message
 
   field :from,   type: :string
   field :froms,  type: Array, default: []
+  belongs_to :lead, class_name: 'Wco::Lead', inverse_of: :email_messages
+
   field :to,     type: :string
   field :tos,    type: Array, default: []
   field :cc,     type: :string
@@ -69,6 +71,7 @@ class WcoEmail::Message
 
   has_many :assets, class_name: '::Wco::Asset'
   has_many :photos, class_name: '::Wco::Photo'
+  has_many :replies, class_name: '::WcoEmail::Context', inverse_of: :reply_to_message
 
   def apply_filter filter
     case filter.kind

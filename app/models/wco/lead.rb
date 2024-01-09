@@ -16,6 +16,8 @@ class Wco::Lead
   belongs_to :leadset, class_name: 'Wco::Leadset'
   has_one :photo,      class_name: 'Wco::Photo'
 
+  has_many                :email_messages,          class_name: '::WcoEmail::Message', inverse_of: :lead
+
   has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation'
   def convs; conversations; end
   has_many                :email_contexts,          class_name: '::WcoEmail::Context'

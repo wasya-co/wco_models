@@ -2,6 +2,7 @@
 RSpec.describe WcoEmail::Conversation do
 
   before do
+    Wco::Lead.unscoped.map &:destroy!
     WcoEmail::Conversation.unscoped.map &:destroy!
     @conv = create(:email_conversation)
   end
@@ -23,6 +24,7 @@ RSpec.describe WcoEmail::Conversation do
         conversation: @conv,
         object_key: 'abba',
         stub: create( :message_stub, object_key: 'abba' ),
+        lead: create( :lead ),
       })
       m.persisted?.should eql false
       m.errors.messages[:message_id].include?( "can't be blank" ).should eql true

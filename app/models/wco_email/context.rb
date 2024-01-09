@@ -1,7 +1,7 @@
+
 ##
 ## Send a single email
 ##
-
 class WcoEmail::Context
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -44,6 +44,8 @@ class WcoEmail::Context
   def subject
     self[:subject].presence || tmpl.subject
   end
+
+  belongs_to :reply_to_message, class_name: 'WcoEmail::Message', inverse_of: :replies, optional: true
 
   belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
   def tmpl; email_template; end

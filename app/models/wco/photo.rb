@@ -51,14 +51,10 @@ class Wco::Photo
                             s3_region: ::S3_CREDENTIALS[:region]
   validates_attachment_content_type :photo, :content_type => ["image/webp", "image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
 
-  def self.n_per_manager_gallery
-    25
-  end
-
   def export_fields
     %w|
       gallery_id
-      name descr weight is_public is_trash
+      name descr weight
 
       photo_file_name photo_content_type photo_file_size photo_updated_at photo_fingerprint
     |

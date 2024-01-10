@@ -11,8 +11,9 @@
   border-left-width: 0;
 }
 
-.pagination {
+ul.pagination {
   border-left: 1px solid #ddd;
+  margin: 1em 0;
 
   li.active {
     padding: 0 14px;

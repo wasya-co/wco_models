@@ -26,6 +26,13 @@ textarea {
   border-right: 1px solid red !important;
 }
 
+.bordered {
+  border: 1px solid gray;
+  border-radius: 5px;
+
+  padding: 0.5em;
+}
+
 table.bordered {
   table-layout:fixed;
   width: 100%;
@@ -94,6 +101,7 @@ textarea.monospace {
 .gray,
 .grey {
   color: grey;
+  display: inline-block;
 }
 
 .green {

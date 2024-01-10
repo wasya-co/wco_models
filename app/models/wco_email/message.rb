@@ -17,7 +17,9 @@ class WcoEmail::Message
 
   field :in_reply_to_id, type: :string
 
-  field :object_key,  type: :string ## aka 'filename', use with bucket name + prefix. I need this!
+  field     :bucket, default: 'ish-ses'
+
+  field     :object_key ## aka 'filename', use with bucket name + prefix. I need this!
   validates :object_key, presence: true, uniqueness: true
   index({ object_key: 1 }, { unique: true, name: "object_key_idx" })
 

@@ -17,6 +17,8 @@ class WcoEmail::MessageStub
   field :status, default: STATUS_PENDING
   scope :pending, ->{ where( status: 'status_pending' ) }
 
+  field     :bucket # 'ish-ses', 'ish-ses-2024'
+
   field     :object_key
   validates :object_key, presence: true, uniqueness: true
   index({ object_key: 1 }, { unique: true, name: "object_key_idx" })
@@ -35,14 +37,16 @@ class WcoEmail::MessageStub
     key      = the_mail.message_id || "no-key-#{Time.now.to_i}.#{rand(1000)}"
 
     @stub = WcoEmail::MessageStub.create({
+      bucket:      ::S3_CREDENTIALS[:bucket_ses],
       object_key:  key,
       status:      WcoEmail::MessageStub::STATUS_PENDING,
       tags:        [ @tag ],
     })
     if @stub.persisted?
-      @client.put_object({ bucket: ::S3_CREDENTIALS[:bucket_ses],
-        key: key,
+      @client.put_object({
         body: message,
+        bucket: ::S3_CREDENTIALS[:bucket_ses],
+        key: key,
       })
     else
       msg = @stub.errors.full_messages.join(", ")

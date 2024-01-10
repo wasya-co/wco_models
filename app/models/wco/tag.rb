@@ -20,7 +20,14 @@ class Wco::Tag
   has_and_belongs_to_many :logs
 
   INBOX = 'inbox'
+  def self.inbox
+    find_or_create_by({ slug: INBOX })
+  end
+
   TRASH = 'trash'
+  def self.trash
+    find_or_create_by({ slug: TRASH })
+  end
 
   def self.list
     [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }

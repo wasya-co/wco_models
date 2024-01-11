@@ -60,7 +60,7 @@ class WcoEmail::EmailAction
   end
 
   def self.list
-    [[nil,nil]] + all.map { |p| [ "#{p.lead.email} :: #{p.tmpl.slug}", p.id ] }
+    [[nil,nil]] + all.map { |p| [ "#{p.lead&.email} :: #{p.tmpl&.slug}", p.id ] }
   end
 
 

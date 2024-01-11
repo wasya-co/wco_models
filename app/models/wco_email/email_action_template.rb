@@ -29,7 +29,7 @@ class WcoEmail::EmailActionTemplate
   field :deleted_at, default: nil, type: :time
 
   def self.list
-    [[nil,nil]] + WcoEmail::EmailAction.where({ :deleted_at => nil }).map { |a| [ a.slug, a.id ] }
+    [[nil,nil]] + all.map { |a| [ a.slug, a.id ] }
   end
 
 end

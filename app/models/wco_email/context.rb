@@ -25,7 +25,7 @@ class WcoEmail::Context
     if self[:body].presence
       return self[:body]
     else
-      return tmpl.body
+      return tmpl&.body || ''
     end
   end
 

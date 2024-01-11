@@ -28,5 +28,5 @@ $(function () {
     },
   });
 
-
-})(); // END
+  console.log('Loaded wco/file_upload.js')
+}); // END

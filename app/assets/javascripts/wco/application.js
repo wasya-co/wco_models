@@ -1,23 +1,24 @@
 //
-//= require rails-ujs
 //
 // // this was loaded twice causing issues - disabled for now.
-// require vendor/test
 // require vendor/jquery-3.3.1.min
 // require vendor/popper-1.14.0.min
 // require vendor/bootstrap-4.6.2.min
 // require vendor/fontawesome-5.15.4.min
 //
+//= require rails-ujs
 //= require vendor/jquery.iframe-transport
 //= require vendor/jquery.ui.widget
 //= require vendor/jquery.fileupload
 //= require vendor/jquery-ui.min
 //
+// require select2
+//
 //= require ./collapse-expand
 //= require ./file_upload
 //= require ./shared
 //
-console.log('Loaded wco/application.js')
+console.log('Loading wco/application.js')
 
 $(function() {
 
@@ -45,4 +46,5 @@ $('select[name="office_action_template[from_type]"]').on('change', (ev) => {
   window.location = parser.href;
 })
 
+console.log('Loaded wco/application.js')
 }); // END

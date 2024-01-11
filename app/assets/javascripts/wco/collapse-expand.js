@@ -1,8 +1,5 @@
 
-
 $(function () {
-
-  console.log('Loaded wco/collapse-expand.js')
 
   $(".collapse-expand").each(function() {
     const thisId = $(this).attr('id')
@@ -29,4 +26,5 @@ $(function () {
     e.stopPropagation()
   })
 
+  console.log('Loaded wco/collapse-expand.js')
 }); // END

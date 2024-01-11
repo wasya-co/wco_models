@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.56"
+  spec.version     = "3.1.0.57"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -51,6 +51,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails",      "~> 6.1.0"
 
   spec.add_dependency 'sass-rails', '~> 6.0'
+  # spec.add_dependency 'select2-rails'
   spec.add_dependency 'selenium-webdriver', "~> 4.9.0"
   spec.add_dependency 'sidekiq', '~> 7.2.0'
   spec.add_dependency 'stripe',      "~> 10.4.0"

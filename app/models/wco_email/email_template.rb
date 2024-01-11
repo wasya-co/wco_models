@@ -1,4 +1,6 @@
 
+DEFAULT_FROM_EMAIL = 'victor@wasya.co'
+
 class WcoEmail::EmailTemplate
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -86,9 +88,20 @@ class WcoEmail::EmailTemplate
     'Wasya Co Mailer <no-reply@wco.com.de>',
     'Wasya Co Mailer <wasyacomailer@gmail.com>',
   ];
+  FROM_EMAILS_2 = [
+
+    [ 'Victor Pudeyev <piousbox@gmail.com>',    'piousbox@gmail.com' ],
+    [ 'Victor Pudeyev <victor@piousbox.com>',   'victor@piousbox.com' ],
+    [ 'Victor Pudeyev <no-reply@piousbox.com>', 'no-reply@piousbox.com' ],
+
+    [ 'WasyaCo Consulting <no-reply@wasya.co>', 'no-reply@wasya.co' ],
+    [ 'Victor Pudeyev <victor@wasya.co>',       'victor@wasya.co' ],
+
+  ];
   field :from_email
-  def self.from_email_list
-    [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
+  def self.from_emails_list
+    # [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
+    FROM_EMAILS_2
   end
 
   SIGNATURE = <<~AOL
@@ -118,7 +131,7 @@ class WcoEmail::EmailTemplate
   def self.blank; self.blank_template; end
 
   def self.list
-    all.map { |p| [ p.id, p.slug ] }
+    all.map { |p| [ p.slug, p.id ] }
   end
 
 end

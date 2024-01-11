@@ -67,7 +67,7 @@ class WcoEmail::Message
   def received_at ; date ; end
 
   belongs_to :conversation, class_name: 'WcoEmail::Conversation'
-  def conv ; email_conversation ; end
+  def conv ; conversation ; end
 
   belongs_to :stub, class_name: 'WcoEmail::MessageStub'
 

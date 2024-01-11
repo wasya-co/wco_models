@@ -35,8 +35,10 @@ class WcoEmail::Context
   def from_email
     if self[:from_email].presence
       return self[:from_email]
-    else
+    elsif tmpl&.from_email
       return tmpl.from_email
+    else
+      return DEFAULT_FROM_EMAIL
     end
   end
 

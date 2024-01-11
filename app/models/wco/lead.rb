@@ -14,6 +14,12 @@ class Wco::Lead
   field :address
 
   belongs_to :leadset, class_name: 'Wco::Leadset'
+  before_validation :set_leadset, on: :create
+  def set_leadset
+    domain         = email.split('@')[1]
+    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: domain })
+  end
+
   has_one :photo,      class_name: 'Wco::Photo'
 
   has_many                :email_messages,          class_name: '::WcoEmail::Message', inverse_of: :lead

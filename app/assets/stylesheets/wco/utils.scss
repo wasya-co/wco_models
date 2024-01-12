@@ -89,9 +89,15 @@ textarea.monospace {
 
 /* F */
 
+
 .flex-row {
   display: flex;
 }
+.flexwidth {
+  max-width: 1000px;
+  margin: auto;
+}
+
 .field_with_errors {
   flex-grow: 1;
 }
@@ -120,7 +126,7 @@ h5.title {
 /* M */
 
 .maxwidth {
-  max-width: 1000px;
+  width: 1000px;
   margin: auto;
 }
 

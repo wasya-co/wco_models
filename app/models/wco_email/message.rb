@@ -76,32 +76,34 @@ class WcoEmail::Message
   has_many :replies, class_name: '::WcoEmail::Context', inverse_of: :reply_to_message
 
   def apply_filter filter
+    puts! filter, 'WcoEmail::Message#apply_filter'
+
     case filter.kind
 
-    when ::Office::EmailFilter::KIND_DESTROY_SCHS
+    when WcoEmail::EmailFilter::KIND_DESTROY_SCHS
       conv.add_tag    ::WpTag::TRASH
       conv.remove_tag ::WpTag::INBOX
       lead.schs.each do |sch|
         sch.update_attributes({ state: ::Sch::STATE_TRASH })
       end
 
-    when ::Office::EmailFilter::KIND_ADD_TAG
+    when WcoEmail::EmailFilter::KIND_ADD_TAG
       conv.add_tag filter.wp_term_id
       if ::WpTag::TRASH == ::WpTag.find( filter.wp_term_id ).slug
         conv.remove_tag ::WpTag::INBOX
       end
 
-    when ::Office::EmailFilter::KIND_REMOVE_TAG
+    when WcoEmail::EmailFilter::KIND_REMOVE_TAG
       conv.remove_tag filter.wp_term_id
 
-    when ::Office::EmailFilter::KIND_AUTORESPOND_TMPL
+    when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
       Ish::EmailContext.create({
         email_template: filter.email_template,
         lead_id:        lead.id,
         send_at:        Time.now + 22.minutes,
       })
 
-    when ::Office::EmailFilter::KIND_AUTORESPOND_EACT
+    when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
       ::Sch.create({
         email_action: filter.email_action,
         state:        ::Sch::STATE_ACTIVE,

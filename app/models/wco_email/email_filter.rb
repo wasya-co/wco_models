@@ -8,6 +8,8 @@ class WcoEmail::EmailFilter
   include Mongoid::Paranoia
   store_in collection: 'office_email_filters' # 'wco_email_email_filters'
 
+  PAGE_PARAM_NAME = :filters_page
+
   field :from_regex
   field :from_exact
   field :subject_regex

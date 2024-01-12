@@ -52,6 +52,9 @@ FactoryBot.define do
     subject { 'test-subject-1' }
   end
 
+  factory :email_filter, class: 'WcoEmail::EmailFilter' do
+  end
+
   factory :email_message, class: 'WcoEmail::Message' do
     object_key { generate('object_key') }
     message_id { generate('message_id') }

@@ -1,5 +1,5 @@
 
-RSpec.describe WcoEmail::Conversation do
+RSpec.describe WcoEmail::Message do
 
   before do
     Wco::Lead.unscoped.map &:destroy!

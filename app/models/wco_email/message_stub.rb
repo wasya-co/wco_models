@@ -33,6 +33,10 @@ class WcoEmail::MessageStub
 
   has_and_belongs_to_many :tags,  class_name: 'Wco::Tag'
 
+  ##
+  ## skip_notification
+  ## process_images
+  ##
   field :config, type: Object, default: <<~AOL
     {}
   AOL
@@ -53,11 +57,11 @@ class WcoEmail::MessageStub
     # puts! message_id, 'message_id'
 
     in_reply_to_id     = the_mail.header['in-reply-to']&.to_s
-    puts! in_reply_to_id, 'in_reply_to_id'
+    # puts! in_reply_to_id, 'in_reply_to_id'
 
     the_mail.to        = [ 'NO-RECIPIENT' ] if !the_mail.to
     subject            = WcoEmail::Message.strip_emoji( the_mail.subject || '(wco-no-subject)' )
-    puts! subject, 'subject'
+    # puts! subject, 'subject'
 
     ## Conversation
     if in_reply_to_id
@@ -94,6 +98,7 @@ class WcoEmail::MessageStub
       message.save!( validate: false )
       message.delete
     end
+
     @message = WcoEmail::Message.create!({
       stub:         stub,
       conversation: conv,
@@ -115,6 +120,7 @@ class WcoEmail::MessageStub
       cc:  the_mail.cc ? the_mail.cc[0] : nil,
       ccs:  the_mail.cc,
     })
+    puts! @message, '@message'
 
     ## Parts
     the_mail.parts.each do |part|
@@ -148,8 +154,6 @@ class WcoEmail::MessageStub
 
     conv.leads.push lead
     conv.save
-    # lead.conversations.push conv
-    # lead.save
 
     the_mail.cc&.each do |cc|
       domain  = cc.split('@')[1] rescue 'unknown.domain'
@@ -171,23 +175,30 @@ class WcoEmail::MessageStub
     conv.tags.push inbox_tag
     conv.tags.push stub.tags
     conv.save
-    # inbox_tag.conversations.push conv
-    # inbox_tag.save
 
 
     ## Actions & Filters
     email_filters = WcoEmail::EmailFilter.active
     email_filters.each do |filter|
-      if ( filter.from_regex.blank?   ||  @message.from.match(                 filter.from_regex    ) ) &&
-        ( filter.from_exact.blank?    ||  @message.from.downcase.include?(     filter.from_exact&.downcase ) ) &&
-        ( filter.body_exact.blank?    ||  @message.part_html&.include?(        filter.body_exact    ) ) &&
-        ( filter.subject_regex.blank? ||  @message.subject.match(              filter.subject_regex ) ) &&
-        ( filter.subject_exact.blank? ||  @message.subject.downcase.include?(  filter.subject_exact&.downcase ) )
+      reson = nil
+      if filter.from_regex && @message.from.downcase.match( filter.from_regex )
+        reason = 'from_regex'
+      end
+      if filter.from_exact && @message.from.downcase.include?( filter.from_exact.downcase )
+        reason = 'from_exact'
+      end
+      if filter.body_exact && @message.part_html&.include?( filter.body_exact )
+        reason = 'body_exact'
+      end
+      if filter.subject_regex && @message.subject.match( filter.subject_regex )
+        reason = 'subject_regex'
+      end
+      if filter.subject_exact && @message.subject.downcase.include?( filter.subject_exact.downcase )
+        reason = 'subject_exact'
+      end
 
-        # || MiaTagger.analyze( @message.part_html, :is_spammy_recruite ).score > .5
-
-        puts! "applying filter #{filter} to conv #{conv}" if DEBUG
-
+      if reason
+        puts! "Applying filter #{filter} to conv #{conv} for matching #{reason}" if DEBUG
         @message.apply_filter( filter )
       end
     end

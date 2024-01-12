@@ -1,0 +1,17 @@
+
+
+<ul>
+  <li><b>From:</b> <%=          @msg.from %></li>
+  <li><b>To:</b> <%=            @msg.to %></li>
+  <li><b>Cc:</b> <%=            @msg.cc %></li>
+  <li><b>Subject:</b> <%=       @msg.subject %></li>
+  <li><b>Date:</b> <%=          @msg.date %></li>
+  <li><b>N Assets:</b> <%=      @msg.assets.length %></li>
+</ul>
+
+<%= raw @msg.part_html %>
+
+<hr />
+
+<%= raw @msg.part_txt %>
+

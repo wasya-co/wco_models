@@ -8,6 +8,9 @@ class WcoEmail::Context
   include Mongoid::Paranoia
   store_in collection: 'ish_email_contexts'
 
+  PAGE_PARAM_NAME = 'email_contexts_page'
+
+
   field :slug
   validates_uniqueness_of :slug, allow_nil: true
 
@@ -29,7 +32,6 @@ class WcoEmail::Context
     end
   end
 
-  PAGE_PARAM_NAME = 'email_contexts_page'
 
   field :from_email
   def from_email
@@ -44,7 +46,7 @@ class WcoEmail::Context
 
   field :subject
   def subject
-    self[:subject].presence || tmpl.subject
+    self[:subject].presence || tmpl&.subject
   end
 
   belongs_to :reply_to_message, class_name: 'WcoEmail::Message', inverse_of: :replies, optional: true

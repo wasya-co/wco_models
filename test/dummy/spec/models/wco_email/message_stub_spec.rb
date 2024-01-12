@@ -11,8 +11,12 @@ RSpec.describe WcoEmail::MessageStub do
   end
 
   context '#do_process' do
-    it 'applies filters' do
+    before do
+      WcoEmail::MessageStub.unscoped.map &:destroy!
       WcoEmail::EmailFilter.unscoped.map &:destroy!
+    end
+
+    it 'applies filters' do
       filter_params = [
         { from_exact: 'MAILER-DAEMON@amazonses.com' },
         { from_regex: 'amazonses\.com$' },
@@ -24,11 +28,28 @@ RSpec.describe WcoEmail::MessageStub do
         filter = create( :email_filter, filter_param )
         expect_any_instance_of( WcoEmail::Message ).to receive( :apply_filter ).exactly(1).times.with( filter )
       end
-
-      WcoEmail::MessageStub.unscoped.map &:destroy!
       stub   = create( :message_stub, bucket: 'ish-ses', object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
       stub.do_process
+    end
 
+    context 'forwarder_notifies' do
+      it 'send for inbox' do
+        expect( WcoEmail::ApplicationMailer ).to receive(:forwarder_notify
+          ).exactly(1).times.and_return( WcoEmail::ApplicationMailer.forwarder_notify(WcoEmail::Message.all.first.id) )
+        stub   = create( :message_stub, bucket: 'ish-ses', object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
+        stub.do_process
+      end
+
+      it 'does not send if not in inbox' do
+        filter = create( :email_filter, {
+          from_regex: '.',
+          kind:       WcoEmail::EmailFilter::KIND_REMOVE_TAG,
+          tag:        Wco::Tag.inbox,
+        })
+        expect( WcoEmail::ApplicationMailer ).to receive(:forwarder_notify).exactly(0).times
+        stub = create( :message_stub, bucket: 'ish-ses', object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
+        stub.do_process
+      end
     end
   end
 

@@ -3,6 +3,7 @@ RSpec.describe WcoEmail::Message do
 
   before do
     Wco::Lead.unscoped.map &:destroy!
+
     WcoEmail::Conversation.unscoped.map &:destroy!
     @conv = create(:email_conversation)
   end
@@ -38,6 +39,62 @@ RSpec.describe WcoEmail::Message do
       m.persisted?.should eql false
       m.errors.messages[:message_id].include?( "is already taken" ).should eql true
     end
+
+  end
+
+  context '#apply_filter' do
+    before do
+      WcoEmail::Message.unscoped.map &:destroy!
+      WcoEmail::MessageStub.unscoped.map &:destroy!
+
+      Wco::Tag.unscoped.map &:destroy!
+      @tag_1 = create( :tag )
+
+      WcoEmail::EmailFilter.unscoped.map &:destroy!
+      WcoEmail::EmailTemplate.unscoped.map &:destroy!
+    end
+
+    it 'KIND_ADD_TAG' do
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_ADD_TAG,
+        tag:  @tag_1,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+      message.apply_filter filter
+      message.reload
+      message.conversation.tag_ids.should eql([ @tag_1.id ])
+    end
+
+    it 'KIND_REMOVE_TAG' do
+      @conv.tags.push @tag_1
+      @conv.save ; @conv.reload
+      @conv.tag_ids.should eql([ @tag_1.id ])
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_REMOVE_TAG,
+        tag:  @tag_1,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+
+      message.apply_filter filter
+      message.reload
+      message.conversation.tag_ids.should eql([])
+    end
+
+    it 'KIND_AUTORESPOND_TMPL' do
+      template = create( :email_template )
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL,
+        email_template: template,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+
+      expect( WcoEmail::Context ).to receive( :create ).exactly(1).times
+      message.apply_filter filter
+    end
+
+    # it 'KIND_AUTORESPOND_EACT' do
+    #   throw 'not implemented'
+    # end
 
   end
 

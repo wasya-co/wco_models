@@ -171,8 +171,7 @@ class WcoEmail::MessageStub
     ##
     ## Tags
     ##
-    inbox_tag = Wco::Tag.inbox
-    conv.tags.push inbox_tag
+    conv.tags.push Wco::Tag.inbox
     conv.tags.push stub.tags
     conv.save
 
@@ -211,7 +210,7 @@ class WcoEmail::MessageStub
       ;
     else
       conv = WcoEmail::Conversation.find( conv.id )
-      if conv.tags.include? inbox_tag
+      if conv.tags.include? Wco::Tag.inbox
         out = WcoEmail::ApplicationMailer.forwarder_notify( @message.id.to_s )
         Rails.env.production? ? out.deliver_later : out.deliver_now
       end

@@ -131,7 +131,7 @@ class WcoEmail::EmailTemplate
   def self.blank; self.blank_template; end
 
   def self.list
-    all.map { |p| [ p.slug, p.id ] }
+    [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
   end
 
 end

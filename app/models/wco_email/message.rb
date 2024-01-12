@@ -71,8 +71,8 @@ class WcoEmail::Message
 
   belongs_to :stub, class_name: 'WcoEmail::MessageStub'
 
-  has_many :assets, class_name: '::Wco::Asset'
-  has_many :photos, class_name: '::Wco::Photo'
+  has_many :assets,  class_name: '::Wco::Asset'
+  has_many :photos,  class_name: '::Wco::Photo'
   has_many :replies, class_name: '::WcoEmail::Context', inverse_of: :reply_to_message
 
   def apply_filter filter
@@ -81,23 +81,23 @@ class WcoEmail::Message
     case filter.kind
 
     when WcoEmail::EmailFilter::KIND_DESTROY_SCHS
-      conv.add_tag    ::WpTag::TRASH
-      conv.remove_tag ::WpTag::INBOX
+      conv.tags.push   Wco::Tag.trash
+      conv.tags -= [ Wco::Tag.inbox ]
       lead.schs.each do |sch|
         sch.update_attributes({ state: ::Sch::STATE_TRASH })
       end
 
     when WcoEmail::EmailFilter::KIND_ADD_TAG
-      conv.add_tag filter.wp_term_id
-      if ::WpTag::TRASH == ::WpTag.find( filter.wp_term_id ).slug
-        conv.remove_tag ::WpTag::INBOX
+      conv.tags.push filter.tag
+      if filter.tag == Wco::Tag.trash
+        conv.tags.remove Wco::Tag.inbox
       end
 
     when WcoEmail::EmailFilter::KIND_REMOVE_TAG
-      conv.remove_tag filter.wp_term_id
+      conv.tags -= [ filter.tag ]
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
-      Ish::EmailContext.create({
+      WcoEmail::Context.create({
         email_template: filter.email_template,
         lead_id:        lead.id,
         send_at:        Time.now + 22.minutes,
@@ -114,6 +114,8 @@ class WcoEmail::Message
     else
       raise "unknown filter kind: #{filter.kind}"
     end
+
+    conv.save
   end
 
   ## From: https://stackoverflow.com/questions/24672834/how-do-i-remove-emoji-from-string/24673322

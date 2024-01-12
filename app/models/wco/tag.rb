@@ -11,6 +11,8 @@ class Wco::Tag
 
   # parent-child
 
+  has_many :email_filters, class_name: 'WcoEmail::EmailFilter', inverse_of: :tag
+
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
   has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
   has_and_belongs_to_many :headlines # ,     class_name: 'Headline'

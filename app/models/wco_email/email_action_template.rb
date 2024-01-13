@@ -13,23 +13,23 @@ class WcoEmail::EmailActionTemplate
   validates :slug, uniqueness: true, allow_nil: true
   index({ slug: 1 }, { unique: true, name: "slug_idx" })
 
-  belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
-  def tmpl; email_template; end
+  # field :from_email ## this is in email_template
 
-  has_many :scheduled_email_actions, class_name: 'WcoEmail::ScheduledEmailAction'
-  def schs; scheduled_email_actions; end
+  belongs_to :email_template, class_name: 'EmailTemplate'
 
-  has_many :ties,      class_name: 'WcoEmail::EmailActionTie', inverse_of: :email_action
-  has_many :prev_ties, class_name: 'WcoEmail::EmailActionTie', inverse_of: :next_email_action
+  has_many :email_actions, class_name: 'EmailAction'
+
+  has_many :ties,      class_name: '::WcoEmail::EmailActionTemplateTie', inverse_of: :tmpl
+  has_many :prev_ties, class_name: '::WcoEmail::EmailActionTemplateTie', inverse_of: :next_tmpl
   accepts_nested_attributes_for :ties
 
-  has_many :email_filters, class_name: 'WcoEmail::EmailFilter', inverse_of: :email_action
+  has_many :email_filters, class_name: 'EmailFilter', inverse_of: :email_action
 
-  ## @TODO: change this right now.
-  field :deleted_at, default: nil, type: :time
+  def to_s
+    slug
+  end
 
   def self.list
     [[nil,nil]] + all.map { |a| [ a.slug, a.id ] }
   end
-
 end

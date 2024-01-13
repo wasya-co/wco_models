@@ -54,8 +54,8 @@ class WcoEmail::Context
   belongs_to :email_template, class_name: 'WcoEmail::EmailTemplate'
   def tmpl; email_template; end
 
-  belongs_to :scheduled_email_action, class_name: 'WcoEmail::ScheduledEmailAction', optional: true
-  def sch; scheduled_email_action; end
+  belongs_to :email_action, class_name: 'WcoEmail::EmailAction', optional: true
+  def sch; email_action; end
 
   belongs_to :email_campaign, class_name: 'WcoEmail::EmailCampaign', optional: true
 
@@ -66,17 +66,14 @@ class WcoEmail::Context
   field :unsubscribed_at, type: DateTime
 
 
-  def notsent
-    WcoEmail::EmailContext.where( sent_at: nil, unsubscribed_at: nil )
+  def self.notsent
+    where( sent_at: nil, unsubscribed_at: nil )
   end
-  def self.notsent; new.notsent; end
 
 
-  def scheduled
-    # or({ :send_at.lte => Time.now }, { :send_at => nil }) ## This won't work b/c I need draft state!
-    WcoEmail::EmailContext.where({ :send_at.lte => Time.now  })
+  def self.scheduled
+    where( :send_at.lte => Time.now  )
   end
-  def self.scheduled; new.scheduled; end
 
 
   belongs_to :lead,      class_name: 'Wco::Lead'

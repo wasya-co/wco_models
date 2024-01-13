@@ -89,6 +89,7 @@ class WcoEmail::EmailTemplate
     'Wasya Co Mailer <wasyacomailer@gmail.com>',
   ];
   FROM_EMAILS_2 = [
+    [ nil, nil ],
 
     [ 'Victor Pudeyev <piousbox@gmail.com>',    'piousbox@gmail.com' ],
     [ 'Victor Pudeyev <victor@piousbox.com>',   'victor@piousbox.com' ],
@@ -115,7 +116,7 @@ class WcoEmail::EmailTemplate
 
   ## 2023-03-04 _vp_ This works!
   def get_binding
-    @lead = Lead.where( email: 'stub@wasya.co' ).first
+    # @lead = Lead.where( email: 'stub@wasya.co' ).first
     binding()
   end
 

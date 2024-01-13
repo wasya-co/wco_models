@@ -26,7 +26,7 @@ module Wco::ApplicationHelper
   def pp_time date
     return nil if !date
     # return date.strftime('%l:%M%P %z')
-    return date.in_time_zone( Rails.application.config.time_zone ).strftime('%l:%M%P')
+    return date.in_time_zone( Rails.application.config.time_zone ).strftime('%l:%M%P %Z')
   end
 
   def pp_amount a

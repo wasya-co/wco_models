@@ -12,6 +12,8 @@ Bundler.require(*Rails.groups)
 module Dummy
   class Application < Rails::Application
     config.load_defaults Rails::VERSION::STRING.to_f
+    config.active_job.queue_adapter = :sidekiq
+    config.time_zone = 'Central Time (US & Canada)'
   end
 end
 

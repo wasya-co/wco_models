@@ -5,25 +5,16 @@
  *= require_tree .
 **/
 
-/* body {
-  color: red !important;
-} */
-
 .select2 {
   min-width: 200px;
-  /* width: 100%; */
-}
-
-.wco--alerts-notices {
-  border-bottom: 1px solid red;
 }
 
 .main-footer {
-  border-top: 1px solid red;
+  border-top: 2px solid #6395b9;
 }
 
 .main-header {
-  // border-bottom: 1px solid red;
+  border-bottom: 2px solid #6395b9;
 
   li {
     display: flex;

@@ -12,26 +12,21 @@
       .row
         .col-sm-4
           %ul
-            %li <b>Email:</b> #{@current_profile.email}
+            %li
+              <b>Email:</b> #{@current_profile.email}
+              = button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
             %li= link_to 'sidekiq', '/sidekiq', target: :_blank
             %li= link_to 'Iron Warbler', '/iron_warbler'
+
 
         .col-sm-4
           %ul
             %li ~__^ &nbsp; &nbsp; v#{@version}
-            -# %li= Time.now.in_time_zone.to_s
             %li
               = pp_date Time.now
               = pp_time Time.now
-            -# <pre>#{@changelog}</pre>
 
         .col-sm-4
-          = button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
-
-          -# .set-jwt-token
-          -#   = button_tag 'Set JWT', class: 'set-jwt-token'
-          -#   .jwt-token
-
           = form_for @current_profile, url: wco.profile_path(@current_profile), as: :profile do |f|
             .flex-row
               = f.label :per_page

@@ -14,11 +14,11 @@
 //
 // require select2
 //
+//= require ./alerts-notices
 //= require ./collapse-expand
 //= require ./file_upload
 //= require ./shared
 //
-console.log('Loading wco/application.js')
 
 $(function() {
 

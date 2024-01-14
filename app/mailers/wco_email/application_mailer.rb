@@ -58,18 +58,12 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
       'utm_source'   => @ctx.tmpl.slug,
     }.map { |k, v| "#{k}=#{v}" }.join("&")
 
-    # @origin         = "https://#{Rails.application.config.action_mailer.default_url_options[:host]}"
-
     @unsubscribe_url = WcoEmail::Engine.routes.url_helpers.unsubscribes_url({
       template_id: @ctx.tmpl.id,
       lead_id:     @lead.id,
       token:       @lead.unsubscribe_token,
       host:        Rails.application.routes.default_url_options[:host],
     })
-    # renderer = Tmp6Ctl.new
-    # renderer = IshManager::ApplicationController.new
-    # renderer.send( :include, ::IshManager::ApplicationHelper )
-    # renderer.send( :request, { host: 'test-host' } )
     renderer = WcoEmail::ApplicationMailer.new
 
     renderer.instance_variable_set( :@ctx,              @ctx )
@@ -78,12 +72,10 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     renderer.instance_variable_set( :@unsubscribe_url,  @unsubscribe_url )
     renderer.instance_variable_set( :@tmpl_config,      @tmpl_config )
 
-    # eval( @ctx.tmpl.config_exe )
-
     rendered_str = renderer.render_to_string("/wco_email/email_templates/_#{@ctx.tmpl.layout}")
-    @ctx.update({
+    @ctx.update!({
       rendered_str: rendered_str,
-      sent_at: Time.now.to_s,
+      sent_at:      Time.now.to_s,
     })
 
     mail( from:    @ctx.from_email,

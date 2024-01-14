@@ -34,7 +34,7 @@ class WcoEmail::EmailAction
 
   def send_and_roll
     sch = self
-    sch.update({ status: STATUS_INACTIVE })
+    sch.update!({ status: STATUS_INACTIVE })
 
     # send now
     ctx = WcoEmail::Context.create!({

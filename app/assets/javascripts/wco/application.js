@@ -22,6 +22,27 @@
 
 $(function() {
 
+
+if ('function' === typeof $('body').DataTable) {
+  const _props = {
+    dom: 'lpftrip',
+    lengthChange: true,
+    lengthMenu: [[10, 25, 100, -1], [10, 25, 100, 'All']],
+    pageLength: -1,
+    aoColumnDefs: [ {
+      bSortable: false,
+      aTargets: [ "nosort" ],
+    } ],
+    order: [ 4, 'desc' ],
+  }
+  $('.data-table').DataTable(_props)
+}
+
+if ('function' === typeof $('body').datepicker) {
+  $(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' })
+}
+
+
 if (!!$('body').select2) {
   $('.select2').each(function() {
     $( this ).select2({

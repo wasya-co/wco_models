@@ -64,3 +64,5 @@ class WcoEmail::EmailAction
   end
 end
 
+Sch = WcoEmail::EmailAction
+

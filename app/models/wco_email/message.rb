@@ -98,18 +98,19 @@ class WcoEmail::Message
       conv.tags -= [ filter.tag ]
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
-      WcoEmail::Context.create({
+      WcoEmail::Context.create!({
         email_template: filter.email_template,
         lead_id:        lead.id,
         send_at:        Time.now,
       })
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
-      ::Sch.create({
-        email_action: filter.email_action,
-        state:        ::Sch::STATE_ACTIVE,
-        lead_id:      lead.id,
-        perform_at:   Time.now,
+      # byebug
+      out = Sch.create!({
+        email_action_template: filter.email_action_template,
+        status:                Sch::STATUS_ACTIVE,
+        lead_id:               lead.id,
+        perform_at:            Time.now,
       })
 
     else

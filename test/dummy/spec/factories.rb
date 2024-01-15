@@ -49,6 +49,12 @@ FactoryBot.define do
 
   ## E
 
+  factory :email_action_template, class: 'WcoEmail::EmailActionTemplate' do
+    after :build do |doc|
+      doc.email_template = ET.all.first || create( :email_template )
+    end
+  end
+
   factory :email_context, class: 'WcoEmail::Context' do
   end
 

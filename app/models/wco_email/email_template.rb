@@ -136,3 +136,4 @@ class WcoEmail::EmailTemplate
   end
 
 end
+ET = WcoEmail::EmailTemplate

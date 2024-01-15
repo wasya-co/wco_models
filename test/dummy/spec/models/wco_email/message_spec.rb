@@ -110,19 +110,29 @@ RSpec.describe WcoEmail::Message do
 
     it 'KIND_AUTORESPOND_TMPL' do
       template = create( :email_template )
-      filter = create( :email_filter, {
+      filter   = create( :email_filter, {
         kind: WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL,
         email_template: template,
       })
       message = create( :email_message, conversation: @conv, lead: create(:lead) )
 
-      expect( WcoEmail::Context ).to receive( :create ).exactly(1).times
-      message.apply_filter filter
+      expect {
+        message.apply_filter filter
+      }.to change { WcoEmail::Context.all.length }.by( 1 )
     end
 
-    # it 'KIND_AUTORESPOND_EACT' do
-    #   throw 'not implemented'
-    # end
+    it 'KIND_AUTORESPOND_EACT' do
+      tmpl   = create( :email_action_template )
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT,
+        email_action_template: tmpl,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+
+      expect {
+        message.apply_filter filter
+      }.to change { Sch.all.length }.by( 1 )
+    end
 
   end
 

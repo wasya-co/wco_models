@@ -77,9 +77,10 @@ class WcoEmail::MessageStub
       end
       conv = in_reply_to_msg.conversation
     else
-      conv = WcoEmail::Conversation.find_or_create_by({
+      conv = WcoEmail::Conversation.unscoped.find_or_create_by({
         subject: subject,
       })
+      conv.deleted_at = nil
     end
 
 

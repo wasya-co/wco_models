@@ -73,13 +73,5 @@
       %ul
         - @lead.convs.each do |conv|
           %li
-            = link_to conv.subject, wco_email.email_conversation_path( conv )
-
-  -# .row
-  -#   .col-md-6
-  -#     = render 'ish_manager/galleries/index', galleries: @lead.galleries
-  -#   .col-md-6
-  -#     = render 'ish_manager/videos/index', videos: @lead.videos
-
-
+            = link_to conv.subject, wco_email.conversation_path( conv )
 

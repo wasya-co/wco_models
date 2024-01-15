@@ -33,12 +33,6 @@ class WcoEmail::EmailFilter
   KINDS = [ nil, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS]
   field :kind
 
-  STATUS_ACTIVE   = 'active'
-  STATUS_INACTIVE = 'inactive'
-  STATUSES        = [ STATUS_ACTIVE, STATUS_INACTIVE ]
-  field :status, type: :string, default: STATUS_ACTIVE
-  scope :active, ->{ where( status: STATUS_ACTIVE ) }
-
   belongs_to :email_template,        class_name: 'WcoEmail::EmailTemplate',         optional: true
   belongs_to :email_action_template, class_name: 'WcoEmail::EmailActionTemplate',   optional: true
 

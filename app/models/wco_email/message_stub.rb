@@ -178,9 +178,9 @@ class WcoEmail::MessageStub
 
 
     ## Actions & Filters
-    email_filters = WcoEmail::EmailFilter.active
+    email_filters = WcoEmail::EmailFilter.all
     email_filters.each do |filter|
-      reson = nil
+      reason = nil
       if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )
         reason = 'from_regex'
       end
@@ -198,7 +198,7 @@ class WcoEmail::MessageStub
       end
 
       if reason
-        puts! "Applying filter #{filter} to conv #{conv} for matching #{reason}" if DEBUG
+        puts! "Applying filter #{filter} to conv #{@message.conversation} for matching #{reason}" if DEBUG
         @message.apply_filter( filter )
       end
     end

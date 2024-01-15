@@ -28,7 +28,7 @@ if ('function' === typeof $('body').DataTable) {
     dom: 'lpftrip',
     lengthChange: true,
     lengthMenu: [[10, 25, 100, -1], [10, 25, 100, 'All']],
-    pageLength: -1,
+    pageLength: 25,
     aoColumnDefs: [ {
       bSortable: false,
       aTargets: [ "nosort" ],

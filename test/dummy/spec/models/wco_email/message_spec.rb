@@ -5,7 +5,7 @@ RSpec.describe WcoEmail::Message do
     Wco::Lead.unscoped.map &:destroy!
 
     WcoEmail::Conversation.unscoped.map &:destroy!
-    @conv = create(:email_conversation)
+    @conv = create(:email_conversation, tags: [ Wco::Tag.inbox ] )
   end
 
   context 'validations' do
@@ -52,6 +52,22 @@ RSpec.describe WcoEmail::Message do
 
       WcoEmail::EmailFilter.unscoped.map &:destroy!
       WcoEmail::EmailTemplate.unscoped.map &:destroy!
+
+      WcoEmail::Conversation.unscoped.map &:destroy!
+      @conv = create(:email_conversation, tags: [ Wco::Tag.inbox ] )
+    end
+
+    it 'KIND_ADD_TAG spam' do
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_ADD_TAG,
+        tag:  Wco::Tag.spam,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+      message.conversation.tag_ids.should eql([ Wco::Tag.inbox.id ])
+
+      message.apply_filter filter
+      message.reload
+      message.conversation.tag_ids.should eql([ Wco::Tag.spam.id ])
     end
 
     it 'KIND_ADD_TAG' do
@@ -62,13 +78,13 @@ RSpec.describe WcoEmail::Message do
       message = create( :email_message, conversation: @conv, lead: create(:lead) )
       message.apply_filter filter
       message.reload
-      message.conversation.tag_ids.should eql([ @tag_1.id ])
+      message.conversation.tag_ids.should eql([ Wco::Tag.inbox.id, @tag_1.id ])
     end
 
     it 'KIND_REMOVE_TAG' do
       @conv.tags.push @tag_1
       @conv.save ; @conv.reload
-      @conv.tag_ids.should eql([ @tag_1.id ])
+      @conv.tag_ids.should eql([ Wco::Tag.inbox.id, @tag_1.id ])
       filter = create( :email_filter, {
         kind: WcoEmail::EmailFilter::KIND_REMOVE_TAG,
         tag:  @tag_1,
@@ -77,7 +93,7 @@ RSpec.describe WcoEmail::Message do
 
       message.apply_filter filter
       message.reload
-      message.conversation.tag_ids.should eql([])
+      message.conversation.tag_ids.should eql([ Wco::Tag.inbox.id ])
     end
 
     it 'KIND_AUTORESPOND_TMPL' do

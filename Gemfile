@@ -10,11 +10,9 @@ gem "omniauth-rails_csrf_protection", "~> 1.0.1"
 
 group :development, :test do
   gem 'byebug'
-  gem 'rspec-rails'
   gem 'factory_bot_rails'
-
-
   gem 'irb', '>= 1.2.8'
-
+  gem 'rails-controller-testing'
+  gem 'rspec-rails'
 end
 

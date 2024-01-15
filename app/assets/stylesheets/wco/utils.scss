@@ -137,7 +137,15 @@ h5.title {
 /* P */
 
 .padded {
+  // border: 1px solid green;
+
   margin: 0.5em;
-  width: 100%;
+  width: calc( 100% - 1em );
+}
+
+/* T */
+
+.title {
+  word-break: break-word;
 }
 

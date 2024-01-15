@@ -10,6 +10,9 @@ class Wco::Video
   store_in collection: 'videos'
 
   field :name, :type => String
+  index({ created_at: -1 })
+  index({ created_at: -1, name: -1 })
+
   field :descr, :type => String, :as => :description
   field :subhead ## still need it... 2023-03-24
 

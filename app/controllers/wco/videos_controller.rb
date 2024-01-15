@@ -47,7 +47,7 @@ class Wco::VideosController < Wco::ApplicationController
 
     respond_to do |format|
       format.html do
-        render
+        render '_index'
       end
       format.json do
         render :json => @videos

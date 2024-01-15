@@ -4,7 +4,7 @@
 -# _vp_ 2022-09-25 :: Small styling revision
 -#
 
-- n_thumbs  ||= 12
+- n_thumbs  ||= 8
 - galleries ||= @galleries
 
 .galleries--index.maxwidth
@@ -28,9 +28,9 @@
               - if g.photos.length == 0
                 No Photos
               - else
-                .flex-row
+                .d-flex.flex-wrap.photos-thumbs
                   - g.photos.limit( n_thumbs ).each do |photo|
-                    = link_to image_tag(photo.photo.url(:thumb), :alt => g.name), gallery_path(g.slug)
+                    = link_to image_tag(photo.photo.url(:thumb), :alt => ''), gallery_path(g.slug)
 
       - if galleries.respond_to? :total_pages
         = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'

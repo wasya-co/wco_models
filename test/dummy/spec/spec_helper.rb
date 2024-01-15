@@ -23,3 +23,14 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
 end
+
+def setup_users
+
+  User.all.destroy_all
+  user = User.create!( email: 'victor@wasya.co', password: 'test1234', provider: 'keycloakopenid' )
+  Wco::Profile.unscoped.map &:destroy!
+  p = Wco::Profile.create!( email: user.email )
+  sign_in user
+
+end
+

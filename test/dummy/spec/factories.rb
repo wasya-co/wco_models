@@ -26,6 +26,8 @@ FactoryBot.define do
   ## factories
   ##
 
+  ## A
+
   factory :appliance, class: 'WcoHosting::Appliance' do
     after :build do |doc|
       doc.subscription = create( :subscription, leadset: doc.leadset )
@@ -44,6 +46,8 @@ FactoryBot.define do
     end
 
   end
+
+  ## E
 
   factory :email_context, class: 'WcoEmail::Context' do
   end
@@ -67,6 +71,15 @@ FactoryBot.define do
     slug { generate('slug') }
   end
 
+  ## G
+
+  factory :gallery, class: 'Wco::Gallery' do
+    name { generate('name') }
+    slug { generate('slug') }
+  end
+
+  ## L
+
   factory :lead, class: 'Wco::Lead' do
     email { generate(:email) }
     after :build do |doc|
@@ -86,9 +99,13 @@ FactoryBot.define do
     end
   end
 
+  ## M
+
   factory :message_stub, class: 'WcoEmail::MessageStub' do
     object_key { generate('object_key') }
   end
+
+  ## P
 
   factory :price, class: 'Wco::Price' do
   end
@@ -108,6 +125,8 @@ FactoryBot.define do
     end
   end
 
+  ## S
+
   factory :serverhost, class: 'WcoHosting::Serverhost' do
     name { generate(:name) }
 
@@ -124,6 +143,8 @@ FactoryBot.define do
     end
   end
 
+  ## T
+
   factory :tag, class: 'Wco::Tag' do
     slug { generate('slug') }
   end
@@ -137,6 +158,8 @@ FactoryBot.define do
     title { 'some title' }
   end
 
+  ## U
+
   factory :user do
     email    { generate(:email) }
     password { 'test1234' }
@@ -144,6 +167,12 @@ FactoryBot.define do
     after :build do |doc|
       create( :profile, email: doc.email )
     end
+  end
+
+  ## V
+
+  factory :video, class: 'Wco::Video' do
+    name { generate(:name) }
   end
 
 end

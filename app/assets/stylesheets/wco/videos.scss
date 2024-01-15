@@ -1,0 +1,40 @@
+
+.videos-index {
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    margin-bottom: 1em;
+
+    .title {
+      word-break: break-word;
+    }
+  }
+
+  .pagination {
+    margin: 1em 0;
+  }
+}
+
+div.videos-show {
+  // border-bottom: 2px solid red;
+  padding-bottom: .8em;
+
+  margin: 0 auto;
+  width: 640px;
+
+  .row {
+    display: flex;
+    margin: 0;
+
+    img {
+      margin-right: .8em;
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+
+}

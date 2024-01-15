@@ -17,6 +17,9 @@ class Wco::Gallery
   validates :slug, presence: true, uniqueness: true
   before_validation :set_slug, :on => :create
 
+  index({ created_at: -1 })
+  index({ created_at: -1, name: -1 })
+
   field :subhead
   field :descr,   :as => :description
 

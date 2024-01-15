@@ -71,7 +71,7 @@ class WcoEmail::Context
   end
 
   def self.scheduled
-    where( :send_at.gte => Time.now  )
+    where( :send_at.lte => Time.now  )
   end
 
 

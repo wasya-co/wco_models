@@ -89,7 +89,7 @@ class WcoEmail::Message
 
     when WcoEmail::EmailFilter::KIND_ADD_TAG
       conv.tags.push filter.tag
-      if filter.tag == Wco::Tag.trash
+      if filter.tag == Wco::Tag.trash || filter.tag == Wco::Tag.spam
         conv.tags -= [ Wco::Tag.inbox ]
       end
 

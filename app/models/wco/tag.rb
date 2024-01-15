@@ -31,6 +31,11 @@ class Wco::Tag
     find_or_create_by({ slug: TRASH })
   end
 
+  SPAM = 'spam'
+  def self.spam
+    find_or_create_by({ slug: SPAM })
+  end
+
   def to_s
     slug
   end

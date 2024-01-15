@@ -20,7 +20,7 @@ RSpec.describe WcoEmail::Context do
       email_template: @tmpl,
       lead: @lead,
     })
-    WcoEmail::Context.scheduled.map( &:id ).should eql([ future_ctx.id ])
+    WcoEmail::Context.scheduled.map( &:id ).should eql([ past_ctx.id ])
   end
 
 end

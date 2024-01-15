@@ -57,6 +57,18 @@ RSpec.describe WcoEmail::Message do
       @conv = create(:email_conversation, tags: [ Wco::Tag.inbox ] )
     end
 
+    it 'Adds conv to filter' do
+      filter = create( :email_filter, {
+        kind: WcoEmail::EmailFilter::KIND_ADD_TAG,
+        tag:  Wco::Tag.spam,
+      })
+      message = create( :email_message, conversation: @conv, lead: create(:lead) )
+
+      message.apply_filter filter
+      filter.reload
+      filter.conversation_ids.should eql([ @conv.id ])
+    end
+
     it 'KIND_ADD_TAG spam' do
       filter = create( :email_filter, {
         kind: WcoEmail::EmailFilter::KIND_ADD_TAG,

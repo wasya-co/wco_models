@@ -30,5 +30,10 @@ class WcoEmail::Conversation
   has_and_belongs_to_many :tags,  class_name: 'Wco::Tag'
   has_and_belongs_to_many :leads, class_name: 'Wco::Lead'
 
+  belongs_to :filter, class_name: 'WcoEmail::EmailFilter', inverse_of: :conversations, optional: true
+
+  def to_s
+    "#{subject} (#{messages.length})"
+  end
 end
 Conv = WcoEmail::Conversation

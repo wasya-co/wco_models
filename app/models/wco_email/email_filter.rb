@@ -42,5 +42,7 @@ class WcoEmail::EmailFilter
   belongs_to :email_template,        class_name: 'WcoEmail::EmailTemplate',         optional: true
   belongs_to :email_action_template, class_name: 'WcoEmail::EmailActionTemplate',   optional: true
 
+  has_many :conversations, class_name: 'WcoEmail::Conversation', inverse_of: :filter
+
 end
 

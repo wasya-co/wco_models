@@ -35,12 +35,12 @@ textarea {
 
 table.bordered {
   table-layout:fixed;
-  width: 100%;
+  width: auto; // 100%;
   word-wrap: break-word;
 
   border: 1px solid gray;
-  border-bottom: 0;
-  border-right: 0;
+  // border-bottom: 0;
+  // border-right: 0;
 
   th {
     background: #ddd;

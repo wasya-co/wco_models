@@ -39,3 +39,4 @@ class Wco::HTTParty
 end
 
 ActiveSupport.escape_html_entities_in_json = true
+

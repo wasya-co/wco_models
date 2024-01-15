@@ -35,7 +35,7 @@ class WcoEmail::EmailFilter
 
   STATUS_ACTIVE   = 'active'
   STATUS_INACTIVE = 'inactive'
-  STATUSS = [ STATUS_ACTIVE, STATUS_INACTIVE ]
+  STATUSES        = [ STATUS_ACTIVE, STATUS_INACTIVE ]
   field :status, type: :string, default: STATUS_ACTIVE
   scope :active, ->{ where( status: STATUS_ACTIVE ) }
 

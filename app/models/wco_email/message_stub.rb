@@ -180,19 +180,19 @@ class WcoEmail::MessageStub
     email_filters = WcoEmail::EmailFilter.active
     email_filters.each do |filter|
       reson = nil
-      if filter.from_regex && @message.from.downcase.match( filter.from_regex )
+      if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )
         reason = 'from_regex'
       end
-      if filter.from_exact && @message.from.downcase.include?( filter.from_exact.downcase )
+      if filter.from_exact.present? && @message.from.downcase.include?( filter.from_exact.downcase )
         reason = 'from_exact'
       end
-      if filter.body_exact && @message.part_html&.include?( filter.body_exact )
+      if filter.body_exact.present? && @message.part_html&.include?( filter.body_exact )
         reason = 'body_exact'
       end
-      if filter.subject_regex && @message.subject.match( filter.subject_regex )
+      if filter.subject_regex.present? && @message.subject.match( filter.subject_regex )
         reason = 'subject_regex'
       end
-      if filter.subject_exact && @message.subject.downcase.include?( filter.subject_exact.downcase )
+      if filter.subject_exact.present? && @message.subject.downcase.include?( filter.subject_exact.downcase )
         reason = 'subject_exact'
       end
 

@@ -73,9 +73,8 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     renderer.instance_variable_set( :@tmpl_config,      @tmpl_config )
 
     rendered_str = renderer.render_to_string("/wco_email/email_templates/_#{@ctx.tmpl.layout}")
-    @ctx.update!({
+    @ctx.update({
       rendered_str: rendered_str,
-      sent_at:      Time.now.to_s,
     })
 
     mail( from:    @ctx.from_email,

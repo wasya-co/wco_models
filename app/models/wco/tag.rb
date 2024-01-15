@@ -31,8 +31,10 @@ class Wco::Tag
     find_or_create_by({ slug: TRASH })
   end
 
+  def to_s
+    slug
+  end
   def self.list
     [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
   end
-
 end

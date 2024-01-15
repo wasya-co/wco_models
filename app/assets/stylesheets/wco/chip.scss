@@ -1,0 +1,68 @@
+
+html {
+  // --wco-color-1: red;
+  --wco-color-2: #ddd;
+}
+
+.chip,
+.Chip {
+  display: inline;
+
+  border: 1px solid var(--wco-color-1);
+  border-radius: 0.5em;
+  padding: 0.1em .3em;
+  margin-bottom: 0.1em;
+  background: var(--wco-color-2);
+
+}
+.chip,
+.Chip {
+  // border: 1px solid black;
+  border-radius: 1em 0 0 1em;
+
+  margin-right: 32px;
+
+  padding: 0.2em 0.2em 0.2em 0.6em;
+
+  height: 32px;
+
+  background: var(--wco-color-2);
+
+  position: relative;
+
+  &::before {
+    // border: 1px solid red;
+    // background: yellow;
+
+    content: "";
+    display: block;
+
+    position: absolute;
+    right: -16px;
+    top: 0;
+
+    width: 16px;
+    height: 32px;
+
+    // border-left: 12px solid white;
+    border-top: 17px solid var(--wco-color-2);
+    border-right: 12px solid transparent;
+    // border-bottom: 12px solid transparent;
+  }
+  &::after {
+    // border: 1px solid red;
+
+    content: "";
+    display: block;
+
+    position: absolute;
+    right: -16px;
+    bottom: 0;
+
+    width: 16px;
+    height: 32px;
+
+    border-bottom: 17px solid var(--wco-color-2);
+    border-right: 12px solid transparent;
+  }
+}

@@ -2,34 +2,26 @@
 require 'business_time'
 require 'httparty'
 
-namespace :office do
+namespace :wco do
 
-  desc 'run_office_actions'
+
+  desc 'run office actions'
   task run_office_actions: :environment do
+    puts! "Starting wco_email:run_office_actions..."
     while true do
 
-      OA  = Wco::OfficeAction
-      OAT = Wco::OfficeActionTemplate
+      schs = Wco::OfficeAction.active.where({ :perform_at.lte => Time.now })
+      print "[#{schs.length}]" if schs.length != 0
+      schs.each do |sch|
 
-      OA.active.where( :perform_at.lte => Time.now ).each do |oa|
-        puts "+++ +++ Office Action: #{oa}"
+        sch.do_run
 
-        oa.update({ status: INACTIVE })
-        oa.tmpl.do_run
-        oa.tmpl.ties.each do |tie|
-          next_oa = OA.find_or_initialize_by({
-            office_action_template_id: tie.next_oat.id,
-          })
-          next_oa.perform_at = eval( tie.next_at_exe )
-          next_oa.status     = ACTIVE
-          next_oa.save!
-        end
-
-        print '^'
+        print "[#{sch.id}]^"
+        sleep 15
       end
 
       print '.'
-      sleep Rails.env.production? ? 60 : 5 # seconds
+      sleep 15
     end
   end
 

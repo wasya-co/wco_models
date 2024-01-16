@@ -1,5 +1,5 @@
 
-- oat ||= nil
+- tmpl ||= nil
 - depth ||= 5
 - depth = depth - 1
 
@@ -10,9 +10,9 @@
       %li
         = tie.next_at_exe
         %br
-        = link_to '[~]', edit_office_action_template_path(tie.next_oat)
-        = link_to tie.next_oat, office_action_template_path(tie.next_oat)
-        - if tie.next_oat == oat
+        = link_to '[~]', edit_office_action_template_path(tie.next_tmpl)
+        = link_to tie.next_tmpl, office_action_template_path(tie.next_tmpl)
+        - if tie.next_tmpl == tmpl
           <b>[Same]</b>
-        - elsif tie.next_oat.ties.present?
-          = render '/wco/office_action_templates/ties', ties: tie.next_oat.ties, depth: depth, oat: tie.next_oat
+        - elsif tie.next_tmpl.ties.present?
+          = render '/wco/office_action_templates/ties', ties: tie.next_tmpl.ties, depth: depth, tmpl: tie.next_tmpl

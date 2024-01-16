@@ -23,9 +23,25 @@ class Wco::OfficeAction
 
   field :perform_at, type: :time
 
+  def do_run
+    sch = self
+    sch.update!({ status: STATUS_INACTIVE })
+
+    eval( sch.tmpl.action_exe )
+
+    # schedule next actions & update the action
+    sch.tmpl.ties.each do |tie|
+      next_sch = self.class.find_or_initialize_by({
+        office_action_template_id: tie.next_tmpl.id,
+      })
+      next_sch.perform_at = eval(tie.next_at_exe)
+      next_sch.status     = STATUS_ACTIVE
+      next_sch.save!
+    end
+  end
+
   def to_s
     slug
   end
-
 end
 

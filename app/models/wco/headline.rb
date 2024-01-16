@@ -12,7 +12,8 @@ class Wco::Headline
   field :name
   validates :name, presence: true, uniqueness: true
 
-  belongs_to :site, class_name: 'Wco::Site'
+  ## @TODO: remove this entirely. 2024-01-16
+  belongs_to :site, class_name: 'Wco::Site', optional: true
 
   has_and_belongs_to_many :tags, class_name: 'Wco::Tag'
 

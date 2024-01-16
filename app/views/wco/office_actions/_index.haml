@@ -7,6 +7,8 @@
       &nbsp;
       = link_to oa.slug, office_action_path(oa)
       %ul
+        %li
+          .gray.mini= oa.id
         %li <b>status:</b> #{oa.status}
         %li
           <b>tmpl:</b>

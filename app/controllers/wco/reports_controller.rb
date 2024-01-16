@@ -4,7 +4,7 @@ class Wco::ReportsController < Wco::ApplicationController
   before_action :set_lists
 
   def create
-    params[:report][:tag_ids].delete ''
+    params[:report][:tag_ids]&.delete ''
 
     @report = Wco::Report.new params[:report].permit!
     authorize! :create, @report
@@ -51,7 +51,7 @@ class Wco::ReportsController < Wco::ApplicationController
   end
 
   def update
-    params[:report][:tag_ids].delete ''
+    params[:report][:tag_ids]&.delete ''
 
     @report = Wco::Report.unscoped.find params[:id]
     authorize! :update, @report

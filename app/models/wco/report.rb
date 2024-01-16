@@ -14,6 +14,7 @@ class Wco::Report
   field :title
   validates :title, presence: true, uniqueness: true
   index({ title: 1 }, { unique: true })
+  def name ; title ; end
 
   field :subtitle
 
@@ -38,10 +39,6 @@ class Wco::Report
   field :z, :type => Float
 
   # has_one :photo
-
-  def export_fields
-    %w| name descr |
-  end
 
   has_and_belongs_to_many :tags
 

@@ -21,7 +21,7 @@ module Wco::Utils
 
   def set_slug
     return if !slug.blank?
-    if name
+    if defined? name
       new_slug = name.downcase.gsub(/[^a-z0-9\s]/i, '').gsub(' ', '-')
     else
       new_slug = '1'

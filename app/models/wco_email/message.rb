@@ -105,7 +105,11 @@ class WcoEmail::Message
       })
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
-      out = Sch.create!({
+      ##
+      ## This error is normal:
+      ## Mongoid::Errors::Validations `Email action template is already taken`
+      ##
+      out = Sch.create({
         email_action_template: filter.email_action_template,
         status:                Sch::STATUS_ACTIVE,
         lead_id:               lead.id,

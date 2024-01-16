@@ -131,6 +131,12 @@ FactoryBot.define do
     end
   end
 
+  ## R
+
+  factory :report, class: 'Wco::Report' do
+    title { generate(:name) }
+  end
+
   ## S
 
   factory :serverhost, class: 'WcoHosting::Serverhost' do

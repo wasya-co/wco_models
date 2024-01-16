@@ -7,6 +7,8 @@ class Wco::GalleriesController < Wco::ApplicationController
   # Alphabetized! : )
 
   def create
+    params[:gallery][:tag_ids]&.delete ''
+
     # params[:gallery][:shared_profiles] ||= []
     # params[:gallery][:shared_profiles].delete('')
     # params[:gallery][:shared_profiles] = Wco::Profile.find params[:gallery][:shared_profiles]
@@ -99,6 +101,7 @@ class Wco::GalleriesController < Wco::ApplicationController
   end
 
   def update
+    params[:gallery][:tag_ids]&.delete ''
     authorize! :update, @gallery
 
     old_shared_profile_ids = @gallery.shared_profiles.map(&:id)

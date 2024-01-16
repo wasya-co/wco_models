@@ -1,17 +1,20 @@
 
 .sites--form
   = form_for site do |f|
+    .actions
+      = f.submit
     .field
       %label Slug
       = f.text_field :slug
 
-      = f.label :kind
-      = f.select :kind, options_for_select( Wco::Site.kinds_list, selected: site.kind )
+    -#   = f.label :kind
+    -#   = f.select :kind, options_for_select( Wco::Site.kinds_list, selected: site.kind )
+
     .field
       = f.label :origin
       = f.text_field :origin
-      = f.label :post_path
-      = f.text_field :post_path
+      -# = f.label :post_path
+      -# = f.text_field :post_path
     .field
       = f.label :username
       = f.text_field :username

@@ -13,14 +13,14 @@
       %label action_exe
       = f.text_area :action_exe, class: :monospace
 
-    .field.flex-row
-      %label From
-      = f.select :from_type, options_for_select( @from_types_list, selected: params[:from_type] || oat.from_type )
-      = f.select :from_id, options_for_select( @from_ids_list ), {}, class: 'select2'
+    -# .field.flex-row
+    -#   %label From
+    -#   = f.select :from_type, options_for_select( @from_types_list, selected: params[:from_type] || oat.from_type )
+    -#   = f.select :from_id, options_for_select( @from_ids_list ), {}, class: 'select2'
 
-    .field.flex-row
-      %label Publisher
-      = f.select :publisher, options_for_select( @publishers_list, selected: oat.publisher ), {}, class: 'select2'
+    -# .field.flex-row
+    -#   %label Publisher
+    -#   = f.select :publisher, options_for_select( @publishers_list, selected: oat.publisher ), {}, class: 'select2'
 
     .row
       .col-md-4

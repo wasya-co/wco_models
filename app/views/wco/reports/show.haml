@@ -1,6 +1,11 @@
 
 .reports-show.maxwidth
-  %h5 Report `#{@report.slug}`
+  %h5
+    = link_to '[~]', edit_report_path(@report)
+    Report #{link_to @report.title, report_path(@report)}
+    %br
+    `#{@report.slug}`
+    .gray.mini= @report.id
 
   .descr= raw @report.body
   -# %pre.descr= raw @report.body

@@ -6,12 +6,16 @@
 
   %ul
     - @reports.each do |ttt|
-      %li
+      %li.Card
         .flex-row
           = button_to '[x]', report_path(ttt), method: :delete, data: { confirm: 'Are you sure?' }
           = link_to '[~]', edit_report_path(ttt)
-          = link_to ttt.slug, report_path(ttt)
+          .a
+            = link_to ttt.title, report_path(ttt)
+            %br
+            `#{ttt.slug}`
+            .gray.mini= ttt.id
         .flex-row
-          <b>Tags (#{ttt.tags.length}):</b>&nbsp;
+
           = render '/wco/tags/index_inline', tags: ttt.tags
 

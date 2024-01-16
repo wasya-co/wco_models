@@ -20,7 +20,9 @@ class Wco::PublishersController < Wco::ApplicationController
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
 
-    @publisher.do_run binding
+    @publisher.props = OpenStruct.new( JSON.parse params[:publisher][:props] )
+    # @publisher.do_run binding
+    @publisher.do_run
 
     flash_notice "Probably ok"
 

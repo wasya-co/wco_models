@@ -1,5 +1,5 @@
 
-.sites-index.padded
+.sites-index.flexwidth
   %h5
     Sites
     = link_to '[+]', new_site_path
@@ -8,17 +8,17 @@
     %tr
       %th &nbsp;
       %th slug
-      %th kind
+      -# %th kind
       %th origin
-      %th post_path
+      -# %th post_path
     - @sites.each do |ttt|
       %tr
         %td
           .flex-row
             = button_to '[x]', site_path(ttt), method: :delete, data: { confirm: 'Are you sure?' }
             = link_to '[~]', edit_site_path(ttt)
-          = ttt.id
+            .gray.mini= ttt.id
         %td= ttt.slug
-        %td= ttt.kind
+        -# %td= ttt.kind
         %td= ttt.origin
-        %td= ttt.post_path
+        -# %td= ttt.post_path

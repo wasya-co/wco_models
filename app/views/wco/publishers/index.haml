@@ -1,5 +1,5 @@
 
-.publishers-index.padded
+.publishers-index.maxwidth
   %h5
     Publishers
     = link_to '[+]', wco.new_publisher_path
@@ -9,29 +9,26 @@
       %th &nbsp;
       %th
         slug
-        %br
+      %th
         site
       %th
-        context_eval
-        %br
-        post_body_eval
+        Run
     - @publishers.each do |item|
       %tr
         %td
           .flex-row
-            = button_to '[x]',   wco.publisher_path(item), method: :delete, data: { confirm: 'Are you sure?' }
+            = button_to 'x',   wco.publisher_path(item), method: :delete, data: { confirm: 'Are you sure?' }
             = link_to '[~]',     wco.edit_publisher_path(item)
-            = button_to '[run]', wco.do_run_publisher_path( item ), data: { confirm: 'Are you sure?' }
         %td
+          -# = link_to item.slug, publisher_path(item)
           = item.slug
-          %hr
-          = item.site.origin
         %td
-          %pre.monospace
-            = item.context_eval
-          %hr
-          %pre.monospace
-            = item.post_body_tmpl
-          %hr
-          %pre.monospace
-            = item.after_eval
+          = link_to '[~]', edit_site_path(item.site)
+          -# = link_to item.site.origin, site_path(item.site)
+          = item.site
+        %td
+          .Card
+            = form_for item, url: wco.run_publisher_path( item ), method: :post do |f|
+              %label props
+              = f.text_field :props, class: 'w-400px'
+              = f.submit 'run', data: { confirm: 'Are you sure?' }

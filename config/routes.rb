@@ -37,7 +37,7 @@ Wco::Engine.routes.draw do
   resources :prices
   resources :products
   resources :profiles
-  post 'publishers/:id/do-run', to: 'publishers#do_run', as: :do_run_publisher
+  post 'publishers/:id/do-run', to: 'publishers#do_run', as: :run_publisher
   resources :publishers
   resources :photos
 

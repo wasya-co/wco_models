@@ -3,6 +3,7 @@
   %ul
     - tags.each do |tag|
       %li
+        = link_to '[~]', edit_tag_path(tag)
         = link_to tag.slug, tag_path(tag)
         <b>N headlines:</b> #{tag.headlines.length}
         <b>N reports:</b> #{tag.reports.length}

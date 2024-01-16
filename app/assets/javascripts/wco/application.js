@@ -17,12 +17,13 @@
 //= require ./alerts-notices
 //= require ./collapse-expand
 //= require ./file_upload
+//= require ./office_action_templates
 //= require ./shared
 //
 
 $(function() {
 
-
+/* DataTable */
 if ('function' === typeof $('body').DataTable) {
   const _props = {
     dom: 'lpftrip',
@@ -33,16 +34,17 @@ if ('function' === typeof $('body').DataTable) {
       bSortable: false,
       aTargets: [ "nosort" ],
     } ],
-    order: [ 4, 'desc' ],
+    order: [], // [ 3, 'desc' ],
   }
   $('.data-table').DataTable(_props)
 }
 
+/* datepicker */
 if ('function' === typeof $('body').datepicker) {
   $(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' })
 }
 
-
+/* select2 */
 if (!!$('body').select2) {
   $('.select2').each(function() {
     $( this ).select2({
@@ -51,21 +53,13 @@ if (!!$('body').select2) {
   })
 }
 
-$('select[name="office_action_template[from_type]"]').on('change', (ev) => {
-  logg(ev.target.value, 'changed')
+/* tinymce */
+if ($(".tinymce").length > 0) {
+  $(".tinymce").summernote()
+}
 
-  // let url = window.location.href;
-  // if (url.indexOf('?') > -1){
-  //   url += `&from_type=${ev.target.value}`
-  // } else {
-  //   url += `?from_type=${ev.target.value}`
-  // }
-  // window.location.href = url;
 
-  const parser = new URL(window.location);
-  parser.searchParams.set('from_type', ev.target.value);
-  window.location = parser.href;
-})
+
 
 console.log('Loaded wco/application.js')
 }); // END

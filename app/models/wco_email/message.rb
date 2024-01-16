@@ -85,7 +85,7 @@ class WcoEmail::Message
       conv.tags.push   Wco::Tag.trash
       conv.tags -= [ Wco::Tag.inbox ]
       lead.schs.each do |sch|
-        sch.update_attributes({ state: ::Sch::STATE_TRASH })
+        sch.update_attributes!({ state: ::Sch::STATE_TRASH })
       end
 
     when WcoEmail::EmailFilter::KIND_ADD_TAG
@@ -105,7 +105,6 @@ class WcoEmail::Message
       })
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
-      # byebug
       out = Sch.create!({
         email_action_template: filter.email_action_template,
         status:                Sch::STATUS_ACTIVE,
@@ -117,7 +116,7 @@ class WcoEmail::Message
       raise "unknown filter kind: #{filter.kind}"
     end
 
-    conv.save
+    conv.save!
   end
 
   ## From: https://stackoverflow.com/questions/24672834/how-do-i-remove-emoji-from-string/24673322

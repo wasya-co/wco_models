@@ -134,7 +134,7 @@ FactoryBot.define do
   factory :publisher, class: 'Wco::Publisher' do
     slug { generate(:slug) }
 
-    factory :publisher_pi_local_report do
+    factory :publisher_pi_drup_prod_report do
       context_eval { <<~AOL
         @headers['Content-Type'] = 'application/hal+json'
         @report                  = Wco::Report.find @props[:report_id]
@@ -147,26 +147,16 @@ FactoryBot.define do
             "type":{"href":"<%= @site.origin %>/rest/type/node/article"}
           },
           "title":[{"value":"Test Au <%= @report.title.gsub('"', '\"')     %>" }],
-          "body":[{"value": "<%= @report.body.gsub('"', '\"')      %>", "format": "full_html" }],
-          "type":[{"target_id":"article"}],
-          "status": [{"value": 0}],
-          "field_image_thumb_url":[{"value": "https://wasyaco.com/wp-content/uploads/2024/01/200x200_gray.jpg" }],
-          "_embedded": {
-            "<%= @site.origin %>/rest/relation/node/article/field_issue": [
-              { "uuid": [{ "value": "56229a95-d675-43e1-99b1-f9e11b5579c5" }] }<% "2023q4 issue, a taxonomy item" %>
-            ],
-            "<%= @site.origin %>/rest/relation/node/article/field_tags": [
-              { "uuid": [{ "value": "e8a7dc02-27cf-478f-8b41-263801a8d4d3" }] }<% "Au tag, stands for automation" %>
-            ]
-          }
+          "body":[{"value": "<%= @report.body.gsub('"', '\"')      %>" }],
+          "type":[{"target_id":"article"}]
         }
         AOL
       }
-      slug { 'publish2-pi_drup_dev-report' }
+      slug { 'publish2-pi_drup_prod-report' }
 
       after :build do |doc|
-        pi_local = Wco::Site.where( origin: 'http://pi.local' ).first
-        pi_local ||= create( :pi_local )
+        pi_local = Wco::Site.where( origin: 'https://piousbox.com' ).first
+        pi_local ||= create( :pi_drup_prod )
         doc.site = pi_local
       end
     end
@@ -194,9 +184,9 @@ FactoryBot.define do
   factory :site, class: 'Wco::Site' do
     slug { generate(:slug) }
 
-    factory :pi_local do
-      origin   { 'http://pi.local' }
-      slug     { 'pi-drup-dev' }
+    factory :pi_drup_prod do
+      origin   { 'https://piousbox.com' }
+      slug     { 'pi-drup-prod' }
       username { PI_DRUP_PROD_USERNAME }
       password { PI_DRUP_PROD_PASSWD }
     end

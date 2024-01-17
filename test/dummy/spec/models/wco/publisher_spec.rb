@@ -8,7 +8,7 @@ RSpec.describe Wco::Publisher do
   end
 
   it '#do_run' do
-    publisher = create(:publisher_pi_local_report)
+    publisher = create(:publisher_pi_drup_prod_report)
     publisher.props = { report_id: @report.id.to_s }
     publisher.do_run
   end

@@ -42,11 +42,11 @@ class Wco::Publisher
       basic_auth: { username: @site.username, password: @site.password },
     })
     puts! out.response, 'out'
-    if out.code != 200
+    if out.code != 201
       raise "#do_run exception: #{out.body}"
     end
 
-    eval( after_eval )
+    eval( after_eval ) if after_eval.present?
   end
 
 

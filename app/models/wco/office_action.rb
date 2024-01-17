@@ -27,7 +27,15 @@ class Wco::OfficeAction
     sch = self
     sch.update!({ status: STATUS_INACTIVE })
 
-    eval( sch.tmpl.action_exe )
+    begin
+      eval( sch.tmpl.action_exe )
+    rescue => err
+      puts! err, "Wco::OfficeAction#do_run"
+      ::ExceptionNotifier.notify_exception(
+        err,
+        data: { office_action: self }
+      )
+    end
 
     # schedule next actions & update the action
     sch.tmpl.ties.each do |tie|

@@ -1,6 +1,6 @@
 
 
-RSpec.describe Wco::Tag, type: :model do
+RSpec.describe Wco::Tag do
 
   it 'sanity' do
     Wco::Tag.unscoped.map &:destroy!

@@ -131,10 +131,53 @@ FactoryBot.define do
     end
   end
 
+  factory :publisher, class: 'Wco::Publisher' do
+    slug { generate(:slug) }
+
+    factory :publisher_pi_local_report do
+      context_eval { <<~AOL
+        @headers['Content-Type'] = 'application/hal+json'
+        @report                  = Wco::Report.find @props[:report_id]
+        AOL
+      }
+      post_path { '/node?_format=hal_json' }
+      post_body_tmpl { <<~AOL
+        {
+          "_links": {
+            "type":{"href":"<%= @site.origin %>/rest/type/node/article"}
+          },
+          "title":[{"value":"Test Au <%= @report.title.gsub('"', '\"')     %>" }],
+          "body":[{"value": "<%= @report.body.gsub('"', '\"')      %>", "format": "full_html" }],
+          "type":[{"target_id":"article"}],
+          "status": [{"value": 0}],
+          "field_image_thumb_url":[{"value": "https://wasyaco.com/wp-content/uploads/2024/01/200x200_gray.jpg" }],
+          "_embedded": {
+            "<%= @site.origin %>/rest/relation/node/article/field_issue": [
+              { "uuid": [{ "value": "56229a95-d675-43e1-99b1-f9e11b5579c5" }] }<% "2023q4 issue, a taxonomy item" %>
+            ],
+            "<%= @site.origin %>/rest/relation/node/article/field_tags": [
+              { "uuid": [{ "value": "e8a7dc02-27cf-478f-8b41-263801a8d4d3" }] }<% "Au tag, stands for automation" %>
+            ]
+          }
+        }
+        AOL
+      }
+      slug { 'publish2-pi_drup_dev-report' }
+
+      after :build do |doc|
+        pi_local = Wco::Site.where( origin: 'http://pi.local' ).first
+        pi_local ||= create( :pi_local )
+        doc.site = pi_local
+      end
+    end
+
+  end
+
   ## R
 
   factory :report, class: 'Wco::Report' do
     title { generate(:name) }
+    body { "xx some-body xx" }
   end
 
   ## S
@@ -145,6 +188,17 @@ FactoryBot.define do
     factory :vbox1 do
       name { 'vbox1' }
       ssh_host { 'vbox1' }
+    end
+  end
+
+  factory :site, class: 'Wco::Site' do
+    slug { generate(:slug) }
+
+    factory :pi_local do
+      origin   { 'http://pi.local' }
+      slug     { 'pi-drup-dev' }
+      username { PI_DRUP_PROD_USERNAME }
+      password { PI_DRUP_PROD_PASSWD }
     end
   end
 

@@ -24,6 +24,12 @@ RSpec.configure do |config|
 
 end
 
+def destroy_every *args
+  args.each do |arg|
+    arg.unscoped.map &:destroy!
+  end
+end
+
 def setup_users
 
   User.all.destroy_all

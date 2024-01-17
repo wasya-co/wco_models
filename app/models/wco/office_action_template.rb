@@ -38,4 +38,4 @@ class Wco::OfficeActionTemplate
   end
 
 end
-OAT = Wco::OfficeActionTemplate
+OAT ||= Wco::OfficeActionTemplate

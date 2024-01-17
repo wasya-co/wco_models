@@ -44,4 +44,4 @@ class Wco::OfficeAction
     slug
   end
 end
-
+OA ||= Wco::OfficeAction

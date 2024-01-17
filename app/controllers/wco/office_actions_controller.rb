@@ -1,7 +1,4 @@
 
-OAT = Wco::OfficeActionTemplate
-OA  = Wco::OfficeAction
-
 class Wco::OfficeActionsController < Wco::ApplicationController
 
   before_action :set_lists

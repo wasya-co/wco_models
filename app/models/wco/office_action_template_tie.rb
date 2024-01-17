@@ -18,3 +18,4 @@ class Wco::OfficeActionTemplateTie
   validates :next_at_exe, presence: true
 
 end
+OATT ||= Wco::OfficeActionTemplateTie

@@ -1,12 +1,10 @@
 
 
-RSpec.describe Wco::Profile, type: :model do
+RSpec.describe Wco::Profile do
 
   it 'sanity' do
-    Wco::Profile.all.destroy_all
-
+    Wco::Profile.unscoped.map &:destroy!
     m = Wco::Profile.create( email: 'test@email.com' )
-
     m.persisted?.should eql true
   end
 

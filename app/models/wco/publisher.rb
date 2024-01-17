@@ -28,6 +28,7 @@ class Wco::Publisher
     @headers = {}
     @ctx     = OpenStruct.new
 
+    puts! context_eval, 'context_eval'
     eval( context_eval )
     puts! @ctx, '@ctx'
 
@@ -38,9 +39,12 @@ class Wco::Publisher
     out = Wco::HTTParty.post( "#{@site.origin}#{post_path}", {
       body: body.to_json,
       headers: @headers,
-      basic_auth: { username: site.username, password: site.password },
+      basic_auth: { username: @site.username, password: @site.password },
     })
     puts! out.response, 'out'
+    if out.code != 200
+      raise "#do_run exception: #{out.body}"
+    end
 
     eval( after_eval )
   end

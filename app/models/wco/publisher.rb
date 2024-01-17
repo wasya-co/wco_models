@@ -41,9 +41,17 @@ class Wco::Publisher
       headers: @headers,
       basic_auth: { username: @site.username, password: @site.password },
     })
-    puts! out.response, 'out'
+    puts! out.response, 'publisher httparty response'
+    puts! out.body,     'publisher httparty body'
     if out.code != 201
-      raise "#do_run exception: #{out.body}"
+      puts! out.body, "publisher#do_run non-201 status"
+      ::ExceptionNotifier.notify_exception(
+        Exception.new,
+        data: {
+          httparty_body: out.body,
+          httparty: out,
+          label: "publisher#do_run non-201 status",
+        } )
     end
 
     eval( after_eval ) if after_eval.present?

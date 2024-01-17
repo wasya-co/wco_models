@@ -3,6 +3,20 @@ class Wco::LeadsController < Wco::ApplicationController
 
   before_action :set_lists
 
+  def create
+    params[:lead][:tags].delete ''
+    params[:lead][:leadset] = nil if params[:lead][:leadset].blank?
+
+    @lead = Wco::Lead.new params[:lead].permit!
+    authorize! :crete, @lead
+    if @lead.save
+      flash_notice 'ok'
+    else
+      flash_alert @lead
+    end
+    redirect_to action: :index
+  end
+
   def index
     authorize! :index, Wco::Lead
     @leads = Wco::Lead.all
@@ -27,6 +41,11 @@ class Wco::LeadsController < Wco::ApplicationController
     @leads = @leads.page( params[:leads_page ] ).per( current_profile.per_page )
   end
 
+  def new
+    authorize! :new, Wco::Lead
+    @lead = Wco::Lead.new
+  end
+
   def show
     @lead      = Wco::Lead.where({ id: params[:id] }).first
     @lead    ||= Wco::Lead.where({ email: params[:id] }).first
@@ -44,6 +63,10 @@ class Wco::LeadsController < Wco::ApplicationController
     # @videos    = @lead.videos.page( params[:videos_page]       ).per( current_profile.per_page )
   end
 
+  def update
+    params[:tags].delete ''
+  end
+
   ##
   ## private
   ##
@@ -51,6 +74,7 @@ class Wco::LeadsController < Wco::ApplicationController
 
   def set_lists
     @email_campaigns_list = [[nil,nil]] + WcoEmail::Campaign.all.map { |c| [ c.slug, c.id ] }
+    @leadsets_list        = Wco::Leadset.list
     @tags_list            = Wco::Tag.list
   end
 

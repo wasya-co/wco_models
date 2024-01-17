@@ -22,4 +22,4 @@ def puts! a, b=''
   puts a.inspect
 end
 
-DEBUG = true
+DEBUG ||= true

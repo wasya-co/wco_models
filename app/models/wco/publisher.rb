@@ -52,6 +52,7 @@ class Wco::Publisher
           httparty: out,
           label: "publisher#do_run non-201 status",
         } )
+      raise out.body
     end
 
     eval( after_eval ) if after_eval.present?

@@ -29,7 +29,6 @@ class Wco::Lead
   has_many                :email_contexts,          class_name: '::WcoEmail::Context'
   def ctxs; email_contexts; end
   has_many                :email_actions,           class_name: '::WcoEmail::EmailAction'
-  # has_and_belongs_to_many :scheduled_email_actions, class_name: '::WcoEmail::ScheduledEmailAction'
   def schs; email_actions; end
   has_and_belongs_to_many :email_campaigns,         class_name: '::WcoEmail::Campaign'
   has_and_belongs_to_many :tags,                    class_name: '::Wco::Tag'
@@ -37,13 +36,9 @@ class Wco::Lead
   # has_many :galleries, class_name: 'Wco::Gallery'
   # has_many :videos, class_name: 'Wco::Video'
 
-  def self.list
-    [[nil,nil]] + all.map { |p| [ p.email, p.id ] }
-  end
-
-  OP_DELETE = 'delete'
+  OP_DELETE          = 'delete'
   OP_ADD_TO_CAMPAIGN = 'add_to_campaign'
-  OPS = [ OP_DELETE, OP_ADD_TO_CAMPAIGN ]
+  OPS                = [ OP_DELETE, OP_ADD_TO_CAMPAIGN ]
 
   has_many :unsubscribes, class_name: '::WcoEmail::Unsubscribe'
   field :unsubscribe_token
@@ -54,4 +49,10 @@ class Wco::Lead
     self[:unsubscribe_token]
   end
 
+  def to_s
+    email
+  end
+  def self.list
+    [[nil,nil]] + all.map { |p| [ p.email, p.id ] }
+  end
 end

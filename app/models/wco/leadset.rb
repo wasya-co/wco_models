@@ -50,5 +50,7 @@ class Wco::Leadset
   def to_s
     company_url
   end
-
+  def self.list
+    [[nil,nil]] + all.map { |ttt| [ ttt.company_url, ttt.id ] }
+  end
 end

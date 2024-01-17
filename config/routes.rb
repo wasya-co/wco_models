@@ -22,9 +22,10 @@ Wco::Engine.routes.draw do
   post 'invoices/:id/send-stripe',  to: 'invoices#send_stripe',        as: :send_invoice_stripe
   resources :invoices
 
-  get 'leads/:id',     to: 'leads#show', id: /[^\/]+/
+  get 'leads/new',     to: 'leads#new'
   post 'leads/bulkop', to: 'leads#bulkop'
   post 'leads/import', to: 'leads#import', as: :leads_import
+  get 'leads/:id',     to: 'leads#show', id: /[^\/]+/
   resources :leads
   resources :leadsets
   delete 'logs/bulkop', to: 'logs#bulkop', as: :logs_bulkop

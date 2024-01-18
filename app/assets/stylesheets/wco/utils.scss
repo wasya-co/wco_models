@@ -123,8 +123,12 @@ textarea.monospace {
 }
 
 /* H */
-h5.title {
+.header {
   display: flex;
+
+  h5.title {
+    display: flex;
+  }
 }
 
 .h-500px {

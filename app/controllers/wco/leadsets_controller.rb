@@ -37,7 +37,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
     authorize! :index, Leadset
     @leadsets = Leadset.all.includes(:leads)
     if params[:q].present?
-      @leadsets = @leadsets.where(" company_url LIKE ? ", "%#{params[:q]}%" )
+      @leadsets = @leadsets.where({ company_url: /.*#{params[:q]}.*/i })
       if @leadsets.length == 1
         return redirect_to action: :show, id: @leadsets[0][:id]
       end

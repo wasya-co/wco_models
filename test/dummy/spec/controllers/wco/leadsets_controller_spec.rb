@@ -4,17 +4,21 @@ RSpec::describe Wco::LeadsetsController do
   routes { Wco::Engine.routes }
 
   before do
-    User.unscoped.map &:destroy!
-    Wco::Profile.unscoped.map &:destroy!
-    Wco::Leadset.unscoped.map &:destroy!
-    @user = create( :user, email: 'piousbox@gmail.com' )
-    sign_in @user
+    destroy_every( Wco::Leadset )
+    setup_users
   end
 
   it '#edit' do
     leadset = create(:leadset)
     get :edit, params: { id: leadset.id }
     response.code.should eql '200'
+  end
+
+  describe '#index' do
+    it 'search' do
+      get :index, params: { q: 'class' }
+      response.code.should eql '200'
+    end
   end
 
 end

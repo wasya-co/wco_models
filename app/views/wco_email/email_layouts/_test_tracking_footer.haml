@@ -1,0 +1,12 @@
+
+
+= @renderer.render( inline: @ctx.body )
+
+- if @ctx.reply_to_message
+  %br
+  %br
+  .mini Your previous message is shown below.
+  %hr
+  = raw @ctx.reply_to_message.part_html_sanitized
+
+= render '/wco_email/email_templates/tracking_footer'

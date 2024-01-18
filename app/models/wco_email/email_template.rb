@@ -31,7 +31,7 @@ class WcoEmail::EmailTemplate
     marketing_wordpress_2
     piousbox_roundborders
     plain
-    tracking_footer
+    test_tracking_footer
     wasyaco_roundborders |
 
   field :subject

@@ -50,6 +50,8 @@ Wco::Engine.routes.draw do
 
   resources :tags
 
+  resources :unsubscribes
+
   resources :videos
 
 end

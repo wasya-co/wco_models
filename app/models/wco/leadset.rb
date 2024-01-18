@@ -8,6 +8,10 @@ class Wco::Leadset
   field     :company_url
   validates :company_url, presence: true, uniqueness: true
   index({ company_url: 1 }, { unique: true, name: 'company_url' })
+  before_validation :normalize_company_url, on: :create
+  def normalize_company_url
+    company_url.downcase!
+  end
 
   field :email
   index({ email: 1 }, { name: 'email' })

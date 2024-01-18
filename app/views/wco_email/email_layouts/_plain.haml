@@ -1,0 +1,18 @@
+
+-# %ul
+-#   %li= @lead.inspect
+-#   %li= @ctx.tmpl.inspect
+-#   %li= @ctx.reply_to_message.inspect
+-#   %li= @renderer.inspect
+
+= @renderer.render( inline: @ctx.body )
+
+-# = @ctx.utm_tracking_str
+-# = @ctx.unsubscribe_url
+
+- if @ctx.reply_to_message
+  %br
+  %br
+  .mini Your previous message is shown below.
+  %hr
+  = raw @ctx.reply_to_message.part_html_sanitized

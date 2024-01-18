@@ -56,6 +56,7 @@ FactoryBot.define do
   end
 
   factory :email_context, class: 'WcoEmail::Context' do
+    subject { 'xx test-subject xx' }
   end
 
   factory :email_conversation, class: 'WcoEmail::Conversation' do

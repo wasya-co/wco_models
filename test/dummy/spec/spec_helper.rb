@@ -24,6 +24,12 @@ RSpec.configure do |config|
 
 end
 
+class EmailDeliveryObserver
+  def self.delivered_email(message)
+    puts! message, 'EmailDeliveryObserver'
+  end
+end
+
 def destroy_every *args
   args.each do |arg|
     arg.unscoped.map &:destroy!

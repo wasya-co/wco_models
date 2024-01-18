@@ -123,7 +123,7 @@ class WcoEmail::Context
   end
 
   def unsubscribe_url
-    WcoEmail::Engine.routes.url_helpers.unsubscribes_url({
+    Wco::Engine.routes.url_helpers.unsubscribes_url({
       host:        Rails.application.routes.default_url_options[:host],
       lead_id:     lead_id,
       template_id: tmpl.id,

@@ -6,15 +6,6 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
 
   layout 'mailer'
 
-  def self.renderer ctx:
-    out = self.new
-    out.instance_variable_set( :@ctx,              ctx )
-    out.instance_variable_set( :@lead,             ctx.lead )
-    out.instance_variable_set( :@utm_tracking_str, ctx.utm_tracking_str )
-    out.instance_variable_set( :@unsubscribe_url,  ctx.unsubscribe_url )
-    out.instance_variable_set( :@config,           ctx.config )
-    return out
-  end
 
   def forwarder_notify msg_id
     @msg = WcoEmail::Message.find msg_id
@@ -53,13 +44,11 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     mail( to: DEFAULT_RECIPIENT, subject: "Test email at #{Time.now}" )
   end
 
-  ## 2023-04-02 _vp_ Continue.
-  ## 2023-09-24 _vp_ Continue : )
-  ## 2024-01-17 _vp_ Continue : )
+
   def send_context_email ctx_id
     @ctx         = Ctx.find ctx_id
-    renderer     = self.class.renderer ctx: @ctx
-    rendered_str = renderer.render_to_string("/wco_email/email_templates/_#{@ctx.tmpl.layout}")
+    @renderer    = self.class.renderer ctx: @ctx
+    rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
     @ctx.update({
       rendered_str: rendered_str,
     })
@@ -71,6 +60,18 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
           subject: ERB.new( @ctx.subject ).result( @ctx.get_binding ),
           body:    rendered_str,
           content_type: "text/html" )
+  end
+
+
+  def self.renderer ctx:
+    out = self.new
+    out.instance_variable_set( :@ctx,              ctx )
+    out.instance_variable_set( :@lead,             ctx.lead )
+    out.instance_variable_set( :@utm_tracking_str, ctx.utm_tracking_str )
+    out.instance_variable_set( :@unsubscribe_url,  ctx.unsubscribe_url )
+    out.instance_variable_set( :@config,           ctx.config )
+    out.instance_variable_set( :@renderer,         out )
+    return out
   end
 
 end

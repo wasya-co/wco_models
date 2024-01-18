@@ -5,6 +5,7 @@ require "active_support/core_ext/integer/time"
 # your test database is "scratch space" for the test suite and is wiped
 # and recreated between test runs. Don't rely on the data there!
 
+Rails.application.routes.default_url_options[:host] = "email.local:3004"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -53,4 +54,9 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  ## From: https://guides.rubyonrails.org/action_mailer_basics.html#mailer-testing
+  # config.action_mailer.interceptors = %w[SandboxEmailInterceptor]
+  config.action_mailer.observers = %w[EmailDeliveryObserver]
+
 end

@@ -19,6 +19,16 @@ class Wco::Lead
     domain         = email.split('@')[1]
     self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: domain })
   end
+  before_validation :normalize_email, on: :create
+  def normalize_email
+    self[:email] = email.downcase
+    if email.index('+')
+      a = email
+      a.slice!( a[a.index('+')...a.index('@')] )
+      self[:email] = a
+    end
+  end
+
 
   has_one :photo,      class_name: 'Wco::Photo'
 

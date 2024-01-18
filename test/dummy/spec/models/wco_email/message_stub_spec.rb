@@ -9,8 +9,7 @@ RSpec.describe WcoEmail::MessageStub do
 
   context '#do_process' do
     before do
-      WcoEmail::MessageStub.unscoped.map &:destroy!
-      WcoEmail::EmailFilter.unscoped.map &:destroy!
+      destroy_every( Wco::Lead, Wco::Leadset, WcoEmail::MessageStub, WcoEmail::EmailFilter )
     end
 
     it 'applies filters' do

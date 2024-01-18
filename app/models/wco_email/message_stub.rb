@@ -87,8 +87,8 @@ class WcoEmail::MessageStub
     ## Leadset, Lead
     from      = the_mail.from ? the_mail.from[0] : "nobody@unknown-doma.in"
     domain    = from.split('@')[1]
-    leadset   = Wco::Leadset.where(  company_url: domain ).first
-    leadset ||= Wco::Leadset.create( company_url: domain, email: from )
+    leadset   = Wco::Leadset.where(  company_url: domain.downcase ).first
+    leadset ||= Wco::Leadset.create( company_url: domain.downcase, email: from.downcase )
     lead      = Wco::Lead.find_or_create_by( email: from, leadset: leadset )
 
 
@@ -151,7 +151,6 @@ class WcoEmail::MessageStub
     if !@message.save
       puts! @message.errors.full_messages.join(", "), "Could not save @message"
     end
-
 
     conv.leads.push lead
     conv.save

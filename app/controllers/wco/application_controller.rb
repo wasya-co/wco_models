@@ -10,6 +10,12 @@ class Wco::ApplicationController < ActionController::Base
     authorize! :home, Wco
   end
 
+  def tinymce
+    authorize! :home, Wco
+    render layout: false
+  end
+
+
   ##
   ## private
   ##

@@ -6,6 +6,15 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
 
   layout 'mailer'
 
+  def self.renderer ctx:
+    out = self.new
+    out.instance_variable_set( :@ctx,              ctx )
+    out.instance_variable_set( :@lead,             ctx.lead )
+    out.instance_variable_set( :@utm_tracking_str, ctx.utm_tracking_str )
+    out.instance_variable_set( :@unsubscribe_url,  ctx.unsubscribe_url )
+    out.instance_variable_set( :@config,           ctx.config )
+    return out
+  end
 
   def forwarder_notify msg_id
     @msg = WcoEmail::Message.find msg_id
@@ -46,32 +55,10 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
 
   ## 2023-04-02 _vp_ Continue.
   ## 2023-09-24 _vp_ Continue : )
+  ## 2024-01-17 _vp_ Continue : )
   def send_context_email ctx_id
     @ctx         = Ctx.find ctx_id
-    @lead        = Wco::Lead.find @ctx.lead_id
-    @tmpl_config = OpenStruct.new JSON.parse( @ctx.tmpl[:config_json] )
-
-    @utm_tracking_str = {
-      'cid'          => @ctx.lead_id,
-      'utm_campaign' => @ctx.tmpl.slug,
-      'utm_medium'   => 'email',
-      'utm_source'   => @ctx.tmpl.slug,
-    }.map { |k, v| "#{k}=#{v}" }.join("&")
-
-    @unsubscribe_url = WcoEmail::Engine.routes.url_helpers.unsubscribes_url({
-      template_id: @ctx.tmpl.id,
-      lead_id:     @lead.id,
-      token:       @lead.unsubscribe_token,
-      host:        Rails.application.routes.default_url_options[:host],
-    })
-    renderer = WcoEmail::ApplicationMailer.new
-
-    renderer.instance_variable_set( :@ctx,              @ctx )
-    renderer.instance_variable_set( :@lead,             @ctx.lead )
-    renderer.instance_variable_set( :@utm_tracking_str, @utm_tracking_str )
-    renderer.instance_variable_set( :@unsubscribe_url,  @unsubscribe_url )
-    renderer.instance_variable_set( :@tmpl_config,      @tmpl_config )
-
+    renderer     = self.class.renderer ctx: @ctx
     rendered_str = renderer.render_to_string("/wco_email/email_templates/_#{@ctx.tmpl.layout}")
     @ctx.update({
       rendered_str: rendered_str,

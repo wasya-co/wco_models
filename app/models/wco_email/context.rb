@@ -24,6 +24,7 @@ class WcoEmail::Context
   end
 
   field :body
+  ## Looks good... 2024-01-17
   def body
     if self[:body].presence
       return self[:body]
@@ -91,14 +92,9 @@ class WcoEmail::Context
   attr_reader :tid
 
   def get_binding
-    @lead = lead()
-    @utm_tracking_str = {
-      'cid'          => lead.id,
-      'utm_campaign' => tmpl.slug,
-      'utm_medium'   => 'email',
-      'utm_source'   => tmpl.slug,
-    }.map { |k, v| "#{k}=#{v}" }.join("&")
-    eval( tmpl.config_exe )
+    @lead             = lead
+    @utm_tracking_str = utm_tracking_str
+    # eval( tmpl.config_exe ) ## @TODO: remove? 2024-01-17
     binding()
   end
 
@@ -111,6 +107,28 @@ class WcoEmail::Context
     ]
     outs = WcoEmail::EmailContext.collection.aggregate( pipeline )
     outs.to_a
+  end
+
+  def config
+    OpenStruct.new JSON.parse( tmpl[:config_json] )
+  end
+
+  def utm_tracking_str
+    {
+      'cid'          => lead_id,
+      'utm_campaign' => tmpl.slug,
+      'utm_medium'   => 'email',
+      'utm_source'   => tmpl.slug,
+    }.map { |k, v| "#{k}=#{v}" }.join("&")
+  end
+
+  def unsubscribe_url
+    WcoEmail::Engine.routes.url_helpers.unsubscribes_url({
+      host:        Rails.application.routes.default_url_options[:host],
+      lead_id:     lead_id,
+      template_id: tmpl.id,
+      token:       lead.unsubscribe_token,
+    })
   end
 
 end

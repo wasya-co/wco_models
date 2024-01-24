@@ -32,6 +32,13 @@ class WcoEmail::Context
       return tmpl&.body || ''
     end
   end
+  before_validation :clear_body
+  def clear_body
+    tmp = ActionView::Base.full_sanitizer.sanitize body
+    if tmp.blank?
+      self[:body] = nil
+    end
+  end
 
 
   field :from_email

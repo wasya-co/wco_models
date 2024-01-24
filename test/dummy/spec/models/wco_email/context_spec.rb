@@ -2,11 +2,22 @@
 RSpec.describe WcoEmail::Context do
 
   before do
-    WcoEmail::Context.unscoped.map &:destroy!
-    WcoEmail::EmailTemplate.unscoped.map &:destroy!
+    destroy_every(
+      Wco::Lead,
+      WcoEmail::Context,
+      WcoEmail::EmailTemplate,
+    );
     @tmpl = create( :email_template )
-    Wco::Lead.unscoped.map &:destroy!
     @lead = create( :lead )
+  end
+
+  context 'callbacks' do
+    it 'clears empty body' do
+      @ctx = build( :email_context, body: "<p><br /></p>", lead: @lead, email_template: @tmpl )
+      @ctx.save
+      @ctx.reload
+      @ctx.body.should eql '' # after two fallbacks (thru template), the body is empty string.
+    end
   end
 
   it '#scheduled' do

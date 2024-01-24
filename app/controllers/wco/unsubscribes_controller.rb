@@ -1,6 +1,6 @@
 
 
-class Wco::UnsubscribesController < WcoEmail::ApplicationController
+class Wco::UnsubscribesController < Wco::ApplicationController
 
   def create
     authorize! :open_permission, Wco

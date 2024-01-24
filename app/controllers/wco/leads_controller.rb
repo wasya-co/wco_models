@@ -8,13 +8,18 @@ class Wco::LeadsController < Wco::ApplicationController
     params[:lead][:leadset] = nil if params[:lead][:leadset].blank?
 
     @lead = Wco::Lead.new params[:lead].permit!
-    authorize! :crete, @lead
+    authorize! :create, @lead
     if @lead.save
       flash_notice 'ok'
     else
       flash_alert @lead
     end
     redirect_to action: :index
+  end
+
+  def edit
+    authorize! :edit, Wco::Lead
+    @lead = Wco::Lead.find params[:id]
   end
 
   def index
@@ -64,7 +69,17 @@ class Wco::LeadsController < Wco::ApplicationController
   end
 
   def update
-    params[:tags].delete ''
+    params[:lead][:tags].delete ''
+    params[:lead][:leadset] = nil if params[:lead][:leadset].blank?
+
+    @lead = Wco::Lead.new params[:lead].permit!
+    authorize! :update, @lead
+    if @lead.save
+      flash_notice 'ok'
+    else
+      flash_alert @lead
+    end
+    redirect_to action: :show, id: @lead.id
   end
 
   ##

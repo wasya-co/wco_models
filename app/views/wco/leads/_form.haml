@@ -19,7 +19,7 @@
 
   .field
     = f.label "Leadset (company)"
-    = f.select :leadset, options_for_select(@leadsets_list, selected: lead.leadset_id), { class: :select2 }
+    = f.select :leadset, options_for_select(@leadsets_list, selected: lead.leadset_id), {}, { class: :select2 }
 
   -# .field
   -#   %label Rating

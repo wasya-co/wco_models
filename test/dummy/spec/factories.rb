@@ -110,6 +110,7 @@ FactoryBot.define do
 
   factory :message_stub, class: 'WcoEmail::MessageStub' do
     object_key { generate('object_key') }
+    config { { process_images: false }.to_json }
   end
 
   ## P

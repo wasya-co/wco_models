@@ -86,17 +86,13 @@ class WcoEmail::MessageStub
 
     ## Leadset, Lead
     from      = the_mail.from ? the_mail.from[0] : "nobody@unknown-doma.in"
-    domain    = from.split('@')[1]
-    leadset   = Wco::Leadset.where(  company_url: domain.downcase ).first
-    leadset ||= Wco::Leadset.create( company_url: domain.downcase, email: from.downcase )
-    lead      = Wco::Lead.find_or_create_by( email: from, leadset: leadset )
-
+    lead      = Wco::Lead.find_or_create_by_email( from )
 
     message   = WcoEmail::Message.unscoped.where( message_id: message_id ).first
     if message
       message.message_id = "#{Time.now.strftime('%Y%m%d')}-trash-#{message.message_id}"
       message.object_key = "#{Time.now.strftime('%Y%m%d')}-trash-#{message.object_key}"
-      message.save!( validate: false )
+      message.save( validate: false )
       message.delete
     end
 
@@ -119,7 +115,7 @@ class WcoEmail::MessageStub
       tos: the_mail.to,
 
       cc:  the_mail.cc ? the_mail.cc[0] : nil,
-      ccs:  the_mail.cc,
+      ccs: the_mail.cc,
     })
     puts! @message, '@message'
 
@@ -156,9 +152,7 @@ class WcoEmail::MessageStub
     conv.save
 
     the_mail.cc&.each do |cc|
-      domain  = cc.split('@')[1] rescue 'unknown.domain'
-      leadset = Wco::Leadset.find_or_create_by( company_url: domain )
-      Wco::Lead.find_or_create_by( email: cc, leadset: leadset )
+      Wco::Lead.find_or_create_by_email( cc )
     end
 
     conv.update_attributes({

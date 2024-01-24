@@ -15,6 +15,17 @@ RSpec.describe Wco::Lead do
     Wco::Leadset.all.length.should eql 1
   end
 
+  it '#find_or_create_by_email' do
+    email = 'sOmE@eMaIl.com'
+    n = Wco::Lead.all.length
+    n.should eql 0
+    one = Wco::Lead.find_or_create_by_email( email )
+    Wco::Lead.all.length.should eql 1
+    one = Wco::Lead.find_or_create_by_email( email )
+    Wco::Lead.all.length.should eql 1
+  end
+
+
 end
 
 

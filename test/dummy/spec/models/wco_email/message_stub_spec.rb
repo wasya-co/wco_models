@@ -24,7 +24,9 @@ RSpec.describe WcoEmail::MessageStub do
         filter = create( :email_filter, filter_param )
         expect_any_instance_of( WcoEmail::Message ).to receive( :apply_filter ).exactly(1).times.with( filter )
       end
-      stub   = create( :message_stub, bucket: 'ish-test-2024', object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
+      stub   = create( :message_stub,
+        bucket: 'ish-test-2024',
+        object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
       stub.do_process
     end
 

@@ -28,6 +28,24 @@ class Wco::Lead
       self[:email] = a
     end
   end
+  def self.normalize_email a
+    a = a.downcase
+    if a.index('+')
+      a.slice!( a[a.index('+')...a.index('@')] )
+    end
+    return a
+  end
+  def self.find_or_create_by_email email
+    email = self.normalize_email email
+    out = where( email: email ).first
+    if !out
+      domain    = email.split('@')[1]
+      leadset   = Wco::Leadset.where(  company_url: domain ).first
+      leadset ||= Wco::Leadset.create( company_url: domain, email: email )
+      out = create!( email: email, leadset: leadset )
+    end
+    return out
+  end
 
 
   has_one :photo,      class_name: 'Wco::Photo'

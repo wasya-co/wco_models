@@ -49,8 +49,9 @@ class WcoEmail::MessageStub
     })
     stub = self
 
-    raw                = @client.get_object( bucket: stub.bucket, key: stub.object_key ).body.read
-    the_mail           = Mail.new( raw )
+    raw      = @client.get_object( bucket: stub.bucket, key: stub.object_key ).body.read
+    raw      = raw.encode('utf-8', invalid: :replace, undef: :replace, replace: '_' )
+    the_mail = Mail.new( raw )
 
     message_id         = the_mail.header['message-id']&.decoded
     message_id       ||= "#{the_mail.date&.iso8601}::#{the_mail.from}"

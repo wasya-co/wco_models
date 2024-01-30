@@ -23,17 +23,17 @@ class Wco::ProductsController < Wco::ApplicationController
   end
 
   def destroy
-    authorize! :destroy, Wco::Product
-    # product = Wco::Product.find params[:id]
+    @product = Wco::Product.find params[:id]
+    authorize! :destroy, @product
 
-    flag = Stripe::Product.delete( params[:id] )
-    # puts! flag, 'flag'
-    flash[:notice] = flag
-    # if product.destroy
-    #   flash[:notice] = 'Success'
-    # else
-    #   flash[:alert] = "Cannot destroy product: #{product.errors.fill_messages.join(', ')}."
-    # end
+    # flag = Stripe::Product.delete( @product.product_id ) if @product.product_id.present?
+    # flash_notice "Delete stripe product: #{flag}"
+
+    if @product.destroy
+      flash_notice 'Deleted Wco::Product'
+    else
+      flash_alert "Cannot destroy product: #{@product.errors.fill_messages.join(', ')}."
+    end
     redirect_to action: :index
   end
 
@@ -82,6 +82,10 @@ class Wco::ProductsController < Wco::ApplicationController
   def show
     authorize! :show, @product
     @product = Wco::Product.find params[:id]
+    respond_to do |format|
+      format.html
+      format.json { render 'show.jbuilder', layout: false }
+    end
   end
 
   def update

@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.95"
+  spec.version     = "3.1.0.96"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -30,6 +30,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'devise',    "~> 4.9.3"
   spec.add_dependency 'droplet_kit', "~> 3.20.0"
+
+  spec.add_dependency "jbuilder", "~> 2.11.5"
 
   spec.add_dependency "haml",       "~> 6.3.0"
   spec.add_dependency "httparty"

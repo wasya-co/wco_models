@@ -13,10 +13,12 @@ class Wco::Product
 
   has_many :subscriptions, as: :product
 
+  def to_s
+    name
+  end
   def self.list
     [ [nil,nil] ] + self.all.order_by({ name: :asc }).map { |i| [i.name, i.id] }
   end
-
 end
 
 

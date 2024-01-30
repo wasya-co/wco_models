@@ -13,11 +13,6 @@ class Wco::Price
 
   field :amount_cents, type: Integer
 
-  def to_s
-    price = self
-    "$#{ price[:amount_cents].to_f/100 }/#{ price.interval||'onetime' }"
-  end
-
   INTERVAL_DAY   = 'day'
   INTERVAL_WEEK  = 'week'
   INTERVAL_MONTH = 'month'
@@ -27,10 +22,13 @@ class Wco::Price
 
   field :price_id   # stripe
 
+  def to_s
+    price = self
+    "$#{ price[:amount_cents].to_f/100 }/#{ price.interval||'onetime' }"
+  end
   def self.list
     [[nil,nil]] + all.map { |p| [ "#{p.product.name} :: #{p.amount_cents.to_f/100}/#{p.interval||'onetime'}", p.id ] }
   end
-
 end
 
 

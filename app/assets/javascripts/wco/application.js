@@ -14,11 +14,13 @@
 //
 // require select2
 //
-//= require ./alerts-notices
-//= require ./collapse-expand
-//= require ./file_upload
-//= require ./office_action_templates
+// require ./alerts-notices
+// require ./collapse-expand
+// require ./file_upload
+// require ./office_action_templates
+//
 //= require ./shared
+//= require_tree .
 //
 
 $(function() {

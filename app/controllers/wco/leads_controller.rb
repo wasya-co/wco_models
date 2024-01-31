@@ -54,12 +54,12 @@ class Wco::LeadsController < Wco::ApplicationController
   def show
     @lead      = Wco::Lead.where({ id: params[:id] }).first
     @lead    ||= Wco::Lead.where({ email: params[:id] }).first
+    authorize! :show, @lead
     if !@lead
       flash_alert "This lead does not exist"
       redirect_to request.referrer
       return
     end
-    authorize! :show, @lead
     # @schs      = Sch.where( lead_id: @lead.id )
     # @ctxs      = Ctx.where( lead_id: @lead.id )
     # @convs     = Conv.find( Office::EmailConversationLead.where( lead_id: @lead.id ).map( &:email_conversation_id ) )

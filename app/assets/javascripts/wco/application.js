@@ -12,8 +12,6 @@
 //= require vendor/jquery.fileupload
 //= require vendor/jquery-ui.min
 //
-// require select2
-//
 // require ./alerts-notices
 // require ./collapse-expand
 // require ./file_upload

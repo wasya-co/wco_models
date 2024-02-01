@@ -67,10 +67,14 @@ class WcoHosting::ApplianceTmpl
 
   has_many :subscriptions, as: :product, class_name: 'Wco::Subscription'
 
+  field :product_id # stripe
+
   # belongs_to :price, class_name: 'Wco::Price', foreign_key: :wco_price_id
   has_one :price, as: :product, class_name: 'Wco::Price'
   field :price_id # stripe
 
-
+  def to_s
+    "#{kind}-#{version}"
+  end
 end
 AppTmpl = WcoHosting::ApplianceTmpl

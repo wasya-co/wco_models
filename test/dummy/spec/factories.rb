@@ -183,7 +183,7 @@ FactoryBot.define do
     name { generate(:name) }
 
     factory :vbox1 do
-      name { 'vbox1' }
+      name     { 'vbox1' }
       ssh_host { 'vbox1' }
     end
   end

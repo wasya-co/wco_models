@@ -79,6 +79,11 @@ class Wco::ProductsController < Wco::ApplicationController
 
   end
 
+  def new
+    @product = Wco::Product.new
+    authorize! :new, @product
+  end
+
   def show
     authorize! :show, @product
     @product = Wco::Product.find params[:id]

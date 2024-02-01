@@ -85,6 +85,11 @@ FactoryBot.define do
     slug { generate('slug') }
   end
 
+  ## I
+
+  factory :invoice, class: 'Wco::Invoice' do
+  end
+
   ## L
 
   factory :lead, class: 'Wco::Lead' do
@@ -217,6 +222,9 @@ FactoryBot.define do
   end
 
   ## U
+
+  factory :unsubscribe, class: 'WcoEmail::Unsubscribe' do
+  end
 
   factory :user do
     email    { generate(:email) }

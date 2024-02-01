@@ -1,5 +1,5 @@
 
-
+## In order to have unsubscribes_url , unsubscribes must be in wco .
 class Wco::UnsubscribesController < Wco::ApplicationController
 
   def create

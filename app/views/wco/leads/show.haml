@@ -42,7 +42,7 @@
         - @lead.ctxs.each do |ctx|
           %li
             = pp_date( ctx.sent_at ) || 'not sent'
-            = link_to ctx.subject.presence||"No Subj?!", email_context_path(ctx)
+            = link_to ctx.subject.presence||"No Subj?!", context_path(ctx)
 
     .col-md-6.schs
       %h5

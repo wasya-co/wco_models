@@ -140,10 +140,10 @@ class WcoEmail::MessageStub
       @message.save
     end
 
-    ## Attachments
-    the_mail.attachments.each do |att|
-      @message.save_attachment( att )
-    end
+    ## Attachments, which are parts (omit!)
+    # the_mail.attachments.each do |att|
+    #   @message.save_attachment( att )
+    # end
 
     if !@message.save
       puts! @message.errors.full_messages.join(", "), "Could not save @message"

@@ -1,4 +1,4 @@
 
 .unsubscrives--header
-  = link_to "Unsubscribes (#{WcoEmail::Unsubscribe.all.length})", unsubscribes_path
-  = link_to '[analytics]', analytics_path
+  = link_to "Unsubscribes (#{WcoEmail::Unsubscribe.all.length})", wco.unsubscribes_path
+  = link_to '[analytics]', wco.unsubscribes_analytics_path

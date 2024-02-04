@@ -34,8 +34,10 @@
           %th Phone, address
           %th Tag
           %th created_at
-          %th.ctxs Ctxs
-          %th Sch
+
+          - if defined?( wco_email )
+            %th.convs Convs
+            %th Sch
 
       %tbody
         - leads.each do |lead|
@@ -53,19 +55,24 @@
               .a= lead.address if lead.address.present?
             %td
             %td= lead.created_at.to_s[0..10]
-            %td.ctxs
-              = lead.email_contexts.length
-              -## without the N+1 but unfinished and messy:
-              -# = email_contexts[lead.id] || '-'
 
-            %td.sch
-              = lead.email_actions.length
-              = link_to '[+]', wco_email.new_email_action_path( lead_id: lead.id )
-              -# %ul
-              -#   - lead.scheduled_email_actions.map do |sch_a|
-              -#     %li
-              -#       = link_to sch_a.email_action.slug, edit_scheduled_email_action_path( sch_a )
-              -#       [x]
+
+            - if defined?( wco_email )
+              %td.convs
+                - if lead.conversations.length > 0
+                  = link_to lead.conversations.length, wco_email.conversations_path( lead_id: lead.id )
+                - else
+                  0
+                -## without the N+1 but unfinished and messy:
+                -# = email_contexts[lead.id] || '-'
+              %td.sch
+                = lead.email_actions.length
+                = link_to '[+]', wco_email.new_email_action_path( lead_id: lead.id )
+                -# %ul
+                -#   - lead.scheduled_email_actions.map do |sch_a|
+                -#     %li
+                -#       = link_to sch_a.email_action.slug, edit_scheduled_email_action_path( sch_a )
+                -#       [x]
 
     - if !defined?( skip_pagination ) || !skip_pagination
       = paginate leads, param_name: :leads_page

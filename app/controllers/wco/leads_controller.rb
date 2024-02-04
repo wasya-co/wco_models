@@ -26,9 +26,11 @@ class Wco::LeadsController < Wco::ApplicationController
     authorize! :index, Wco::Lead
     @leads = Wco::Lead.all
 
-    # if params[:q].present?
-    #   @leads = @leads.where(" email LIKE ? or name LIKE ? ", "%#{params[:q]}%", "%#{params[:q]}%" )
-    # end
+    if params[:q].present?
+      @leads = @leads.any_of(
+        { email: /#{params[:q].downcase}/i },
+        { name:  /#{params[:q].downcase}/i } )
+    end
 
     # if params[:q_tag_ids].present?
     #   carry = nil

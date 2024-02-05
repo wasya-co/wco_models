@@ -126,6 +126,10 @@ textarea.monospace {
 .header {
   display: flex;
 
+  > * {
+    padding-right: 0.2em;
+  }
+
   h5.title {
     display: flex;
   }

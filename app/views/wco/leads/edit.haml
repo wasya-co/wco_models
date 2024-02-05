@@ -1,7 +1,9 @@
 
 .leads-edit.maxwidth
   .header
-    %h5.title Edit lead #{ link_to @lead.name, lead_path(@lead) }
+    %h5.title
+      Edit lead
+    #{ link_to @lead, lead_path(@lead) }
 
   = render 'form', :lead => @lead
 

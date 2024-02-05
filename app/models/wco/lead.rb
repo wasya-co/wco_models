@@ -78,7 +78,7 @@ class Wco::Lead
   end
 
   def to_s
-    email
+    "#{name} <#{email}>"
   end
   def self.list
     [[nil,nil]] + all.map { |p| [ p.email, p.id ] }

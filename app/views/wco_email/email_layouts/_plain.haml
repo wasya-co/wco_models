@@ -13,6 +13,7 @@
 - if @ctx.reply_to_message
   %br
   %br
-  .mini Your previous message is shown below.
+  %br
+  .mini{ style: "font-size: 0.7em; color: gray; text-align: right" } Your previous message is shown below.
   %hr
   = raw @ctx.reply_to_message.part_html_sanitized

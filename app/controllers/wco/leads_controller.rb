@@ -72,13 +72,14 @@ class Wco::LeadsController < Wco::ApplicationController
 
   def update
     params[:lead][:tags].delete ''
-    params[:lead][:leadset] = nil if params[:lead][:leadset].blank?
+    params[:lead].delete :leadset if params[:lead][:leadset].blank?
 
-    @lead = Wco::Lead.new params[:lead].permit!
+    @lead = Wco::Lead.find params[:id]
     authorize! :update, @lead
-    if @lead.save
+    if @lead.update params[:lead].permit!
       flash_notice 'ok'
     else
+      puts! @lead.errors.full_messages.join(", "), 'cannot update lead'
       flash_alert @lead
     end
     redirect_to action: :show, id: @lead.id

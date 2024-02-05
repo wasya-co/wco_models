@@ -4,7 +4,7 @@ RSpec::describe Wco::LeadsController do
   routes { Wco::Engine.routes }
 
   before do
-    destroy_every( Wco::Lead )
+    destroy_every( Wco::Lead, Wco::Leadset )
     @lead = create( :lead )
 
     setup_users
@@ -37,6 +37,14 @@ RSpec::describe Wco::LeadsController do
   it '#show' do
     get :show, params: { id: @lead.id }
     response.code.should eql '200'
+  end
+
+  it '#update' do
+    @z = create(:lead, email: 'z@z.com',
+      leadset: create(:leadset, email: 'hm@hm.com'),
+    )
+    patch :update, params: { id: @z.id, lead: { email: 'a@a.com', tags: [ '' ] } }
+    Wco::Lead.find( @z.id ).email.should eql 'a@a.com'
   end
 
 end

@@ -112,7 +112,7 @@ class WcoEmail::Context
       } },
       { '$sort' => { '_id': -1 } },
     ]
-    outs = WcoEmail::EmailContext.collection.aggregate( pipeline )
+    outs = WcoEmail::Context.collection.aggregate( pipeline )
     outs.to_a
   end
 

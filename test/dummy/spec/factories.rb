@@ -28,6 +28,7 @@ FactoryBot.define do
 
   ## A
 
+
   factory :appliance, class: 'WcoHosting::Appliance' do
     after :build do |doc|
       doc.subscription = create( :subscription, leadset: doc.leadset )
@@ -88,6 +89,13 @@ FactoryBot.define do
   ## I
 
   factory :invoice, class: 'Wco::Invoice' do
+  end
+
+  factory :iro_alert, class: 'Iro::Alert' do
+    class_name { 'Iro::Stock' }
+    symbol { 'NVDA' }
+    strike { 600 }
+    direction { 'BELOW' }
   end
 
   ## L

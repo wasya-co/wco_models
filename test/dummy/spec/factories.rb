@@ -98,6 +98,10 @@ FactoryBot.define do
     direction { 'BELOW' }
   end
 
+  factory :iro_stock, class: 'Iro::Stock' do
+    ticker { 'QQQ' }
+  end
+
   ## L
 
   factory :lead, class: 'Wco::Lead' do

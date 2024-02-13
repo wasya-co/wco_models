@@ -15,6 +15,10 @@
     = f.label :next_invoice_number
     = f.text_field :next_invoice_number
 
+  .field
+    %label serverhosts
+    = f.select :serverhost_ids, options_for_select(@serverhosts_list, selected: leadset.serverhost_ids), {}, { multiple: true }
+
   -# .input-field
   -#   %label Stripe customer_id
   -#   = f.text_field :customer_id

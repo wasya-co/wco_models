@@ -8,6 +8,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
   ## alphabetized : )
 
   def create
+    params[:leadset][:serverhost_ids].delete ''
     @leadset = Leadset.new params[:leadset].permit!
     authorize! :create, @leadset
     if @leadset.save
@@ -65,6 +66,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
   end
 
   def update
+    params[:leadset][:serverhost_ids].delete ''
     @leadset = Leadset.find params[:id]
     authorize! :update, @leadset
     if @leadset.update_attributes params[:leadset].permit!
@@ -81,9 +83,10 @@ class Wco::LeadsetsController < Wco::ApplicationController
   private
 
   def set_lists
-    @tags_list      = Wco::Tag.list
-    @leads_list     = Wco::Lead.all.map { |lead| [ lead.email, lead.id ] }
-    @templates_list = WcoEmail::EmailTemplate.all.map { |t| [ t.slug, t.id ] }
+    @serverhosts_list     = WcoHosting::Serverhost.list
+    @tags_list            = Wco::Tag.list
+    @leads_list           = Wco::Lead.all.map { |lead| [ lead.email, lead.id ] }
+    @templates_list       = WcoEmail::EmailTemplate.all.map { |t| [ t.slug, t.id ] }
     @email_campaigns_list = WcoEmail::Campaign.list
   end
 

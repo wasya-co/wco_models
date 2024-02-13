@@ -11,9 +11,10 @@
 -# = @ctx.unsubscribe_url
 
 - if @ctx.reply_to_message
-  %br
-  %br
-  %br
-  .mini{ style: "font-size: 0.7em; color: gray; text-align: right" } Your previous message is shown below.
-  %hr
-  = raw @ctx.reply_to_message.part_html_sanitized
+  %blockquote
+    %br
+    %br
+    %br
+    .mini{ style: "font-size: 0.7em; color: gray; text-align: right" } Your previous message is shown below.
+    %hr
+    = raw @ctx.reply_to_message.part_html_sanitized

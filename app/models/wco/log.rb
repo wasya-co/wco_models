@@ -6,13 +6,20 @@ class Wco::Log
   include Mongoid::Paranoia
   store_in collection: 'wco_logs'
 
-  field :message
+  field :label,   type: :string
+  field :message, type: :string
 
-  field :class_name
-  field :object_id
-
-  field :raw_json, type: Object, default: '{}'
+  belongs_to :obj, polymorphic: true, optional: true
 
   has_and_belongs_to_many :tags
 
+  def self.puts! message, label, obj: nil
+    create( message: message, label: label, obj: obj )
+    puts "+++ +++ #{label}:"
+    puts message.inspect
+  end
+
+  def to_s
+    "#{created_at} #{message}"
+  end
 end

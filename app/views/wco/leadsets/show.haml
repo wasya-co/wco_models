@@ -15,6 +15,29 @@
 
   .row
     .col-md-6
+      %h5 Prices
+      %ul
+        - @leadset.appliance_tmpl_prices.each do |price|
+          %li
+            .a= price.product
+            = price
+
+    .col-md-6
+      %h5.collapse-expand#subscriptionsList
+        Subscriptions (#{@subscriptions.length})
+        = link_to '[+wco]', new_subscription_path({ customer_id: @leadset.customer_id })
+      %table.bordered
+        %thead
+          %tr
+            %th Name
+            %th Price
+        - @subscriptions.each do |i|
+          %tr
+            %td= i.product.name
+            %td= i.price
+  %hr
+  .row
+    .col-md-6
       %h5.collapse-expand#invoicesList
         Invoices  (#{@leadset.invoices.length})
         = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
@@ -30,22 +53,8 @@
         %label (replace ?)
         = check_box_tag 'replace'
         = submit_tag 'Go >', data: { confirm: 'Are you sure?' }
-      %hr
+  %hr
 
-    .col-md-6
-      %h5.collapse-expand#subscriptionsList
-        Subscriptions (#{@subscriptions.length})
-        = link_to '[+wco]', new_subscription_path({ customer_id: @leadset.customer_id })
-      %table.bordered
-        %thead
-          %tr
-            %th Name
-            %th Price
-        - @subscriptions.each do |i|
-          %tr
-            %td= i.product.name
-            %td= i.price
-      %hr
   .row
     %h5.collapse-expand#leads Leads
     = render '/wco/leads/index', leads: @leads

@@ -2,11 +2,11 @@
 class Wco::PricesController < Wco::ApplicationController
 
   def create
-    @price   = Wco::Price.new params[:price].permit( :amount_cents, :interval, :product_id )
+    @price   = Wco::Price.new params[:price].permit!
     authorize! :create, @price
 
     @price.interval = nil if !params[:price][:interval].present?
-    @product        = Wco::Product.find @price.product_id
+    @product        = params[:price][:product_type].constantize.find @price.product_id
     stripe_product  = Stripe::Product.retrieve( @product.product_id )
     price_hash = {
       product:     stripe_product.id,
@@ -17,17 +17,34 @@ class Wco::PricesController < Wco::ApplicationController
       price_hash[:recurring] = { interval: @price.interval }
     end
     stripe_price = Stripe::Price.create( price_hash )
-    # puts! stripe_price, 'stripe_price'
+    # flash_notice 'Created stripe price.'
+    flash_notice stripe_price
 
-    flash_notice 'Created stripe price.'
-    @price.product = @product
+    @price.product  = @product
     @price.price_id = stripe_price[:id]
     if @price.save
       flash_notice @price
     else
       flash_alert @price
     end
-    redirect_to controller: :products, action: :index
+    case @product.class.name
+    when 'WcoHosting::ApplianceTmpl'
+      redirect_to request.referrer || root_path
+    when 'Wco::Product'
+      redirect_to controller: :products, action: :index
+    end
+  end
+
+  def destroy
+    @price = Wco::Price.find params[:id]
+    authorize! :destroy, @price
+    flag = @price.delete
+    if flag
+      flash_notice 'ok'
+    else
+      flash_alert @price
+    end
+    redirect_to request.referrer || root_path
   end
 
   def update

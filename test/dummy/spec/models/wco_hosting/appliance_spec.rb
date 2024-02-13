@@ -1,13 +1,14 @@
 
-
-RSpec.describe WcoHosting::Appliance, type: :model do
+RSpec.describe WcoHosting::Appliance do
 
   before do
-    Wco::Leadset.unscoped.map &:destroy!
+    destroy_every(
+      Wco::Leadset,
+      WcoHosting::ApplianceTmpl,
+      WcoHosting::Serverhost,
+    )
     @leadset    = create( :leadset )
-    WcoHosting::Serverhost.unscoped.map &:destroy!
     @serverhost = create( :vbox1, leadsets: [ @leadset ] )
-    WcoHosting::ApplianceTmpl.unscoped.map &:destroy!
     @tmpl       = create( :hw0_tmpl )
     @appliance  = create( :appliance, {
       appliance_tmpl: @tmpl,

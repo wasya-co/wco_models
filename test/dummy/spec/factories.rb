@@ -40,6 +40,8 @@ FactoryBot.define do
     image      { 'some-image' }
     version    { '0.0.0' }
     volume_zip { 'somefile.zip' }
+    tmp_price_cents { 1 }
+    tmp_price_interval { 'year' }
 
     factory :hw0_tmpl do
       image      { 'piousbox/php82:0.0.2' }
@@ -84,6 +86,12 @@ FactoryBot.define do
   factory :gallery, class: 'Wco::Gallery' do
     name { generate('name') }
     slug { generate('slug') }
+  end
+
+  ## H
+
+  factory :hosting_environment, class: 'WcoHosting::Environment' do
+    name { 'some-name' }
   end
 
   ## I

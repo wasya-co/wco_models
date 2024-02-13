@@ -21,5 +21,11 @@ RSpec::describe Wco::LeadsetsController do
     end
   end
 
+  it '#show' do
+    leadset = create(:leadset)
+    get :show, params: { id: leadset.id }
+    response.code.should eql '200'
+  end
+
 end
 

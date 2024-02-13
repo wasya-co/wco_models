@@ -5,9 +5,10 @@ class Wco::Price
   include Mongoid::Paranoia
   store_in collection: 'wco_prices'
 
-  # belongs_to :product,     class_name: 'Wco::Product',      inverse_of: :prices
-  ## Wco::Product, WcoHosting::ApplianceTmpl:
-  belongs_to :product, polymorphic: true # , foreign_key: :wco_price_id
+  ## Wco::Product, WcoHosting::ApplianceTmpl
+  belongs_to :product, polymorphic: true
+
+  belongs_to :appliance_tmpl_leadset, class_name: 'Wco::Leadset', optional: true
 
   has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :price, foreign_key: :wco_price_id
 

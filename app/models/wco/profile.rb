@@ -16,8 +16,10 @@ class Wco::Profile
   has_and_belongs_to_many :shared_galleries, class_name: 'Wco::Gallery', inverse_of: :shared_profiles
 
 
+  def to_s
+    email
+  end
   def self.list
     all.map { |p| [ p.email, p.id ] }
   end
-
 end

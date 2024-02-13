@@ -10,8 +10,8 @@ rm -rf __MACOSX
 #                                           curl <%= @app.tmpl.volume_zip %> > <%= @app.kind %>__prototype.zip
 
 ## cache/overwrite
-[ ! -e <%= @app.kind %>__prototype     ] && rm -rf <%= @app.kind %>__prototype && unzip <%= @app.kind %>__prototype.zip
-#                                           rm -rf <%= @app.kind %>__prototype && unzip <%= @app.kind %>__prototype.zip
+[ ! -e <%= @app.kind %>__prototype     ] && rm -rf <%= @app.kind %>__prototype && unzip -o <%= @app.kind %>__prototype.zip
+#                                           rm -rf <%= @app.kind %>__prototype && unzip -o <%= @app.kind %>__prototype.zip
 
 mv  <%= @app.kind %>__prototype ./volumes/<%= @app.service_name %>_data
 

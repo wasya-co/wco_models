@@ -42,6 +42,8 @@ class WcoHosting::Serverhost
   end
 
   def create_subdomain app
+    @obj = app
+
     client = DropletKit::Client.new(access_token: DO_TOKEN_1)
     record = DropletKit::DomainRecord.new(
       type: 'A',
@@ -49,86 +51,64 @@ class WcoHosting::Serverhost
       data: app.serverhost.public_ip,
     )
     client.domain_records.create(record, for_domain: app.domain )
+
+    Wco::Log.puts! record, 'created subdomain?', obj: @obj
   end
-
-  ## obsolete _vp_ 2023-12-23
-  def aws_create_subdomain app
-    ac   = ActionController::Base.new
-    ac.instance_variable_set( :@app, app )
-    rendered_str = ac.render_to_string("wco_hosting/scripts/create_subdomain.json")
-    # puts '+++ create_subdomain rendered_str:'; print rendered_str
-
-    file = Tempfile.new('prefix')
-    file.write rendered_str
-    file.close
-
-    cmd = "aws route53 change-resource-record-sets \
-      --hosted-zone-id #{ app.route53_zone } \
-      --change-batch file://#{ file.path } \
-      --profile route53 "
-    do_exec( cmd )
-  end
-
 
   def add_nginx_site app
+    @obj = app
+
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     rendered_str = ac.render_to_string("wco_hosting/scripts/nginx_site.conf")
-    puts '+++ add_nginx_site rendered_str:'
-    print rendered_str
+    Wco::Log.puts! rendered_str, 'add_nginx_site rendered_str', obj: @obj
 
     file = Tempfile.new('prefix')
     file.write rendered_str
     file.close
 
     cmd = "scp #{file.path} #{ssh_host}:/etc/nginx/sites-available/#{app.service_name}.conf "
-    puts! cmd, 'cmd'
-    `#{cmd}`
+    do_exec cmd
 
     cmd = "ssh #{ssh_host} 'ln -s /etc/nginx/sites-available/#{app.service_name}.conf /etc/nginx/sites-enabled/#{app.service_name}.conf ' "
-    puts! cmd, 'cmd'
-    `#{cmd}`
+    do_exec cmd
 
     cmd = "ssh #{ssh_host} 'nginx -s reload ' "
-    puts! cmd, 'cmd'
-    `#{cmd}`
+    do_exec cmd
   end
 
   def add_docker_service app
-    puts! app, '#add_docker_service'
+    @obj = app
+    Wco::Log.puts! nil, '#add_docker_service', obj: @obj
 
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )
     rendered_str = ac.render_to_string("wco_hosting/docker-compose/dc-#{app.tmpl.kind}")
-    puts '+++ add_docker_service rendered_str:'
-    print rendered_str
+    Wco::Log.puts! rendered_str, 'add_docker_service rendered_str', obj: @obj
 
     file = Tempfile.new('prefix')
     file.write rendered_str
     file.close
-    puts! file.path, 'file.path'
+    # puts! file.path, 'file.path'
 
     cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/dc-#{app.service_name}.yml "
-    puts! cmd, 'cmd'
-    `#{cmd}`
+    do_exec cmd
 
     cmd = "ssh #{ssh_host} 'cd #{WORKDIR} ; \
       docker compose -f dc-#{app.service_name}.yml up -d #{app.service_name} ; \
       echo ok #add_docker_service ' "
-    puts! cmd, 'cmd'
-    `#{cmd}`
-
-    puts "ok '#add_docker_service'"
+    do_exec cmd
   end
 
   def create_wordpress_volume app
+    @obj = app
+
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )
     rendered_str = ac.render_to_string("wco_hosting/scripts/create_volume")
-    # puts '+++ create_volume rendered_str:'
-    # print rendered_str
+    Wco::Log.puts! rendered_str, 'create_volume rendered_str', obj: @obj
 
     file = Tempfile.new('prefix')
     file.write rendered_str
@@ -136,26 +116,22 @@ class WcoHosting::Serverhost
     # puts! file.path, 'file.path'
 
     cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume"
-    puts! cmd, 'cmd'
-    `#{cmd}`
+    do_exec cmd
 
     cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
       #{WORKDIR}/wco_hosting/scripts/create_volume ' "
-    puts! cmd, 'cmd'
-    `#{cmd}`
-
-    puts 'ok #create_volume'
+    do_exec cmd
   end
 
   def create_volume app
-    # puts! app.service_name, 'Serverhost#create_volume'
+    @obj = app
+    Wco::Log.puts! app.service_name, 'Serverhost#create_volume', obj: @obj
 
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )
     rendered_str = ac.render_to_string("wco_hosting/scripts/create_volume")
-    puts '+++ create_volume rendered_str:'
-    print rendered_str
+    Wco::Log.puts! rendered_str, 'create_volume rendered_str', obj: @obj
 
     file = Tempfile.new('prefix')
     file.write rendered_str
@@ -167,40 +143,20 @@ class WcoHosting::Serverhost
 
     cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; #{WORKDIR}/scripts/create_volume ' "
     do_exec( cmd )
+  end
 
-    puts 'ok #create_volume'
-    return done_exec
+  def do_exec cmd
+    Wco::Log.puts! cmd, '#do_exec', obj: @obj
+
+    stdout, stderr, status = Open3.capture3(cmd)
+    status = status.to_s.split.last.to_i
+    Wco::Log.puts! stdout, 'stdout', obj: @obj
+    Wco::Log.puts! stderr, 'stderr', obj: @obj
+    Wco::Log.puts! status, 'status', obj: @obj
   end
 
   def self.list
     [[nil,nil]] + all.map { |s| [s.name, s.id] }
     # all.map { |s| [s.name, s.id] }
   end
-
-  def do_exec cmd
-    # @messages ||= []
-    # @errors   ||= []
-    # @statuses ||= []
-
-    puts! cmd, '#do_exec'
-    stdout, stderr, status = Open3.capture3(cmd)
-    status = status.to_s.split.last.to_i
-    puts "+++ +++ stdout"
-    puts stdout
-    # @messages.push( stdout )
-    puts "+++ +++ stderr"
-    puts stderr
-    # @errors.push( stderr )
-    puts! status, 'status'
-    # @statuses.push( status )
-  end
-
-  def done_exec
-    @messages ||= []
-    @errors   ||= []
-    @statuses ||= []
-    OpenStruct.new( statuses: @statuses, errors: @errors, messages: @messages )
-  end
-
-
 end

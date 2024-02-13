@@ -17,19 +17,25 @@ class Wco::Leadset
   index({ email: 1 }, { name: 'email' })
   validates :email, uniqueness: { allow_nil: true } # presence: true
 
+
+  has_many :appliances,    class_name: '::WcoHosting::Appliance',   inverse_of: :leadset
+  has_many :appliance_tmpl_prices,        class_name: 'Wco::Price'
+  has_many :environments,  class_name: '::WcoHosting::Environment', inverse_of: :leadset
+  has_many :invoices,     class_name: 'Wco::Invoice'
   has_many :leads,         class_name: 'Wco::Lead'
-  has_many :profiles,      class_name: 'Wco::Profile',           inverse_of: :leadset
-  has_many :appliances,    class_name: 'WcoHosting::Appliance',  inverse_of: :leadset
-  has_many :subscriptions, class_name: 'Wco::Subscription',      inverse_of: :leadset
+
+  has_many :profiles,      class_name: 'Wco::Profile',              inverse_of: :leadset
+  has_many :subscriptions, class_name: 'Wco::Subscription',         inverse_of: :leadset
   has_and_belongs_to_many :tags, class_name: 'Wco::Tag'
 
-  has_many :invoices,     class_name: 'Wco::Invoice'
+
   field :next_invoice_number, type: :integer, default: 100
 
-  has_and_belongs_to_many :serverhosts, class_name: 'WcoHosting::Serverhost' # , inverse_of: :leadset
+  has_and_belongs_to_many :serverhosts, class_name: '::WcoHosting::Serverhost' # , inverse_of: :leadset
   def next_serverhost
     serverhosts.first
   end
+
 
   ##
   ## stripe

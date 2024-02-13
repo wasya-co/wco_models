@@ -5,6 +5,8 @@ class WcoHosting::Appliance
   include Mongoid::Paranoia
   store_in collection: 'wco_appliances'
 
+  has_many :logs, as: :obj, class_name: 'Wco::Log'
+
   belongs_to :leadset,      class_name: 'Wco::Leadset', inverse_of: :appliances
   belongs_to :subscription, class_name: 'Wco::Subscription' # , inverse_of: :appliance
 
@@ -14,7 +16,7 @@ class WcoHosting::Appliance
     self[:service_name] = host.gsub(".", "_")
   end
 
-  field :environment
+  belongs_to :environment, class_name: 'WcoHosting::Environment', inverse_of: :appliances
 
   field :subdomain
   field :domain
@@ -41,6 +43,9 @@ class WcoHosting::Appliance
   STATE_TERM    = 'state-term'
   field :state, default: STATE_PENDING
 
+  def to_s
+    service_name
+  end
 end
 
 

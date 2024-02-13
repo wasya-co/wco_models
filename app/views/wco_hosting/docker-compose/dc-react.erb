@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+
+  <%= @app.service_name %>:
+    image: <%= @app.tmpl.image %>
+    volumes:
+      - type: bind
+        source: volumes/<%= @app.service_name %>_data
+        target: /var/www/html
+    ports:
+      - <%= @app.port %>:80
+    restart: always
+
+
+

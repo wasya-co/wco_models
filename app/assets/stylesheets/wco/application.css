@@ -5,6 +5,10 @@
  *= require_tree .
 **/
 
+.bold {
+  font-weight: bold;
+}
+
 .select2 {
   min-width: 200px;
 }

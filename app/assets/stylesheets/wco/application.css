@@ -9,9 +9,7 @@
   font-weight: bold;
 }
 
-.select2 {
-  min-width: 200px;
-}
+
 
 .main-footer {
   border-top: 2px solid #6395b9;
@@ -27,4 +25,12 @@
       width: 20px;
     }
   }
+}
+
+.select2 {
+  min-width: 200px;
+}
+
+td.tags {
+  min-width: 200px;
 }

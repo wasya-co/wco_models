@@ -68,10 +68,7 @@
 
 
   .row
-    .col-md-12.msgs
+    .col-md-12.conversations
       %h5 Email Conversations (#{@lead.convs.length})
-      %ul
-        - @lead.convs.each do |conv|
-          %li
-            = link_to conv.subject, wco_email.conversation_path( conv )
+      = render 'wco_email/conversations/table', convs: @lead.convs
 

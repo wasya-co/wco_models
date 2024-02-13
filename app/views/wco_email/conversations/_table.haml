@@ -1,0 +1,37 @@
+
+.conversations--table
+  %table.bordered.data-table
+    %thead
+      %th.select-all.nosort
+        .a
+          = check_box_tag :select_all
+          .n-selected -
+      %th.leads leads
+      %th.subject subject, preview
+      %th.tags Tags
+      %th.latest-at latest_at
+    - convs.each_with_index do |conv, idx|
+      %tr
+        %td.select-all
+          .gray= idx+1
+          = check_box_tag 'conversation_ids[]', conv.id.to_s, nil, { class: 'i-sel' }
+        %td.leads.mini
+          -# - conv.from_emails.each do |from|
+          -#   = link_to from, wco.lead_path( from )
+          -# %hr
+          - conv.leads.each do |lead|
+            = link_to lead.email, wco.lead_path( lead )
+        %td.subject
+          - if conv.unread?
+            <b>#{link_to conv.subject, wco_email.conversation_path(conv)}</b>
+          - else
+            = link_to conv.subject, wco_email.conversation_path(conv)
+          <b>(#{conv.messages.length})</b>
+          %span.gray= conv.preview
+        %td.tags.mini
+          - conv.tags.each do |tag|
+            .mb-1
+              .Chip= tag.slug
+        %td.latest-at
+          = pp_date conv.latest_at
+          = pp_time conv.latest_at

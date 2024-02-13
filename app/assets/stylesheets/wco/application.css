@@ -1,8 +1,8 @@
 /*
  *= require vendor/bootstrap-4.6.2.min
  *
- *= require ./utils
  *= require_tree .
+ *= require ../production_theme
 **/
 
 .bold {

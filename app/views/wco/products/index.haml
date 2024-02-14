@@ -10,7 +10,6 @@
     .col-md-6
       %h5.collapse-expand#stripeProducts
         Stripe Products (#{@stripe_products.length}):
-        -# = link_to '[+]', new_product_path
       %ol
         - @stripe_products.each do |product_id, product|
           %li

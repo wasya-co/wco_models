@@ -60,8 +60,8 @@
       %hr
       %h5
         Invoices (?)
-        = link_to '[+stripe]', new_invoice_stripe_path({ leadset: @lead.leadset })
-        = link_to '[+pdf]', new_invoice_pdf_path({ leadset: @lead.leadset })
+        = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @lead.leadset_id })
+        = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @lead.leadset_id })
       %ul
         %li None?
 

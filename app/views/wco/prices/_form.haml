@@ -3,7 +3,8 @@
 .prices--form
 
   = form_for price, as: :price, html: { class: 'flex-row' } do |f|
-    = hidden_field_tag 'price[product_id]', price.product_id
+    = hidden_field_tag 'price[product_id]',   price.product_id
+    = hidden_field_tag 'price[product_type]', price.product_type
 
     .field
       %label amount cents

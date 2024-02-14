@@ -63,52 +63,11 @@ class WcoHosting::ApplianceTmpl
   # belongs_to :price, class_name: 'Wco::Price', foreign_key: :wco_price_id
 
   field :price_id # stripe
-  attr_accessor :tmp_price_cents
-  attr_accessor :tmp_price_interval
+
   before_validation :set_stripe_product_price, on: :create
   def set_stripe_product_price
     stripe_product  = Stripe::Product.create({ name: "Appliance #{self}" })
     self.product_id = stripe_product.id
-
-    wco_price   = Wco::Price.create!({
-      amount_cents: tmp_price_cents,
-      interval:     tmp_price_interval,
-      product_id:   stripe_product.id,
-      product:      self,
-    })
-    self.prices.push wco_price
-    price_hash = {
-      product:     stripe_product.id,
-      unit_amount: tmp_price_cents,
-      currency:    'usd',
-      recurring: {
-        interval: tmp_price_interval,
-      },
-    }
-    stripe_price = Stripe::Price.create( price_hash )
-    self.price_id = stripe_price.id
-  end
-  before_validation :update_stripe_product_price, on: :update
-  def update_stripe_product_price
-    if tmp_price_cents.present?
-      price_hash = {
-        product:     product_id,
-        unit_amount: tmp_price_cents,
-        currency:    'usd',
-        recurring: {
-          interval: tmp_price_interval,
-        },
-      }
-      stripe_price  = Stripe::Price.create( price_hash )
-      wco_price   = Wco::Price.create!({
-        amount_cents: tmp_price_cents,
-        interval:     tmp_price_interval,
-        price_id:     stripe_price.id,
-        product_id:   product_id,
-        product:      self,
-      })
-      self.prices.push wco_price
-    end
   end
 
 

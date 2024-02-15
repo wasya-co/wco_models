@@ -30,6 +30,11 @@ class Wco::LeadsController < Wco::ApplicationController
       @leads = @leads.any_of(
         { email: /#{params[:q].downcase}/i },
         { name:  /#{params[:q].downcase}/i } )
+
+      if 1 == @leads.length
+        redirect_to controller: 'wco/leads', action: 'show', id: @leads[0].id
+        return
+      end
     end
 
     # if params[:q_tag_ids].present?

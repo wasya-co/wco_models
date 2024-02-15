@@ -17,7 +17,11 @@ RSpec::describe Wco::LeadsController do
 
   describe '#index' do
     it 'search' do
-      @z_lead = create(:lead, email: 'z@z.com' )
+      @z_lead_1 = create(:lead, email: 'z@z.com' )
+      get :index, params: { q: 'z' }
+      response.should redirect_to( lead_path(@z_lead_1.id) )
+
+      @z_lead_2 = create(:lead, email: 'z_2@z.com' )
 
       get :index, params: { q: 'z' }
 

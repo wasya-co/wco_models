@@ -19,10 +19,11 @@ class Wco::Leadset
 
 
   has_many :appliances,    class_name: '::WcoHosting::Appliance',   inverse_of: :leadset
-  has_many :appliance_tmpl_prices,        class_name: 'Wco::Price'
+  has_many :appliance_tmpl_prices, class_name: 'Wco::Price'
   has_many :environments,  class_name: '::WcoHosting::Environment', inverse_of: :leadset
-  has_many :invoices,     class_name: 'Wco::Invoice'
+  has_many :invoices,      class_name: 'Wco::Invoice'
   has_many :leads,         class_name: 'Wco::Lead'
+  has_many :subdomains,    class_name: 'WcoHosting::Subdomain'
 
   has_many :profiles,      class_name: 'Wco::Profile',              inverse_of: :leadset
   has_many :subscriptions, class_name: 'Wco::Subscription',         inverse_of: :leadset

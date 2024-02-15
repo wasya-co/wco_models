@@ -47,11 +47,9 @@ class Wco::PricesController < Wco::ApplicationController
     redirect_to request.referrer || root_path
   end
 
-  def update
-    # if !params[:price][:interval].present?
-    #   @price.interval = nil
-    # end
-  end
+  ## delete and the create, instead
+  # def update
+  # end
 
 end
 

@@ -1,26 +1,50 @@
 
-.leadsets-show.container
-  .header
-    %h2.title
-      Leadset `#{@leadset.company_url}`
-      = link_to '[~]', edit_leadset_path( @leadset )
+.leadsets-show.padded
+  .maxwidth
+    .header
+      %h2.title
+        Leadset `#{@leadset.company_url}`
+        = link_to '[~]', edit_leadset_path( @leadset )
 
-  %ul
-    %li <b>Email:</b> #{@leadset.email}
-    %li <b>company_url</b>: #{@leadset.company_url}
-    %li <b>customer_id</b>: #{@leadset.customer_id}
-
-
-  %hr
+    %ul
+      %li <b>Email:</b> #{@leadset.email}
+      %li <b>company_url</b>: #{@leadset.company_url}
+      %li <b>customer_id</b>: #{@leadset.customer_id}
+    %hr
 
   .row
     .col-md-6
-      %h5 Prices
-      %ul
-        - @leadset.appliance_tmpl_prices.each do |price|
-          %li
-            .a= price.product
-            = price
+      %h5 Appliance Tmpls (prices)
+      %table.bordered.data-table
+        %thead
+          %td &nbsp;
+          %td Appliance Tmpl
+          %td Amount Cents
+          %td Interval
+        - @appliance_tmpls.each do |tmpl|
+          %tr
+            - price   = @leadset.appliance_tmpl_prices.where( product: tmpl ).first
+            - price ||= Wco::Price.new({ product: tmpl, appliance_tmpl_leadset: @leadset })
+            - url     = price.new_record? ? wco.prices_path : wco.price_path(price)
+            - if !price.new_record?
+              %td
+                = button_to 'x', wco.price_path(price), method: :delete, data: { confirm: 'Are you sure?' }
+            - else
+              %td
+            = form_for price, url: url do |f|
+              = hidden_field_tag 'price[product_id]',   price.product_id
+              = hidden_field_tag 'price[product_type]', price.product_type
+              = hidden_field_tag 'price[appliance_tmpl_leadset_id]', @leadset.id
+              %td
+                %b= tmpl
+              %td
+                = f.number_field :amount_cents
+              %td
+                = f.select :interval, options_for_select( Wco::Price::INTERVALS, selected: price.interval ), class: 'select2'
+                = f.submit '>'
+                &nbsp;
+                %br
+                .gray= price.price_id || 'nil'
 
     .col-md-6
       %h5.collapse-expand#subscriptionsList
@@ -36,7 +60,8 @@
             %td= i.product.name
             %td= i.price
   %hr
-  .row
+
+  .row.maxwidth
     .col-md-6
       %h5.collapse-expand#invoicesList
         Invoices  (#{@leadset.invoices.length})
@@ -56,6 +81,7 @@
   %hr
 
   .row
-    %h5.collapse-expand#leads Leads
-    = render '/wco/leads/index', leads: @leads
+    .col-12
+      %h5.collapse-expand#leads Leads
+      = render '/wco/leads/index', leads: @leads
 

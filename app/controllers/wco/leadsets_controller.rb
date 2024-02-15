@@ -83,6 +83,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
   private
 
   def set_lists
+    @appliance_tmpls      = WcoHosting::ApplianceTmpl.all
     @serverhosts_list     = WcoHosting::Serverhost.list
     @tags_list            = Wco::Tag.list
     @leads_list           = Wco::Lead.all.map { |lead| [ lead.email, lead.id ] }

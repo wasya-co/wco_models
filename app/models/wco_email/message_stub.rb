@@ -131,11 +131,12 @@ class WcoEmail::MessageStub
       if the_mail.content_type&.include?('text/html')
         @message.part_html = body
       elsif the_mail.content_type&.include?('text/plain')
-        @message.part_txt = body
+        @message.part_html = "<pre>#{body}</pre>"
       elsif the_mail.content_type.blank?
-        @message.part_txt = body
+        @message.part_html = "<pre>#{body}</pre>"
       else
         @message.logs.push "mail body of unknown type: #{the_mail.content_type}"
+        @message.part_html = "<pre>#{body}</pre>"
       end
       @message.save
     end

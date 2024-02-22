@@ -1,9 +1,13 @@
 //
 //
-// // this was loaded twice causing issues - disabled for now.
-// require vendor/jquery-3.3.1.min
-// require vendor/popper-1.14.0.min
-// require vendor/bootstrap-4.6.2.min
+//= require vendor/jquery-3.3.1.min
+//= require vendor/popper-1.14.0.min
+//= require vendor/bootstrap-4.6.2.min
+//= require vendor/select2-4.0.0
+//
+// Skip for now b/c I need to move fonts, too:
+// require vendor/summernote-0.8.18
+//
 // require vendor/fontawesome-5.15.4.min
 //
 //= require rails-ujs

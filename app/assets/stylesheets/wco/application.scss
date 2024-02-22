@@ -1,9 +1,18 @@
 /*
  *= require vendor/bootstrap-4.6.2.min
+ *= require vendor/select2-4.0.0
+ *
+ * Skip for now b/c I need to move fonts, too:
+ * require vendor/summernote-0.8.18
  *
  *= require_tree .
  *= require ../production_theme
 **/
+
+.application--main-header.development {
+  background: url('//wasyaco.com/wp-content/uploads/2024/02/weather-bg-development.png'),
+    linear-gradient(90deg, pink, rgba(255,255,255,0) 5% );
+}
 
 .bold {
   font-weight: bold;
@@ -16,7 +25,6 @@
 }
 
 .main-header {
-
   border-bottom: 2px solid #6395b9;
 
   li {

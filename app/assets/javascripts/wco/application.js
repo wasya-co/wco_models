@@ -1,20 +1,21 @@
 //
 //
-//= require vendor/jquery-3.3.1.min
-//= require vendor/popper-1.14.0.min
-//= require vendor/bootstrap-4.6.2.min
-//= require vendor/select2-4.0.0
+//= require ../vendor/jquery-3.3.1.min
+//= require ../vendor/popper-1.14.0.min
+//= require ../vendor/bootstrap-4.6.2.min
+//= require ../vendor/select2-4.0.0
+//= require ../vendor/jquery.dataTables-1.10.16
 //
 // Skip for now b/c I need to move fonts, too:
-// require vendor/summernote-0.8.18
+// require ../vendor/summernote-0.8.18
 //
-// require vendor/fontawesome-5.15.4.min
+// require ../vendor/fontawesome-5.15.4.min
 //
 //= require rails-ujs
-//= require vendor/jquery.iframe-transport
-//= require vendor/jquery.ui.widget
-//= require vendor/jquery.fileupload
-//= require vendor/jquery-ui.min
+//= require ../vendor/jquery.iframe-transport
+//= require ../vendor/jquery.ui.widget
+//= require ../vendor/jquery.fileupload
+//= require ../vendor/jquery-ui.min
 //
 // require ./alerts-notices
 // require ./collapse-expand

@@ -26,6 +26,8 @@ class WcoEmail::Message
   field :subject
 
   field :part_html
+  field :read_at, type: DateTime
+  index({ read_at: -1 })
 
   def part_html_sanitized
     doc = Nokogiri::HTML part_html
@@ -233,6 +235,7 @@ class WcoEmail::Message
     end
   end
 
+  scope :unread, ->{ where( read_at: nil ) }
 
 end
 ::Msg = WcoEmail::Message

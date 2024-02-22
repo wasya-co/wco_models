@@ -1,0 +1,23 @@
+
+.collapse-expand [reply]
+.email-contexts--form-reply-mini.form-mini.descr{ style: 'display: none' }
+  = form_for ctx, html: { target: :_blank } do |f|
+
+    .flex-row
+      .flex-row
+        -# %label from
+        = f.select :from_email, options_for_select( WcoEmail::EmailTemplate.from_emails_list, selected: ctx.from_email ), {}, class: 'select2'
+        -# %label to (lead)
+        = f.select :lead, options_for_select( @leads_list, selected: lead_id ), {}, class: 'select2', required: true
+      .flex-row
+        = f.label :template
+        = f.select :email_template_id, options_for_select( @email_templates_list, selected: ctx.email_template_id ), {}, class: 'select2', required: true
+        -# = link_to '[+]', new_email_template_path, target: :_blank
+    .flex-row
+      .flex-row
+        %label Respond inline?
+        = check_box_tag :respond_inline, message.id, checked: true
+      .flex-row
+        = f.label :send_at
+        = f.text_field :send_at, placeholder: 'YYYY-MM-DD', value: Time.now, size: 30, class: 'input-date'
+      = f.submit 'Send/Schedule'

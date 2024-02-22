@@ -1,23 +1,31 @@
 /*
- *= require vendor/bootstrap-4.6.2.min
- *= require vendor/select2-4.0.0
+ *= require ../vendor/bootstrap-4.6.2.min
+ *= require ../vendor/select2-4.0.0
+ *= require ../vendor/jquery.dataTables-1.10.16
  *
  * Skip for now b/c I need to move fonts, too:
- * require vendor/summernote-0.8.18
+ * require ../vendor/summernote-0.8.18
  *
  *= require_tree .
  *= require ../production_theme
+ *= require_self
 **/
 
+$enable-important-utilities: false;
+
+/* A */
 .application--main-header.development {
   background: url('//wasyaco.com/wp-content/uploads/2024/02/weather-bg-development.png'),
     linear-gradient(90deg, pink, rgba(255,255,255,0) 5% );
 }
 
+/* B */
 .bold {
   font-weight: bold;
 }
-
+.border-bottom {
+  border-bottom: 1px solid grey !important;
+}
 
 
 .main-footer {

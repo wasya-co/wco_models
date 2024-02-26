@@ -38,9 +38,7 @@
               = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
 
         %td.tags.mini
-          - conv.tags.each do |tag|
-            .mb-1
-              .Chip= tag.slug
+          = render '/wco/tags/chips', tags: conv.tags, cache_key: conv.cache_key
         %td.latest-at
           = pp_date conv.latest_at
           = pp_time conv.latest_at

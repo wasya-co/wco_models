@@ -1,0 +1,6 @@
+
+- cache cache_key do
+  .tags--chips
+    - tags.each do |tag|
+      .mb-1
+        .Chip{ data: { tag: { id: tag.id.to_s } } }= tag.slug

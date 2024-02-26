@@ -1,7 +1,9 @@
 
+- url = ctx.new_record? ? wco_email.contexts_path : wco_email.context_path(ctx)
+
 .collapse-expand [reply]
 .email-contexts--form-reply-mini.form-mini.descr{ style: 'display: none' }
-  = form_for ctx, html: { target: :_blank } do |f|
+  = form_for ctx, url: url, html: { target: :_blank } do |f|
 
     .flex-row
       .flex-row

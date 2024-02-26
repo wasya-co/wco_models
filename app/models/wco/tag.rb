@@ -13,10 +13,10 @@ class Wco::Tag
 
   has_many :email_filters, class_name: 'WcoEmail::EmailFilter', inverse_of: :tag
 
-  has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation'
+  has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation', index: true
   has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
   has_and_belongs_to_many :headlines # ,     class_name: 'Headline'
-  has_and_belongs_to_many :leads # ,         class_name: 'Lead'
+  has_and_belongs_to_many :leads, index: true # ,         class_name: 'Lead'
   has_and_belongs_to_many :leadsets # ,      class_name: 'Leadset'
   has_and_belongs_to_many :reports
   has_and_belongs_to_many :logs

@@ -56,7 +56,7 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     mail( from:    @ctx.from_email,
           to:      @ctx.to_email,
           cc:      @ctx.cc,
-          bcc:     "poxlovi@gmail.com",
+          bcc:     "poxlovi+sent@gmail.com",
           subject: ERB.new( @ctx.subject ).result( @ctx.get_binding ),
           body:    rendered_str,
           content_type: "text/html" )

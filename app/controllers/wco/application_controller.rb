@@ -1,6 +1,18 @@
 
+EC   ||= WcoEmail::Conversation
+EF   ||= WcoEmail::EmailFilter
+EM   ||= WcoEmail::Message
+ET   ||= WcoEmail::EmailTemplate
+MS   ||= WcoEmail::MessageStub
+EMS  ||= MS
+OA   ||= Wco::OfficeAction
+OAT  ||= Wco::OfficeActionTemplate
+OATT ||= Wco::OfficeActionTemplateTie
+Sch  ||= WcoEmail::EmailAction
+
 class Wco::ApplicationController < ActionController::Base
   include Wco::ApplicationHelper
+  rescue_from Exception, with: :exception_notifier if Rails.env.production?
 
   check_authorization
 
@@ -31,6 +43,17 @@ class Wco::ApplicationController < ActionController::Base
 
   def current_leadset
     @current_leadset ||= current_profile.leadset
+  end
+
+  def exception_notifier(exc)
+    puts! exc, "wco_models custom Exception"
+    ::ExceptionNotifier.notify_exception(
+      exc,
+      data: {
+        backtrace: exc.backtrace,
+      }
+    )
+    raise exc
   end
 
   def flash_alert what

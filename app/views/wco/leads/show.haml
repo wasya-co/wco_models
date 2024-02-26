@@ -39,7 +39,7 @@
         Email Contexts (#{@lead.ctxs.length})
         = link_to '[+]', '#'
       %ul
-        - @lead.ctxs.each do |ctx|
+        - @ctxs.each do |ctx|
           %li
             = pp_date( ctx.sent_at ) || 'not sent'
             = link_to ctx.subject.presence||"No Subj?!", wco_email.context_path(ctx)
@@ -69,6 +69,6 @@
 
   .row
     .col-md-12.conversations
-      %h5 Email Conversations (#{@lead.convs.length})
-      = render 'wco_email/conversations/table', convs: @lead.convs
+      %h5 Email Conversations (#{@convs.length})
+      = render 'wco_email/conversations/table', convs: @convs
 

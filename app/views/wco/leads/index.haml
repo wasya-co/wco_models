@@ -9,9 +9,9 @@
     %h2.title
       Leads
       - if !defined?( skip_pagination ) || !skip_pagination
-        (#{leads.total_count})
+        (#{@leads.total_count})
       - else
-        (#{leads.length})
+        (#{@leads.length})
       = link_to raw("<i class='fa fa-plus-square'></i>"), new_lead_path
 
   = render 'index', leads: @leads, search_path: leads_path

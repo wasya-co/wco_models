@@ -52,14 +52,14 @@ class Wco::Lead
 
   has_many                :email_messages,          class_name: '::WcoEmail::Message', inverse_of: :lead
 
-  has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation'
+  has_and_belongs_to_many :conversations,           class_name: '::WcoEmail::Conversation', index: true
   def convs; conversations; end
   has_many                :email_contexts,          class_name: '::WcoEmail::Context'
   def ctxs; email_contexts; end
   has_many                :email_actions,           class_name: '::WcoEmail::EmailAction'
   def schs; email_actions; end
   has_and_belongs_to_many :email_campaigns,         class_name: '::WcoEmail::Campaign'
-  has_and_belongs_to_many :tags,                    class_name: '::Wco::Tag'
+  has_and_belongs_to_many :tags,                    class_name: '::Wco::Tag', index: true
 
   # has_many :galleries, class_name: 'Wco::Gallery'
   # has_many :videos, class_name: 'Wco::Video'

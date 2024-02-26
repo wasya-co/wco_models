@@ -67,12 +67,8 @@ class Wco::LeadsController < Wco::ApplicationController
       redirect_to request.referrer
       return
     end
-    # @schs      = Sch.where( lead_id: @lead.id )
-    # @ctxs      = Ctx.where( lead_id: @lead.id )
-    # @convs     = Conv.find( Office::EmailConversationLead.where( lead_id: @lead.id ).map( &:email_conversation_id ) )
-    # @msgs      = Msg.where( from: @lead.email )
-    # @galleries = @lead.galleries.page( params[:galleries_page] ).per( current_profile.per_page )
-    # @videos    = @lead.videos.page( params[:videos_page]       ).per( current_profile.per_page )
+    @ctxs  = @lead.ctxs
+    @convs = @lead.conversations.includes(:messages)
   end
 
   def update
@@ -97,6 +93,8 @@ class Wco::LeadsController < Wco::ApplicationController
 
   def set_lists
     @email_campaigns_list = [[nil,nil]] + WcoEmail::Campaign.all.map { |c| [ c.slug, c.id ] }
+    @email_templates_list = WcoEmail::EmailTemplate.list
+    @leads_list           = Wco::Lead.list
     @leadsets_list        = Wco::Leadset.list
     @tags_list            = Wco::Tag.list
   end

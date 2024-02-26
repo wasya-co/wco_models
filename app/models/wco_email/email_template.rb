@@ -1,5 +1,5 @@
 
-DEFAULT_FROM_EMAIL = 'victor@wasya.co'
+DEFAULT_FROM_EMAIL = 'no-reply@wasya.co'
 
 class WcoEmail::EmailTemplate
   include Mongoid::Document
@@ -41,7 +41,7 @@ class WcoEmail::EmailTemplate
   field :config_json,     type: Object,   default: '{}'
   field :layout, default: 'plain'
 
-  DEFAULT_FROM_EMAIL = 'Victor Pudeyev <victor@wasya.co>'
+  DEFAULT_FROM_EMAIL = 'Victor Pudeyev <no-reply@wasya.co>'
   FROM_EMAILS = [
     'Annesque Studio <hello@annesque.studio>',
     'Annesque Studio <no-reply@annesque.studio>',
@@ -134,6 +134,4 @@ class WcoEmail::EmailTemplate
   def self.list
     [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
   end
-
 end
-ET = WcoEmail::EmailTemplate

@@ -27,15 +27,18 @@
           - else
             = link_to conv.subject, wco_email.conversation_path(conv)
           <b>#{conv.messages.unread.length}</b> (#{conv.messages.length})
-          - conv.messages.unread.each do |msg|
-            .border-bottom
-              .gray= msg.preview_str
-              = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
-          - if conv.messages.unread.blank?
-            - msg = conv.messages.last
-            .border-bottom
-              .gray= msg.preview_str
-              = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
+
+          .gray= conv.preview
+
+          -# - conv.messages.unread.each do |msg|
+          -#   .border-bottom
+          -#     .gray= msg.preview_str
+          -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
+          -# - if conv.messages.unread.blank?
+          -#   - msg = conv.messages.last
+          -#   .border-bottom
+          -#     .gray= msg.preview_str
+          -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
 
         %td.tags.mini
           = render '/wco/tags/chips', tags: conv.tags, cache_key: conv.cache_key

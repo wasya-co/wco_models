@@ -26,7 +26,7 @@ class WcoEmail::Conversation
   field :preview, default: ''
 
   has_many :messages,             class_name: '::WcoEmail::Message'
-  default_scope ->{ includes(:messages) }
+  # default_scope ->{ includes(:messages) }
 
   has_and_belongs_to_many :tags,  class_name: 'Wco::Tag', index: true
   has_and_belongs_to_many :leads, class_name: 'Wco::Lead', index: true

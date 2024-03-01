@@ -28,7 +28,7 @@ class Wco::OfficeActionTemplatesController < Wco::ApplicationController
   end
 
   def update
-    params[:oat][:ties_attributes].permit!
+    params[:oat][:ties_attributes].permit! rescue nil
     if params[:id]
       @oat = OAT.find params[:id]
     else
@@ -53,6 +53,7 @@ class Wco::OfficeActionTemplatesController < Wco::ApplicationController
     else
       flash_alert @oat
     end
+
     redirect_to action: :index
   end
 

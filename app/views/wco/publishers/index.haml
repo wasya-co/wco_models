@@ -30,5 +30,5 @@
           .Card
             = form_for item, url: wco.run_publisher_path( item ), method: :post do |f|
               %label props
-              = f.text_field :props, class: 'w-400px'
+              = f.text_field :props, value: '{}', class: 'w-400px'
               = f.submit 'run', data: { confirm: 'Are you sure?' }

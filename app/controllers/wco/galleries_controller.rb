@@ -78,7 +78,7 @@ class Wco::GalleriesController < Wco::ApplicationController
   def shared_with_me
     authorize! :index, Wco::Gallery
     @page_title = 'Galleries Shared With Me'
-    @galleries = @current_profile.shared_galleries.unscoped.where( :is_trash => false
+    @galleries = @current_profile.shared_galleries(
       ).order_by( :created_at => :desc
       ).page( params[:shared_galleries_page] ).per( 10 )
     render params[:render_type]

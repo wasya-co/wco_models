@@ -24,7 +24,8 @@ class Wco::Gallery
   field :descr,   :as => :description
 
   field :is_public, type: Boolean, default: false
-  # has_and_belongs_to_many :shared_profiles, :class_name => 'Wco::Profile', :inverse_of => :shared_galleries
+
+  has_and_belongs_to_many :shared_profiles, :class_name => 'Wco::Profile', :inverse_of => :shared_galleries
 
   def published
     where({ :is_public => true }).order_by({ :created_at => :desc })

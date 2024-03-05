@@ -86,8 +86,8 @@ class Wco::GalleriesController < Wco::ApplicationController
 
   def show
     authorize! :show, @gallery
-    @photos = @gallery.photos.unscoped.where({ :is_trash => false }).order_by( ordering: :asc )
-    @deleted_photos = @gallery.photos.unscoped.where({ :is_trash => true }).order_by( ordering: :asc )
+    @photos = @gallery.photos.order_by( ordering: :asc )
+    @deleted_photos = @gallery.photos.deleted.order_by( ordering: :asc )
   end
 
   def update_ordering

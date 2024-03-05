@@ -85,7 +85,8 @@ class WcoHosting::Serverhost
     ac   = ActionController::Base.new
     ac.instance_variable_set( :@app, app )
     ac.instance_variable_set( :@workdir, WORKDIR )
-    rendered_str = ac.render_to_string("wco_hosting/docker-compose/dc-#{app.tmpl.kind}")
+    # rendered_str = ac.render_to_string("wco_hosting/docker-compose/dc-#{app.tmpl.kind}")
+    rendered_str = ac.render_to_string("wco_hosting/docker-compose/dc-any")
     Wco::Log.puts! rendered_str, 'add_docker_service rendered_str', obj: @obj
 
     file = Tempfile.new('prefix')

@@ -1,19 +1,22 @@
 #!/bin/bash
 
+function download { name="$(basename $1)"; curl "$1" > "$name"; }
+export filename="$(basename <%= @app.tmpl.volume_zip %>)"
+
 set -ex
 
 cd <%= @workdir %>
 rm -rf __MACOSX
 
 ## cache/overwrite
-[ ! -e <%= @app.kind %>__prototype.zip ] && curl <%= @app.tmpl.volume_zip %> > <%= @app.kind %>__prototype.zip
-#                                           curl <%= @app.tmpl.volume_zip %> > <%= @app.kind %>__prototype.zip
+[ ! -e $filename ] && curl <%= @app.tmpl.volume_zip %> > $filename
+#                     curl <%= @app.tmpl.volume_zip %> > $filename
 
 ## cache/overwrite
-[ ! -e <%= @app.kind %>__prototype     ] && rm -rf <%= @app.kind %>__prototype && unzip -o <%= @app.kind %>__prototype.zip
-#                                           rm -rf <%= @app.kind %>__prototype && unzip -o <%= @app.kind %>__prototype.zip
+[ ! -e build ] && unzip -o $filename -d build
+# rm -rf build && unzip -o $filename -d build
 
-mv  <%= @app.kind %>__prototype ./volumes/<%= @app.service_name %>_data
+mv  build ./volumes/<%= @app.service_name %>_data
 
 set +ex
 echo ok #create_volume

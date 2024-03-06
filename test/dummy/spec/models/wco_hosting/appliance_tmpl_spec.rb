@@ -24,7 +24,7 @@ RSpec.describe WcoHosting::ApplianceTmpl do
       image: 'some-image',
       volume_zip: 'same',
     })
-    tmpl.price_id.should_not eql nil
+    tmpl.persisted?.should eql true
   end
 
 

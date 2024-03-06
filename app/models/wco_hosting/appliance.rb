@@ -16,7 +16,7 @@ class WcoHosting::Appliance
     self[:service_name] = host.gsub(".", "_")
   end
 
-  belongs_to :environment, class_name: 'WcoHosting::Environment', inverse_of: :appliances
+  belongs_to :environment, class_name: 'WcoHosting::Environment', inverse_of: :appliances, optional: true
 
   field :subdomain
   field :domain

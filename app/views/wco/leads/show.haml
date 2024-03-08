@@ -46,16 +46,16 @@
 
     .col-md-6.schs
       %h5
-        Scheduled actions (#{@lead.schs.length})
-        -# = link_to '[+]', '#'
-        \[+]
+        Email Actions (#{@lead.schs.length})
+        = link_to '[+]', wco_email.new_email_action_path(lead_id: @lead.id)
       %ul
         - @lead.schs.each do |sch|
           %li
-            = link_to sch.email_action.slug, edit_scheduled_email_action_path(sch)
-            = sch.state
-            (#{link_to 'proto-action', edit_email_action_path(sch.email_action)})
-            = sch.perform_at
+            = link_to sch, wco_email.edit_email_action_path(sch)
+            = sch.status
+            %br
+            (#{link_to sch.email_action_template, wco_email.edit_email_action_template_path(sch.email_action_template)})
+            Perform at: #{pp_datetime sch.perform_at}
 
       %hr
       %h5

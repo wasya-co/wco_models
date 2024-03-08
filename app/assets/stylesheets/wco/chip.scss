@@ -1,33 +1,26 @@
 
-html {
-  // --wco-color-1: red;
-  --wco-color-2: #ddd;
-}
+
+
 
 .chip,
 .Chip {
-  display: inline;
-
-  border: 1px solid var(--wco-color-1);
-  border-radius: 0.5em;
-  padding: 0.1em .3em;
-  margin-bottom: 0.1em;
   background: var(--wco-color-2);
-
-}
-.chip,
-.Chip {
-  // border: 1px solid black;
   border-radius: 1em 0 0 1em;
 
-  margin-right: 32px;
+  color: var(--wco-color-2contrast);
+  a {
+    color: var(--wco-color-2contrast);
+  }
 
-  padding: 0.2em 0.2em 0.2em 0.6em;
+  display: inline;
 
   height: 32px;
 
-  background: var(--wco-color-2);
+  margin-right: 32px;
+  margin-bottom: 0.1em;
 
+  padding: 0.1em .3em;
+  padding: 0.2em 0.2em 0.2em 0.6em;
   position: relative;
 
   &::before {

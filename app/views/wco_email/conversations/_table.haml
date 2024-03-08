@@ -10,38 +10,39 @@
       %th.subject subject, preview
       %th.tags Tags
       %th.latest-at latest_at
-    - convs.each_with_index do |conv, idx|
-      %tr
-        %td.select-all
-          .gray= idx+1
-          = check_box_tag 'conversation_ids[]', conv.id.to_s, nil, { class: 'i-sel' }
-        %td.leads.mini
-          -# - conv.from_emails.each do |from|
-          -#   = link_to from, wco.lead_path( from )
-          -# %hr
-          - conv.leads.each do |lead|
-            = link_to lead.email, wco.lead_path( lead )
-        %td.subject
-          - if conv.unread?
-            <b>#{link_to conv.subject, wco_email.conversation_path(conv)}</b>
-          - else
-            = link_to conv.subject, wco_email.conversation_path(conv)
-          <b>#{conv.messages.unread.length}</b> (#{conv.messages.length})
+    %tbody.conversations-list
+      - convs.each_with_index do |conv, idx|
+        %tr
+          %td.select-all
+            .gray= idx+1
+            = check_box_tag 'conversation_ids[]', conv.id.to_s, nil, { class: 'i-sel' }
+          %td.leads.mini
+            -# - conv.from_emails.each do |from|
+            -#   = link_to from, wco.lead_path( from )
+            -# %hr
+            - conv.leads.each do |lead|
+              = link_to lead.email, wco.lead_path( lead )
+          %td.subject
+            - if conv.unread?
+              <b>#{link_to conv.subject, wco_email.conversation_path(conv)}</b>
+            - else
+              = link_to conv.subject, wco_email.conversation_path(conv)
+            <b>#{conv.messages.unread.length}</b> (#{conv.messages.length})
 
-          .gray= conv.preview
+            .gray= conv.preview
 
-          -# - conv.messages.unread.each do |msg|
-          -#   .border-bottom
-          -#     .gray= msg.preview_str
-          -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
-          -# - if conv.messages.unread.blank?
-          -#   - msg = conv.messages.last
-          -#   .border-bottom
-          -#     .gray= msg.preview_str
-          -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
+            -# - conv.messages.unread.each do |msg|
+            -#   .border-bottom
+            -#     .gray= msg.preview_str
+            -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
+            -# - if conv.messages.unread.blank?
+            -#   - msg = conv.messages.last
+            -#   .border-bottom
+            -#     .gray= msg.preview_str
+            -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
 
-        %td.tags.mini
-          = render '/wco/tags/chips', tags: conv.tags, cache_key: conv.cache_key
-        %td.latest-at
-          = pp_date conv.latest_at
-          = pp_time conv.latest_at
+          %td.tags.mini
+            = render '/wco/tags/chips', tags: conv.tags, cache_key: conv.cache_key
+          %td.latest-at
+            = pp_date conv.latest_at
+            = pp_time conv.latest_at

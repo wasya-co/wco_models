@@ -1,8 +1,10 @@
 
 
-.tags--index-inline
+.Tags.mb-2
   <b>Tags (#{tags.length}):</b>
   - tags.each_with_index do |tag, idx|
-    = link_to tag.slug, tag_path(tag)
-    - if idx+1 != tags.length
+    = link_to tag.slug, wco.tag_path(tag)
+    - if idx+1 == tags.length
+      \.
+    - else
       \,&nbsp;

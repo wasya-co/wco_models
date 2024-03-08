@@ -5,11 +5,17 @@
 
   %ul
     %li.d-flex
-      <b>Headlines (#{@tag.headlines.length}):</b>
+      <b>Conversations (#{@tag.conversations.length}):&nbsp;</b>
+      - if @tag.conversations.present?
+        .Conversations
+          = render '/wco_email/conversations/table', convs: @tag.conversations
+    %li.d-flex
+      <b>Headlines (#{@tag.headlines.length}):&nbsp;</b>
       = render '/wco/headlines/index', headlines: @tag.headlines
-    %li
-      <b>N reports:</b> #{@tag.reports.length}
-    %li
-      <b>N stubs:</b> #{@tag.message_stubs.length}
+    %li.d-flex
+      <b>Reports (#{@reports.length}):&nbsp;</b>
+      = render 'wco/reports/list', reports: @reports, config: { skip_tags: true }
+    %li.d-flex
+      <b>Message Stubs (#{@tag.message_stubs.length}):&nbsp;</b>
       = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs
 

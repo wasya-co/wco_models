@@ -41,6 +41,8 @@ class Wco::TagsController < Wco::ApplicationController
   def show
     @tag = Wco::Tag.find params[:id]
     authorize! :show, @tag
+
+    @reports = @tag.reports.page( params[:reports_page] ).per( current_profile.per_page )
   end
 
   def update

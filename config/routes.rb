@@ -2,6 +2,10 @@
 Wco::Engine.routes.draw do
   root to: 'application#home'
 
+  namespace :api do
+    get 'leads/index_hash', to: 'leads#index_hash'
+  end
+
   get 'application/tinymce', to: 'application#tinymce'
 
   resources :assets
@@ -22,10 +26,10 @@ Wco::Engine.routes.draw do
   post 'invoices/:id/send-stripe',  to: 'invoices#send_stripe',        as: :send_invoice_stripe
   resources :invoices
 
-  get 'leads/new',     to: 'leads#new'
+  get  'leads/new',    to: 'leads#new'
   post 'leads/bulkop', to: 'leads#bulkop'
   post 'leads/import', to: 'leads#import', as: :leads_import
-  get 'leads/:id',     to: 'leads#show', id: /[^\/]+/
+  get  'leads/:id',    to: 'leads#show', id: /[^\/]+/
   resources :leads
   resources :leadsets
   delete 'logs/bulkop', to: 'logs#bulkop', as: :logs_bulkop

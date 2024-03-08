@@ -70,5 +70,7 @@
   .row
     .col-md-12.conversations
       %h5 Email Conversations (#{@convs.length})
+      = paginate @convs, param_name: :convs_page
       = render 'wco_email/conversations/table', convs: @convs
+      = paginate @convs, param_name: :convs_page
 

@@ -67,11 +67,8 @@ class Wco::LeadsController < Wco::ApplicationController
       redirect_to request.referrer
       return
     end
-    @ctxs  = @lead.ctxs.page( params[:ctxs_page] ).per( current_profile.per_page )
-
-    ## not paginated b/c of dataTable:
-    @convs = @lead.conversations # .includes(:messages)
-    #      ).page( params[:convs_page] ).per( current_profile.per_page )
+    @ctxs  = @lead.ctxs.page(          params[:ctxs_page]  ).per( current_profile.per_page )
+    @convs = @lead.conversations.page( params[:convs_page] ).per( current_profile.per_page )
 
   end
 

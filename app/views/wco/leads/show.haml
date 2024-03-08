@@ -18,8 +18,6 @@
           %li Phone: #{@lead.phone}
         - if @lead.address
           %li Address: #{@lead.address}
-        -# - if @lead.shoe_size
-        -#   %li Shoe size: #{@lead.shoe_size}
         -# - if @lead.comment
         -#   %li Comment: #{raw @lead.comment}
         - if @lead.photo
@@ -39,10 +37,12 @@
         Email Contexts (#{@lead.ctxs.length})
         = link_to '[+]', '#'
       %ul
+        = paginate @ctxs, param_name: :ctxs_page
         - @ctxs.each do |ctx|
           %li
             = pp_date( ctx.sent_at ) || 'not sent'
             = link_to ctx.subject.presence||"No Subj?!", wco_email.context_path(ctx)
+        = paginate @ctxs, param_name: :ctxs_page
 
     .col-md-6.schs
       %h5

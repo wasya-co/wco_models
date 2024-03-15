@@ -123,6 +123,30 @@ textarea.monospace {
 }
 
 /* H */
+
+
+.h-20px {
+  min-height: 20px;
+}
+.h-30px {
+  min-height: 30px;
+}
+.h-50px {
+  min-height: 50px;
+}
+
+.h-300px {
+  min-height: 300px;
+}
+
+.h-400px {
+  min-height: 400px;
+}
+
+.h-500px {
+  min-height: 500px;
+}
+
 .header {
   display: flex;
 
@@ -135,9 +159,10 @@ textarea.monospace {
   }
 }
 
-.h-500px {
-  min-height: 500px;
+.hide, .hidden {
+  display: none;
 }
+
 
 /* M */
 
@@ -159,6 +184,11 @@ textarea.monospace {
   width: calc( 100% - 1em );
 }
 
+/* S */
+.spacer-small {
+  height: 20px;
+}
+
 /* T */
 
 .title {
@@ -167,6 +197,21 @@ textarea.monospace {
 
 /* W */
 
+.w-20px {
+  width: 20px;
+}
+.w-30px {
+  width: 30px;
+}
+.w-50px {
+  width: 50px;
+}
+.w-150px {
+  width: 150px;
+}
+.w-200px {
+  width: 200px;
+}
 .w-300px {
   width: 300px;
 }

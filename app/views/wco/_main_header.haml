@@ -10,9 +10,12 @@
     .flex-row
       %ul
         %li= link_to 'ROOT', '/'
-        %li= link_to '/email',   '/email'
-        %li= link_to '/hosting', '/hosting'
-        %li= link_to '/trading', '/trading'
+        - if defined? wco_email
+          %li= link_to '/email',   '/email'
+        - if defined? wco_hosting
+          %li= link_to '/hosting', '/hosting'
+        - if defined? iro
+          %li= link_to '/trading', '/trading'
 
       %ul
         %li= render '/wco/invoices/header'

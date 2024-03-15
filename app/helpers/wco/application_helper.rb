@@ -29,9 +29,10 @@ module Wco::ApplicationHelper
     return date.in_time_zone( Rails.application.config.time_zone ).strftime('%l:%M%P %Z')
   end
 
-  def pp_amount a
+  def pp_amount a, config = { precision: 2 }
     return '-' if !a
-    "$ #{'%.2f' % a}"
+    return number_to_currency a, precision: config[:precision]
+    # "$#{'%.2f' % a}"
   end
   def pp_money a; pp_amount a; end
   def pp_currency a; pp_amount a; end

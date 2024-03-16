@@ -24,12 +24,12 @@ div.galleries-show {
 }
 
 
-// .row-thumbs .item {
-//   margin-bottom: 1em;
-//   img {
-//     margin-top: 10px;
-//   }
-// }
+.row-thumbs {
+  .items {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}
 
 .row-large .item {
   // border: 1px solid red;

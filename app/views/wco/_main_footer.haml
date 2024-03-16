@@ -27,11 +27,7 @@
               = pp_time Time.now
 
         .col-sm-4
-          = form_for @current_profile, url: wco.profile_path(@current_profile), as: :profile do |f|
-            .flex-row
-              = f.label :per_page
-              = f.select :per_page, options_for_select([ 10, 25, 50, 100, 250, 500, 1000], selected: @current_profile.per_page)
-              = f.submit 'Go'
+          = render '/wco/profiles/form_extra', profile: @current_profile
           = link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
 
     .c

@@ -40,7 +40,9 @@ class Wco::Gallery
 
   def self.list conditions = {}
     out = self.unscoped.where( conditions ).order_by( :created_at => :desc )
-    [['', nil]] + out.map { |item| [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ] }
+    [['', nil]] + out.map do |item|
+      [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ]
+    end
   end
 
   has_many :photos,    class_name: '::Wco::Photo', order: { weight: :asc }

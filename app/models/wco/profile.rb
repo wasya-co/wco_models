@@ -10,6 +10,7 @@ class Wco::Profile
   validates :email, presence: true, uniqueness: true
 
   field :per_page, type: :integer, default: 25
+  field :show_n_thumbs, type: :integer, default: 8
 
   belongs_to :leadset,          class_name: 'Wco::Leadset', inverse_of: :profile,         optional: true
   has_many :newsitems, class_name: 'Wco::Newsitem'

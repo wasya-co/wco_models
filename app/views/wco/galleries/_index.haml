@@ -4,7 +4,6 @@
 -# _vp_ 2022-09-25 :: Small styling revision
 -#
 
-- n_thumbs  ||= 8
 - galleries ||= @galleries
 
 .galleries--index.maxwidth
@@ -29,7 +28,7 @@
                 No Photos
               - else
                 .d-flex.flex-wrap.photos-thumbs
-                  - g.photos.limit( n_thumbs ).each do |photo|
+                  - g.photos.limit( @current_profile.show_n_thumbs ).each do |photo|
                     = link_to image_tag(photo.photo.url(:thumb), :alt => ''), gallery_path(g.slug)
 
       - if galleries.respond_to? :total_pages

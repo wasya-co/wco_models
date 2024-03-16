@@ -44,6 +44,9 @@ Wco::Engine.routes.draw do
   resources :profiles
   post 'publishers/:id/do-run', to: 'publishers#do_run', as: :run_publisher
   resources :publishers
+
+  post   'photos/move',   to: 'photos#move',    as: :move_photos
+  delete 'photos/delete', to: 'photos#destroy', as: :delete_photos
   resources :photos
 
   get 'reports/deleted', to: 'reports#index', as: :deleted_reports, defaults: { deleted: true }

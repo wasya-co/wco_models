@@ -1,7 +1,7 @@
 
 class Wco::GalleriesController < Wco::ApplicationController
 
-  # before_action :set_lists
+  before_action :set_lists, only: %i| show |
   before_action :set_gallery, only: %w| destroy edit j_show show update update_ordering |
 
   # Alphabetized! : )
@@ -140,6 +140,10 @@ class Wco::GalleriesController < Wco::ApplicationController
     end
     @page_title = "#{@gallery.name} Gallery"
     @page_description = @gallery.subhead
+  end
+
+  def set_lists
+    @galleries_list = Wco::Gallery.list
   end
 
 end

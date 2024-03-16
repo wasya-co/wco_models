@@ -21,17 +21,36 @@
           = link_to image_tag(photo.photo.url( :mini ), :alt => ''), "#large_#{photo.id}"
 
   .row-thumbs
-    %p.collapse-expand#rowThumbs Thumbs
+    %i.fa.fa-expand.collapse-expand#rowMovableThumbs Movable Thumbs
     .orderable-items{ data: { id: @gallery.id.to_s, slug: @gallery.slug, token: form_authenticity_token } }
-      .flex-row.items
-        - @photos.each do |photo|
-          .itemW
-            %a.mvLeft &lt;
-            %a.mvRight &gt;
-            .item{ data: { id: photo.id.to_s } }
-              = render 'wco/photos/meta_manager', photo: photo
-              = image_tag photo.photo.url( :thumb )
-      = button_tag 'Save ordering', class: 'save-ordering'
+      = form_tag wco.move_photos_path, { method: :post } do
+        .d-flex
+          = select_tag :gallery_id, options_for_select(@galleries_list), class: 'select2'
+          = submit_tag 'Move', data: { confirm: 'Are you sure?' }
+        .d-flex.items
+          - @photos.each do |photo|
+            .itemW
+              = check_box_tag 'ids[]', photo.id
+              .item{ data: { id: photo.id.to_s } }
+                = image_tag photo.photo.url( :thumb )
+
+  .row-thumbs
+    %i.fa.fa-expand.collapse-expand#rowOrderableThumbs Orderable, Deletable Thumbs
+    .orderable-items{ data: { id: @gallery.id.to_s, slug: @gallery.slug, token: form_authenticity_token } }
+      = form_tag wco.delete_photos_path, { method: :delete } do
+        = submit_tag 'Delete', data: { confirm: 'Are you sure?' }
+        = button_tag 'Save ordering', class: 'save-ordering'
+        .d-flex.items
+          - @photos.each do |photo|
+            .itemW
+              %a.mvLeft &lt;
+              %a.mvRight &gt;
+              .item{ data: { id: photo.id.to_s } }
+                = check_box_tag 'ids[]', photo.id
+                = render 'wco/photos/meta_manager', photo: photo
+                = image_tag photo.photo.url( :thumb )
+
+
 
   .row-large
     %p.collapse-expand#rowLarge Large

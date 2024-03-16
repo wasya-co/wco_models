@@ -34,6 +34,7 @@ img.thumb {
 .photos--meta-manager {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 
   .right-hand {
     text-align: right;

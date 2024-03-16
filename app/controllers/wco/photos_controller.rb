@@ -8,16 +8,18 @@ class Wco::PhotosController < Wco::ApplicationController
   ## Alphabetized : )
 
   def destroy
-    @photo = Wco::Photo.unscoped.find params[:id]
-    authorize! :destroy, @photo
-    @photo.gallery.touch if @photo.gallery
-    @photo.is_trash = true
-    flag = @photo.save
-    if flag
-      flash[:notice] = "Success"
-    else
-      flash[:alert] = "No luck: #{@photo.errors.messages}"
+    authorize! :destroy, Wco::Photo
+    if params[:id]
+      @photos = [ Wco::Photo.unscoped.find( params[:id] ) ]
+    elsif params[:ids]
+      @photos = Wco::Photo.where( :id.in => params[:ids] )
     end
+    outs = []
+    @photos.map do |photo|
+      photo.gallery.touch if photo.gallery
+      outs.push photo.delete
+    end
+    flash_notice "Outcomes: #{outs}"
     redirect_to request.referrer || root_path
   end
 
@@ -58,6 +60,19 @@ class Wco::PhotosController < Wco::ApplicationController
         filename: @photo.photo.original_filename,
       }, status: 400
     end
+  end
+
+  def move
+    authorize! :move, Wco::Photo
+    photos  = Wco::Photo.where({ :id.in => params[:ids] })
+
+    flag = photos.update_all({ gallery_id: params[:gallery_id] })
+    if flag
+      flash_notice 'ok'
+    else
+      flash_alert 'not ok'
+    end
+    redirect_to request.referrer
   end
 
   def new

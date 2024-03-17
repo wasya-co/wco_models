@@ -11,6 +11,7 @@ Wco::Engine.routes.draw do
   resources :assets
   # get 'assets/:id', to: 'assets#show', as: :asset
 
+  post 'galleries/update', to: 'galleries#update', as: :update_galleries
   resources :galleries do
     post 'multiadd', :to => 'photos#j_create', :as => :multiadd
   end

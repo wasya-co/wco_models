@@ -4,7 +4,7 @@
   .mini-inputs
     .flex-row
       = f.label :per_page
-      = f.select :per_page, options_for_select([ 10, 25, 50, 100, 250, 500, 1000], selected: @current_profile.per_page)
+      = f.select :per_page, options_for_select([ 2, 10, 25, 50, 100, 250, 500, 1000], selected: @current_profile.per_page)
     .d-flex
       %label show_n_thumbs
       = f.number_field :show_n_thumbs

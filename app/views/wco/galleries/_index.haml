@@ -6,33 +6,38 @@
 
 - galleries ||= @galleries
 
+
 .galleries--index.maxwidth
   = render 'header', galleries: galleries
 
   .padded
     - if galleries.length > 0
-
       - if galleries.respond_to? :total_pages
         = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'
 
-      .row
-        - galleries.each do |g|
-          .col-sm-12.col-md-6
-            .Card
-              %h5
-                = link_to '[~]', edit_gallery_path( g )
-                = link_to g.name, gallery_path(g.slug)
-                (#{g.photos.length})
-              = render 'meta', item: g
-              - if g.photos.length == 0
-                No Photos
-              - else
-                .d-flex.flex-wrap.photos-thumbs
-                  - g.photos.limit( @current_profile.show_n_thumbs ).each do |photo|
-                    = link_to image_tag(photo.photo.url(:thumb), :alt => ''), gallery_path(g.slug)
+      = form_tag update_galleries_path do
+        = select_tag 'tag_ids[]', options_for_select([ nil, 1 ]), { multiple: true }
+        = submit_tag 'Add Tags'
 
-      - if galleries.respond_to? :total_pages
-        = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'
+        .row
+          - galleries.each do |g|
+            .col-sm-12.col-md-6
+              .Card
+                %h5
+                  = check_box_tag 'ids[]', g.id
+                  = link_to '[~]', edit_gallery_path( g )
+                  = link_to g.name, gallery_path(g.slug)
+                  (#{g.photos.length})
+                = render 'meta', item: g
+                - if g.photos.length == 0
+                  No Photos
+                - else
+                  .d-flex.flex-wrap.photos-thumbs
+                    - g.photos.limit( @current_profile.show_n_thumbs ).each do |photo|
+                      = link_to image_tag(photo.photo.url(:thumb), :alt => ''), gallery_path(g.slug)
+
+        - if galleries.respond_to? :total_pages
+          = paginate galleries, :param_name => :galleries_page, :views_prefix => 'wco'
 
     - else
       %h5 No Galleries

@@ -10,6 +10,9 @@
       %i.material-icons visibility
     - else
       %i.material-icons visibility_off
+
+  = render '/wco/tags/list_mini', tags: gallery.tags
+
   %ul
     %li slug :: #{gallery.slug}
     %li subhead :: #{gallery.subhead}

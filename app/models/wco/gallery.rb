@@ -51,6 +51,9 @@ class Wco::Gallery
     %w| name subhead descr |
   end
 
+  has_and_belongs_to_many :tags
+
+
   has_many :oats, class_name: 'Wco::OfficeActionTemplate'
 
 end

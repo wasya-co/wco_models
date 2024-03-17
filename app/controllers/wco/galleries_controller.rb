@@ -44,14 +44,15 @@ class Wco::GalleriesController < Wco::ApplicationController
     @page_title = 'Galleries'
     @galleries = Wco::Gallery.all.order_by( :created_at => :desc )
 
+    @tags = Wco::Tag.all
+
     if params[:q]
       q = URI.decode(params[:q])
       @galleries = @galleries.where({ :name => /#{q}/i })
     end
 
     @galleries = @galleries.page( params[:galleries_page] ).per( current_profile.per_page )
-
-    render "_index"
+    render '_index'
   end
 
   def j_show
@@ -126,6 +127,31 @@ class Wco::GalleriesController < Wco::ApplicationController
       render :action => :edit
     end
   end
+
+  def update_many
+    authorize! :update, Wco::Gallery
+    galleries = Wco::Gallery.where( :id.in => params[:gallery_ids] )
+
+    tags = Wco::Tag.where( :id.in => params[:tag_ids] )
+
+    if params[:remove]
+      galleries.each do |gallery|
+        tags.each do |tag|
+          gallery.tags.delete tag
+        end
+        gallery.save
+      end
+    else
+      galleries.each do |gallery|
+        gallery.tags.push tags
+        gallery.save
+      end
+    end
+
+    flash_notice 'Unknown outcome, no exception raised.'
+    redirect_to request.referrer
+  end
+
 
   ##
   ## private

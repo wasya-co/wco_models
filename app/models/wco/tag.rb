@@ -18,7 +18,9 @@ class Wco::Tag
   has_and_belongs_to_many :headlines # ,     class_name: 'Headline'
   has_and_belongs_to_many :leads, index: true # ,         class_name: 'Lead'
   has_and_belongs_to_many :leadsets # ,      class_name: 'Leadset'
+  has_and_belongs_to_many :galleries
   has_and_belongs_to_many :reports
+  has_and_belongs_to_many :videos
   has_and_belongs_to_many :logs
 
   INBOX = 'inbox'

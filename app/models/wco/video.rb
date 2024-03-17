@@ -32,6 +32,9 @@ class Wco::Video
   # belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
   # has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos
 
+  has_and_belongs_to_many :tags
+
+
   has_mongoid_attached_file :video,
     # styles: { :thumb => { geometry: '192x108', format: 'jpeg' }, },
     # processors: [ :transcoder ],

@@ -1,6 +1,8 @@
 
 class Wco::TagsController < Wco::ApplicationController
 
+  before_action :set_lists, only: %i| show |
+
   def create
     @tag = Wco::Tag.new params[:tag].permit!
     authorize! :create, @tag
@@ -42,7 +44,12 @@ class Wco::TagsController < Wco::ApplicationController
     @tag = Wco::Tag.find params[:id]
     authorize! :show, @tag
 
-    @reports = @tag.reports.page( params[:reports_page] ).per( current_profile.per_page )
+    @galleries = @tag.galleries(
+      ).page( params[:galleries_page] ).per( current_profile.per_page )
+
+    @reports = @tag.reports(
+      ).page( params[:reports_page] ).per( current_profile.per_page )
+
   end
 
   def update
@@ -55,5 +62,15 @@ class Wco::TagsController < Wco::ApplicationController
     end
     redirect_to action: 'index'
   end
+
+  ##
+  ## private
+  ##
+  private
+
+  def set_lists
+    @tags = Wco::Tag.all
+  end
+
 
 end

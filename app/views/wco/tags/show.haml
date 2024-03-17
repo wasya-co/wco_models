@@ -13,6 +13,9 @@
       <b>Headlines (#{@tag.headlines.length}):&nbsp;</b>
       = render '/wco/headlines/index', headlines: @tag.headlines
     %li.d-flex
+      <b>Galleries (#{@galleries.length}):&nbsp;</b>
+      = render 'wco/galleries/index', galleries: @galleries, config: { skip_tags: true }
+    %li.d-flex
       <b>Reports (#{@reports.length}):&nbsp;</b>
       = render 'wco/reports/list', reports: @reports, config: { skip_tags: true }
     %li.d-flex

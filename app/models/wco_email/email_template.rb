@@ -40,6 +40,7 @@ class WcoEmail::EmailTemplate
   field :config_exe,                      default: ""      ## unused! _vp_ 2023-09-24
   field :config_json,     type: Object,   default: '{}'
   field :layout, default: 'plain'
+  field :mangle_subject, type: :boolean, default: false
 
   DEFAULT_FROM_EMAIL = 'Victor Pudeyev <no-reply@wasya.co>'
   FROM_EMAILS = [

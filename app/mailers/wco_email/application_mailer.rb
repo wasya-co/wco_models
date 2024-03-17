@@ -52,28 +52,8 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
 
 
-
     rendered_subject = ERB.new( @ctx.subject ).result( @ctx.get_binding )
-    if @ctx.lead.leadset.mangle_subject
-      ## From: https://www.fileformat.info/info/unicode/char/a.htm
-      ## From: https://stackoverflow.com/questions/7019034/utf-8-encoding-in-ruby-using-a-variable
-      ## From: https://stackoverflow.com/questions/52654509/random-generate-a-valid-unicode-character-in-ruby
-      ## latin
-      # n1 = 0x192
-      # n2 = 0x687
-      ##
-      ## weird punctuation
-      # n1 = 0x133
-      # n2 = 0x255
-
-      # random_utf8 = Enumerator.new do |yielder|
-      #   loop do
-      #     yielder << ( rand(n2-n1)+n1 ).chr('UTF-8')
-      #   rescue RangeError
-      #   end
-      # end
-      # rendered_subject = "#{rendered_subject} #{ random_utf8.next }#{ random_utf8.next }"
-
+    if @ctx.lead.leadset.mangle_subject || @ctx.email_template.mangle_subject
       ## From: https://www.ascii-code.com/
       n1 = 33
       n2 = 64

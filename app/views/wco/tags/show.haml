@@ -4,7 +4,7 @@
   %h5 Tag `#{@tag.slug}`
 
   %ul
-    - if wco_email
+    - if defined? wco_email
       %li.d-flex
         <b>Conversations (#{@tag.conversations.length}):&nbsp;</b>
         - if @tag.conversations.present?

@@ -40,7 +40,7 @@
             -#     = render '/wco_email/contexts/form_reply_mini', lead_id: msg.lead_id, message: msg, ctx: WcoEmail::Context.new({ from_email: msg.to&.downcase, subject: msg.subject, email_template_id: ET.find_by( slug: 'blank').id })
 
           %td.tags.mini
-            = render '/wco/tags/chips', tags: conv.tags, cache_key: conv.cache_key
+            = render '/wco/tags/list_mini', tags: conv.tags, cache_key: conv.cache_key, config: OpenStruct.new( without_checkbox: true )
           %td.latest-at
             = pp_date conv.latest_at
             = pp_time conv.latest_at

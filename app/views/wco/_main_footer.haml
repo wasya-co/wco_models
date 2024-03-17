@@ -29,6 +29,7 @@
         .col-sm-4
           = render '/wco/profiles/form_extra', profile: @current_profile
           = link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
+      = render 'wco/application/debug' if !Rails.env.production?
 
     .c
-    = render 'wco/application/debug' if !Rails.env.production?
+

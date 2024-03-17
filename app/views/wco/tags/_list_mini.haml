@@ -1,1 +1,11 @@
-_index_inline.haml
+
+
+-# <b>Tags (#{tags.length}):</b>
+-# - cache cache_key do
+.Tags.chips.mb-2
+  - tags.each do |tag|
+    .Chip{ data: { tag: { id: tag.id.to_s } } }
+      - if !config&.without_checkbox
+        = check_box_tag 'tag_ids[]', tag.id
+      = link_to tag.slug, wco.tag_path( tag )
+

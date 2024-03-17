@@ -1,7 +1,0 @@
-
-
-.Tags.chips.mb-2
-  <b>Tags (#{tags.length}):</b>
-  - tags.each_with_index do |tag, idx|
-    .Chip
-      = link_to tag.slug, wco.tag_path(tag)

@@ -13,11 +13,8 @@
   .padded
     - if galleries.length > 0
       = form_tag update_galleries_path do
-        - @tags.each do |tag|
 
-          .Chip
-            = check_box_tag 'tag_ids[]', tag.id
-            = tag
+        = render '/wco/tags/list_mini', tags: @tags
 
         = submit_tag 'Add Tags', data: { confirm: 'Are you sure?' }
         &nbsp;&nbsp;

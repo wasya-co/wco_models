@@ -63,6 +63,25 @@ if ($(".tinymce").length > 0) {
   $(".tinymce").summernote()
 }
 
+/*
+ * select_all
+ * _vp_ 2023-02-28
+**/
+$("input[type='checkbox'].i-sel").change((ev) => {
+  $( $(".n-selected")[0] ).html( $("input[type='checkbox'].i-sel:checked").length )
+})
+$("input#select_all[type='checkbox']").change((e) => {
+  const count = $("input[type='checkbox'].i-sel:checked").length
+  const new_state = count ? false : true // all will be checked?
+
+  $(".select-all input[type='checkbox']").prop('checked', new_state)
+
+  $( $("input[type='checkbox'].i-sel") ).each( i => {
+    $( $("input[type='checkbox'].i-sel")[i] ).prop('checked', new_state)
+  })
+
+  $( $(".n-selected")[0] ).html( $("input[type='checkbox'].i-sel:checked").length )
+})
 
 
 

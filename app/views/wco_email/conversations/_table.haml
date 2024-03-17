@@ -3,9 +3,7 @@
   %table.bordered.data-table
     %thead
       %th.select-all.nosort
-        .a
-          = check_box_tag :select_all
-          .n-selected -
+        = render '/wco/select_all'
       %th.leads leads
       %th.subject subject, preview
       %th.tags Tags

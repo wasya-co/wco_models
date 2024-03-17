@@ -170,6 +170,7 @@ class Wco::GalleriesController < Wco::ApplicationController
 
   def set_lists
     @galleries_list = Wco::Gallery.list
+    @tags_list = Wco::Tag.list
   end
 
 end

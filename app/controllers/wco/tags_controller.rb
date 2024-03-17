@@ -40,6 +40,28 @@ class Wco::TagsController < Wco::ApplicationController
     @new_tag = Wco::Tag.new
   end
 
+  def add_to
+    @tag = Wco::Tag.find params[:id]
+    resource = params[:resource].constantize.find params[:resource_id]
+    authorize! :update, @tag
+
+    resource.tags.push @tag
+    flag = resource.save
+    flash_notice 'maybe?'
+    redirect_to request.referrer
+  end
+
+  def remove_from
+    @tag = Wco::Tag.find params[:id]
+    resource = params[:resource].constantize.find params[:resource_id]
+    authorize! :update, @tag
+
+    resource.tags.delete @tag
+    flag = resource.save
+    flash_notice 'maybe?'
+    redirect_to request.referrer
+  end
+
   def show
     @tag = Wco::Tag.find params[:id]
     authorize! :show, @tag

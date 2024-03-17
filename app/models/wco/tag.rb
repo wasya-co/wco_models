@@ -42,6 +42,6 @@ class Wco::Tag
     slug
   end
   def self.list
-    [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
+    [[nil,nil]] + all.order_by( slug: :asc ).map { |p| [ p.slug, p.id ] }
   end
 end

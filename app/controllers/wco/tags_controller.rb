@@ -91,7 +91,7 @@ class Wco::TagsController < Wco::ApplicationController
   private
 
   def set_lists
-    @tags = Wco::Tag.all
+    @tags = Wco::Tag.all.order_by( slug: :asc )
   end
 
 

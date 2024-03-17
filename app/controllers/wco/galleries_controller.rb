@@ -44,7 +44,7 @@ class Wco::GalleriesController < Wco::ApplicationController
     @page_title = 'Galleries'
     @galleries = Wco::Gallery.all.order_by( :created_at => :desc )
 
-    @tags = Wco::Tag.all
+    @tags = Wco::Tag.all.order_by( slug: :asc )
 
     if params[:q]
       q = URI.decode(params[:q])

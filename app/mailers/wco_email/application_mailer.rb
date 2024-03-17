@@ -1,3 +1,4 @@
+# encoding: utf-8
 
 class WcoEmail::ApplicationMailer < ActionMailer::Base
 
@@ -49,15 +50,55 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     @ctx         = Ctx.find ctx_id
     @renderer    = self.class.renderer ctx: @ctx
     rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
+
+
+
+    rendered_subject = ERB.new( @ctx.subject ).result( @ctx.get_binding )
+    if @ctx.lead.leadset.mangle_subject
+      ## From: https://www.fileformat.info/info/unicode/char/a.htm
+      ## From: https://stackoverflow.com/questions/7019034/utf-8-encoding-in-ruby-using-a-variable
+      ## From: https://stackoverflow.com/questions/52654509/random-generate-a-valid-unicode-character-in-ruby
+      ## latin
+      # n1 = 0x192
+      # n2 = 0x687
+      ##
+      ## weird punctuation
+      # n1 = 0x133
+      # n2 = 0x255
+
+      # random_utf8 = Enumerator.new do |yielder|
+      #   loop do
+      #     yielder << ( rand(n2-n1)+n1 ).chr('UTF-8')
+      #   rescue RangeError
+      #   end
+      # end
+      # rendered_subject = "#{rendered_subject} #{ random_utf8.next }#{ random_utf8.next }"
+
+      ## From: https://www.ascii-code.com/
+      n1 = 33
+      n2 = 64
+      ch1 = ( rand(n2-n1)+n1 ).chr # ('UTF-8')
+      ch2 = ( rand(n2-n1)+n1 ).chr
+
+      if rendered_subject.last.ord >= n1 &&
+         rendered_subject.last.ord <= n2
+        space_idx = rendered_subject.rindex(/ /)
+        rendered_subject = rendered_subject[0...space_idx]
+      end
+
+      rendered_subject = "#{rendered_subject} #{ ch1 }#{ ch2 }"
+    end
+
     @ctx.update({
       rendered_str: rendered_str,
+      subject: rendered_subject,
     })
 
     mail( from:    @ctx.from_email,
           to:      @ctx.to_email,
           cc:      @ctx.cc,
           bcc:     "poxlovibb1@gmail.com",
-          subject: ERB.new( @ctx.subject ).result( @ctx.get_binding ),
+          subject: rendered_subject,
           body:    rendered_str,
           content_type: "text/html" )
   end

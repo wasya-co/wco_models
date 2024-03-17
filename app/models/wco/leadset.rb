@@ -31,6 +31,7 @@ class Wco::Leadset
 
 
   field :next_invoice_number, type: :integer, default: 100
+  field :mangle_subject, type: :boolean, default: false
 
   has_and_belongs_to_many :serverhosts, class_name: '::WcoHosting::Serverhost' # , inverse_of: :leadset
   def next_serverhost

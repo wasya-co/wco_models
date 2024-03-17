@@ -12,7 +12,9 @@
         %li Name: #{@lead.name}
         %li Email: #{@lead.email}
         %li
-          Leadset: #{ link_to @lead.leadset.company_url, leadset_path(@lead.leadset) }
+          Leadset:
+          = link_to @lead.leadset.company_url, leadset_path(@lead.leadset)
+          = link_to '[~]', edit_leadset_path(@lead.leadset)
         -# %li Rating: #{@lead.rating}
         - if @lead.phone
           %li Phone: #{@lead.phone}

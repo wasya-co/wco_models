@@ -10,6 +10,9 @@
   .input-field
     = f.label :email
     = f.text_field :email
+  .field
+    %label mangle_subject
+    = f.check_box :mangle_subject
 
   .input-field
     = f.label :next_invoice_number

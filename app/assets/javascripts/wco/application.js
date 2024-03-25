@@ -5,6 +5,7 @@
 //= require ../vendor/bootstrap-4.6.2.min
 //= require ../vendor/select2-4.0.0
 //= require ../vendor/jquery.dataTables-1.10.16
+//= require ../vendor/jquery-ui@1.13.2.js
 //
 // Skip for now b/c I need to move fonts, too:
 // require ../vendor/summernote-0.8.18
@@ -27,6 +28,11 @@
 //
 
 $(function() {
+
+  /* sortable */
+  $( function() {
+    $( ".orderable-items" ).sortable();
+  } );
 
 /* DataTable */
 if ('function' === typeof $('body').DataTable) {

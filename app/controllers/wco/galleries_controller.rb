@@ -93,12 +93,12 @@ class Wco::GalleriesController < Wco::ApplicationController
 
   def update_ordering
     authorize! :update, @gallery
-    out = []
-    params[:gallery][:sorted_photo_ids].each_with_index do |id, idx|
-      out.push Photo.find( id ).update_attribute( :ordering, idx )
+    flags = []
+    params[:ids].each_with_index do |id, idx|
+      flags.push Wco::Photo.find( id ).update( weight: idx )
     end
-    flash[:notice] = "Outcomes: #{out}."
-    redirect_to action: 'show', id: @gallery.id
+    flash_notice "Ordering photos: #{flags}"
+    redirect_to request.referrer
   end
 
   def update

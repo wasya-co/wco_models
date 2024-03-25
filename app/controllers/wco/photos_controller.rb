@@ -66,12 +66,14 @@ class Wco::PhotosController < Wco::ApplicationController
     authorize! :move, Wco::Photo
     photos  = Wco::Photo.where({ :id.in => params[:ids] })
 
-    flag = photos.update_all({ gallery_id: params[:gallery_id] })
-    if flag
-      flash_notice 'ok'
+    if params['delete'] == '1'
+      flash_notice 'deleting'
+      flag = photos.map &:delete
     else
-      flash_alert 'not ok'
+      flag = photos.update_all({ gallery_id: params[:gallery_id] })
+      flash_notice 'moving'
     end
+    flash_notice flag
     redirect_to request.referrer
   end
 

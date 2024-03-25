@@ -17,6 +17,7 @@ class Wco::ApplicationController < ActionController::Base
   check_authorization
 
   before_action :current_profile
+  before_action :set_lists
 
   def home
     authorize! :home, Wco
@@ -78,6 +79,9 @@ class Wco::ApplicationController < ActionController::Base
 
   def my_truthy? which
     ["1", "t", "T", "true"].include?( which )
+  end
+
+  def set_lists
   end
 
 end

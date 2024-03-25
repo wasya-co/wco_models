@@ -1,7 +1,6 @@
 
 class Wco::GalleriesController < Wco::ApplicationController
 
-  before_action :set_lists, only: %i| show |
   before_action :set_gallery, only: %w| destroy edit j_show show update update_ordering |
 
   # Alphabetized! : )

@@ -6,4 +6,9 @@
   = render 'index', tags: @tags
 
   %hr
-  = render 'form', tag: Wco::Tag.new
+
+  .tags-new.maxwidth
+    .header
+      %h5.title New tag
+
+    = render 'form', tag: @new_tag

@@ -1,7 +1,7 @@
 
 class Wco::TagsController < Wco::ApplicationController
 
-  before_action :set_lists, only: %i| show |
+  before_action :set_lists
 
   def create
     @tag = Wco::Tag.new params[:tag].permit!
@@ -37,7 +37,6 @@ class Wco::TagsController < Wco::ApplicationController
 
   def new
     authorize! :new, Wco::Tag
-    @new_tag = Wco::Tag.new
   end
 
   def add_to
@@ -91,7 +90,9 @@ class Wco::TagsController < Wco::ApplicationController
   private
 
   def set_lists
+    @new_tag = Wco::Tag.new
     @tags = Wco::Tag.all.order_by( slug: :asc )
+    @tags_list = Wco::Tag.list
   end
 
 

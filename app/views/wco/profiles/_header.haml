@@ -1,0 +1,6 @@
+
+= link_to "Profiles (#{Wco::Profile.all.length})", wco.profiles_path
+.inline-search
+  = form_tag wco.profiles_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_profile_path

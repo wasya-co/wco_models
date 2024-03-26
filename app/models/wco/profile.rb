@@ -16,6 +16,13 @@ class Wco::Profile
   has_many :newsitems, class_name: 'Wco::Newsitem'
   has_and_belongs_to_many :shared_galleries, class_name: 'Wco::Gallery', inverse_of: :shared_profiles
 
+  ROLE_ADMIN = 'admin'
+  ROLE_GUY   = 'guy'
+  ROLES      = [ ROLE_ADMIN, ROLE_GUY ]
+  field :role, type: :string, default: ROLE_GUY
+  def self.roles_list
+    [nil] + ROLES
+  end
 
   def to_s
     email

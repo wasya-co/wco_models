@@ -6,5 +6,9 @@
       %label slug
       = f.text_field :slug
 
+    .field.d-flex
+      %label parent
+      = f.select :parent_id, options_for_select(@tags_list, selected: tag.parent_id ), {}, class: 'select2'
+
     .actions
       = f.submit

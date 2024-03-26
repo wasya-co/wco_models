@@ -1,6 +1,16 @@
 
 class Wco::ProfilesController < Wco::ApplicationController
 
+  def edit
+    @profile = Wco::Profile.find params[:id]
+    authorize! :update, @profile
+  end
+
+  def index
+    @profiles = Wco::Profile.all
+    authorize! :index, Wco::Profile
+  end
+
   def update
     @profile = Wco::Profile.find params[:id]
     authorize! :update, @profile

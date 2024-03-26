@@ -1,0 +1,10 @@
+
+.profiles-index.maxwidth
+  .header
+    .title Profiles
+
+  %ul
+    - @profiles.each do |profile|
+      %li
+        = link_to '[~]', edit_profile_path(profile)
+        = profile.email

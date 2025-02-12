@@ -19,6 +19,7 @@ class Wco::Profile
   field :show_n_thumbs, type: :integer, default: 8
 
   has_many :reports, class_name: 'Wco::Report'
+  has_many :stocks, class_name: 'Iro::Stock'
 
   belongs_to :leadset,          class_name: 'Wco::Leadset', inverse_of: :profile,         optional: true
   has_many :newsitems, class_name: 'Wco::Newsitem'

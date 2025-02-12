@@ -35,7 +35,7 @@ class Iro::Stock
   has_many :options,    class_name: 'Iro::Option',   inverse_of: :stock
   has_many :priceitems, inverse_of: :stock
 
-  belongs_to :user
+  belongs_to :profile, class_name: 'Wco::Profile', optional: true
   LONG_ONLY     = 'long-only'
   LONG_OR_SHORT = 'long-or-short'
   SHORT_ONLY    = 'short-only'

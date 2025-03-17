@@ -53,6 +53,7 @@ class Wco::InvoicesController < Wco::ApplicationController
   end
 
   def create_stripe
+    params[:invoice][:is_stripe] = true
     @invoice = Wco::Invoice.new params[:invoice].permit!
     authorize! :create, @invoice
 

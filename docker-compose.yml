@@ -24,17 +24,17 @@ services:
     # environment:
       ## LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       # - DEBUG=${DEBUG:-0}
-    restart: always
+    restart: 'no'
 
   mongo_development:
     image: mongodb/mongodb-community-server:5.0.7-ubuntu2004
     ports:
-      - 27041:27017
+      - 27017:27017
     volumes:
       - type: bind
         source: ./volumes/mongo_development_data
         target: /data/db
-    restart: always
+    restart: 'no'
 
 
 

@@ -3,32 +3,44 @@
 
 = form_for leadset, :as => :leadset, :url => url do |f|
 
-  .input-field
+  .field
     = f.label :company_url
     = f.text_field :company_url
 
-  .input-field
+  .field
     = f.label :email
     = f.text_field :email
   .field
     %label mangle_subject
     = f.check_box :mangle_subject
 
-  .input-field
+  .field
     = f.label :next_invoice_number
     = f.text_field :next_invoice_number
+
+  .field
+    %label tags
+    = f.select :tag_ids, options_for_select(@tags_list, selected: leadset.tag_ids), {}, { multiple: true }
+
+  .header
+    %h5.title Hosting
 
   .field
     %label serverhosts
     = f.select :serverhost_ids, options_for_select(@serverhosts_list, selected: leadset.serverhost_ids), {}, { multiple: true }
 
-  -# .input-field
-  -#   %label Stripe customer_id
-  -#   = f.text_field :customer_id
+  .field
+    %label Stripe customer_id
+    = f.text_field :customer_id
 
   .field
-    %label tags
-    = f.select :tag_ids, options_for_select(@tags_list, selected: leadset.tag_ids), {}, { multiple: true }
+    %label appliance tmpl prices
+    - @appliance_tmpl_prices.each do |price|
+      = check_box_tag 'leadset[appliance_tmpl_ids][]', price.id, false
+      %label= price.product.name
+      %br
+    -# = f.select :appliance_tmpls, options_for_select(@appliance_tmpls, selected: leadset.appliance_tmpls), {}, { multiple: true }
+
 
   .actions
     = f.submit

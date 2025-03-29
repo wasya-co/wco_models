@@ -30,32 +30,6 @@ class WcoHosting::Serverhost
   has_many :appliances, class_name: 'WcoHosting::Appliance'
   has_many :files,      class_name: 'WcoHosting::File'
 
-  def create_appliance app
-    # puts! app, 'Serverhost#create_appliance'
-
-    create_subdomain(   app )
-    create_volume(      app )
-    add_docker_service( app )
-    add_nginx_site(     app )
-    # load_database( app )
-
-    update({ next_port: app.serverhost.next_port + 1 })
-  end
-
-  def create_subdomain app
-    @obj = app
-    Wco::Log.puts! @obj, '#create_subdomain...', obj: @obj
-
-    client = DropletKit::Client.new(access_token: DO_TOKEN_1)
-    record = DropletKit::DomainRecord.new(
-      type: 'A',
-      name: app.subdomain,
-      data: app.serverhost.public_ip,
-    )
-    client.domain_records.create(record, for_domain: app.domain )
-
-    Wco::Log.puts! record, 'created subdomain?', obj: @obj
-  end
 
   def add_nginx_site app
     @obj = app
@@ -102,6 +76,33 @@ class WcoHosting::Serverhost
       docker compose -f dc-#{app.service_name}.yml up -d #{app.service_name} ; \
       echo ok #add_docker_service ' "
     do_exec cmd
+  end
+
+  def create_appliance app
+    # puts! app, 'Serverhost#create_appliance'
+
+    create_subdomain(   app )
+    create_volume(      app )
+    add_docker_service( app )
+    add_nginx_site(     app )
+    # load_database( app )
+
+    update({ next_port: app.serverhost.next_port + 1 })
+  end
+
+  def create_subdomain app
+    @obj = app
+    Wco::Log.puts! @obj, '#create_subdomain...', obj: @obj
+
+    client = DropletKit::Client.new(access_token: DO_TOKEN_1)
+    record = DropletKit::DomainRecord.new(
+      type: 'A',
+      name: app.subdomain,
+      data: app.serverhost.public_ip,
+    )
+    client.domain_records.create(record, for_domain: app.domain )
+
+    Wco::Log.puts! record, 'created subdomain?', obj: @obj
   end
 
   def create_wordpress_volume app
@@ -156,6 +157,10 @@ class WcoHosting::Serverhost
     Wco::Log.puts! stdout, 'stdout', obj: @obj
     Wco::Log.puts! stderr, 'stderr', obj: @obj
     Wco::Log.puts! status, 'status', obj: @obj
+  end
+
+  def self.next_host
+    where( name: 'vbox1' ).first || all.first
   end
 
   def self.list

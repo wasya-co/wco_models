@@ -14,17 +14,19 @@
 
   .row
     .col-md-6
-      %h5 Appliance Tmpls (prices)
-      %table.bordered.data-table
+      .header
+        %h5.title Appliance Tmpls (prices)
+      %label Create:
+      %table.bordered
         %thead
           %td &nbsp;
           %td Appliance Tmpl
           %td Amount Cents
           %td Interval
-        - @appliance_tmpls.each do |tmpl|
+        - @appliance_tmpls_list.each do |tmpl|
           %tr
-            - price   = @leadset.appliance_tmpl_prices.where( product: tmpl ).first
-            - price ||= Wco::Price.new({ product: tmpl, appliance_tmpl_leadset: @leadset })
+            - price   = @leadset.appliance_tmpls.where( product: tmpl ).first
+            - price ||= Wco::Price.new({ product: tmpl, appliance_tmpl_leadsets: [ @leadset ] })
             - url     = price.new_record? ? wco.prices_path : wco.price_path(price)
             - if !price.new_record?
               %td
@@ -45,6 +47,7 @@
                 &nbsp;
                 %br
                 .gray= price.price_id || 'nil'
+      = @leadset.appliance_tmpls.inspect
 
     .col-md-6
       %h5.collapse-expand#subscriptionsList

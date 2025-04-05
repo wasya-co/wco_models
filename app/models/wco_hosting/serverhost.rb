@@ -34,7 +34,7 @@ class WcoHosting::Serverhost
     # puts! app, 'Serverhost#create_appliance'
 
     create_subdomain(   app )
-    create_volume(      app )
+    # create_volume(      app )
     add_docker_service( app )
     add_nginx_site(     app )
     # load_database( app )
@@ -44,7 +44,7 @@ class WcoHosting::Serverhost
 
   def create_subdomain app
     @obj = app
-    Wco::Log.puts! @obj, '#create_subdomain...', obj: @obj
+    # Wco::Log.puts! @obj, '#create_subdomain...', obj: @obj
 
     client = DropletKit::Client.new(access_token: DO_TOKEN_1)
     record = DropletKit::DomainRecord.new(
@@ -52,9 +52,9 @@ class WcoHosting::Serverhost
       name: app.subdomain,
       data: app.serverhost.public_ip,
     )
-    client.domain_records.create(record, for_domain: app.domain )
+    client.domain_records.create(record, for_domain: app.domain.name )
 
-    Wco::Log.puts! record, 'created subdomain?', obj: @obj
+    # Wco::Log.puts! record, 'created subdomain?', obj: @obj
   end
 
   def add_nginx_site app
@@ -126,6 +126,7 @@ class WcoHosting::Serverhost
     do_exec cmd
   end
 
+=begin
   def create_volume app
     @obj = app
     Wco::Log.puts! app.service_name, 'Serverhost#create_volume', obj: @obj
@@ -147,6 +148,7 @@ class WcoHosting::Serverhost
     cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; #{WORKDIR}/scripts/create_volume ' "
     do_exec( cmd )
   end
+=end
 
   def do_exec cmd
     Wco::Log.puts! cmd, '#do_exec', obj: @obj

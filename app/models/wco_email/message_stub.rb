@@ -24,6 +24,7 @@ class WcoEmail::MessageStub
   STATUSES         = [ STATUS_PENDING, STATUS_PROCESSED, STATUS_FAILED ]
   field :status, default: STATUS_PENDING
   scope :pending, ->{ where( status: STATUS_PENDING ) }
+  scope :failed,  ->{ where( status: STATUS_FAILED  ) }
 
   field     :bucket # 'ish-ses' (current), 'ish-ses-2024'
 

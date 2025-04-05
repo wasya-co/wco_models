@@ -6,6 +6,10 @@ class WcoHosting::Appliance
   include Wco::Utils
   store_in collection: 'wco_appliances'
 
+  ## @TODO: slug can be subdomain+domain, since its unique?!
+  field :slug, type: String
+  ## @TODO: valudate that slug is alphanumeric with dashes.
+
   has_many :logs, as: :obj, class_name: 'Wco::Log'
   has_many :files,          class_name: 'WcoHosting::File'
 
@@ -15,7 +19,7 @@ class WcoHosting::Appliance
   end
 
   belongs_to :leadset,      class_name: 'Wco::Leadset', inverse_of: :appliances
-  belongs_to :subscription, class_name: 'Wco::Subscription' # , inverse_of: :appliance
+  belongs_to :subscription, class_name: 'Wco::Subscription', optional: true # , inverse_of: :appliance
 
   # field :service_name
   # before_validation :set_service_name, on: :create, unless: ->{ service_name }
@@ -51,6 +55,9 @@ class WcoHosting::Appliance
   STATE_LIVE       = 'live'
   STATE_TERMINATED = 'terminated'
   field :state, default: STATE_PENDING
+
+  field :stdout, default: ''
+  field :stderr, default: ''
 
   def to_s
     appliance_tmpl # kind

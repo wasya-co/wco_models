@@ -76,8 +76,9 @@ class WcoHosting::ApplianceTmpl
   end
 
   has_many :appliances, class_name: 'WcoHosting::Appliance'
+  has_many :leadsets,   class_name: 'Wco::LeadsetApplianceTmpl', inverse_of: :appliance_tmpl
   has_many :subscriptions, as: :product, class_name: 'Wco::Subscription'
-  has_many :prices, as: :product, class_name: 'Wco::Price'
+  has_many :prices,        as: :product, class_name: 'Wco::Price'
   has_and_belongs_to_many :task_tmpls, class_name: 'WcoHosting::TaskTmpl'
 
   field :product_id # stripe

@@ -47,6 +47,13 @@ class Wco::PricesController < Wco::ApplicationController
     redirect_to request.referrer || root_path
   end
 
+  def new
+    @price = Wco::Price.new
+    authorize! :new, @price
+
+    @products_list = Wco::Product.list + WcoHosting::ApplianceTmpl.list
+  end
+
   ## delete and the create, instead
   # def update
   # end

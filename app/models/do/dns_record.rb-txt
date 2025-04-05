@@ -1,0 +1,15 @@
+
+From: https://docs.digitalocean.com/reference/api/digitalocean/#tag/Domain-Records/operation/domains_list_records
+
+new:
+
+POST /v2/domains/$DOMAIN_NAME/records
+
+{
+  type: 'A',
+  name: 'subdomain',
+  data: '127.0.0.1',
+  ttl: 3600,
+}
+
+DELETE /v2/domains/$DOMAIN_NAME/records/$DOMAIN_RECORD_ID

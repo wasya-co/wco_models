@@ -19,5 +19,11 @@
       %label schwab_id_token
       = f.text_field :schwab_id_token
 
+    %hr
+
+    .field
+      %label leadset
+      = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset )
+
     .actions
       = f.submit 'Go'

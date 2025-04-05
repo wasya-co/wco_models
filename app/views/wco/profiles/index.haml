@@ -8,3 +8,4 @@
       %li
         = link_to '[~]', edit_profile_path(profile)
         = profile.email
+        <b>Leadset:</b> #{link_to profile.leadset, leadset_path(profile.leadset)}

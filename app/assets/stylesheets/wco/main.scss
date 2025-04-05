@@ -144,12 +144,13 @@ textarea.monospace {
 
 .header {
   display: flex;
+  justify-content: center;
 
   > * {
     padding-right: 0.2em;
   }
 
-  h5.title {
+  .title {
     display: flex;
   }
 }

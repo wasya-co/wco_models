@@ -1,0 +1,22 @@
+
+.maxwidth
+  .header
+    %h5.title New Price
+
+  - price = @price
+  = form_for price, as: :price do |f|
+    .field
+      %label Product
+      = f.select :product_id, options_for_select(@products_list, selected: price.product_id)
+
+    .field
+      %label amount cents
+      = f.number_field :amount_cents
+
+    .field
+      %label interval
+      = f.select :interval, options_for_select( Wco::Price::INTERVALS, selected: price.interval ), class: 'select2'
+
+    .actions
+      = f.submit 'Create'
+

@@ -5,32 +5,50 @@
       %h2.title
         Leadset `#{@leadset.company_url}`
         = link_to '[~]', edit_leadset_path( @leadset )
+    .row
+      .col-6.border-right
+        %ul
+          %li <b>Email:</b> #{@leadset.email}
+          %li <b>company_url</b>: #{@leadset.company_url}
+          %li <b>customer_id</b>: #{@leadset.customer_id}
+      -# tags
+      .col-6
+        Tags:
+        = render '/wco/tags/index_chips', tags: @leadset.tags
 
-    %ul
-      %li <b>Email:</b> #{@leadset.email}
-      %li <b>company_url</b>: #{@leadset.company_url}
-      %li <b>customer_id</b>: #{@leadset.customer_id}
     %hr
+    .row
+      -# serverhosts
+      .col-6.border-right
+        = render 'wco_hosting/serverhosts/list', serverhosts: @leadset.serverhosts
+      .col-6
+        &nbsp;
 
+    %hr
     .row
       -# appliance templates (prices)
-      .col-md-6
+      .col-md-6.border-right
         .header
           %h5.title Appliance Tmpls (prices) (#{@leadset.appliance_tmpls.length})
-        -# %ul
-        -#   - @leadset.appliance_tmpls.each do |tmpl|
-        -#     %li= tmpl.inspect
-
         = render 'wco/prices/form_table'
 
-        -# = @leadset.appliance_tmpls.inspect
-        -# %ul
-        -#   - @all_prices.each do |price|
-        -#     %li= price.inspect
+      -# environments
+      .col-md-6
+        - if defined?( wco_hosting )
+          .header
+            %h5.title Environments (#{@leadset.environments.length}) #{link_to '[+]', wco_hosting.new_environment_path({ leadset_id: @leadset.id }) }
+          %ul
+            - @leadset.environments.each do |env|
+              %li= env
+    %hr
+    .row
+      -# appliances
+      .col-md-6.border-right
+        .header
+          %h5.title Appliances (#{@leadset.appliances.length})
 
       -# subscriptions
       .col-md-6
-
         .header
           %h5.title.collapse-expand#subscriptionsList
             Subscriptions (#{@subscriptions.length})
@@ -47,27 +65,13 @@
 
     %hr
     .row
-      -# environments
-      .col-md-6
-        - if defined?( wco_hosting )
-          .header
-            %h5.title Environments (#{@leadset.environments.length}) #{link_to '[+]', wco_hosting.new_environment_path({ leadset_id: @leadset.id }) }
-          %ul
-            - @leadset.environments.each do |env|
-              %li= env.inspect
-
-      -# serverhosts
-      .col-md-6
-        = render 'wco_hosting/serverhosts/list', serverhosts: @leadset.serverhosts
-
-    %hr
-
-    .row
-      .col-md-6
-        %h5.collapse-expand#invoicesList
-          Invoices  (#{@leadset.invoices.length})
-          = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
-          = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
+      -# invoices
+      .col-md-12
+        .header
+          %h5.title.collapse-expand#invoicesList
+            Invoices  (#{@leadset.invoices.length})
+            = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
+            = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
 
         = render '/wco/invoices/index_list', invoices: @invoices
 
@@ -82,10 +86,9 @@
 
     %hr
     .row
-      .col-6
-        %h5.collapse-expand#leads Leads
+      -# leads
+      .col-12
+        .header
+          %h5.title.collapse-expand#leads Leads
         = render '/wco/leads/index', leads: @leads
-      .col-6
-        Tags:
-        = render '/wco/tags/index_chips', tags: @leadset.tags
 

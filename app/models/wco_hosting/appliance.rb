@@ -6,9 +6,10 @@ class WcoHosting::Appliance
   include Wco::Utils
   store_in collection: 'wco_appliances'
 
-  ## @TODO: slug can be subdomain+domain, since its unique?!
-  field :slug, type: String
-  ## @TODO: valudate that slug is alphanumeric with dashes.
+  # field :slug, type: String
+  def slug
+    "#{subdomain}_#{domain.name.gsub('.', '_')}"
+  end
 
   has_many :logs, as: :obj, class_name: 'Wco::Log'
   has_many :files,          class_name: 'WcoHosting::File'
@@ -18,15 +19,10 @@ class WcoHosting::Appliance
     OpenStruct.new JSON.parse rc_json
   end
 
+  field :port
+
   belongs_to :leadset,      class_name: 'Wco::Leadset', inverse_of: :appliances
   belongs_to :subscription, class_name: 'Wco::Subscription', optional: true # , inverse_of: :appliance
-
-  # field :service_name
-  # before_validation :set_service_name, on: :create, unless: ->{ service_name }
-  # def set_service_name
-  #   self[:service_name] = host.gsub(".", "_")
-  # end
-
 
   belongs_to :environment, class_name: 'WcoHosting::Environment', inverse_of: :appliances, optional: true
   def environment_name
@@ -49,7 +45,6 @@ class WcoHosting::Appliance
 
   belongs_to :serverhost,  class_name: 'WcoHosting::Serverhost', optional: true
 
-  field :port
 
   STATE_PENDING    = 'pending'
   STATE_LIVE       = 'live'

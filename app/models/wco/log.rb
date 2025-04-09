@@ -14,7 +14,7 @@ class Wco::Log
   has_and_belongs_to_many :tags
 
   def self.puts! message, label, obj: nil
-    create( message: message, label: label, obj: obj )
+    create( message: message.to_s, label: label.to_s, obj: obj.to_s )
     puts "+++ +++ #{label}:"
     puts message.inspect
   end

@@ -35,7 +35,7 @@ class Wco::Leadset
 
 
   has_many :appliances,      class_name: '::WcoHosting::Appliance',   inverse_of: :leadset
-  has_and_belongs_to_many :appliance_tmpls, class_name: 'Wco::Price', inverse_of: :appliance_tmpl_leadsets
+  has_many :appliance_tmpls, class_name: 'Wco::Price', inverse_of: :leadset
 
   has_many :environments,  class_name: '::WcoHosting::Environment', inverse_of: :leadset
   has_many :invoices,      class_name: 'Wco::Invoice'

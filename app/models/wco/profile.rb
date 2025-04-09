@@ -11,17 +11,18 @@ class Wco::Profile
 
 
   field :per_page, type: :integer, default: 25
+  field :show_n_thumbs, type: :integer, default: 8
+
 
   field :schwab_access_token,  type: :string
   field :schwab_refresh_token, type: :string
   field :schwab_id_token,      type: :string
 
-  field :show_n_thumbs, type: :integer, default: 8
 
   has_many :reports, class_name: 'Wco::Report'
   has_many :stocks, class_name: 'Iro::Stock'
 
-  belongs_to :leadset,          class_name: 'Wco::Leadset', inverse_of: :profile,         optional: true
+  belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :profile
   has_many :newsitems, class_name: 'Wco::Newsitem'
   has_and_belongs_to_many :shared_galleries, class_name: 'Wco::Gallery', inverse_of: :shared_profiles
 

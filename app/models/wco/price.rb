@@ -8,7 +8,7 @@ class Wco::Price
   ## Wco::Product, WcoHosting::ApplianceTmpl
   belongs_to :product, polymorphic: true
 
-  has_and_belongs_to_many :appliance_tmpl_leadsets, class_name: 'Wco::Leadset'
+  belongs_to :leadset, class_name: 'Wco::Leadset'
 
   has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :price, foreign_key: :wco_price_id
 

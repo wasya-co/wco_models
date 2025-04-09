@@ -39,8 +39,13 @@ end
 def setup_users
   User.all.destroy_all
   user = User.create!( email: 'victor@wasya.co', password: 'test1234', provider: 'keycloakopenid' )
+
   Wco::Profile.unscoped.map &:destroy!
-  p = Wco::Profile.create!( email: user.email )
+
+  Wco::Leadset.unscoped.map &:destroy!
+  leadset = Wco::Leadset.create!( company_url: 'test' )
+
+  p = Wco::Profile.create!( email: user.email, leadset: leadset )
   sign_in user
 end
 

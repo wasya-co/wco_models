@@ -63,6 +63,10 @@ class Wco::LeadsetsController < Wco::ApplicationController
     @leads         = @leadset.leads.page( params[:leads_page] ).per( current_profile.per_page )
     @subscriptions = @leadset.subscriptions
     @invoices      = @leadset.invoices
+
+    @prices = @leadset.appliance_tmpls
+    ## _TODO: can remove
+    @all_prices = Wco::Price.all
   end
 
   def update
@@ -85,7 +89,9 @@ class Wco::LeadsetsController < Wco::ApplicationController
   def set_lists
     @appliance_tmpls_list       = WcoHosting::ApplianceTmpl.all
     @appliance_tmpl_prices_list = Wco::Price.all
+    @serverhosts          = WcoHosting::Serverhost.all
     @serverhosts_list     = WcoHosting::Serverhost.list
+    @tags                 = Wco::Tag.all
     @tags_list            = Wco::Tag.list
     @leads_list           = Wco::Lead.all.map { |lead| [ lead.email, lead.id ] }
     @templates_list       = WcoEmail::EmailTemplate.all.map { |t| [ t.slug, t.id ] }

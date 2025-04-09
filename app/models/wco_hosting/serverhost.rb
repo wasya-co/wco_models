@@ -30,6 +30,15 @@ class WcoHosting::Serverhost
   has_many :appliances, class_name: 'WcoHosting::Appliance'
   has_many :files,      class_name: 'WcoHosting::File'
 
+  def self.next_host
+    where( name: 'vbox1' ).first || all.first
+  end
+
+  def self.list
+    [[nil,nil]] + all.map { |s| [s.name, s.id] }
+    # all.map { |s| [s.name, s.id] }
+  end
+
   def create_appliance app
     # puts! app, 'Serverhost#create_appliance'
 
@@ -187,12 +196,8 @@ class WcoHosting::Serverhost
     Wco::Log.puts! status, 'status', obj: @obj
   end
 
-  def self.next_host
-    where( name: 'vbox1' ).first || all.first
+  def to_s
+    "<Serverhost name=#{name} next_port=#{next_port} ssh_host=#{ssh_host} />"
   end
 
-  def self.list
-    [[nil,nil]] + all.map { |s| [s.name, s.id] }
-    # all.map { |s| [s.name, s.id] }
-  end
 end

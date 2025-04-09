@@ -20,14 +20,22 @@
 
   .field
     %label tags
-    = f.select :tag_ids, options_for_select(@tags_list, selected: leadset.tag_ids), {}, { multiple: true }
+    .d-flex.flex-wrap
+      - @tags.each do |tag|
+        .descr
+          = check_box_tag 'leadset[tag_ids][]', tag.id, leadset.tags.include?(tag)
+          %label= tag
 
   .header
     %h5.title Hosting
 
   .field
     %label serverhosts
-    = f.select :serverhost_ids, options_for_select(@serverhosts_list, selected: leadset.serverhost_ids), {}, { multiple: true }
+    .d-flex.flex-wrap
+      - @serverhosts.each do |opt|
+        .descr
+          = check_box_tag 'leadset[serverhost_ids][]', opt.id, leadset.serverhost_ids.include?(opt.id)
+          %label= opt.name
 
   .field
     %label Stripe customer_id
@@ -35,11 +43,11 @@
 
   .field
     %label appliance tmpl prices
-    - @appliance_tmpl_prices.each do |price|
-      = check_box_tag 'leadset[appliance_tmpl_ids][]', price.id, false
-      %label= price.product.name
-      %br
-    -# = f.select :appliance_tmpls, options_for_select(@appliance_tmpls, selected: leadset.appliance_tmpls), {}, { multiple: true }
+    .d-flex.flex-wrap
+      - @appliance_tmpl_prices_list.each do |price|
+        .descr
+          = check_box_tag 'leadset[appliance_tmpl_ids][]', price.id, leadset.appliance_tmpls.include?(price)
+          %label= price.product.name
 
 
   .actions

@@ -1,0 +1,50 @@
+
+.prices--form-table
+
+  -# %label New price (app tmpl leadset):
+
+  %table.bordered
+    %thead
+      %tr
+        %th
+        %th tmpl
+        %th price
+        %th interval
+        %th
+    %tbody
+      - @appliance_tmpls_list.each do |tmpl|
+        - price   = @leadset.appliance_tmpls.where( product: tmpl ).first
+        - price ||= Wco::Price.new({ product: tmpl, leadset: @leadset })
+        - url     = price.new_record? ? wco.prices_path : wco.price_path(price)
+        - if !price.new_record?
+          %tr
+            %td
+            %td
+              %b= tmpl
+            %td
+              = price.amount_cents
+              cents
+            %td
+              = price.interval
+            %td
+              = button_to 'x', wco.price_path(price), method: :delete, data: { confirm: 'Are you sure?' }
+        - else
+          = form_for price, url: url do |f|
+            %tr
+              %td
+                .d-flex.flex-column.hide
+                  product_id
+                  = text_field_tag 'price[product_id]',   price.product_id
+                  product_type
+                  = text_field_tag 'price[product_type]', price.product_type
+                  leadset_id
+                  = text_field_tag 'price[leadset_id]', @leadset.id
+              %td
+                %b= tmpl
+              %td
+                = f.number_field :amount_cents
+              %td
+                = f.select :interval, options_for_select( Wco::Price::INTERVALS, selected: price.interval ), class: 'select2'
+              %td
+                = f.submit '>'
+

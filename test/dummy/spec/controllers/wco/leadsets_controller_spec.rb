@@ -4,7 +4,10 @@ RSpec::describe Wco::LeadsetsController do
   routes { Wco::Engine.routes }
 
   before do
-    destroy_every( Wco::Lead, Wco::Leadset )
+    destroy_every(
+      Wco::Lead, Wco::Leadset,
+      Wco::Price,
+    );
     setup_users
   end
 

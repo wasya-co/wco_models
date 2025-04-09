@@ -1,0 +1,15 @@
+
+.serverhosts--list
+  - if !defined?( wco_hosting )
+    .header
+      %h5.title wco_hosting is not included
+  - else
+    .header
+      %h5.title
+        Serverhosts for `#{@leadset}`
+        = link_to '[+]', wco_hosting.new_serverhost_path({ leadset_id: @leadset.id })
+    %ul
+      - serverhosts.each do |s|
+        %li
+          = link_to '[~]', wco_hosting.edit_serverhost_path(s)
+          = s

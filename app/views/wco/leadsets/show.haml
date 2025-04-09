@@ -12,92 +12,80 @@
       %li <b>customer_id</b>: #{@leadset.customer_id}
     %hr
 
-  .row
-    .col-md-6
-      .header
-        %h5.title Appliance Tmpls (prices)
-      %label Create:
-      %table.bordered
-        %thead
-          %td &nbsp;
-          %td Appliance Tmpl
-          %td Amount Cents
-          %td Interval
-        - @appliance_tmpls_list.each do |tmpl|
-          %tr
-            - price   = @leadset.appliance_tmpls.where( product: tmpl ).first
-            - price ||= Wco::Price.new({ product: tmpl, appliance_tmpl_leadsets: [ @leadset ] })
-            - url     = price.new_record? ? wco.prices_path : wco.price_path(price)
-            - if !price.new_record?
-              %td
-                = button_to 'x', wco.price_path(price), method: :delete, data: { confirm: 'Are you sure?' }
-            - else
-              %td
-            = form_for price, url: url do |f|
-              = hidden_field_tag 'price[product_id]',   price.product_id
-              = hidden_field_tag 'price[product_type]', price.product_type
-              = hidden_field_tag 'price[appliance_tmpl_leadset_id]', @leadset.id
-              %td
-                %b= tmpl
-              %td
-                = f.number_field :amount_cents
-              %td
-                = f.select :interval, options_for_select( Wco::Price::INTERVALS, selected: price.interval ), class: 'select2'
-                = f.submit '>'
-                &nbsp;
-                %br
-                .gray= price.price_id || 'nil'
-      = @leadset.appliance_tmpls.inspect
+    .row
+      -# appliance templates (prices)
+      .col-md-6
+        .header
+          %h5.title Appliance Tmpls (prices) (#{@leadset.appliance_tmpls.length})
+        -# %ul
+        -#   - @leadset.appliance_tmpls.each do |tmpl|
+        -#     %li= tmpl.inspect
 
-    .col-md-6
-      %h5.collapse-expand#subscriptionsList
-        Subscriptions (#{@subscriptions.length})
-        = link_to '[+wco]', new_subscription_path({ customer_id: @leadset.customer_id })
-      %table.bordered
-        %thead
-          %tr
-            %th Name
-            %th Price
-        - @subscriptions.each do |i|
-          %tr
-            %td= i.product.name
-            %td= i.price
-  %br
-  .row
-    .col-md-6
-      %h5 Environments (#{@leadset.environments.length}) #{link_to '[+]', wco_hosting.new_environment_path({ leadset_id: @leadset.id }) }
-      %ul
-        - @leadset.environments.each do |env|
-          %li= env.inspect
+        = render 'wco/prices/form_table'
 
-    .col-md-6
+        -# = @leadset.appliance_tmpls.inspect
+        -# %ul
+        -#   - @all_prices.each do |price|
+        -#     %li= price.inspect
 
-  %hr
+      -# subscriptions
+      .col-md-6
 
-  .row.maxwidth
-    .col-md-6
-      %h5.collapse-expand#invoicesList
-        Invoices  (#{@leadset.invoices.length})
-        = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
-        = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
+        .header
+          %h5.title.collapse-expand#subscriptionsList
+            Subscriptions (#{@subscriptions.length})
+          = link_to '[+wco]', new_subscription_path({ customer_id: @leadset.customer_id })
+        %table.bordered
+          %thead
+            %tr
+              %th Name
+              %th Price
+          - @subscriptions.each do |i|
+            %tr
+              %td= i.product.name
+              %td= i.price
 
-      = render '/wco/invoices/index_list', invoices: @invoices
+    %hr
+    .row
+      -# environments
+      .col-md-6
+        - if defined?( wco_hosting )
+          .header
+            %h5.title Environments (#{@leadset.environments.length}) #{link_to '[+]', wco_hosting.new_environment_path({ leadset_id: @leadset.id }) }
+          %ul
+            - @leadset.environments.each do |env|
+              %li= env.inspect
 
-      %p Next invoice number: #{@leadset.next_invoice_number}
+      -# serverhosts
+      .col-md-6
+        = render 'wco_hosting/serverhosts/list', serverhosts: @leadset.serverhosts
 
-      = form_tag create_monthly_invoice_for_leadset_path({ leadset_id: @leadset.id }) do
-        %label Create invoice for month
-        = text_field_tag 'month_on', nil, placeholder: 'YYYY-MM-DD'
-        %label (replace ?)
-        = check_box_tag 'replace'
-        = submit_tag 'Go >', data: { confirm: 'Are you sure?' }
-  %hr
+    %hr
 
-  .row
-    .col-6
-      %h5.collapse-expand#leads Leads
-      = render '/wco/leads/index', leads: @leads
-    .col-6
-      Tags:
-      = render '/wco/tags/index_chips', tags: @leadset.tags
+    .row
+      .col-md-6
+        %h5.collapse-expand#invoicesList
+          Invoices  (#{@leadset.invoices.length})
+          = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
+          = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
+
+        = render '/wco/invoices/index_list', invoices: @invoices
+
+        %p Next invoice number: #{@leadset.next_invoice_number}
+
+        = form_tag create_monthly_invoice_for_leadset_path({ leadset_id: @leadset.id }) do
+          %label Create invoice for month
+          = text_field_tag 'month_on', nil, placeholder: 'YYYY-MM-DD'
+          %label (replace ?)
+          = check_box_tag 'replace'
+          = submit_tag 'Go >', data: { confirm: 'Are you sure?' }
+
+    %hr
+    .row
+      .col-6
+        %h5.collapse-expand#leads Leads
+        = render '/wco/leads/index', leads: @leads
+      .col-6
+        Tags:
+        = render '/wco/tags/index_chips', tags: @leadset.tags
 

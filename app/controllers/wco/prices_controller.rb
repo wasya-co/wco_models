@@ -7,6 +7,8 @@ class Wco::PricesController < Wco::ApplicationController
 
     @price.interval = nil if !params[:price][:interval].present?
     @product        = params[:price][:product_type].constantize.find @price.product_id
+    @price.product  = @product
+
     stripe_product  = Stripe::Product.retrieve( @product.product_id )
     price_hash = {
       product:     stripe_product.id,
@@ -17,11 +19,9 @@ class Wco::PricesController < Wco::ApplicationController
       price_hash[:recurring] = { interval: @price.interval }
     end
     stripe_price = Stripe::Price.create( price_hash )
-    # flash_notice 'Created stripe price.'
     flash_notice stripe_price
-
-    @price.product  = @product
     @price.price_id = stripe_price[:id]
+
     if @price.save
       flash_notice @price
     else

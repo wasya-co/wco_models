@@ -56,23 +56,11 @@ class WcoHosting::Serverhost
 
   def add_nginx_site app
     @obj = app
-
-    ac   = ActionController::Base.new
-    ac.instance_variable_set( :@app, app )
-    rendered_str = ac.render_to_string("wco_hosting/scripts/nginx_site.conf")
-    Wco::Log.puts! rendered_str, 'add_nginx_site rendered_str', obj: @obj
-
-    file = Tempfile.new('prefix')
-    file.write rendered_str
-    file.close
-
-    cmd = "scp #{file.path} #{ssh_host}:/etc/nginx/sites-available/#{app.service_name}.conf "
-    do_exec cmd
-
-    cmd = "ssh #{ssh_host} 'ln -s /etc/nginx/sites-available/#{app.service_name}.conf /etc/nginx/sites-enabled/#{app.service_name}.conf ' "
-    do_exec cmd
-
-    cmd = "ssh #{ssh_host} 'nginx -s reload ' "
+    cmd =<<~AOL
+      cd #{ANSIBLE_ROOT}
+      . zenv/bin/activate
+      ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/install-nginx-proxy-vsite.yml --extra-vars '{"appliance_slug": "#{app.slug}", "port": "#{app.port}", "origin": "#{app.subdomain}.#{app.domain.name}" }'
+    AOL
     do_exec cmd
   end
 
@@ -103,6 +91,7 @@ class WcoHosting::Serverhost
 
   def do_create_server!
     out = HTTParty.post( "https://api.digitalocean.com/v2/droplets", body: {
+        monitoring: true,
         name: name,
         size: "s-1vcpu-2gb",
         region: "sfo2",

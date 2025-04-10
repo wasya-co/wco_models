@@ -1,4 +1,8 @@
 
+##
+## Subdomain is not an object b/c domain.appliances is like the same thing.
+##
+
 class WcoHosting::Subdomain
   include Mongoid::Document
   include Mongoid::Timestamps

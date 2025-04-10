@@ -8,7 +8,7 @@ class WcoHosting::Domain
   field :name
   validates :name, presence: true, uniqueness: true
 
-  has_many :subdomains, class_name: 'WcoHosting::Subdomain'
+  has_many :appliances, class_name: 'WcoHosting::Appliance'
 
   STATUS_ACTIVE   = 'active'
   STATUS_INACTIVE = 'inactive'

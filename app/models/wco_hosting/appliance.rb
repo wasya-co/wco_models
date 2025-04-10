@@ -11,8 +11,8 @@ class WcoHosting::Appliance
     "#{subdomain}_#{domain.name.gsub('.', '_')}"
   end
 
-  has_many :logs, as: :obj, class_name: 'Wco::Log'
-  has_many :files,          class_name: 'WcoHosting::File'
+  has_many :logs,      class_name: 'Wco::Log', inverse_of: :obj
+  has_many :files,     class_name: 'WcoHosting::File'
 
   field :rc_json, type: Object, default: '{}'
   def rc

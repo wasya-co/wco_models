@@ -45,6 +45,7 @@ class WcoHosting::Serverhost
   end
 
   def add_docker_service app
+    @obj = app
     cmd =<<~AOL
       cd /Users/piousbox/projects/ansible
       . zenv/bin/activate
@@ -75,6 +76,7 @@ class WcoHosting::Serverhost
     do_exec cmd
   end
 
+=begin
   def create_appliance app
     # puts! app, 'Serverhost#create_appliance'
     create_subdomain(   app )
@@ -83,10 +85,11 @@ class WcoHosting::Serverhost
     add_nginx_site(     app )
     # load_database( app )
   end
+=end
 
   def create_subdomain app
     @obj = app
-    Wco::Log.puts! @obj, '#create_subdomain...', obj: @obj
+    Wco::Log.puts! @obj, 'Creating subdomain...', obj: @obj
     client = DropletKit::Client.new(access_token: DO_TOKEN_1)
     record = DropletKit::DomainRecord.new(
       type: 'A',
@@ -94,7 +97,8 @@ class WcoHosting::Serverhost
       data: app.serverhost.public_ip,
     )
     client.domain_records.create(record, for_domain: app.domain )
-    Wco::Log.puts! record, 'created subdomain?', obj: @obj
+    Wco::Log.puts! record, 'Created subdomain.', obj: @obj
+    # WcoHosting::Subdomain.create!( domain: app.domain, name: app.subdomain )
   end
 
   def do_create_server!
@@ -126,68 +130,10 @@ class WcoHosting::Serverhost
     puts! out, 'assign droplet to a project'
   end
 
-=begin
-  def create_wordpress_volume app
-    @obj = app
-
-    ac   = ActionController::Base.new
-    ac.instance_variable_set( :@app, app )
-    ac.instance_variable_set( :@workdir, WORKDIR )
-    rendered_str = ac.render_to_string("wco_hosting/scripts/create_volume")
-    Wco::Log.puts! rendered_str, 'create_volume rendered_str', obj: @obj
-
-    file = Tempfile.new('prefix')
-    file.write rendered_str
-    file.close
-    # puts! file.path, 'file.path'
-
-    cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume"
-    do_exec cmd
-
-    cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; \
-      #{WORKDIR}/wco_hosting/scripts/create_volume ' "
-    do_exec cmd
-  end
-=end
-
-=begin
-  def create_volume app
-    @obj = app
-    Wco::Log.puts! app.service_name, 'Serverhost#create_volume', obj: @obj
-
-    ac   = ActionController::Base.new
-    ac.instance_variable_set( :@app, app )
-    ac.instance_variable_set( :@workdir, WORKDIR )
-    rendered_str = ac.render_to_string("wco_hosting/scripts/create_volume")
-    Wco::Log.puts! rendered_str, 'create_volume rendered_str', obj: @obj
-
-    file = Tempfile.new('prefix')
-    file.write rendered_str
-    file.close
-    # puts! file.path, 'file.path'
-
-    cmd = "scp #{file.path} #{ssh_host}:#{WORKDIR}/scripts/create_volume"
-    do_exec( cmd )
-
-    cmd = "ssh #{ssh_host} 'chmod a+x #{WORKDIR}/scripts/create_volume ; #{WORKDIR}/scripts/create_volume ' "
-    do_exec( cmd )
-  end
-=end
-
   def do_exec cmd
-
-    ## option 1
-    # Wco::Log.puts! cmd, '#do_exec', obj: @obj
-    # stdout, stderr, status = Open3.capture3(cmd)
-    # status = status.to_s.split.last.to_i
-    # Wco::Log.puts! stdout, 'stdout', obj: @obj
-    # Wco::Log.puts! stderr, 'stderr', obj: @obj
-    # Wco::Log.puts! status, 'status', obj: @obj
-
-    ## option 2
-    puts! cmd, 'cmd'
+    Wco::Log.puts! cmd, '#do_exec', obj: @obj
     IO.popen(cmd).each do |line|
-      puts line
+      Wco::Log.puts line, obj: @obj
     end
   end
 

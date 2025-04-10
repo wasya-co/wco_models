@@ -47,7 +47,7 @@ class WcoHosting::Serverhost
   def add_docker_service app
     @obj = app
     cmd =<<~AOL
-      cd /Users/piousbox/projects/ansible
+      cd #{ANSIBLE_ROOT}
       . zenv/bin/activate
       ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/hosted-packagedapp.yml --extra-vars '{"appliance_slug": "#{app.slug}", "codebase_zip": "#{app.tmpl.volume_zip_url}", "next_port": "#{self.next_port}"}'
     AOL

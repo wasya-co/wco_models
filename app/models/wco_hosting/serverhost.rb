@@ -49,7 +49,7 @@ class WcoHosting::Serverhost
     cmd =<<~AOL
       cd #{ANSIBLE_ROOT}
       . zenv/bin/activate
-      ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/hosted-packagedapp.yml --extra-vars '{"appliance_slug": "#{app.slug}", "codebase_zip": "#{app.tmpl.volume_zip_url}", "next_port": "#{self.next_port}"}'
+      ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/hosted-packagedapp.yml --extra-vars '{"appliance_slug": "#{app.slug}", "codebase_zip": "#{app.tmpl.volume_zip_url}", "app_port": "#{app.port}"}'
     AOL
     do_exec cmd
   end

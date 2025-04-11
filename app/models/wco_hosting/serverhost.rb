@@ -78,7 +78,7 @@ class WcoHosting::Serverhost
   def create_subdomain app
     @obj = app
     Wco::Log.puts! @obj, 'Creating subdomain...', obj: @obj
-    client = DropletKit::Client.new(access_token: DO_TOKEN_1)
+    client = DropletKit::Client.new(access_token: DO_DOMAIN_TOKEN)
     record = DropletKit::DomainRecord.new(
       type: 'A',
       name: app.subdomain,

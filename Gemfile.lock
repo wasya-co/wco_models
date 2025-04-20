@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.1.0.208)
+    wco_models (3.1.0.210)
       ahoy_matey
       aws-sdk-s3
       business_time
@@ -409,7 +409,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    stringio (3.1.0)
+    stringio (3.1.2)
     stripe (10.4.0)
     temple (0.10.3)
     terrapin (1.1.0)
@@ -453,6 +453,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 1.0.1)
   rails-controller-testing
   rspec-rails
+  stringio (= 3.1.2)
   wco_models!
 
 BUNDLED WITH

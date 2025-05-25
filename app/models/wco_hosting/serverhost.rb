@@ -44,12 +44,28 @@ class WcoHosting::Serverhost
     # all.map { |s| [s.name, s.id] }
   end
 
-  def add_docker_service app
+  def add_docker_service_bk app
     @obj = app
     cmd =<<~AOL
       cd #{ANSIBLE_ROOT}
       . zenv/bin/activate
       ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/hosted-packagedapp.yml --extra-vars '{"appliance_slug": "#{app.slug}", "codebase_zip": "#{app.tmpl.volume_zip_url}", "app_port": "#{app.port}"}'
+    AOL
+    do_exec cmd
+  end
+
+  ##
+  ## @TODO: this can be very different, depending on kindset.
+  ##
+  def add_docker_service app
+    @obj = app
+    cmd =<<~AOL
+      cd #{ANSIBLE_ROOT}
+      . zenv/bin/activate
+      ansible-playbook -i inventory/do.yml --limit #{self.name} playbooks/#{app.playbook_name}.yml --extra-vars '{ \
+        "appliance_slug": "#{app.slug}", \
+        "codebase_zip": "#{app.tmpl.volume_zip_url}", \
+        "app_port": "#{app.port}"}' \
     AOL
     do_exec cmd
   end
@@ -78,7 +94,7 @@ class WcoHosting::Serverhost
   def create_subdomain app
     @obj = app
     Wco::Log.puts! @obj, 'Creating subdomain...', obj: @obj
-    client = DropletKit::Client.new(access_token: DO_DOMAIN_TOKEN)
+    client = DropletKit::Client.new(access_token: ::DO_DOMAIN_TOKEN)
     record = DropletKit::DomainRecord.new(
       type: 'A',
       name: app.subdomain,

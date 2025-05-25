@@ -41,10 +41,10 @@ class WcoHosting::Appliance
   def tmpl
     appliance_tmpl
   end
-  delegate :kind, to: :appliance_tmpl
+  delegate :kind,          to: :appliance_tmpl
+  delegate :playbook_name, to: :appliance_tmpl
 
   belongs_to :serverhost,  class_name: 'WcoHosting::Serverhost', optional: true
-
 
   STATE_PENDING    = 'pending'
   STATE_LIVE       = 'live'

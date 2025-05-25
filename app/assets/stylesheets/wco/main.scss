@@ -46,15 +46,20 @@ table.bordered {
   // border-right: 0;
 
 
-  th, thead {
+  th {
     background: #ddd;
+    border: 1px solid gray;
     font-weight: bold;
+    padding: 0.5em;
   }
 
   td {
     border: 1px solid gray;
     border-top: 0;
     border-left: 0;
+
+    padding: 0.5em;
+    vertical-align: top;
   }
   .latest-at {
     width: 100px;

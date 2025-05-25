@@ -7,6 +7,27 @@ class WcoHosting::ApplianceTmpl
   include Wco::Utils
   store_in collection: 'wco_appliance_tmpls'
 
+  ## 2023-12-08 :: These names are impossible to change already.
+  KIND_CRM        = 'crm'        # trash
+  KIND_DRUPAL     = 'drupal'     # drupal
+  KIND_HELLOWORLD = 'helloworld' # static
+  KIND_IROWOR     = 'irowor'     # ror
+  KIND_JENKINS    = 'jenkins'    # jenkins
+  KIND_MATOMO     = 'matomo'     # docker
+  KIND_MOODLE     = 'moodle'     # docker
+  KIND_PRESTASHOP = 'prestashop' # docker
+  KIND_REACT      = 'react'      # static
+  KIND_SMT        = 'smt'        # ror
+  KIND_WORDPRESS  = 'wordpress'  # docker
+  KIND_TRASH      = 'trash'      # trash
+  KIND_TMP        = 'tmp'        # static
+
+  KINDS = [ nil, KIND_CRM, KIND_DRUPAL, KIND_HELLOWORLD, KIND_IROWOR,
+    KIND_JENKINS, KIND_MATOMO, KIND_MOODLE, KIND_PRESTASHOP,
+    KIND_REACT,
+    KIND_SMT,
+    KIND_WORDPRESS, KIND_TRASH, KIND_TMP ]
+
   field :kind, type: :string
   validates :kind, uniqueness: { scope: :version }, presence: true
 
@@ -17,6 +38,20 @@ class WcoHosting::ApplianceTmpl
   def name
     "#{kind} #{version}"
   end
+
+  def playbook_name
+    case kind
+    when KIND_SMT
+      return 'hosted-packagedapp'
+    when KIND_DRUPAL
+      return 'hosted-drupal'
+    when KIND_HELLOWORLD
+      return 'hosted-static'
+    else
+      throw '0ip - not implemented'
+    end
+  end
+
   field :descr, type: :string
 
   field :ecs_task_definition_erb, type: :string
@@ -48,26 +83,6 @@ class WcoHosting::ApplianceTmpl
     end
   end
 
-  ## 2023-12-08 :: These names are impossible to change already.
-  KIND_CRM        = 'crm'
-  KIND_DRUPAL     = 'drupal'
-  KIND_HELLOWORLD = 'helloworld'
-  KIND_IROWOR     = 'irowor'
-  KIND_JENKINS    = 'jenkins'
-  KIND_MATOMO     = 'matomo'
-  KIND_MOODLE     = 'moodle'
-  KIND_PRESTASHOP = 'prestashop'
-  KIND_REACT      = 'react'
-  KIND_SMT        = 'smt'
-  KIND_WORDPRESS  = 'wordpress'
-  KIND_TRASH      = 'trash'
-  KIND_TMP        = 'tmp'
-
-  KINDS = [ nil, KIND_CRM, KIND_DRUPAL, KIND_HELLOWORLD, KIND_IROWOR,
-    KIND_JENKINS, KIND_MATOMO, KIND_MOODLE, KIND_PRESTASHOP,
-    KIND_REACT,
-    KIND_SMT,
-    KIND_WORDPRESS, KIND_TRASH, KIND_TMP ]
 
 
 

@@ -70,7 +70,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
   end
 
   def update
-    params[:leadset][:serverhost_ids].delete ''
+    params[:leadset][:serverhost_ids].present? && params[:leadset][:serverhost_ids].delete('')
     @leadset = Leadset.find params[:id]
     authorize! :update, @leadset
     if @leadset.update_attributes params[:leadset].permit!

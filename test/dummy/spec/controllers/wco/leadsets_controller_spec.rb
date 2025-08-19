@@ -34,5 +34,15 @@ RSpec::describe Wco::LeadsetsController do
     assigns(:leads).length.should > 0
   end
 
+  it '#update - with empty serverhost_ids' do
+    leadset = create(:leadset)
+    lead    = create(:lead, leadset: leadset )
+
+    patch :update, params: { id: leadset.id, leadset: { company_url: 'one' } }
+    response.code.should eql '302'
+    leadset.reload
+    leadset.company_url.should eql 'one'
+  end
+
 end
 

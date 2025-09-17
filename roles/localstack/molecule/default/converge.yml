@@ -1,0 +1,22 @@
+
+- name: Converge
+  hosts: molecule
+  vars_files: ## relative to playbook
+    - ../vars/packagedapp_test.yml
+  # gather_facts: false ## because python is missing
+  tasks:
+    - include_role:
+        name: roles/wco
+        tasks_from: common_packages
+    - include_role:
+        name: roles/wco
+        tasks_from: common_config
+    - include_role:
+        name: roles/docker
+        tasks_from: main
+    - include_role:
+        name: roles/mongo
+        tasks_from: install_via_docker
+
+
+

@@ -25,9 +25,14 @@ class Wco::OfficeActionTemplatesController < Wco::ApplicationController
   def perform
     @oat = OAT.find params[:id]
     authorize! :run, @oat
-    @conversations = WcoEmail::Conversation.find( params[:conversation_ids] )
-    out = eval( @oat.action_exe )
+    @conversations = WcoEmail::Conversation.find( params[:conversation_ids] ) if params[:conversation_ids].present?
+    if 'rb' == @oat.action_type
+      out = eval( @oat.action_exe )
+    elsif 'sh' == @oat.action_type
+      out = `#{@oat.action_exe}`
+    end
     flash_notice out
+    redirect_to action: :index
   end
 
   def show

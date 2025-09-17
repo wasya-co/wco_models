@@ -44,7 +44,9 @@ Wco::Engine.routes.draw do
   resources :obfuscated_redirects
 
   post 'office_action_templates',         to: 'office_action_templates#update'
-  post 'office_action_templates/perform', to: 'office_action_templates#perform', as: :office_action_templates_perform
+  post 'office_action_templates/perform', to: 'office_action_templates#perform', as: :oat_perform_with_conversations ## from the mailbox, the oat_id is passed as a body param.
+  post 'office_action_templates/:id/perform', to: 'office_action_templates#perform', as: :oat_perform
+  get  'office_action_templates/:id/perform', to: 'office_action_templates#perform'
   resources :office_action_templates
   resources :office_actions
 

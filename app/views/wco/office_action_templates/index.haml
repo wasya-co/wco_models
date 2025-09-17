@@ -6,10 +6,15 @@
   %ul
     - @oats.each do |oat|
       %li
-        = link_to '[~]', edit_office_action_template_path(oat)
-        .d-inline-block= button_to 'x', office_action_template_path(oat), method: :delete, html: { confirm: 'Are you sure?' }
-        = link_to oat.slug, office_action_template_path(oat)
-        %br
+        .d-flex
+          = link_to '[~]', edit_office_action_template_path(oat)
+          &nbsp;
+          = button_to 'x', office_action_template_path(oat), method: :delete, data: { confirm: 'Are you sure?' }
+          &nbsp;
+          = link_to oat.slug, office_action_template_path(oat)
+          &nbsp;
+          = button_to 'Run', office_action_templates_perform_path(oat), data: { confirm: 'Are you sure?' }
+
         = render '/wco/office_action_templates/ties', ties: oat.ties, oat: oat
         -# = oat.inspect
 

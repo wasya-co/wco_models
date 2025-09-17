@@ -1,0 +1,3 @@
+---
+- name: docker localstack_development
+- name: docker mongo_development

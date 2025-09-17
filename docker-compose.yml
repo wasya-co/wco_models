@@ -4,7 +4,7 @@ services:
 
   localstack_development:
     image: localstack/localstack:3.7.0
-    # container_name: localstack_development
+    container_name: wco_models_localstack
     environment:
       - SERVICES=s3:5002
       - DEFAULT_REGION=us-east-1
@@ -28,14 +28,12 @@ services:
 
   mongo_development:
     image: mongodb/mongodb-community-server:5.0.7-ubuntu2004
-    ports:
-      - 27017:27017
+    container_name: wco_models_mongo
     volumes:
       - type: bind
         source: ./volumes/mongo_development_data
         target: /data/db
-    restart: 'no'
-
+    restart: 'unless-stopped'
 
 
 

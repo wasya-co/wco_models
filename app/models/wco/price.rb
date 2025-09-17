@@ -8,7 +8,11 @@ class Wco::Price
   ## Wco::Product, WcoHosting::ApplianceTmpl
   belongs_to :product, polymorphic: true
 
-  belongs_to :leadset, class_name: 'Wco::Leadset'
+  ## 2025-09-12 This used to be required - but I think it's unreasonable...
+  ##   all leadsets can have the same price.
+  ##   but I'll keep this around - to be able to override per-leadset.
+  ##   something else may be broken b/c I made this optional.
+  belongs_to :leadset, class_name: 'Wco::Leadset', optional: true
 
   has_many :subscriptions, class_name: 'Wco::Subscription', inverse_of: :price, foreign_key: :wco_price_id
 

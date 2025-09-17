@@ -16,6 +16,7 @@ class Wco::OfficeActionTemplate
   belongs_to :from,      polymorphic: true,            optional: true
   belongs_to :publisher, class_name: 'Wco::Publisher', optional: true
 
+  field :action_type, type: :string, default: 'rb' # 'js', 'rb', 'sh'
   field :action_exe, type: :string
   validates :action_exe, presence: true
   def do_run

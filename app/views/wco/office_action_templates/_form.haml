@@ -9,8 +9,11 @@
       %label Slug
       = f.text_field :slug, class: 'w-100'
 
+    .field
+      %label action_type
+      = f.select :action_type, options_for_select( [ nil, 'js', 'rb', 'sh' ], selected: oat.action_type )
     .descr
-      available vars: @conversations , @oat ,
+      rb available vars: @conversations , @oat ,
     .field
       %label action_exe
       = f.text_area :action_exe, class: :monospace

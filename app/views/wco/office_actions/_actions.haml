@@ -3,5 +3,5 @@
   %h5 Office Action
   .d-inline-block
     = select_tag :office_action_template, options_for_select(@office_action_templates_list), class: 'select2'
-  %a.btn.office-action-templates-perform-btn{ href: "javascript: void(0)", data: { url: wco.office_action_templates_perform_path } }
+  %a.btn.office-action-templates-perform-btn{ href: "javascript: void(0)", data: { url: wco.oat_perform_with_conversations_path } }
     Perform

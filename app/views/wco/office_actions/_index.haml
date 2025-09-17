@@ -6,6 +6,8 @@
       = link_to '[~]', edit_office_action_path(oa)
       &nbsp;
       = link_to oa.slug, office_action_path(oa)
+      &nbsp;
+      = button_to 'x', office_action_path(oa), method: :delete, data: { confirm: 'Are you sure?' }
       %ul
         %li
           .gray.mini= oa.id

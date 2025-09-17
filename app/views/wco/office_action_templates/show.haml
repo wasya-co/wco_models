@@ -6,7 +6,7 @@
     = link_to '[~]', edit_office_action_template_path(@oat)
 
   .a
-    %label action_exe
+    %label action_exe #{@oat.action_type}
     %pre.mono.descr= @oat.action_exe
 
   .a

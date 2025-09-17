@@ -4,11 +4,13 @@
 
 /config/initializers/0*
 
+.DS_Store
+
 *gem
 
-node_modules
-
 /log/*.log
+
+node_modules
 
 /pkg/
 
@@ -21,7 +23,8 @@ node_modules
 
 /vendor/bundle
 /volumes/localstack_development_data/*
-/volumes/mongo_development_data/*
 !/volumes/localstack_development_data/.keep
+/volumes/mongo_development_data/*
 !/volumes/mongo_development_data/.keep
-.DS_Store
+
+zenv

@@ -15,6 +15,17 @@ class Wco::OfficeActionsController < Wco::ApplicationController
     redirect_to action: :index
   end
 
+  def destroy
+    @oa = OA.find params[:id]
+    authorize! :destroy, @oa
+    if @oa.delete
+      flash_notice @oa
+    else
+      flash_alert @oa
+    end
+    redirect_to action: :index
+  end
+
   def edit
     @oa = OA.find params[:id]
     authorize! :edit, @oa

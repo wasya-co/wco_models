@@ -138,8 +138,18 @@ RSpec.describe WcoEmail::MessageStub do
 
       stub.do_process
       WcoEmail::Context.all.length.should eql( n_contexts ) # unchanged
-
     end
+
+    it 'populates preview' do
+      destroy_every( WcoEmail::Conversation )
+      stub = create( :message_stub, bucket: ::SES_S3_BUCKET, object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
+
+      stub.do_process
+
+      conversation = WcoEmail::Conversation.all.first
+      conversation.preview.should eql "Delivery has failed to these recipients or groups: russelldaveggio@hotmail.com The recipient's mailbox is full and can't accept messages now. Please try resending your message later, or contact the rec"
+    end
+
   end
 
 end

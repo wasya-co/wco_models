@@ -61,7 +61,8 @@ Wco::Engine.routes.draw do
   delete 'photos/delete', to: 'photos#destroy', as: :delete_photos
   resources :photos
 
-  get 'reports/deleted', to: 'reports#index', as: :deleted_reports, defaults: { deleted: true }
+  get 'reports',         to: 'reports#index',  as: :reports, defaults: { deleted: false }
+  get 'reports/deleted', to: 'reports#index',  as: :deleted_reports, defaults: { deleted: true } ## must be before resources, because 'deleted' is not an id.
   resources :reports
 
   post 'sites/:id/check_sitemap', to: 'sites#check_sitemap', as: :check_sitemap

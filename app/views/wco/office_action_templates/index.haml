@@ -13,7 +13,7 @@
           &nbsp;
           = link_to oat.slug, office_action_template_path(oat)
           &nbsp;
-          = button_to 'Run', office_action_templates_perform_path(oat), data: { confirm: 'Are you sure?' }
+          = button_to 'Run w/convos', oat_perform_with_conversations_path(oat), data: { confirm: 'Are you sure?' }
 
         = render '/wco/office_action_templates/ties', ties: oat.ties, oat: oat
         -# = oat.inspect

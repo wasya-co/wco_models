@@ -4,7 +4,7 @@ require 'business_time'
 ##
 ## https://www.macrotrends.net/stocks/charts/META/meta-platforms/stock-price-history
 ##
-class Iro::Stock
+class ::Iro::Stock
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paranoia
@@ -29,10 +29,10 @@ class Iro::Stock
 
   field :stdev, type: :float
 
-  has_many :positions,  class_name: 'Iro::Position', inverse_of: :stock
-  has_many :strategies, class_name: 'Iro::Strategy', inverse_of: :stock
-  # has_many :purses,     class_name: 'Iro::Purse',    inverse_of: :stock
-  has_many :options,    class_name: 'Iro::Option',   inverse_of: :stock
+  has_many :positions,  class_name: '::Iro::Position', inverse_of: :stock
+  has_many :strategies, class_name: '::Iro::Strategy', inverse_of: :stock
+  # has_many :purses,     class_name: '::Iro::Purse',    inverse_of: :stock
+  has_many :options,    class_name: '::Iro::Option',   inverse_of: :stock
   has_many :priceitems, inverse_of: :stock
 
   belongs_to :profile, class_name: 'Wco::Profile', optional: true
@@ -79,7 +79,7 @@ class Iro::Stock
 
     stock = self
     begin_on = Time.now - duration - 1.day
-    points = Iro::Datapoint.where( kind: 'STOCK', symbol: stock.ticker,
+    points = ::Iro::Datapoint.where( kind: 'STOCK', symbol: stock.ticker,
       :date.gte => begin_on,
     ).order_by( date: :asc )
 

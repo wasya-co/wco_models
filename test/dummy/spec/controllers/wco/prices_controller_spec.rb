@@ -23,7 +23,7 @@ RSpec::describe Wco::PricesController do
     post :create, params: { price: {
       interval: 'year',
       amount_cents: 2,
-      appliance_tmpl_leadset_id: leadset.id,
+      leadset_id: leadset.id,
       product_id: appliance_tmpl.id,
       product_type: appliance_tmpl.class,
 

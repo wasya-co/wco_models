@@ -1,4 +1,9 @@
 
+##
+## This doesn't work because gems gsl, rb-gsl are messing up
+## I'd prefer to write this in python, and restfully integrate.
+##
+
 require 'distribution'
 N = Distribution::Normal
 

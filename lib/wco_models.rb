@@ -30,6 +30,8 @@ ACTIVE   = 'active'
 INACTIVE = 'inactive'
 STATUSES = [ nil, ACTIVE, INACTIVE ]
 
+module Iro; end
+module Tda; end
 module Wco; end
 
 module WcoEmail

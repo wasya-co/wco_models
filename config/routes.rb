@@ -48,6 +48,8 @@ Wco::Engine.routes.draw do
   post 'office_action_templates/:id/perform', to: 'office_action_templates#perform', as: :oat_perform
   get  'office_action_templates/:id/perform', to: 'office_action_templates#perform'
   resources :office_action_templates
+
+  post 'office_actions/:id/run', to: 'office_actions#do_run', as: :run_office_action
   resources :office_actions
 
   resources :prices

@@ -17,7 +17,7 @@ class Iro::Strategy
 
   CREDIT = 'credit'
   DEBIT  = 'debit'
-  field     :credit_or_debit, type: :string
+  field     :credit_or_debit, type: :string, default: 'credit'
   validates :credit_or_debit, presence: true
 
 
@@ -26,36 +26,37 @@ class Iro::Strategy
   belongs_to :stock,               class_name: 'Iro::Stock',    inverse_of: :strategies
   # has_and_belongs_to_many :purses, class_name: 'Iro::Purse',    inverse_of: :strategies
 
-  # KIND_COVERED_CALL             = 'covered_call'
-  # KIND_IRON_CONDOR              = 'iron_condor'
-  # KIND_LONG_CREDIT_PUT_SPREAD   = 'long_credit_put_spread'
-  # KIND_LONG_DEBIT_CALL_SPREAD   = 'long_debit_call_spread'
-  # KIND_SHORT_CREDIT_CALL_SPREAD = 'short_credit_call_spread'
-  # KIND_SHORT_DEBIT_PUT_SPREAD   = 'short_debit_put_spread'
-  # KINDS = [ nil,
-  #   KIND_COVERED_CALL,
-  #   KIND_IRON_CONDOR,
-  #   KIND_LONG_CREDIT_PUT_SPREAD,
-  #   KIND_LONG_DEBIT_CALL_SPREAD,
-  #   KIND_SHORT_CREDIT_CALL_SPREAD,
-  #   KIND_SHORT_DEBIT_PUT_SPREAD,
-  # ];
+  KIND_COVERED_CALL             = 'covered_call'
+  KIND_IRON_CONDOR              = 'iron_condor'
+  KIND_LONG_CREDIT_PUT_SPREAD   = 'long_credit_put_spread'
+  KIND_LONG_DEBIT_CALL_SPREAD   = 'long_debit_call_spread'
+  KIND_SHORT_CREDIT_CALL_SPREAD = 'short_credit_call_spread'
+  KIND_SHORT_DEBIT_PUT_SPREAD   = 'short_debit_put_spread'
+  KINDS = [ nil,
+    KIND_COVERED_CALL,
+    KIND_IRON_CONDOR,
+    KIND_LONG_CREDIT_PUT_SPREAD,
+    KIND_LONG_DEBIT_CALL_SPREAD,
+    KIND_SHORT_CREDIT_CALL_SPREAD,
+    KIND_SHORT_DEBIT_PUT_SPREAD,
+  ];
+  ## these are too simple:
   KIND_SPREAD = 'spread'
   KIND_WHEEL  = 'wheel'
   field :kind
 
   def put_call
     case kind
-    # when Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD
-    #   put_call = 'PUT'
-    # when Iro::Strategy::KIND_LONG_DEBIT_CALL_SPREAD
-    #   put_call = 'CALL'
-    # when Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD
-    #   put_call = 'CALL'
-    # when Iro::Strategy::KIND_SHORT_DEBIT_PUT_SPREAD
-    #   put_call = 'PUT'
-    # when Iro::Strategy::KIND_COVERED_CALL
-    #   put_call = 'CALL'
+    when Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD
+      put_call = 'PUT'
+    when Iro::Strategy::KIND_LONG_DEBIT_CALL_SPREAD
+      put_call = 'CALL'
+    when Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD
+      put_call = 'CALL'
+    when Iro::Strategy::KIND_SHORT_DEBIT_PUT_SPREAD
+      put_call = 'PUT'
+    when Iro::Strategy::KIND_COVERED_CALL
+      put_call = 'CALL'
     when Iro::Strategy::KIND_SPREAD
       if credit_or_debit == CREDIT
         if long_or_short == LONG
@@ -174,12 +175,14 @@ class Iro::Strategy
 
 
   ## 2024-05-09 @TODO
+  ## 2025-10-11 _TODO
   def next_inner_strike_on expires_on
-    outs = Tda::Option.get_quotes({
+    outs = ::Tda::Option.get_quotes({
       contractType: put_call,
       expirationDate: expires_on,
       ticker: stock.ticker,
     })
+    puts! outs, 'next_inner_strike_on -> outs'
   end
 
 

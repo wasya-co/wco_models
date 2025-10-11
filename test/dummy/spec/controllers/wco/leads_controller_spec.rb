@@ -4,11 +4,10 @@ RSpec::describe Wco::LeadsController do
   routes { Wco::Engine.routes }
 
   before do
-    destroy_every( Wco::Lead, Wco::Leadset, Wco::Tag )
-    @tag  = create( :tag )
-    @lead = create( :lead, tag_ids: [ @tag.id ] )
-
     setup_users
+    destroy_every( Wco::Lead, Wco::Leadset, Wco::Tag )
+    @tag     = create( :tag )
+    @lead    = create( :lead, tag_ids: [ @tag.id ] )
   end
 
   it '#create' do

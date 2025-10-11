@@ -26,6 +26,14 @@ class Wco::OfficeActionsController < Wco::ApplicationController
     redirect_to action: :index
   end
 
+  def do_run
+    @oa = OA.find params[:id]
+    authorize! :do_run, @oa
+    out = @oa.do_run
+    puts! out, 'do_run office action'
+    redirect_to request.referrer
+  end
+
   def edit
     @oa = OA.find params[:id]
     authorize! :edit, @oa

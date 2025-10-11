@@ -1,6 +1,6 @@
 
-require 'distribution'
-N = Distribution::Normal
+# require 'distribution'
+# N = Distribution::Normal
 
 class Iro::Purse
   include Mongoid::Document

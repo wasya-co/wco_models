@@ -3,7 +3,7 @@ class Iro::Option
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paranoia
-  include Iro::OptionBlackScholes
+  # include Iro::OptionBlackScholes
   store_in collection: 'iro_options'
 
   attr_accessor :recompute

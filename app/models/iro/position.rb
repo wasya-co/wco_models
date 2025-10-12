@@ -159,6 +159,7 @@ class Iro::Position
     elsif 'PUT' == pos.put_call
       outs = outs.reverse
     end
+    puts! outs, '#calc_nxt.outs -> 2'
 
     ## next_inner_strike
     outs = outs.select do |out|
@@ -171,7 +172,7 @@ class Iro::Position
           out[:strikePrice] <= strategy.next_inner_strike
         end
       else
-        raise 'zz3 - @TODO: implement, debit spreads'
+        raise 'zt3 - @TODO: implement, debit spreads'
       end
     end
     puts! outs[0][:strikePrice], 'after calc next_inner_strike'
@@ -184,7 +185,7 @@ class Iro::Position
       elsif Iro::Strategy::LONG == pos.long_or_short
         out[:strikePrice] < strategy.stock.last - strategy.next_buffer_above_water
       else
-        raise 'zz4 - this cannot happen'
+        raise 'zt4 - this cannot happen'
       end
     end
     puts! outs[0][:strikePrice], 'after calc next_buffer_above_water'
@@ -199,7 +200,7 @@ class Iro::Position
         out_delta  = out[:delta] rescue 0
         out_delta <= strategy.next_inner_delta
       else
-        raise 'zz5 - this cannot happen'
+        raise 'zt5 - this cannot happen'
       end
     end
     puts! outs[0][:strikePrice], 'after calc next_inner_delta'

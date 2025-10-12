@@ -230,7 +230,6 @@ FactoryBot.define do
 
   factory :profile, class: 'Wco::Profile' do
     email { email }
-    schwab_access_token { TEST_SCHWAB_ACCESS_TOKEN }
     after :build do |doc|
       leadset   = Wco::Leadset.where( email: doc.email ).first
       leadset ||= create( :leadset, email: doc.email )

@@ -21,9 +21,9 @@ class Iro::Strategy
   validates :credit_or_debit, presence: true
 
 
-  has_many :positions,             class_name: 'Iro::Position', inverse_of: :strategy
-  has_one  :next_position,         class_name: 'Iro::Position', inverse_of: :next_strategy
-  belongs_to :stock,               class_name: 'Iro::Stock',    inverse_of: :strategies
+  has_many :positions,     class_name: 'Iro::Position', inverse_of: :strategy,     dependent: :destroy
+  has_one  :next_position, class_name: 'Iro::Position', inverse_of: :next_strategy ## _TODO: makes no sense...
+  belongs_to :stock,       class_name: 'Iro::Stock',    inverse_of: :strategies
   # has_and_belongs_to_many :purses, class_name: 'Iro::Purse',    inverse_of: :strategies
 
   KIND_COVERED_CALL             = 'covered_call'
@@ -32,6 +32,9 @@ class Iro::Strategy
   KIND_LONG_DEBIT_CALL_SPREAD   = 'long_debit_call_spread'
   KIND_SHORT_CREDIT_CALL_SPREAD = 'short_credit_call_spread'
   KIND_SHORT_DEBIT_PUT_SPREAD   = 'short_debit_put_spread'
+  ## these are too simple and deprecated:
+  KIND_SPREAD = 'spread' ## @deprecated, be specific
+  KIND_WHEEL  = 'wheel'  ## @deprecated, be specific
   KINDS = [ nil,
     KIND_COVERED_CALL,
     KIND_IRON_CONDOR,
@@ -39,10 +42,9 @@ class Iro::Strategy
     KIND_LONG_DEBIT_CALL_SPREAD,
     KIND_SHORT_CREDIT_CALL_SPREAD,
     KIND_SHORT_DEBIT_PUT_SPREAD,
+    KIND_SPREAD,
+    KIND_WHEEL,
   ];
-  ## these are too simple:
-  KIND_SPREAD = 'spread'
-  KIND_WHEEL  = 'wheel'
   field :kind
 
   def put_call
@@ -64,20 +66,20 @@ class Iro::Strategy
         elsif long_or_short == SHORT
           'CALL'
         else
-          throw 'zz5 - should never happen'
+          throw 'zq5 - should never happen'
         end
       else
-        throw 'zz6 - debit spreads are not implemented'
+        throw 'zq6 - debit spreads are not implemented'
       end
-    when Iro::Strategy::KIND_WHEEL
-      'CALL'
     else
-      throw 'zz9 - this should never happen'
+      # put_call = 'zq9-ERROR'
+      throw 'zq9 - this should never happen'
     end
   end
 
-  field :threshold_buffer_above_water, type: :float
-  field :threshold_delta,              type: :float
+  field :buffer_above_water, type: :float
+  field :threshold_pos_delta,              type: :float # best-case scenario: roll b/c markets are going my way
+  field :threshold_neg_delta, type: :float # nightmare scenario: defensively rolling
   field :threshold_netp,               type: :float
   field :threshold_dte,                type: :integer, default: 1
 
@@ -203,8 +205,8 @@ class Iro::Strategy
           "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
     end
 
-    if p.inner.end_delta < threshold_delta
-      return [ 0.61, "Delta #{p.inner.end_delta} is lower than #{threshold_delta} threshold." ]
+    if p.inner.end_delta < threshold_pos_delta
+      return [ 0.61, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
     end
 
     if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
@@ -230,8 +232,39 @@ class Iro::Strategy
           "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
     end
 
-    if p.inner.end_delta < threshold_delta
-      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_delta} threshold." ]
+    if p.inner.end_delta < threshold_pos_delta
+      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
+    end
+
+    if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
+      return [ 0.51, "made enough #{'%.02f' % [(1.0 - p.inner.end_price/p.inner.begin_price )*100]}% profit^" ]
+    end
+
+    return [ 0.33, '-' ]
+  end
+
+  ## 2025-10-12 _TODO
+  def calc_rollp_long_credit_put_spread p
+    # puts! p, '#calc_rollp_long_credit_put_spread'
+    # puts! p.inner, 'p.inner'
+    puts! stock, 'stock'
+    puts! attributes, 'strategy attributes'
+
+    if ( p.expires_on.to_date - Time.now.to_date ).to_i < 1
+      return [ 0.99, '0 DTE, must exit' ]
+    end
+    if ( p.expires_on.to_date - Time.now.to_date ).to_i < 2
+      return [ 0.99, '1 DTE, must exit' ]
+    end
+
+    if ( stock.last - buffer_above_water ) < p.inner.strike
+      return [ 0.95, "Last #{'%.2f' % stock.last} is " +
+          "#{'%.2f' % [stock.last - p.inner.strike - buffer_above_water]} " +
+          "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
+    end
+
+    if p.inner.end_delta < threshold_pos_delta
+      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
     end
 
     if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
@@ -254,8 +287,8 @@ class Iro::Strategy
           "above #{'%.2f' % [p.inner.strike - buffer_above_water]} water" ]
     end
 
-    if p.inner.end_delta.abs < threshold_delta.abs
-      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_delta} threshold." ]
+    if p.inner.end_delta.abs < threshold_pos_delta.abs
+      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
     end
 
     if p.net_percent > threshold_netp

@@ -9,11 +9,6 @@
     awslocal s3 mb s3://wco-email-ses-development
     awslocal s3 ls
 
-  awslocal s3api put-object \
-    --bucket sample-bucket \
-    --key image.jpg \
-    --body image.jpg
-
   cd /opt/tmp
   awslocal s3api put-object --bucket wco-email-ses-development \
     --key 2021-10-18T18_41_17Fanand_phoenixwebgroup_co \

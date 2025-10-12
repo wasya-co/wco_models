@@ -23,7 +23,7 @@
 
     .field
       %label leadset
-      = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset )
+      = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset_id )
 
     .actions
       = f.submit 'Go'

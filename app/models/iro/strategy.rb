@@ -91,15 +91,14 @@ class Iro::Strategy
   field :next_buffer_above_water, type: :float
 
 
-
-
-
-
   def begin_delta_wheel p
     p.inner.begin_delta
   end
   def begin_delta_spread p
     p.inner.begin_delta - p.outer.begin_delta
+  end
+  def begin_delta_long_credit_put_spread p
+    begin_delta_spread p
   end
 
 
@@ -118,26 +117,29 @@ class Iro::Strategy
   def end_delta_spread p
     p.inner.end_delta - p.outer.end_delta
   end
+  def end_delta_long_credit_put_spread p
+    end_delta_spread p
+  end
 
 
-  # def max_gain_covered_call p
-  #   p.inner.begin_price * 100 - 0.66 # @TODO: is this *100 really?
-  # end
-  # # def max_gain_long_credit_put_spread p
-  #   ## 100 * disallowed for gameui
-  #   p.inner.begin_price - p.outer.begin_price
-  # end
-  # def max_gain_long_debit_call_spread p
-  #   ## 100 * disallowed for gameui
-  #   ( p.inner.strike - p.outer.strike - p.outer.begin_price + p.inner.begin_price ) # - 2*0.66
-  # end
-  # def max_gain_short_credit_call_spread p
-  #   p.inner.begin_price - p.outer.begin_price
-  # end
-  # def max_gain_short_debit_put_spread p
-  #   ## 100 * disallowed for gameui
-  #   ( p.outer.strike - p.inner.strike - p.outer.begin_price + p.inner.begin_price ) # - 2*0.66
-  # end
+  def max_gain_covered_call p
+    p.inner.begin_price * 100 - 0.66 # @TODO: is this *100 really?
+  end
+  def max_gain_long_credit_put_spread p
+    ## 100 * disallowed for gameui
+    p.inner.begin_price - p.outer.begin_price
+  end
+  def max_gain_long_debit_call_spread p
+    ## 100 * disallowed for gameui
+    ( p.inner.strike - p.outer.strike - p.outer.begin_price + p.inner.begin_price ) # - 2*0.66
+  end
+  def max_gain_short_credit_call_spread p
+    p.inner.begin_price - p.outer.begin_price
+  end
+  def max_gain_short_debit_put_spread p
+    ## 100 * disallowed for gameui
+    ( p.outer.strike - p.inner.strike - p.outer.begin_price + p.inner.begin_price ) # - 2*0.66
+  end
   def max_gain_spread p
     ## 100 * disallowed for gameui
     ( p.outer.strike - p.inner.strike ).abs - p.outer.begin_price + p.inner.begin_price # - 2*0.66
@@ -147,21 +149,21 @@ class Iro::Strategy
   end
 
 
-  # def max_loss_covered_call p
-  #   p.inner.begin_price*10 # just suppose 10,000%
-  # end
-  # def max_loss_long_credit_put_spread p
-  #   out = p.inner.strike - p.outer.strike
-  # end
-  # def max_loss_long_debit_call_spread p
-  #   out = p.outer.strike - p.inner.strike
-  # end
-  # def max_loss_short_debit_put_spread p # different
-  #   out = p.inner.strike - p.outer.strike
-  # end
-  # def max_loss_short_credit_call_spread p
-  #   out = p.outer.strike - p.inner.strike
-  # end
+  def max_loss_covered_call p
+    p.inner.begin_price*10 # just suppose 10,000%
+  end
+  def max_loss_long_credit_put_spread p
+    out = p.inner.strike - p.outer.strike
+  end
+  def max_loss_long_debit_call_spread p
+    out = p.outer.strike - p.inner.strike
+  end
+  def max_loss_short_debit_put_spread p # different
+    out = p.inner.strike - p.outer.strike
+  end
+  def max_loss_short_credit_call_spread p
+    out = p.outer.strike - p.inner.strike
+  end
   def max_loss_spread p
     ( p.outer.strike - p.inner.strike ).abs
   end
@@ -172,6 +174,9 @@ class Iro::Strategy
 
 
   def net_amount_spread p
+    p.inner.begin_price - p.inner.end_price
+  end
+  def net_amount_long_credit_put_spread p
     p.inner.begin_price - p.inner.end_price
   end
 

@@ -62,6 +62,11 @@ RSpec.describe Iro::Strategy do
     #   @strategy.net_amount_short_credit_call_spread( @position ).should eql( 1.99 - 0.5 - 1.86 + 0.25 )
     # end
 
+    it '#net_amount_long_credit_put_spread' do
+      p = @position
+      @strategy.net_amount_long_credit_put_spread( p ).should eql( p.inner.begin_price - p.inner.end_price )
+    end
+
     context '#calc_rollp_long_credit_put_spread' do
       before do
         @nvda = create( :stock, ticker: 'NVDA', last: 892.0 )

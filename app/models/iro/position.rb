@@ -103,8 +103,13 @@ class Iro::Position
     net_amount / max_gain
   end
   def net_amount # each
-    strategy.send("net_amount_#{strategy.kind}", self)
+    self.send("net_amount_#{strategy.kind}")
   end
+  ## 2025-10-14 tested
+  def net_amount_long_credit_put_spread ## each
+    inner.begin_price - outer.begin_price + outer.end_price - inner.end_price
+  end
+
   def max_gain # each
     strategy.send("max_gain_#{strategy.kind}", self)
   end

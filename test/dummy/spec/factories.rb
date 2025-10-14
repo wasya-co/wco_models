@@ -129,12 +129,20 @@ FactoryBot.define do
 
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
+    factory :stock_meta do
+      ticker { 'META' }
+    end
   end
 
   factory :strategy, class: '::Iro::Strategy' do
     kind { ::Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD }
     long_or_short { ::Iro::Strategy::LONG }
     # slug { generate(:slug) }
+
+    factory :strategy_long_credit_put_spread do
+      kind { ::Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD }
+    end
+
   end
 
 
@@ -156,9 +164,9 @@ FactoryBot.define do
     expires_on { '2024-04-19' }
     quantity { 1 }
     after :build do |doc|
-      doc.purse    = Iro::Purse.all.first
-      doc.stock    = Iro::Stock.all.first
-      doc.strategy = Iro::Strategy.all.first
+      doc.purse    ||= Iro::Purse.all.first
+      doc.stock    ||= Iro::Stock.all.first
+      doc.strategy ||= Iro::Strategy.all.first
     end
   end
 

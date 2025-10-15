@@ -30,7 +30,12 @@ class Iro::Position
   delegate :ticker, to: :stock
 
   belongs_to :strategy, class_name: 'Iro::Strategy', inverse_of: :positions
-  delegate :put_call,        to: :strategy
+
+  ## no: the strategy can be wheel, and position is put-spread.
+  # delegate :put_call,        to: :strategy
+  field :put_call, type: :string
+  validates :put_call, presence: true
+
   delegate :long_or_short,   to: :strategy
   delegate :credit_or_debit, to: :strategy
 
@@ -244,7 +249,8 @@ class Iro::Position
       pos.autonxt ||= Iro::Position.new
       pos.autonxt.update({
         prev_gain_loss_amount: 'a',
-        status:       'proposed',
+        put_call:     pos.put_call,
+        status:      'proposed',
         stock:        strategy.stock,
         inner:        inner_,
         outer:        outer_,

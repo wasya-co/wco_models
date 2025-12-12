@@ -227,9 +227,6 @@ class WcoEmail::MessageStub
         else
           @message.apply_filter( filter )
         end
-
-      else
-        puts! 'No reason to act upon.'
       end
     end
 

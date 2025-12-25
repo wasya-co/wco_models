@@ -63,10 +63,6 @@ class Wco::LeadsetsController < Wco::ApplicationController
     @leads         = @leadset.leads.page( params[:leads_page] ).per( current_profile.per_page )
     @subscriptions = @leadset.subscriptions
     @invoices      = @leadset.invoices
-
-    @prices = @leadset.appliance_tmpls
-    ## _TODO: can remove
-    @all_prices = Wco::Price.all
   end
 
   def update

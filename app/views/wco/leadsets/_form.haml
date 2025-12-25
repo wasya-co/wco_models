@@ -41,13 +41,13 @@
     %label Stripe customer_id
     = f.text_field :customer_id
 
-  .field
-    %label appliance tmpl prices
-    .d-flex.flex-wrap
-      - @appliance_tmpl_prices_list.each do |price|
-        .descr
-          = check_box_tag 'leadset[appliance_tmpl_ids][]', price.id, leadset.appliance_tmpls.include?(price)
-          %label= price.product&.name
+  -# .field
+  -#   %label appliance tmpl prices
+  -#   .d-flex.flex-wrap
+  -#     - @appliance_tmpl_prices_list.each do |price|
+  -#       .descr
+  -#         = check_box_tag 'leadset[appliance_tmpl_ids][]', price.id, leadset.appliance_tmpls.include?(price)
+  -#         %label= price.product&.name
 
 
   .actions

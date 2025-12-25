@@ -26,12 +26,6 @@
 
     %hr
     .row
-      -# appliance templates (prices)
-      .col-md-6.border-right
-        .header
-          %h5.title Appliance Tmpls (prices) (#{@leadset.appliance_tmpls.length})
-        = render 'wco/prices/form_table'
-
       -# environments
       .col-md-6
         - if defined?( wco_hosting )

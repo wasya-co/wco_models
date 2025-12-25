@@ -9,6 +9,8 @@ Wco::Engine.routes.draw do
     get 'obf/:id',          to: 'obfuscared_redirects#show'
 
     get 'tags', to: 'tags#index'
+
+    post 'videos', to: 'videos#create'
   end
 
   get 'application/tinymce', to: 'application#tinymce'

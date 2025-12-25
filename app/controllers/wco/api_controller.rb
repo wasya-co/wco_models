@@ -16,4 +16,12 @@ class Wco::ApiController < ActionController::Base
     sign_in user
   end
 
+  def decode_simple_api_key
+    if params[:api_key] === SIMPLE_API_KEY &&
+       params[:api_secret] === SIMPLE_API_SECRET
+      user = User.find_by({ email: 'piousbox@gmail.com' })
+      sign_in user
+    end
+  end
+
 end

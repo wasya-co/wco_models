@@ -34,100 +34,100 @@ class Wco::NewsvideosController < Wco::ApplicationController
 
 
     ## put together config
-    # cmd = "cd #{Rails.root.join('tmp')} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} ; rm -f videolist.txt audiolist.txt ; "
-    # @newsvideo.newspartials.each_with_index do |part, idx|
-    #   cmd = "#{cmd} echo \"file 'newspartial_#{idx}.mp4' \" >> videolist.txt ; "
-    #   cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "
-    #   cmd = "#{cmd} ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
-    # end
-    # puts! cmd, 'cmd'
-    # out = `#{cmd}`
-    # puts! out, 'out'
+    cmd = "cd #{Rails.root.join('tmp')} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} ; rm -f videolist.txt audiolist.txt ; "
+    @newsvideo.newspartials.each_with_index do |part, idx|
+      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.mp4' \" >> videolist.txt ; "
+      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "
+      cmd = "#{cmd} ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
+    end
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## get base files locally
-    # cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
-    # @newsvideo.newspartials.each_with_index do |part, idx|
-    #   cmd = "#{cmd} wget -O newspartial_#{idx}.webm #{part.video.video.url} ; "
-    #   cmd = "#{cmd} wget -O newspartial_#{idx}.wav #{part.audio.url} ; "
-    # end
-    # puts! cmd, 'cmd'
-    # out = `#{cmd}`
-    # puts! out, 'out'
+    cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
+    @newsvideo.newspartials.each_with_index do |part, idx|
+      cmd = "#{cmd} wget -O newspartial_#{idx}.webm #{part.video.video.url} ; "
+      cmd = "#{cmd} wget -O newspartial_#{idx}.wav #{part.audio.url} ; "
+    end
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## get overlays
-    # cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
-    # @newsvideo.newsoverlays.each_with_index do |overlay, idx|
-    #   cmd = "#{cmd} wget -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
-    # end
-    # puts! cmd, 'cmd'
-    # out = `#{cmd}`
-    # puts! out, 'out'
+    cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
+    @newsvideo.newsoverlays.each_with_index do |overlay, idx|
+      cmd = "#{cmd} wget -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
+    end
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## video concat
-#     cmd = <<AOL
-#       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
-#       rm -f video_concat.mp4 ;
-#       ffmpeg -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
-# AOL
-#     puts! cmd, 'cmd'
-#     out = `#{cmd}`
-#     puts! out, 'out'
+    cmd = <<AOL
+      cd #{Rails.root.join('tmp', @newsvideo.id)} ;
+      rm -f video_concat.mp4 ;
+      ffmpeg -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
+AOL
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## audio concat
-#     audio_filenames = (0...@newsvideo.newspartials.length).map { |i| "newspartial_#{i}.wav" }.join("|")
-#     cmd = <<AOL
-#       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
-#       rm -f audio_concat.wav ;
-#       ffmpeg -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
-# AOL
-#     puts! cmd, 'cmd'
-#     out = `#{cmd}`
-#     puts! out, 'out'
+    audio_filenames = (0...@newsvideo.newspartials.length).map { |i| "newspartial_#{i}.wav" }.join("|")
+    cmd = <<AOL
+      cd #{Rails.root.join('tmp', @newsvideo.id)} ;
+      rm -f audio_concat.wav ;
+      ffmpeg -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
+AOL
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## combine base
-#     cmd = <<AOL
-#       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
-#       rm -f output.mp4 ;
-#       ffmpeg -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
-# AOL
-#     puts! cmd, 'cmd'
-#     out = `#{cmd}`
-#     puts! out, 'out'
+    cmd = <<AOL
+      cd #{Rails.root.join('tmp', @newsvideo.id)} ;
+      rm -f output.mp4 ;
+      ffmpeg -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
+AOL
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ##  combine overlays
-    # nn = @newsvideo.newsoverlays.map { |ol| ol.start_at_ms }
-    # puts! nn, 'nn'
-    # ffmpeg_cmd = [ "ffmpeg -i combined_base.mp4 \\ " ]
-    # nn.each_with_index do |ms, idx|
-    #   ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\ "
-    # end
-    # ffmpeg_cmd.push "-filter_complex \" \\ "
-    # #
-    # nn.each_with_index do |ms, idx|
-    #   ffmpeg_cmd.push " [#{idx+1}:v]setpts=PTS-STARTPTS+#{ms.to_f/1000}/TB[v#{idx+1}]; \\ "
-    # end
-    # #
-    # curr_s = "0:v"
-    # n = nil
-    # nn.each_with_index do |ms, idx|
-    #   n = idx+1
-    #   ffmpeg_cmd.push " [#{curr_s}][v#{n}]overlay=0:0:eof_action=pass[tmp#{n}]; \\ "
-    #   curr_s = "tmp#{n}"
-    # end
-    # ffmpeg_cmd.push " \" -map \"[#{curr_s}]\" -map 0:a? -c:v libx264 -c:a copy combined_fin.mp4 "
-    # ffmpeg_cmd = ffmpeg_cmd.join("\n")
-    # puts "+++ ffmpeg_cmd:"
-    # puts ffmpeg_cmd
+    nn = @newsvideo.newsoverlays.map { |ol| ol.start_at_ms }
+    puts! nn, 'nn'
+    ffmpeg_cmd = [ "ffmpeg -i combined_base.mp4 \\ " ]
+    nn.each_with_index do |ms, idx|
+      ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\ "
+    end
+    ffmpeg_cmd.push "-filter_complex \" \\ "
+    #
+    nn.each_with_index do |ms, idx|
+      ffmpeg_cmd.push " [#{idx+1}:v]setpts=PTS-STARTPTS+#{ms.to_f/1000}/TB[v#{idx+1}]; \\ "
+    end
+    #
+    curr_s = "0:v"
+    n = nil
+    nn.each_with_index do |ms, idx|
+      n = idx+1
+      ffmpeg_cmd.push " [#{curr_s}][v#{n}]overlay=0:0:eof_action=pass[tmp#{n}]; \\ "
+      curr_s = "tmp#{n}"
+    end
+    ffmpeg_cmd.push " \" -map \"[#{curr_s}]\" -map 0:a? -c:v libx264 -c:a copy combined_fin.mp4 "
+    ffmpeg_cmd = ffmpeg_cmd.join("\n")
+    puts "+++ ffmpeg_cmd:"
+    puts ffmpeg_cmd
 
     # combine overlays 2
-#     cmd = <<AOL
-#       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
-#       rm -f combined_fin.mp4 ;
-#       #{ffmpeg_cmd} ;
-# AOL
-#     puts! cmd, 'cmd'
-#     out = `#{cmd}`
-#     puts! out, 'out'
+    cmd = <<AOL
+      cd #{Rails.root.join('tmp', @newsvideo.id)} ;
+      rm -f combined_fin.mp4 ;
+      #{ffmpeg_cmd} ;
+AOL
+    puts! cmd, 'cmd'
+    out = `#{cmd}`
+    puts! out, 'out'
 
     ## upload the video.
     @video = Wco::Video.new name: @newsvideo.title

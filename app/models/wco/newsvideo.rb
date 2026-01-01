@@ -60,7 +60,8 @@ class Wco::Newsvideo
       cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "
       cmd = "#{cmd} ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
     end
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -70,7 +71,8 @@ class Wco::Newsvideo
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.webm #{part.video.video.url} ; "
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.wav #{part.audio.url} ; "
     end
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -79,7 +81,8 @@ class Wco::Newsvideo
     @newsvideo.newsoverlays.each_with_index do |overlay, idx|
       cmd = "#{cmd} wget -nc -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
     end
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -89,7 +92,8 @@ class Wco::Newsvideo
       rm -f video_concat.mp4 ;
       ffmpeg -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
 AOL
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -100,7 +104,8 @@ AOL
       rm -f audio_concat.wav ;
       ffmpeg -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
 AOL
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -110,7 +115,8 @@ AOL
       rm -f output.mp4 ;
       ffmpeg -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
 AOL
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
@@ -145,7 +151,8 @@ AOL
       rm -f combined_fin.mp4 ;
       #{ffmpeg_cmd} ;
 AOL
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 

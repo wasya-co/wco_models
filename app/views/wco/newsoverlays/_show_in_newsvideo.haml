@@ -1,0 +1,10 @@
+
+.NewsoverlayTimeline{ style: "top: #{newsoverlay.start_at_ms*HEIGHT_MS}px; height: #{newsoverlay.duration_ms*HEIGHT_MS}px;"}
+  .d-flex
+    = newsoverlay.name
+    = link_to '[~]', edit_newsoverlay_path(newsoverlay)
+    = button_to 'x', newsoverlay_path(newsoverlay), method: :delete, data: { confirm: 'Are you sure?' }
+
+  %img{ src: newsoverlay.video.thumb.url(:thumb) }
+  .a start_at: #{newsoverlay.start_at_ms}ms
+  .a Duration: #{newsoverlay.duration_ms}ms

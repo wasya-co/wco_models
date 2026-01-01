@@ -2,10 +2,9 @@
 .videos-index.container-fluid
   .d-flex
     = link_to "Videos (#{@videos.count})", videos_path
-
     .inline-search
       = form_tag videos_path, method: :get do
         = text_field_tag :q
-
     = link_to '[+]', new_video_path
+
   = render '/wco/videos/index', videos: @videos

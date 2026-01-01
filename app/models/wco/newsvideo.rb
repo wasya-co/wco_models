@@ -24,6 +24,7 @@ class Wco::Newsvideo
 
   field :body
   field :config_json, type: :string
+  field :duration_ms, type: :integer
 
   field :x, :type => Float
   field :y, :type => Float
@@ -34,8 +35,19 @@ class Wco::Newsvideo
 
   belongs_to :author, class_name: 'Wco::Profile'
 
-  has_and_belongs_to_many :tags
   has_many :newspartials
+  def newspartials
+    Wco::Newspartial.where( newsvideo_id: self.id )
+  end
+
+  has_many :newsoverlay_configs
+  has_and_belongs_to_many :tags
   has_many :videos
+
+
+  has_many :newsoverlays
+  def newsoverlays
+    Wco::Newsoverlay.where( newsvideo_id: self.id )
+  end
 
 end

@@ -3,9 +3,9 @@ require 'mongoid_paperclip'
 
 class Wco::Video
   include Mongoid::Document
-  include Mongoid::Timestamps
   include Mongoid::Paperclip
   include Mongoid::Paranoia
+  include Mongoid::Timestamps
   include Wco::Utils
   store_in collection: 'videos'
 
@@ -30,6 +30,8 @@ class Wco::Video
   field :youtube_id
   validates_uniqueness_of :youtube_id, allow_blank: true, case_sensitive: false
   before_save { youtube_id.present? || youtube_id = nil }
+
+  field :duration_ms, type: :integer
 
   # belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
   # has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos

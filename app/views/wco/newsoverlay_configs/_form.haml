@@ -1,0 +1,15 @@
+
+= form_for newsoverlay_config do |f|
+  .actions
+    = f.submit 'Submit'
+
+  .field
+    %label Newsvideo
+    = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newsoverlay_config.newsvideo_id), {}, class: :select2
+
+  .field
+    %label Video
+    = f.text_field :video_id, value: newsoverlay_config[:video_id] || params[:video_id]
+
+  .actions
+    = f.submit 'Submit'

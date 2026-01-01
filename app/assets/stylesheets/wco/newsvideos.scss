@@ -1,0 +1,58 @@
+
+.NewsoverlayTimeline {
+  border: 5px solid green;
+  position: absolute;
+  left: 230px;
+}
+
+.NewspartialTimeline {
+  border: 1px solid blue;
+  position: relative;
+
+  margin-left: 50px;
+  width: 400px;
+
+  .full-text {
+    position: absolute;
+    left: 300px;
+
+    .header {
+      background: #efefef;
+    }
+
+    .flex-row > div {
+      margin-right: 1em;
+    }
+
+    .descr {
+      min-width: 300px;
+    }
+
+  }
+
+  .main {
+    width: 200px;
+  }
+
+
+  .timestamp {
+    position: absolute;
+    .word {
+      border: 1px solid cyan;
+      left: 100px;
+      position: absolute;
+    }
+    .wtime {
+      border: 1px solid yellow;
+      left: 20px;
+      position: absolute;
+    }
+  }
+
+}
+
+
+.NewsvideoTimeline {
+  border: 5px solid yellow;
+  position: absolute;
+}

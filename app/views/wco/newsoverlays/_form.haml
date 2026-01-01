@@ -1,0 +1,22 @@
+
+= form_for newsoverlay do |f|
+  .actions
+    = f.submit 'Submit'
+
+  .field
+    %label Newsvideo
+    = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newsoverlay.newsvideo_id), {}, class: :select2
+
+  .field.d-flex.flex-column
+    %label Video
+    = f.text_field :video_id, value: newsoverlay[:video_id] || params[:video_id], disabled: true
+    .flex-row
+      .thumb= image_tag( newsoverlay.video.thumb.url( :thumb ), :alt => '' )
+      .a Duration: #{newsoverlay.video.duration_ms}ms
+
+  .field
+    %label Start at ms
+    = f.text_field :start_at_ms, value: newsoverlay.start_at_ms
+
+  .actions
+    = f.submit 'Submit'

@@ -12,6 +12,8 @@
               = link_to video.name, video_path( video )
             .d-flex
               = link_to '[~]', edit_video_path( video )
+              = link_to '[overlay]', new_newsoverlay_path( video_id: video.id.to_s )
+              = link_to '[overlay-multi]', new_newsoverlay_config_path( video_id: video.id.to_s )
               = button_to '[x]', video_path( video ), :method => :delete, :data => { :confirm => 'Are you sure?' }
             = render 'meta', item: video
 

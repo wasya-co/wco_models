@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.1.0.224)
+    wco_models (3.1.0.225)
       ahoy_matey
       aws-sdk-s3
       business_time
@@ -299,6 +299,7 @@ GEM
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
     pdf-core (0.10.0)
+    pragmatic_segmenter (0.3.24)
     prawn (2.5.0)
       matrix (~> 0.4)
       pdf-core (~> 0.10.0)
@@ -453,6 +454,7 @@ DEPENDENCIES
   omniauth (~> 2.1.1)
   omniauth-keycloak (~> 1.5.1)
   omniauth-rails_csrf_protection (~> 1.0.1)
+  pragmatic_segmenter (= 0.3.24)
   rails-controller-testing
   rspec-rails
   stringio (= 3.1.2)

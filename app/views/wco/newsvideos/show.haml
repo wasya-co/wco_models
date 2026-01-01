@@ -1,10 +1,22 @@
 
 .newsvideos-show.maxwidth
-  %h5.text-center Newsvideo `#{@newsvideo.title}` #{link_to '[~]', edit_newsvideo_path(@newsvideo)}
+  %h5.text-center
+    Newsvideo `#{@newsvideo.title}`
+    #{link_to '[~]', edit_newsvideo_path(@newsvideo)}
+    .d-inline-block= button_to 'split', split_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+    = link_to '[+ newspartial]', new_newspartial_path(newsvideo_id: @newsvideo.id)
+    = link_to '[search illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
+    .d-inline-block= button_to 'generate', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+
   .descr= @newsvideo.body
-%hr
-.text-center
-  Newspartials #{link_to '[+]', new_newspartial_path(newsvideo_id: @newsvideo.id) }
-  = link_to '[+ illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
-- @newspartials.each do |newspartial|
-  = render 'wco/newspartials/show_in_newsvideo', newspartial: newspartial
+  %br
+  %br
+
+.NewsvideoTimeline
+  - @newspartials.each do |newspartial|
+    = render 'wco/newspartials/show_in_newsvideo', newspartial: newspartial
+
+  - @newsoverlays.each do |newsoverlay|
+    = render 'wco/newsoverlays/show_in_newsvideo', newsoverlay: newsoverlay
+
+.c

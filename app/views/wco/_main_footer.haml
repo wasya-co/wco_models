@@ -1,35 +1,38 @@
 
-#Config{ data: { jwt_token: @jwt_token } }
-:javascript
-  localStorage.setItem('jwt_token', $("#Config").data('jwt-token') )
+- if !@skip_footer
+  %hr
 
-.application--main-footer.main-footer
-  .maxwidth
+  #Config{ data: { jwt_token: @jwt_token } }
+  :javascript
+    localStorage.setItem('jwt_token', $("#Config").data('jwt-token') )
 
-    %i.fa.fa-compress.collapse-expand#mainFooter
-      Account & Session
-    .a
-      .row
-        .col-sm-4
-          %ul
-            %li
-              <b>Email:</b> #{@current_profile.email}
-              = button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
-            %li= link_to 'sidekiq', '/sidekiq', target: :_blank
-            %li= link_to 'Iron Warbler', '/iron_warbler'
+  .application--main-footer.main-footer
+    .maxwidth
+
+      %i.fa.fa-compress.collapse-expand#mainFooter
+        Account & Session
+      .a
+        .row
+          .col-sm-4
+            %ul
+              %li
+                <b>Email:</b> #{@current_profile.email}
+                = button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
+              %li= link_to 'sidekiq', '/sidekiq', target: :_blank
+              %li= link_to 'Iron Warbler', '/iron_warbler'
 
 
-        .col-sm-4
-          %ul
-            %li ~__^ &nbsp; &nbsp; v#{@version}
-            %li
-              = pp_date Time.now
-              = pp_time Time.now
+          .col-sm-4
+            %ul
+              %li ~__^ &nbsp; &nbsp; v#{@version}
+              %li
+                = pp_date Time.now
+                = pp_time Time.now
 
-        .col-sm-4
-          = render '/wco/profiles/form_extra', profile: @current_profile
-          = link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
-      = render 'wco/application/debug' if !Rails.env.production?
+          .col-sm-4
+            = render '/wco/profiles/form_extra', profile: @current_profile
+            = link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
+        = render 'wco/application/debug' if !Rails.env.production?
 
-    .c
+      .c
 

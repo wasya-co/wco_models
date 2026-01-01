@@ -12,6 +12,8 @@ Wco::Engine.routes.draw do
     patch 'reports/:id/add-config', to: 'reports#add_config'
     get   'newspartials/:id/config',     to: 'newspartials#show_config', as: :newspartial_config
 
+    match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
+
     get 'tags', to: 'tags#index'
 
     post 'videos', to: 'videos#create'
@@ -47,11 +49,16 @@ Wco::Engine.routes.draw do
   delete 'logs/bulkop', to: 'logs#bulkop', as: :logs_bulkop
   resources :logs
 
+  resources :newsoverlay_configs
+  resources :newsoverlays
+
   match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
   match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video',  as: :newspartial_generate_video,  via: [ :get, :post ]
   resources :newspartials
 
   match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
+  post  'newsvideos/:id/generate', to: 'newsvideos#generate', as: :generate_newsvideo
+  post  'newsvideos/:id/split',    to: 'newsvideos#split',    as: :split_newsvideo
   resources :newsvideos
 
   resources :obfuscated_redirects

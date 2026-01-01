@@ -25,7 +25,7 @@ class Wco::NewspartialsController < Wco::ApplicationController
     else
       flash_alert 'No luck.'
     end
-    redirect_to action: 'index'
+    redirect_to request.referrer
   end
 
   def edit
@@ -42,8 +42,13 @@ class Wco::NewspartialsController < Wco::ApplicationController
 
   def generate_video
     @newspartial = Wco::Newspartial.unscoped.find params[:id]
-    authorize! :show, @newspartial
-    @newspartial.generate_video
+    authorize! :edit, @newspartial
+
+    Rails.env.production? ?
+      Wco::NewspartialVideoJob.perform_async(params[:id]) :
+      Wco::NewspartialVideoJob.perform_sync( params[:id])
+
+    flash_notice 'Scheduled.'
     redirect_to controller: 'newsvideos', id: @newspartial.newsvideo_id, action: 'show'
   end
 

@@ -1,8 +1,11 @@
 
+require 'mongoid_paperclip'
+
 class Wco::Newspartial
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Paperclip
   include Mongoid::Paranoia
+  include Mongoid::Timestamps
   include Wco::Utils
   store_in collection: 'wco_newspartials'
 
@@ -18,6 +21,35 @@ class Wco::Newspartial
 
   belongs_to :newsvideo
   has_one :video
+
+  has_mongoid_attached_file :audio,
+    :storage => :s3,
+    :s3_credentials => ::S3_CREDENTIALS,
+    :path => "newspartials/:id/audio/:filename",
+    :s3_protocol => 'https',
+    # :s3_permissions => 'public-read',
+    :validate_media_type => false,
+    s3_region: ::S3_CREDENTIALS[:region]
+  validates_attachment_content_type :audio, content_type: [ /\Aaudio\/.*\z/, ]
+
+  # has_mongoid_attached_file :video,
+  #   :storage => :s3,
+  #   :s3_credentials => ::S3_CREDENTIALS,
+  #   :path => "newspartials/:id/video/:filename",
+  #   :s3_protocol => 'https',
+  #   :validate_media_type => false,
+  #   s3_region: ::S3_CREDENTIALS[:region]
+  # validates_attachment_content_type :video, content_type: [ /\Avideo\/.*\Z/, ]
+
+  # has_mongoid_attached_file :thumb,
+  #   :storage => :s3,
+  #   :s3_credentials => ::S3_CREDENTIALS,
+  #   :path => "newspartials/:id/thumb/:filename",
+  #   :s3_protocol => 'https',
+  #   :validate_media_type => false,
+  #   s3_region: ::S3_CREDENTIALS[:region]
+  # validates_attachment_content_type :thumb, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", 'application/octet-stream' ]
+
 
   def config
     @config ||= JSON.parse self[:config_json]
@@ -42,9 +74,18 @@ class Wco::Newspartial
     puts! out, 'out'
 
     self[:config_json] = out
-
     tmp = JSON.parse( out )
+
+    decoded_audio = Base64.decode64( tmp['audio'] )
+    temp_file = Tempfile.new(['speech', '.wav'])
+    temp_file.binmode
+    temp_file.write(decoded_audio)
+    temp_file.rewind
+    self.audio = temp_file
+    temp_file.close
+    temp_file.unlink
     tmp.delete('audio')
+
     self[:speech_json] = tmp.to_json
 
     self.save

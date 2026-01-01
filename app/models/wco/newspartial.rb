@@ -100,7 +100,8 @@ class Wco::Newspartial
         --wco_origin=#{WCO_ORIGIN} \
         --newspartial_id=#{self[:id]} ";
 
-    puts! cmd, 'cmd'
+    puts "+++ cmd:"
+    puts cmd
     begin
       out = `#{cmd}`
     rescue err

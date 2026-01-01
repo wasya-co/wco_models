@@ -13,7 +13,7 @@ class Wco::Newspartial
 
   field :title
   # validates :title, presence: true, uniqueness: true
-  index({ title: 1 }, { unique: true })
+  # index({ title: 1 }, { unique: true })
 
   field :body
   field :config_json, type: :string, default: '{}'

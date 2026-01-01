@@ -121,10 +121,10 @@ AOL
     nn.each_with_index do |ms, idx|
       ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\ "
     end
-    ffmpeg_cmd.push "-filter_complex \" \\ "
+    ffmpeg_cmd.push "-filter_complex \\ \""
     #
     nn.each_with_index do |ms, idx|
-      ffmpeg_cmd.push " [#{idx+1}:v]setpts=PTS-STARTPTS+#{ms.to_f/1000}/TB[v#{idx+1}]; \\ "
+      ffmpeg_cmd.push "[#{idx+1}:v]setpts=PTS-STARTPTS+#{ms.to_f/1000}/TB[v#{idx+1}]; \\"
     end
     #
     curr_s = "0:v"

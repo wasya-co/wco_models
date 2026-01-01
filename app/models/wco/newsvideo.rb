@@ -123,9 +123,9 @@ AOL
     ##  combine overlays
     nn = @newsvideo.newsoverlays.map { |ol| ol.start_at_ms }
     puts! nn, 'nn'
-    ffmpeg_cmd = [ "ffmpeg -i combined_base.mp4 \\ " ]
+    ffmpeg_cmd = [ "ffmpeg -i combined_base.mp4 \\" ]
     nn.each_with_index do |ms, idx|
-      ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\ "
+      ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\"
     end
     ffmpeg_cmd.push "-filter_complex \"\\"
     #
@@ -137,7 +137,7 @@ AOL
     n = nil
     nn.each_with_index do |ms, idx|
       n = idx+1
-      ffmpeg_cmd.push " [#{curr_s}][v#{n}]overlay=0:0:eof_action=pass[tmp#{n}]; \\ "
+      ffmpeg_cmd.push "[#{curr_s}][v#{n}]overlay=0:0:eof_action=pass[tmp#{n}]; \\"
       curr_s = "tmp#{n}"
     end
     ffmpeg_cmd.push " \" -map \"[#{curr_s}]\" -map 0:a? -c:v libx264 -c:a copy combined_fin.mp4 "

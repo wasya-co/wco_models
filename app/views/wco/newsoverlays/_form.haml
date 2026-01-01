@@ -9,7 +9,7 @@
 
   .field.d-flex.flex-column
     %label Video
-    = f.text_field :video_id, value: newsoverlay[:video_id] || params[:video_id], disabled: true
+    = f.text_field :video_id, value: newsoverlay[:video_id] || params[:video_id]
     .flex-row
       .thumb= image_tag( newsoverlay.video.thumb.url( :thumb ), :alt => '' )
       .a Duration: #{newsoverlay.video.duration_ms}ms

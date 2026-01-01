@@ -1,0 +1,28 @@
+
+.newsvideos--form
+  = form_for newsvideo do |f|
+    .actions
+      = f.submit
+
+    .field.flex-row
+      %label Title
+      = f.text_field :title, class: 'w-100'
+    .field.flex-row
+      %label Slug
+      = f.text_field :slug, class: 'w-100'
+
+    .field
+      %label deleted_at
+      = f.text_field :deleted_at
+
+    .field
+      %label Body
+      = f.text_area :body, class: 'tinymce'
+
+    .field
+      %label Tags (#{newsvideo.tags.length}):
+      -# = render '/wco/tags/index', tags: newsvideo.tags
+      = f.select :tag_ids, options_for_select(@tags_list, selected: newsvideo.tag_ids), {}, { multiple: true, class: 'select2' }
+
+    .actions
+      = f.submit

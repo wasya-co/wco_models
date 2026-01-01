@@ -1,4 +1,4 @@
 
 .reports-new.maxwidth
-  %h5 Edit Report
+  %h5 Edit Report `#{link_to @report.title, report_path(@report)}`
   = render 'form', report: @report

@@ -1,0 +1,6 @@
+
+.newsvideos-index
+  %h5.text-center Newsvideos
+  %ul
+    - @newsvideos.each do |nv|
+      %li= link_to nv.title, newsvideo_path(nv)

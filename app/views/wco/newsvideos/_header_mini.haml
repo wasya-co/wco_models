@@ -1,0 +1,8 @@
+
+- newsvideos ||= Wco::Newsvideo.all
+
+= link_to "Newsvideos (#{newsvideos.length})", wco.newsvideos_path
+.d-inline-block
+  = form_tag wco.newsvideos_path, method: :get do
+    = text_field_tag :q
+= link_to '[+]', wco.new_newsvideo_path

@@ -1,0 +1,31 @@
+
+- height_ms = 100.0/1000
+
+.newspartials--show-in-newsvideo
+
+  .a
+    = link_to '[~]', edit_newspartial_path(newspartial)
+    Newspartial `#{link_to newspartial.title, newspartial_path(newspartial)}`
+    %span{ class: 'gray' } #{newspartial.id}
+    = link_to '[api]', api_newspartial_config_path(newspartial, format: :json, api_key: SIMPLE_API_KEY, api_secret: SIMPLE_API_SECRET ), target: :_blank
+
+
+.Timeline{ style: "height: #{newspartial.duration_ms*height_ms}px; min-height: 100px;" }
+  .main
+    - newspartial.config['wtimes']&.each_with_index do |wtime, idx|
+
+      %div.ts{ style: "top: #{wtime.to_f*height_ms}px"}
+        .wtime= wtime
+        .word= newspartial.config['words'][idx]
+
+  .full-text
+    = newspartial.body
+    .d-inline-block= button_to 'Generate visemes', newspartial_generate_speech_path(newspartial)
+    .d-inline-block= button_to 'Generate video', newspartial_generate_video_path(newspartial)
+
+    .a= newspartial.config_json[0...100]
+    .a= newspartial.speech_json[0...100]
+    .a
+      Video:
+      - if newspartial.video
+        = image_tag newspartial.video.thumb.url(:thumb), class: 'thumb'

@@ -18,7 +18,7 @@ class Wco::Profile
   field :schwab_refresh_token, type: :string
   field :schwab_id_token,      type: :string
 
-
+  has_many :newsvideos, class_name: 'Wco::Newsvideo'
   has_many :reports, class_name: 'Wco::Report'
   has_many :stocks, class_name: 'Iro::Stock'
 

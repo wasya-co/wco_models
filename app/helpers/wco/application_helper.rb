@@ -1,6 +1,10 @@
 
 module Wco::ApplicationHelper
 
+  def pexels_search_path(opts)
+    "/2025/pexels_example_169.html?pexels_api_key=#{PEXELS_API_KEY}&newsvideo_id=#{opts[:newsvideo_id]}"
+  end
+
   def my_truthy? which
     ["1", "t", "T", "true"].include?( which )
   end

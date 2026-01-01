@@ -1,0 +1,20 @@
+
+.newspartials--form
+  = form_for newspartial do |f|
+    .actions
+      = f.submit
+
+    .field.flex-row
+      %label Title
+      = f.text_field :title, class: 'w-100'
+
+    .field
+      %label Body
+      = f.text_area :body, class: 'tinymce'
+
+    .field
+      %label Newsvideo:
+      = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newspartial.newsvideo_id || params[:newsvideo_id] ), {}, {}
+
+    .actions
+      = f.submit

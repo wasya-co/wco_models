@@ -21,6 +21,8 @@ class Wco::ApiController < ActionController::Base
        params[:api_secret] === SIMPLE_API_SECRET
       user = User.find_by({ email: 'piousbox@gmail.com' })
       sign_in user
+    else
+      throw :unauthorized
     end
   end
 

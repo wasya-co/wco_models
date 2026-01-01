@@ -50,6 +50,9 @@ class Wco::ReportsController < Wco::ApplicationController
   def show
     @report = Wco::Report.unscoped.find params[:id]
     authorize! :show, @report
+
+    # @config = JSON.parse( @report.config_json )
+    # @duration_ms = @config['vtimes'].last.to_i + @config['vdurations'].last.to_i
   end
 
   def update
@@ -72,6 +75,7 @@ class Wco::ReportsController < Wco::ApplicationController
 
   def set_lists
     @tags_list = Wco::Tag.list
+    @newsvideos_list = Wco::Newsvideo.list
   end
 
 end

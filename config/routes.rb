@@ -8,6 +8,10 @@ Wco::Engine.routes.draw do
     get 'obf',              to: 'obfuscated_redirects#show' ## testing only.
     get 'obf/:id',          to: 'obfuscared_redirects#show'
 
+    post  'reports',                to: 'reports#create'
+    patch 'reports/:id/add-config', to: 'reports#add_config'
+    get   'newspartials/:id/config',     to: 'newspartials#show_config', as: :newspartial_config
+
     get 'tags', to: 'tags#index'
 
     post 'videos', to: 'videos#create'
@@ -42,6 +46,13 @@ Wco::Engine.routes.draw do
   resources :leadsets
   delete 'logs/bulkop', to: 'logs#bulkop', as: :logs_bulkop
   resources :logs
+
+  match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
+  match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video',  as: :newspartial_generate_video,  via: [ :get, :post ]
+  resources :newspartials
+
+  match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
+  resources :newsvideos
 
   resources :obfuscated_redirects
 

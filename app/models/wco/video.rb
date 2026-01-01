@@ -34,7 +34,9 @@ class Wco::Video
   # belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
   # has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos
 
-  belongs_to :lead, optional: true
+  belongs_to :lead,        optional: true
+  belongs_to :newspartial, optional: true
+  belongs_to :newsvideo,   optional: true
 
   has_and_belongs_to_many :tags
 

@@ -1,0 +1,10 @@
+
+.newsvideos-show.maxwidth
+  %h5.text-center Newsvideo `#{@newsvideo.title}` #{link_to '[~]', edit_newsvideo_path(@newsvideo)}
+  .descr= @newsvideo.body
+%hr
+.text-center
+  Newspartials #{link_to '[+]', new_newspartial_path(newsvideo_id: @newsvideo.id) }
+  = link_to '[+ illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
+- @newspartials.each do |newspartial|
+  = render 'wco/newspartials/show_in_newsvideo', newspartial: newspartial

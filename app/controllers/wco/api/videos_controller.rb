@@ -6,9 +6,13 @@ class Wco::Api::VideosController < Wco::ApiController
   before_action :decode_simple_api_key
 
   def create
-    puts! params, 'ze params'
+    # puts! params, 'api videos#create params'
 
-    @video = Wco::Video.new name: params[:name], video: params[:video]
+    @video = Wco::Video.new({ name: params[:name],
+      thumb: params[:thumb],
+      video: params[:video],
+      newspartial_id: params[:newspartial_id],
+    })
     authorize! :create, @video
 
     if @video.save

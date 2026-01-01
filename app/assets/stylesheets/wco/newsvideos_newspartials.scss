@@ -1,0 +1,31 @@
+
+.Timeline {
+  border: 1px solid blue;
+  position: relative;
+
+  .full-text {
+    position: absolute;
+    left: 300px;
+  }
+
+  .main {
+    width: 200px;
+  }
+
+
+  .ts { /* timestamp */
+    position: absolute;
+    .word {
+      border: 1px solid cyan;
+      left: 100px;
+      position: absolute;
+    }
+    .wtime {
+      border: 1px solid yellow;
+      left: 20px;
+      position: absolute;
+    }
+  }
+
+}
+

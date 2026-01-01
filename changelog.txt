@@ -1,4 +1,5 @@
 3.1.0 :: 2023-12-16 :: great, continue
          2023-12-22 :: bringing a lot of wco_hosting in here
 3.2.0 :: 2024-12-09 :: making cool emailFilters
+3.3.0 :: 2025-12-31 :: newsvideos generation. many changes
 

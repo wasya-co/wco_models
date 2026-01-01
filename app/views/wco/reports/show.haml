@@ -1,4 +1,6 @@
 
+- height_ms = 100.0/1000
+
 .reports-show.maxwidth
   %h5
     = link_to '[~]', edit_report_path(@report)
@@ -10,3 +12,19 @@
   = render 'wco/tags/index_chips', tags: @report.tags
 
   .descr= raw @report.body
+
+.Timeline{ style: "height: #{@duration_ms*height_ms}px" }
+  .main
+    - @config['wtimes'].each_with_index do |wtime, idx|
+
+      %div.ts{ style: "top: #{wtime.to_f*height_ms}px"}
+        .wtime= wtime
+        .word= @config['words'][idx]
+
+.reports-show.maxwidth
+  %hr
+  %label config_json
+  .descr
+    = @report.config_json
+
+

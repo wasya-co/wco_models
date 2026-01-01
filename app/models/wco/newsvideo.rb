@@ -67,8 +67,8 @@ class Wco::Newsvideo
     ## get base files locally
     cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
     @newsvideo.newspartials.each_with_index do |part, idx|
-      cmd = "#{cmd} wget -O newspartial_#{idx}.webm #{part.video.video.url} ; "
-      cmd = "#{cmd} wget -O newspartial_#{idx}.wav #{part.audio.url} ; "
+      cmd = "#{cmd} wget -nc -O newspartial_#{idx}.webm #{part.video.video.url} ; "
+      cmd = "#{cmd} wget -nc -O newspartial_#{idx}.wav #{part.audio.url} ; "
     end
     puts! cmd, 'cmd'
     out = `#{cmd}`
@@ -77,7 +77,7 @@ class Wco::Newsvideo
     ## get overlays
     cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
     @newsvideo.newsoverlays.each_with_index do |overlay, idx|
-      cmd = "#{cmd} wget -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
+      cmd = "#{cmd} wget -nc -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
     end
     puts! cmd, 'cmd'
     out = `#{cmd}`

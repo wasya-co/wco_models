@@ -53,10 +53,22 @@ class Wco::Newsvideo
   def generate
     @newsvideo = self
 
+    ## put together config, first thing
+    cmd = "cd #{Rails.root.join('tmp')} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} ; rm -f videolist.txt audiolist.txt ; "
+    @newsvideo.newspartials.each_with_index do |part, idx|
+      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.mp4' \" >> videolist.txt ; "
+      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "
+    end
+    puts "+++ config cmd:"
+    puts cmd
+    out = `#{cmd}`
+    puts! out, 'out'
+
     ## get base files locally
     cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
     @newsvideo.newspartials.each_with_index do |part, idx|
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.webm #{part.video.video.url} ; "
+      cmd = "#{cmd} [ -f newspartial_#{idx}.mp4 ] || ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.wav #{part.audio.url} ; "
     end
     puts "+++ base files cmd:"
@@ -70,18 +82,6 @@ class Wco::Newsvideo
       cmd = "#{cmd} wget -nc -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
     end
     puts "+++ overlays cmd:"
-    puts cmd
-    out = `#{cmd}`
-    puts! out, 'out'
-
-    ## put together config
-    cmd = "cd #{Rails.root.join('tmp')} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} ; rm -f videolist.txt audiolist.txt ; "
-    @newsvideo.newspartials.each_with_index do |part, idx|
-      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.mp4' \" >> videolist.txt ; "
-      cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "
-      cmd = "#{cmd} ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
-    end
-    puts "+++ config cmd:"
     puts cmd
     out = `#{cmd}`
     puts! out, 'out'

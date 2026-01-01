@@ -68,7 +68,7 @@ class Wco::Newsvideo
     cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
     @newsvideo.newspartials.each_with_index do |part, idx|
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.webm #{part.video.video.url} ; "
-      cmd = "#{cmd} [ -f newspartial_#{idx}.mp4 ] || ffmpeg -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
+      cmd = "#{cmd} [ -f newspartial_#{idx}.mp4 ] || ffmpeg -y -i newspartial_#{idx}.webm newspartial_#{idx}.mp4 ; "
       cmd = "#{cmd} wget -nc -O newspartial_#{idx}.wav #{part.audio.url} ; "
     end
     puts "+++ base files cmd:"
@@ -90,7 +90,7 @@ class Wco::Newsvideo
     cmd = <<AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f video_concat.mp4 ;
-      ffmpeg -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
+      ffmpeg -y -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
 AOL
     puts "+++ video concat cmd:"
     puts cmd
@@ -102,7 +102,7 @@ AOL
     cmd = <<AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f audio_concat.wav ;
-      ffmpeg -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
+      ffmpeg -y -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
 AOL
     puts "+++ audio concat cmd:"
     puts cmd
@@ -113,7 +113,7 @@ AOL
     cmd = <<AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f output.mp4 ;
-      ffmpeg -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
+      ffmpeg -y -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
 AOL
     puts "+++ combine base cmd:"
     puts cmd
@@ -123,7 +123,7 @@ AOL
     ##  combine overlays
     nn = @newsvideo.newsoverlays.map { |ol| ol.start_at_ms }
     puts! nn, 'nn'
-    ffmpeg_cmd = [ "ffmpeg -i combined_base.mp4 \\" ]
+    ffmpeg_cmd = [ "ffmpeg -y -i combined_base.mp4 \\" ]
     nn.each_with_index do |ms, idx|
       ffmpeg_cmd.push " -i overlay_#{idx}.mp4 \\"
     end
@@ -160,7 +160,11 @@ AOL
     @video = Wco::Video.new name: @newsvideo.title
     video_path = Rails.root.join("tmp", @newsvideo.id, "combined_fin.mp4")
     @video.video = File.open(video_path)
-    @video.save!
+    flag = @video.save
+    if !flag
+      puts "Could not create video:"
+      puts @video.errors.full_messages.join(", ")
+    end
   end
 
 end

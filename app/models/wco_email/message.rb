@@ -105,11 +105,15 @@ class WcoEmail::Message
       conv.tags -= [ filter.tag ]
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
-      WcoEmail::Context.create!({
+      ctx = WcoEmail::Context.new({
         email_template: filter.email_template,
         lead_id:        lead.id,
         send_at:        Time.now,
       })
+      if filter.email_template.respond_inline
+        ctx.reply_to_message_id = self.id
+      end
+      ctx.save!
 
     when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
       ##

@@ -41,6 +41,7 @@ class WcoEmail::EmailTemplate
   field :config_json,     type: Object,   default: '{}'
   field :layout, default: 'plain'
   field :mangle_subject, type: :boolean, default: false
+  field :respond_inline, type: :boolean, default: true
 
   DEFAULT_FROM_EMAIL = 'Victor Pudeyev <no-reply@wasya.co>'
   FROM_EMAILS = [

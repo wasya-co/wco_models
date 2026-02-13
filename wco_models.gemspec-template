@@ -26,37 +26,36 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'business_time'
 
-  spec.add_dependency "cancancan", "~> 3.5.0"
+  spec.add_dependency "cancancan"
   spec.add_dependency 'capybara'
 
-  spec.add_dependency 'devise',    "~> 4.9.3"
-  spec.add_dependency 'droplet_kit', "~> 3.20.0"
+  spec.add_dependency 'devise'
+  spec.add_dependency 'droplet_kit'
 
-  spec.add_dependency "jbuilder", "~> 2.11.5"
+  spec.add_dependency "jbuilder"
 
-  spec.add_dependency "haml",       "~> 6.3.0"
+  spec.add_dependency "haml"
   spec.add_dependency "httparty"
 
-  spec.add_dependency 'kaminari-mongoid', '~> 1.0.1'
+  spec.add_dependency 'kaminari-mongoid'
   spec.add_dependency 'kaminari-actionview'
 
-  spec.add_dependency 'mongoid',          '~> 7.3.0'
-  spec.add_dependency 'mongoid_paranoia', '~> 0.6.0'
-  spec.add_dependency 'mongoid-autoinc',  '~> 6.0'
+  spec.add_dependency 'mongoid'
+  spec.add_dependency 'mongoid_paranoia'
+  spec.add_dependency 'mongoid-autoinc'
   spec.add_dependency 'mongoid-paperclip'
 
-  spec.add_dependency 'net-ssh',     "~> 7.2.0"
-  spec.add_dependency 'net-scp',     "~> 4.0.0"
+  spec.add_dependency 'net-ssh'
+  spec.add_dependency 'net-scp'
 
   spec.add_dependency 'prawn'
   spec.add_dependency 'prawn-table'
 
-  spec.add_dependency "rails",      "~> 6.1.0"
+  spec.add_dependency "rails",      "~> 8.0.0"
 
-  spec.add_dependency 'sass-rails', '~> 6.0'
-  # spec.add_dependency 'select2-rails'
-  spec.add_dependency 'selenium-webdriver', "~> 4.9.0"
-  spec.add_dependency 'sidekiq', '~> 7.2.0'
-  spec.add_dependency 'stripe',      "~> 10.4.0"
+  spec.add_dependency 'sass-rails'
+  spec.add_dependency 'selenium-webdriver'
+  spec.add_dependency 'sidekiq'
+  spec.add_dependency 'stripe'
 
 end

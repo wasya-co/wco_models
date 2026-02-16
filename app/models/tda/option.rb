@@ -13,7 +13,6 @@ class Tda::Option
 
   include ::HTTParty
   debug_output $stdout
-  # base_uri 'https://api.tdameritrade.com'
   base_uri 'https://api.schwabapi.com/marketdata/v1'
 
 
@@ -100,14 +99,14 @@ class Tda::Option
   ##
   ## params: contractType, strike, expirationDate, ticker
   ##
-  ## ow = { contractType: 'PUT', ticker: 'GME', date: '2022-12-09' }
-  ## query = {:apikey=>"<>", :toDate=>"2022-12-09", :fromDate=>"2022-12-09", :symbol=>"GME"}
+  ## params = { contractType: 'PUT', ticker: 'GME', expirationDate: '2026-02-20' }
+  ## outs   = Tda::Option.get_quotes params
   ##
   ## 2023-02-04 _vp_ :: Too specific, but I want the entire chain, every 1-min
   ## 2023-02-06 _vp_ :: Continue.
   ##
   def self.get_quotes params
-    puts! params, 'Tda::Option#get_quotes'
+    puts! params, 'core Tda::Option#get_quotes'
 
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
@@ -120,39 +119,36 @@ class Tda::Option
       if params[s]
         opts[s] = params[s]
       else
-        raise Iro::InputError.new("Invalid input, missing '#{s}'.")
+        raise Iro::InputError.new("Invalid input z1, missing '#{s}'.")
       end
     end
     if params[:expirationDate]
       opts[:fromDate] = opts[:toDate] = params[:expirationDate].to_s[0...10]
     else
-      raise Iro::InputError.new("Invalid input, missing 'expirationDate'.")
+      raise Iro::InputError.new("Invalid input z2, missing 'expirationDate'.")
     end
     if params[:ticker]
       opts[:symbol] = params[:ticker].upcase
     else
-      raise Iro::InputError.new("Invalid input, missing 'ticker'.")
+      raise Iro::InputError.new("Invalid input z3, missing 'ticker'.")
     end
 
     if params[:strike]
       opts[:strike] = params[:strike]
     end
 
+    ## query = { contractType: "PUT", toDate: "2026-02-26", fromDate: "2026-02-26", symbol: "TSLA", strike: 395.0}
     query = { }.merge opts
-    puts! query, 'input opts'
+    puts! query, 'query'
 
-    headers = {
-      accept:        'application/json',
-      Authorization: "Bearer #{profile[:schwab_access_token]}",
-    }
-
-    path = "/chains"
-    out = self.get path, {
-      # basic_auth: { username: SCHWAB_DATA[:key], password: SCHWAB_DATA[:secret] },
-      headers: headers,
+    out = self.get( "/chains", {
+      headers: {
+        accept:        'application/json',
+        Authorization: "Bearer #{profile[:schwab_access_token]}",
+      },
       query: query,
-    }
-    puts! out, 'out'
+    })
+    puts! out, '/chains --'
     timestamp = DateTime.parse out.headers['date']
     out = out.parsed_response.deep_symbolize_keys
 
@@ -170,7 +166,7 @@ class Tda::Option
       end
     end
 
-    # puts! outs, 'outs'
+    puts! outs, 'core Tda::Option.get_quotes --'
     return outs
   end
 

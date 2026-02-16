@@ -138,9 +138,13 @@ FactoryBot.define do
     kind { ::Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD }
     long_or_short { ::Iro::Strategy::LONG }
     # slug { generate(:slug) }
+    after :build do |doc|
+      doc.stock    = Iro::Stock.all.first
+    end
 
     factory :strategy_long_credit_put_spread do
       kind { ::Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD }
+      # put_or_call { 'PUT' } ## implied from kind.
     end
 
   end

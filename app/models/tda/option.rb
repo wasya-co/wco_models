@@ -106,7 +106,7 @@ class Tda::Option
   ## 2023-02-06 _vp_ :: Continue.
   ##
   def self.get_quotes params
-    puts! params, 'core Tda::Option#get_quotes'
+    puts! params, 'core Tda::Option#get_quotes...'
 
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
@@ -166,7 +166,7 @@ class Tda::Option
       end
     end
 
-    puts! outs, 'core Tda::Option.get_quotes --'
+    puts! outs, 'Tda::Option.get_quotes out'
     return outs
   end
 

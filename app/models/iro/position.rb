@@ -23,21 +23,22 @@ class Iro::Position
   validates :status, presence: true
   scope :active, ->{ where( status: 'active' ) }
 
-  belongs_to :purse,    class_name: 'Iro::Purse',    inverse_of: :positions
+  belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions
   index({ purse_id: 1, ticker: 1 })
 
-  belongs_to :stock,   class_name: 'Iro::Stock',    inverse_of: :positions
+  belongs_to :stock, class_name: 'Iro::Stock',    inverse_of: :positions
   delegate :ticker, to: :stock
 
   belongs_to :strategy, class_name: 'Iro::Strategy', inverse_of: :positions
-
-  ## no: the strategy can be wheel, and position is put-spread.
-  # delegate :put_call,        to: :strategy
-  field :put_call, type: :string
-  validates :put_call, presence: true
-
   delegate :long_or_short,   to: :strategy
   delegate :credit_or_debit, to: :strategy
+
+  field :put_call, type: :string
+  validates :put_call, presence: true
+  def put_call
+    self[:put_call] || self.strategy.put_call
+  end
+
 
   belongs_to :next_strategy, class_name: 'Iro::Strategy', inverse_of: :next_position, optional: true
 
@@ -152,12 +153,15 @@ class Iro::Position
   def calc_nxt
     pos = self
 
-    ## 7 days ahead - not configurable so far
-    outs = Tda::Option.get_quotes({
+    ## 7 days ahead - not configurable
+    params = {
       contractType: pos.put_call,
       expirationDate: next_expires_on,
       ticker: ticker,
-    })
+    }
+    # puts! params, '#calc_nxt'
+    outs = Tda::Option.get_quotes(params)
+    # puts! outs, 'outs'
     outs_bk = outs.dup
 
     outs = outs.select do |out|
@@ -169,7 +173,7 @@ class Iro::Position
     elsif 'PUT' == pos.put_call
       outs = outs.reverse
     end
-    puts! outs, '#calc_nxt.outs -> 2'
+    # puts! outs, '#calc_nxt.outs -> 2'
 
     ## next_inner_strike
     outs = outs.select do |out|
@@ -186,7 +190,7 @@ class Iro::Position
       end
     end
     puts! outs[0][:strikePrice], 'after calc next_inner_strike'
-    puts! outs, 'outs'
+    # puts! outs, 'outs'
 
     ## next_buffer_above_water
     outs = outs.select do |out|
@@ -282,7 +286,7 @@ class Iro::Position
     if !out.workday?
       out = Time.previous_business_day(out)
     end
-    return out
+    return out.strftime('%Y-%m-%d')
   end
 
   ## ok

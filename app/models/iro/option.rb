@@ -81,7 +81,7 @@ class Iro::Option
     out = Tda::Option.get_quote({
       contractType: put_call,
       strike: strike,
-      expirationDate: expires_on,
+      expirationDate: expires_on.strftime('%Y-%m-%d'),
       ticker: ticker,
     })
     puts! out, 'option sync'

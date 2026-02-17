@@ -123,21 +123,25 @@ FactoryBot.define do
     direction { 'BELOW' }
   end
 
-  # factory :iro_stock, class: 'Iro::Stock' do
-  #   ticker { 'QQQ' }
-  # end
-
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
+    factory :stock_gme do
+      ticker { 'GME' }
+    end
     factory :stock_meta do
       ticker { 'META' }
+    end
+    factory :stock_nvda do
+      ticker { 'NVDA' }
+    end
+    factory :stock_TSLA do
+      ticker { 'TSLA' }
     end
   end
 
   factory :strategy, class: '::Iro::Strategy' do
     kind { ::Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD }
     long_or_short { ::Iro::Strategy::LONG }
-    # slug { generate(:slug) }
     after :build do |doc|
       doc.stock    = Iro::Stock.all.first
     end

@@ -125,18 +125,19 @@ FactoryBot.define do
 
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
-    factory :stock_gme do
-      ticker { 'GME' }
-    end
-    factory :stock_meta do
-      ticker { 'META' }
-    end
-    factory :stock_nvda do
-      ticker { 'NVDA' }
-    end
-    factory :stock_TSLA do
-      ticker { 'TSLA' }
-    end
+    ## lets not do this:
+    # factory :stock_gme do
+    #   ticker { 'GME' }
+    # end
+    # factory :stock_meta do
+    #   ticker { 'META' }
+    # end
+    # factory :stock_nvda do
+    #   ticker { 'NVDA' }
+    # end
+    # factory :stock_tsla do
+    #   ticker { 'TSLA' }
+    # end
   end
 
   factory :strategy, class: '::Iro::Strategy' do

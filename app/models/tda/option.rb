@@ -139,7 +139,7 @@ class Tda::Option
 
     ## query = { contractType: "PUT", toDate: "2026-02-26", fromDate: "2026-02-26", symbol: "TSLA", strike: 395.0}
     query = { }.merge opts
-    puts! query, 'query'
+    # puts! query, 'query'
 
     out = self.get( "/chains", {
       headers: {
@@ -148,7 +148,7 @@ class Tda::Option
       },
       query: query,
     })
-    puts! out, '/chains --'
+    # puts! out, '/chains --'
     timestamp = DateTime.parse out.headers['date']
     out = out.parsed_response.deep_symbolize_keys
 
@@ -166,7 +166,7 @@ class Tda::Option
       end
     end
 
-    puts! outs, 'Tda::Option.get_quotes out'
+    # puts! outs, 'Tda::Option.get_quotes out'
     return outs
   end
 

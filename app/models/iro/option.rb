@@ -59,8 +59,8 @@ class Iro::Option
   field :end_delta, type: :float
 
 
-  has_one :outer, class_name: 'Iro::Position', inverse_of: :outer
-  has_one :inner, class_name: 'Iro::Position', inverse_of: :inner
+  has_one :pos_of_outer, class_name: 'Iro::Position', inverse_of: :outer
+  has_one :pos_of_inner, class_name: 'Iro::Position', inverse_of: :inner
 
   field :last, type: :float
 
@@ -76,7 +76,7 @@ class Iro::Option
     self[:symbol]
   end
 
-  before_save :sync, if: ->() { !Rails.env.test? } ## do not sync in test
+  # before_save :sync, if: ->() { !Rails.env.test? } ## do not sync in test
   def sync
     out = Tda::Option.get_quote({
       contractType: put_call,

@@ -51,10 +51,10 @@ class Iro::Position
 
   ## Options
 
-  belongs_to :inner, class_name: 'Iro::Option', inverse_of: :inner
+  belongs_to :inner, class_name: 'Iro::Option', inverse_of: :pos_of_inner
   validates_associated :inner
 
-  belongs_to :outer, class_name: 'Iro::Option', inverse_of: :outer
+  belongs_to :outer, class_name: 'Iro::Option', inverse_of: :pos_of_outer
   validates_associated :outer
 
   accepts_nested_attributes_for :inner, :outer

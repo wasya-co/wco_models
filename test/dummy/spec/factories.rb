@@ -125,19 +125,6 @@ FactoryBot.define do
 
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
-    ## lets not do this:
-    # factory :stock_gme do
-    #   ticker { 'GME' }
-    # end
-    # factory :stock_meta do
-    #   ticker { 'META' }
-    # end
-    # factory :stock_nvda do
-    #   ticker { 'NVDA' }
-    # end
-    # factory :stock_tsla do
-    #   ticker { 'TSLA' }
-    # end
   end
 
   factory :strategy, class: '::Iro::Strategy' do
@@ -147,6 +134,7 @@ FactoryBot.define do
       doc.stock    = Iro::Stock.all.first
     end
 
+    ## @deprecated, just create a strategy.
     factory :strategy_long_credit_put_spread do
       kind { ::Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD }
       # put_or_call { 'PUT' } ## implied from kind.

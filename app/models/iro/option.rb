@@ -28,6 +28,11 @@ class Iro::Option
   field :strike, type: :float
   validates :strike, presence: true
 
+  def to_s
+    "#{symbol} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
+  end
+
+
   field :expires_on, type: :date
   validates :expires_on, presence: true
   def self.expirations_list full: false, n: 5
@@ -84,10 +89,10 @@ class Iro::Option
       expirationDate: expires_on.strftime('%Y-%m-%d'),
       ticker: ticker,
     })
-    puts! out, 'option sync'
+    puts! out, "option sync of `#{self.to_s}`"
     self.end_price = ( out.bid + out.ask ) / 2 rescue 0
-    self.end_delta = out.delta if out.delta
-    # self.save
+    self.end_delta = out.delta ? out.delta : 0.0
+    self.save! ## 2026-02-19 this must be present.
   end
 
   def self.max_pain hash

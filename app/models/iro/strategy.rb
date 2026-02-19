@@ -100,6 +100,9 @@ class Iro::Strategy
   def begin_delta_long_credit_put_spread p
     begin_delta_spread p
   end
+  def begin_delta_short_credit_call_spread p
+    begin_delta_spread p
+  end
 
 
   def breakeven_covered_call p
@@ -118,6 +121,9 @@ class Iro::Strategy
     p.inner.end_delta - p.outer.end_delta
   end
   def end_delta_long_credit_put_spread p
+    end_delta_spread p
+  end
+  def end_delta_short_credit_call_spread p
     end_delta_spread p
   end
 

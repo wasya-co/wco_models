@@ -147,7 +147,7 @@ class Iro::Position
     # self.next_symbol  = nil
     # self.next_delta   = nil
 
-    out = strategy.send( "calc_rollp_#{strategy.kind}", self )
+    out = strategy.send("calc_rollp_#{strategy.kind}", self )
 
     self.rollp = out[0]
     self.next_reasons.push out[1]

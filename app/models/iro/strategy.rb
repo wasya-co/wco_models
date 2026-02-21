@@ -77,11 +77,11 @@ class Iro::Strategy
     end
   end
 
-  field :buffer_above_water, type: :float
-  field :threshold_pos_delta,              type: :float # best-case scenario: roll b/c markets are going my way
-  field :threshold_neg_delta, type: :float # nightmare scenario: defensively rolling
-  field :threshold_netp,               type: :float
-  field :threshold_dte,                type: :integer, default: 1
+  field :buffer_above_water,  type: :float
+  field :threshold_pos_delta, type: :float # offensive: roll b/c markets are going my way
+  field :threshold_neg_delta, type: :float # defensive: roll b/c markets are going against me
+  field :threshold_netp,      type: :float
+  field :threshold_dte,       type: :integer, default: 1
 
   field :next_inner_delta,        type: :float
   field :next_inner_strike,       type: :float
@@ -205,6 +205,7 @@ class Iro::Strategy
   ##
 
   def calc_rollp_covered_call p
+    stock.reload
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i < 1
       return [ 0.99, '0 DTE, must exit' ]
@@ -212,8 +213,8 @@ class Iro::Strategy
 
     if ( stock.last - buffer_above_water ) < p.inner.strike
       return [ 0.98, "Last #{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [p.inner.strike + buffer_above_water - stock.last]} " +
-          "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
+        "#{'%.2f' % [p.inner.strike + buffer_above_water - stock.last]} " +
+        "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
     end
 
     if p.inner.end_delta < threshold_pos_delta
@@ -227,8 +228,9 @@ class Iro::Strategy
     return [ 0.33, '-' ]
   end
 
-  ## @TODO
+  ## _TODO
   def calc_rollp_long_debit_call_spread p
+    stock.reload
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i < 1
       return [ 0.99, '0 DTE, must exit' ]
@@ -256,6 +258,8 @@ class Iro::Strategy
 
   ## 2025-10-12 _TODO
   def calc_rollp_long_credit_put_spread p
+    stock.reload
+
     # puts! p, '#calc_rollp_long_credit_put_spread'
     # puts! p.inner, 'p.inner'
     puts! stock, 'stock'
@@ -285,11 +289,12 @@ class Iro::Strategy
     return [ 0.33, '-' ]
   end
 
-  ## @TODO
+  ## _TODO
   def calc_rollp_short_debit_put_spread p
+    stock.reload
 
-    if ( p.expires_on.to_date - Time.now.to_date ).to_i <= min_dte
-      return [ 0.99, "< #{min_dte}DTE, must exit" ]
+    if ( p.expires_on.to_date - Time.now.to_date ).to_i <= threshold_dte
+      return [ 0.99, "< #{threshold_dte}DTE, must exit" ]
     end
 
     if stock.last + buffer_above_water > p.inner.strike
@@ -300,6 +305,38 @@ class Iro::Strategy
 
     if p.inner.end_delta.abs < threshold_pos_delta.abs
       return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
+    end
+
+    if p.net_percent > threshold_netp
+      return [ 0.51, "made enough #{'%.0f' % [p.net_percent*100]}% > #{"%.2f" % [threshold_netp*100]}% profit," ]
+    end
+
+    return [ 0.33, '-' ]
+  end
+
+  ## 2026-02-21 ok
+  def calc_rollp_short_credit_call_spread p
+    stock.reload
+
+    if ( p.expires_on.to_date - Time.now.to_date ).to_i <= threshold_dte
+      return [ 0.99, "< #{threshold_dte}DTE, must exit" ]
+    end
+
+    if stock.last + buffer_above_water > p.inner.strike
+      return [ 0.95, "Last #{'%.2f' % stock.last} is " +
+          "#{'%.2f' % [stock.last + buffer_above_water - p.inner.strike]} " +
+          "above #{'%.2f' % [p.inner.strike - buffer_above_water]} water" ]
+    end
+
+    ## defensive
+    ## inner short call is negative delta, but I'll deal with absolutes anyway.
+    if p.inner.end_delta.abs > threshold_neg_delta.abs
+      return [ 0.88, "Delta #{p.inner.end_delta} is larger than #{threshold_neg_delta} defensive threshold." ]
+    end
+
+    ## offensive
+    if p.inner.end_delta.abs < threshold_pos_delta.abs
+      return [ 0.69, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} offensive threshold." ]
     end
 
     if p.net_percent > threshold_netp

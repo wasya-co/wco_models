@@ -11,6 +11,10 @@ RSpec.describe Iro::Position do
     );
   end
 
+  context '#calc_rollp' do
+    it 'sanity' do
+    end
+  end
 
   context '#net_amount' do
     before do

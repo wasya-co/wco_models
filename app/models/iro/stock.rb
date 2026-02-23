@@ -137,5 +137,33 @@ class ::Iro::Stock
   # sum_sqr = contents.map {|x| x * x}.reduce(&:+) # => 285.0
   # std_dev = Math.sqrt((sum_sqr - n * mean * mean)/(n-1)) # => 2.7386127875258306
 
+  ##
+  ## From: stockdata_org
+  ##
+  def get_historic_data date_from=nil, date_to=nil
+    date_from ||= Time.now - 1.year - 1.week
+    date_to   ||= date_from + 180.days
+    date_from = date_from.strftime('%Y-%m-%d')
+    date_to = date_to.strftime('%Y-%m-%d')
+    puts! [ticker, date_from, date_to], "ticker,date_from,date_to"
+    outs = HTTParty.get("https://api.stockdata.org/v1/data/eod?symbols=#{ticker}&date_from=#{date_from}&date_to=#{date_to}&api_token=#{STOCKDATA_ORG_KEY}")
+    outs['data'].each do |datum|
+      existing = ::Iro::Datapoint.find_by({ symbol: ticker, date: datum['date'].to_date.strftime('%Y-%m-%d') }) rescue nil
+      if existing
+        print('.')
+      else
+        ::Iro::Datapoint.create!({ symbol: ticker,
+          kind:   ::Iro::Datapoint::KIND_STOCK,
+          date:   datum['date'].to_date.strftime('%Y-%m-%d'),
+          open:   datum['open'],
+          high:   datum['high'],
+          low:    datum['low'],
+          value:  datum['close'],
+          volume: datum['volume'],
+        })
+        print('^')
+      end
+    end
+  end
 
 end

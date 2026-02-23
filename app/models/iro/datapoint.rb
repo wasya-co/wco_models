@@ -42,20 +42,21 @@ class Iro::Datapoint
 
   field :date, type: Date
   index({ kind: -1, date: -1 })
-  validates :date, uniqueness: { scope: [ :symbol ] }
+  validates :date, uniqueness: { scope: [ :kind, :symbol ] }
 
+  ## @obsolete, @deprecated, use :date instead?
   field :quote_at, type: DateTime
   index({ kind: -1, quote_at: -1 })
-  validates :quote_at, uniqueness: { scope: [ :kind, :symbol ] } ## scope-by-kind is unnecessary here? _vp_ 2024-08-08
+  ## I don't understand why this was forced to be unique... I want the date to be unique.
+  # validates :quote_at, uniqueness: { scope: [ :kind, :symbol ] } ## scope-by-kind is unnecessary here? _vp_ 2024-08-08
 
-  field :open, type: Float
-  field :high, type: Float
-  field :low, type: Float
-  def close;    value;    end
-  def close= a; value= a; end
-
+  field :open,  type: Float
+  field :high,  type: Float
+  field :low,   type: Float
   field :value, type: Float
   validates :value, presence: true
+  def close;    value;    end
+  def close= a; value= a; end
 
 
   field :volume, type: Integer

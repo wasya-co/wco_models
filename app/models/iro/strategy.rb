@@ -5,9 +5,6 @@ class Iro::Strategy
   include Mongoid::Paranoia
   store_in collection: 'iro_strategies'
 
-  # field :slug
-  # validates :slug, presence: true, uniqueness: true
-
   field :description
 
   LONG  = 'long'
@@ -32,9 +29,11 @@ class Iro::Strategy
   KIND_LONG_DEBIT_CALL_SPREAD   = 'long_debit_call_spread'
   KIND_SHORT_CREDIT_CALL_SPREAD = 'short_credit_call_spread'
   KIND_SHORT_DEBIT_PUT_SPREAD   = 'short_debit_put_spread'
+  KIND_UNINVESTABLE = 'uninvestable'
+  KIND_LONG_ONLY    = 'long-only'
   ## these are too simple and deprecated:
   KIND_SPREAD = 'spread' ## @deprecated, be specific
-  KIND_WHEEL  = 'wheel'  ## @deprecated, be specific
+  KIND_WHEEL  = 'wheel'  ## @deprecated, use covered_call
   KINDS = [ nil,
     KIND_COVERED_CALL,
     KIND_IRON_CONDOR,
@@ -42,8 +41,8 @@ class Iro::Strategy
     KIND_LONG_DEBIT_CALL_SPREAD,
     KIND_SHORT_CREDIT_CALL_SPREAD,
     KIND_SHORT_DEBIT_PUT_SPREAD,
-    KIND_SPREAD,
-    KIND_WHEEL,
+    KIND_UNINVESTABLE,
+    KIND_LONG_ONLY,
   ];
   field :kind
 

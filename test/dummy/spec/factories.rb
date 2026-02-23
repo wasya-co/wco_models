@@ -48,6 +48,12 @@ FactoryBot.define do
 
   end
 
+  ## D
+
+  factory :datapoint, class: 'Iro::Datapoint' do
+    kind { 'STOCK' }
+  end
+
   ## E
 
   factory :email_action, class: 'WcoEmail::EmailAction' do

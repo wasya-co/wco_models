@@ -181,13 +181,15 @@ class Iro::Strategy
   def net_amount_spread p
     p.inner.begin_price - p.inner.end_price
   end
-  def net_amount_long_credit_put_spread p
-    p.inner.begin_price - p.inner.end_price
-  end
+  # def net_amount_long_credit_put_spread p
+  #   p.inner.begin_price - p.inner.end_price
+  # end
 
 
-  ## 2024-05-09 @TODO
+  ## 2024-05-09 _TODO
   ## 2025-10-11 _TODO
+  ## 2026-02-23 trash, makes no sense.
+=begin
   def next_inner_strike_on expires_on
     outs = ::Tda::Option.get_quotes({
       contractType: put_call,
@@ -196,7 +198,7 @@ class Iro::Strategy
     })
     puts! outs, 'next_inner_strike_on -> outs'
   end
-
+=end
 
 
   ##

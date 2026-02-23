@@ -10,8 +10,7 @@ class Tda::Stock
     self.get_quotes( which )[0]
   end
 
-  ## tickers = "GME"
-  ## tickers = "NVDA,GME"
+  ## tickers = "NVDA,TSLA"
   def self.get_quotes tickers
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
 

@@ -102,6 +102,8 @@ class Tda::Option
   ## params = { contractType: 'PUT', ticker: 'GME', expirationDate: '2026-02-20' }
   ## outs   = Tda::Option.get_quotes params
   ##
+  ## params = { contractType: 'PUT', ticker: 'GME', fromDate: '2026-02-20', toDate: '2026-02-20' }
+  ##
   ## 2023-02-04 _vp_ :: Too specific, but I want the entire chain, every 1-min
   ## 2023-02-06 _vp_ :: Continue.
   ##
@@ -124,8 +126,11 @@ class Tda::Option
     end
     if params[:expirationDate]
       opts[:fromDate] = opts[:toDate] = params[:expirationDate].to_s[0...10]
+    elsif params[:fromDate] && params[:toDate]
+      opts[:fromDate] = params[:fromDate].to_s[0...10]
+      opts[:toDate]   = params[:toDate].to_s[0...10]
     else
-      raise Iro::InputError.new("Invalid input z2, missing 'expirationDate'.")
+      raise Iro::InputError.new("Invalid input z2, missing 'expirationDate' or both fromDate,toDate .")
     end
     if params[:ticker]
       opts[:symbol] = params[:ticker].upcase

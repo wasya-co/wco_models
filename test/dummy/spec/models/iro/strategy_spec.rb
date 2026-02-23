@@ -8,17 +8,17 @@ RSpec.describe Iro::Strategy do
       ::Wco::Profile,
     );
 
-    @leadset   = ::Wco::Leadset.find_or_create_by!( company_url: 'wasya.co' )
-    @profile = ::Wco::Profile.create( email: 'piousbox@gmail.com', leadset: @leadset,
-      schwab_access_token: TEST_SCHWAB_ACCESS_TOKEN )
+    @leadset = ::Wco::Leadset.find_or_create_by!( company_url: 'wasya.co' )
+    @profile = ::Wco::Profile.create( email: 'piousbox@gmail.com', leadset: @leadset )
   end
 
   ## short NVDA credit spread
   ## 2025-10-11 doing
-  it '#next_inner_strike(expires_on)' do
+  ## 2026-02-23 No way.. too complicated - this will be deleted.
+=begin
+  it '#next_inner_strike_on(expires_on)' do
     @nvda = create( :stock, ticker: 'NVDA', last: 892.0 )
     @strategy = Iro::Strategy.create!({
-      # slug: 'xxTestxx',
       kind: Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD,
       long_or_short: Iro::Strategy::SHORT,
       stock: @nvda,
@@ -30,6 +30,7 @@ RSpec.describe Iro::Strategy do
     out = @strategy.next_inner_strike_on( '2025-10-17' )
     out.should eql 920
   end
+=end
 
   context 'per-kind calculations' do
 
@@ -145,10 +146,10 @@ RSpec.describe Iro::Strategy do
     #   @strategy.net_amount_short_credit_call_spread( @position ).should eql( 1.99 - 0.5 - 1.86 + 0.25 )
     # end
 
-    it '#net_amount_long_credit_put_spread' do
-      p = @position
-      @strategy.net_amount_long_credit_put_spread( p ).should eql( p.inner.begin_price - p.inner.end_price )
-    end
+    # it '#net_amount_long_credit_put_spread' do
+    #   p = @position
+    #   @strategy.net_amount_long_credit_put_spread( p ).should eql( p.inner.begin_price - p.inner.end_price )
+    # end
 
   end
 

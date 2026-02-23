@@ -84,8 +84,20 @@ class Iro::Position
   end
 
   def breakeven
-    strategy.send("breakeven_#{strategy.kind}", self)
+    send("breakeven_#{strategy.kind}", self)
   end
+  def breakeven_covered_call p
+    p.inner.strike + p.inner.begin_price
+  end
+  def breakeven_long_debit_call_spread p
+    p.inner.strike - p.max_gain
+  end
+  ## 2026-02-23
+  def breakeven_short_credit_call_spread p
+    p.inner.strike + p.max_gain
+  end
+  alias_method :breakeven_short_debit_put_spread, :breakeven_long_debit_call_spread
+
 
   def current_underlying_strike
     Iro::Stock.find_by( ticker: ticker ).last

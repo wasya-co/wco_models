@@ -51,4 +51,4 @@ end
 
 Wco::Obf = Wco::ObfuscatedRedirect
 
-
+EPSILON = 0.0001

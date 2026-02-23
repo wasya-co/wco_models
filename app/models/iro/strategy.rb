@@ -103,16 +103,6 @@ class Iro::Strategy
     begin_delta_spread p
   end
 
-
-  def breakeven_covered_call p
-    p.inner.strike + p.inner.begin_price
-  end
-  def breakeven_long_debit_call_spread p
-    p.inner.strike - p.max_gain
-  end
-  alias_method :breakeven_short_debit_put_spread, :breakeven_long_debit_call_spread
-
-
   def end_delta_wheel p
     p.inner.end_delta
   end

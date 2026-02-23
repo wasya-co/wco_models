@@ -32,6 +32,7 @@ RSpec.describe Iro::Strategy do
   end
 =end
 
+
   context 'per-kind calculations' do
 
     context '#calc_rollp_long_credit_put_spread' do

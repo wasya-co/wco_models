@@ -1,3 +1,4 @@
+require 'csv'
 
 ##
 ## Datapoints are at most daily!
@@ -166,15 +167,15 @@ class Iro::Datapoint
       flag = create({
         kind:     KIND_STOCK,
         symbol:   symbol,
-        date:     row['Date'],
-        quote_at: row['Date'],
+        date:     row['date'],
+        quote_at: row['date'],
 
-        volume: row['Volume'],
+        volume: row['volume'],
 
-        open:  row['Open'],
-        high:  row['High'],
-        low:   row['Low'],
-        value: row['Close'],
+        open:  row['open'],
+        high:  row['high'],
+        low:   row['low'],
+        value: row['close'],
       })
       if flag.persisted?
         print '^'

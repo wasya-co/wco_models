@@ -121,8 +121,8 @@ class Iro::Strategy
   end
 
 
-  def max_gain_covered_call p
-    p.inner.begin_price * 100 - 0.66 # _TODO: is this *100 really?
+  def max_gain_covered_call p ## each
+    p.inner.begin_price # - 0.66
   end
   def max_gain_long_credit_put_spread p
     ## 100 * disallowed for gameui

@@ -13,18 +13,20 @@
 
   .descr= raw @report.body
 
-.Timeline{ style: "height: #{@duration_ms*height_ms}px" }
-  .main
-    - @config['wtimes'].each_with_index do |wtime, idx|
+-## this is in newspartials, newsvideos.
+-#
+  .Timeline{ style: "height: #{@duration_ms*height_ms}px" }
+    .main
+      - @config['wtimes'].each_with_index do |wtime, idx|
 
-      %div.ts{ style: "top: #{wtime.to_f*height_ms}px"}
-        .wtime= wtime
-        .word= @config['words'][idx]
+        %div.ts{ style: "top: #{wtime.to_f*height_ms}px"}
+          .wtime= wtime
+          .word= @config['words'][idx]
 
-.reports-show.maxwidth
-  %hr
-  %label config_json
-  .descr
-    = @report.config_json
+  .reports-show.maxwidth
+    %hr
+    %label config_json
+    .descr
+      = @report.config_json
 
 

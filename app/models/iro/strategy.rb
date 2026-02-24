@@ -336,23 +336,23 @@ class Iro::Strategy
     return [ 0.33, '-' ]
   end
 
-
+  ##
   ## scopes
-
+  ##
   def self.for_ticker ticker
     where( ticker: ticker )
   end
 
 
-  def slug
-    "#{long_or_short} #{credit_or_debit} #{kind} #{stock}"
-  end
+  # def slug
+  #   "#{kind} #{stock}"
+  # end
   def to_s
-    slug
+    "#{kind} #{stock}"
   end
   def self.list long_or_short = nil
     these = long_or_short ? where( long_or_short: long_or_short ) : all
-    [[nil,nil]] + these.map { |ttt| [ ttt, ttt.id ] }
+    [[nil,nil]] + these.map { |st| [ st, st.id ] }
   end
 end
 

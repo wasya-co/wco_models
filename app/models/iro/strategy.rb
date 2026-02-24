@@ -88,36 +88,41 @@ class Iro::Strategy
   field :next_spread_amount,      type: :float # e.g. $20 for a $2000 NVDA spread
   field :next_buffer_above_water, type: :float
 
-
-  def begin_delta_wheel p
+  def begin_delta_covered_call p
     p.inner.begin_delta
   end
-  def begin_delta_spread p
+  # def begin_delta_wheel p
+  #   p.inner.begin_delta
+  # end
+  def _begin_delta_spread p
     p.inner.begin_delta - p.outer.begin_delta
   end
   def begin_delta_long_credit_put_spread p
-    begin_delta_spread p
+    _begin_delta_spread p
   end
   def begin_delta_short_credit_call_spread p
-    begin_delta_spread p
+    _begin_delta_spread p
   end
 
-  def end_delta_wheel p
+  def end_delta_covered_call p
     p.inner.end_delta
   end
-  def end_delta_spread p
+  # def end_delta_wheel p
+  #   p.inner.end_delta
+  # end
+  def _end_delta_spread p
     p.inner.end_delta - p.outer.end_delta
   end
   def end_delta_long_credit_put_spread p
-    end_delta_spread p
+    _end_delta_spread p
   end
   def end_delta_short_credit_call_spread p
-    end_delta_spread p
+    _end_delta_spread p
   end
 
 
   def max_gain_covered_call p
-    p.inner.begin_price * 100 - 0.66 # @TODO: is this *100 really?
+    p.inner.begin_price * 100 - 0.66 # _TODO: is this *100 really?
   end
   def max_gain_long_credit_put_spread p
     ## 100 * disallowed for gameui

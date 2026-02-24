@@ -54,7 +54,7 @@ class Iro::Position
   belongs_to :inner, class_name: 'Iro::Option', inverse_of: :pos_of_inner
   validates_associated :inner
 
-  belongs_to :outer, class_name: 'Iro::Option', inverse_of: :pos_of_outer
+  belongs_to :outer, class_name: 'Iro::Option', inverse_of: :pos_of_outer, optional: true
   validates_associated :outer
 
   accepts_nested_attributes_for :inner, :outer
@@ -129,6 +129,9 @@ class Iro::Position
   end
   def net_amount # each
     self.send("net_amount_#{strategy.kind}")
+  end
+  def net_amount_covered_call
+    inner.begin_price - inner.end_price
   end
   ## 2025-10-14 tested
   def net_amount_long_credit_put_spread ## each
@@ -325,13 +328,13 @@ class Iro::Position
   def to_s
     out = "#{stock} (#{q}) #{expires_on.to_datetime.strftime('%b %d')} #{strategy.long_or_short} ["
     if Iro::Strategy::LONG == long_or_short
-      if outer.strike
+      if outer&.strike
         out = out + "$#{outer.strike} <- "
       end
       out = out + "$#{inner.strike}"
     else
       out = out + "$#{inner.strike}"
-      if outer.strike
+      if outer&.strike
         out = out + " -> $#{outer.strike}"
       end
     end

@@ -131,6 +131,7 @@ FactoryBot.define do
 
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
+    last { 400 }
   end
 
   factory :strategy, class: '::Iro::Strategy' do

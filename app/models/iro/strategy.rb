@@ -71,7 +71,6 @@ class Iro::Strategy
         throw 'zq6 - debit spreads are not implemented'
       end
     else
-      # put_call = 'zq9-ERROR'
       throw 'zq9 - this should never happen'
     end
   end

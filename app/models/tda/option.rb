@@ -90,7 +90,8 @@ class Tda::Option
   end
 
   ##
-  ## 2023-03-18 _vp_ This is what I should be using to check if a position should be rolled.
+  ## 2023-03-18 This is what I should be using to check if a position should be rolled.
+  ## 2026-02-23 Used a lot but @deprecated, use get_quote_h
   ##
   def self.get_quote params
     OpenStruct.new ::Tda::Option.get_quotes(params)[0]
@@ -175,6 +176,83 @@ class Tda::Option
     return outs
   end
 
+  ## 2026-02-23 use this instead.
+  def self.get_quotes_h params
+    puts! params, 'Tda::Option#get_quotes_h ...'
+
+    profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
+    opts = {}
+
+    #
+    # Validate input ???
+    #
+    validOpts = %i| contractType |
+    validOpts.each do |s|
+      if params[s]
+        opts[s] = params[s]
+      else
+        raise Iro::InputError.new("Invalid input z1, missing '#{s}'.")
+      end
+    end
+    if params[:expirationDate]
+      opts[:fromDate] = opts[:toDate] = params[:expirationDate].to_s[0...10]
+    elsif params[:fromDate] && params[:toDate]
+      opts[:fromDate] = params[:fromDate].to_s[0...10]
+      opts[:toDate]   = params[:toDate].to_s[0...10]
+    else
+      raise Iro::InputError.new("Invalid input z2, missing 'expirationDate' or both fromDate,toDate .")
+    end
+    if params[:ticker]
+      opts[:symbol] = params[:ticker].upcase
+    else
+      raise Iro::InputError.new("Invalid input z3, missing 'ticker'.")
+    end
+
+    if params[:strike]
+      opts[:strike] = params[:strike]
+    end
+
+    ## query = { contractType: "PUT", toDate: "2026-02-26", fromDate: "2026-02-26", symbol: "TSLA", strike: 395.0}
+    query = { }.merge opts
+    puts! query, 'query'
+
+    results = self.get( "/chains", {
+      headers: {
+        accept:        'application/json',
+        Authorization: "Bearer #{profile[:schwab_access_token]}",
+      },
+      query: query,
+    })
+    # puts! results, '/chains --'
+    timestamp = DateTime.parse results.headers['date']
+    results = results.parsed_response.deep_symbolize_keys
+
+    ## expdate, putcall, strike, price -and-
+    ## expdate, putcall, strike, delta ...
+    outs = {}
+    [ 'PUT', 'CALL' ].each do |contract_type|
+      tmp_sym     = "#{contract_type.to_s.downcase}ExpDateMap".to_sym
+      if results[tmp_sym]
+        tmp_results = results[tmp_sym]
+        tmp_results.each do |date, vs|
+          vs.each do |strike, _v|
+            v = _v[0]
+            v = v.except( :lastSize, :optionDeliverablesList, :settlementType,
+              :deliverableNote, :pennyPilot, :mini )
+            v[:timestamp] = timestamp
+            v[:price] = ( v[:bid]+v[:ask] )/2
+
+            outs[date[0...10]] ||= {}
+            outs[date[0...10]][contract_type] ||= {}
+            outs[date[0...10]][contract_type][v[:strikePrice]] = v
+          end
+        end
+      end
+    end
+
+    # puts! outs, 'Tda::Option.get_quotes_h:'
+    return outs
+  end
 
   def self.close_credit_call
   end

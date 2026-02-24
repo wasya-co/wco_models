@@ -84,19 +84,26 @@ class Iro::Position
   end
 
   def breakeven
-    send("breakeven_#{strategy.kind}", self)
+    send("breakeven_#{strategy.kind}")
   end
-  def breakeven_covered_call p
+  def breakeven_covered_call
+    p = self
     p.inner.strike + p.inner.begin_price
   end
-  def breakeven_long_debit_call_spread p
+  def breakeven_long_debit_call_spread
+    p = self
     p.inner.strike - p.max_gain
   end
   ## 2026-02-23
-  def breakeven_short_credit_call_spread p
+  def breakeven_short_credit_call_spread
+    p = self
     p.inner.strike + p.max_gain
   end
-  alias_method :breakeven_short_debit_put_spread, :breakeven_long_debit_call_spread
+  ## 2026-02-23
+  def breakeven_long_credit_put_spread
+    p = self
+    p.inner.strike - p.max_gain
+  end
 
 
   def current_underlying_strike
@@ -319,13 +326,13 @@ class Iro::Position
     out = "#{stock} (#{q}) #{expires_on.to_datetime.strftime('%b %d')} #{strategy.long_or_short} ["
     if Iro::Strategy::LONG == long_or_short
       if outer.strike
-        out = out + "$#{outer.strike}->"
+        out = out + "$#{outer.strike} <- "
       end
       out = out + "$#{inner.strike}"
     else
       out = out + "$#{inner.strike}"
       if outer.strike
-        out = out + "<-$#{outer.strike}"
+        out = out + " -> $#{outer.strike}"
       end
     end
     out += "] "

@@ -316,13 +316,6 @@ class Tda::Option
   def self.create_short_debit_put_spread
   end
 
-  def self.roll_credit_call
-  end
-  def self.roll_long_debit_call_spread
-  end
-  def self.roll_short_debit_put_spread
-  end
-
 
 end
 

@@ -60,10 +60,10 @@ class Iro::Position
   accepts_nested_attributes_for :inner, :outer
 
   field     :outer_strike, type: :float
-  # validates :outer_strike, presence: true
+  validates :outer_strike, presence: true ## 2026-02-24 only to make finding easier.
 
   field     :inner_strike, type: :float
-  # validates :inner_strike, presence: true
+  validates :inner_strike, presence: true ## 2026-02-24 only to make finding easier.
 
   field :expires_on
   validates :expires_on, presence: true
@@ -124,6 +124,13 @@ class Iro::Position
     print '^'
   end
 
+  def roll_price
+    pos = self
+    out = pos.autoprev.outer.end_price - pos.autoprev.inner.end_price + pos.inner.begin_price - pos.outer.begin_price
+    return out
+  end
+
+
   def net_percent
     net_amount / max_gain
   end
@@ -165,19 +172,21 @@ class Iro::Position
 
   ## should_roll?
   def calc_rollp
-    self.next_reasons = []
-    # self.next_symbol  = nil
-    # self.next_delta   = nil
+    pos = self
+    pos.next_reasons = []
+    # pos.next_symbol  = nil
+    # pos.next_delta   = nil
 
-    out = strategy.send("calc_rollp_#{strategy.kind}", self )
+    out = strategy.send("calc_rollp_#{strategy.kind}", pos )
 
-    self.rollp = out[0]
-    self.next_reasons.push out[1]
+    pos.rollp = out[0]
+    pos.next_reasons.push out[1]
     save
   end
 
   def calc_nxt
     pos = self
+    puts! pos, '#calc_nxt...'
 
     ## 7 days ahead - not configurable
     params = {
@@ -185,9 +194,9 @@ class Iro::Position
       expirationDate: next_expires_on,
       ticker: ticker,
     }
-    # puts! params, '#calc_nxt'
+    puts! params, 'ze params'
     outs = Tda::Option.get_quotes(params)
-    # puts! outs, 'outs'
+    puts! outs, 'outs'
     outs_bk = outs.dup
 
     outs = outs.select do |out|
@@ -262,37 +271,45 @@ class Iro::Position
         put_call:   pos.put_call,
         stock_id:   pos.stock_id,
       }
-      inner_ = Iro::Option.new(o_attrs.merge({
+      inner_attrs = o_attrs.merge({
         strike:        inner[:strikePrice],
         begin_price: ( inner[:bid] + inner[:ask] )/2,
         begin_delta:   inner[:delta],
         end_price:   ( inner[:bid] + inner[:ask] )/2,
         end_delta:     inner[:delta],
-      }))
-      outer_ = Iro::Option.new(o_attrs.merge({
+      })
+      outer_attrs = o_attrs.merge({
         strike:        outer[:strikePrice],
         begin_price: ( outer[:bid] + outer[:ask] )/2,
         begin_delta:   outer[:delta],
         end_price:   ( outer[:bid] + outer[:ask] )/2,
         end_delta:     outer[:delta],
-      }))
-      pos.autonxt ||= Iro::Position.new
-      pos.autonxt.update({
+      })
+      autonxt_attrs = {
         prev_gain_loss_amount: 'a',
         put_call:     pos.put_call,
         status:      'proposed',
         stock:        strategy.stock,
-        inner:        inner_,
-        outer:        outer_,
-        inner_strike: inner_.strike,
-        outer_strike: outer_.strike,
+        inner_strike: inner_attrs[:strike],
+        outer_strike: outer_attrs[:strike],
         begin_on:     Time.now.to_date,
         expires_on:   next_expires_on,
         purse:        purse,
         strategy:     strategy,
-        quantity:     1,
+        quantity:     pos.quantity,
         autoprev:     pos,
-      })
+      }
+      pos.autonxt ||= Iro::Position.where({
+        inner_strike: inner_attrs[:strike],
+        outer_strike: outer_attrs[:strike],
+        purse:        purse,
+        stock:        strategy.stock,
+        strategy:     strategy,
+      }).first
+      pos.autonxt ||= Iro::Position.new(autonxt_attrs)
+      pos.autonxt.update(autonxt_attrs)
+      pos.autonxt.inner.update(inner_attrs)
+      pos.autonxt.outer.update(outer_attrs)
 
       pos.autonxt.sync
       pos.autonxt.save!

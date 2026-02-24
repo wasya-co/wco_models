@@ -42,7 +42,7 @@ module Wco::ApplicationHelper
   def pp_money a; pp_amount a; end
   def pp_currency a; pp_amount a; end
   def pp_percent a, config = { precision: 2}
-    "#{(a*100).round( config[:precision] )}%" rescue '@TODO'
+    "#{(a*100).round( config[:precision] )}%" rescue 'nil@#pp_percent'
   end
 
 end

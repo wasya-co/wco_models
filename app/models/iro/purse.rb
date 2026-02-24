@@ -29,6 +29,7 @@ class Iro::Purse
   field :n_next_positions, type: :integer, default: 5
 
   field :available_amount, type: :float
+  validates :available_amount, presence: true
   def available
     available_amount
   end

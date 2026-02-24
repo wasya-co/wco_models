@@ -311,6 +311,7 @@ class Iro::Strategy
 
   ## 2026-02-21 ok
   def calc_rollp_short_credit_call_spread p
+    puts! p, 'calc_rollp_short_credit_call_spread...'
     stock.reload
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i <= threshold_dte

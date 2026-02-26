@@ -26,6 +26,7 @@ class ::Iro::Stock
 
   field :last, type: :float
   field :options_price_increment, type: :float
+  validates :options_price_increment, presence: true
 
   field :stdev, type: :float
 

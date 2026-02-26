@@ -10,7 +10,7 @@ class Ability
 
     if user
 
-      if [ 'piousbox@gmail.com', 'victor@piousbox.com', 'test-1@wasya.co', 'victor@wasya.co' ].include? user.email
+      if [ 'piousbox@gmail.com', 'victor@piousbox.com', 'victor@wasya.co' ].include? user.email
         can :manage, :all
       end
 

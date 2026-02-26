@@ -24,6 +24,12 @@ class Wco::ProfilesController < Wco::ApplicationController
     if params[:q]
       q = URI.decode(params[:q])
       @profiles = @profiles.where({ email: /#{q}/i })
+
+      if params[:q] == 'pi'
+        profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
+        redirect_to action: 'edit', id: profile.id.to_s
+        return
+      end
     end
   end
 

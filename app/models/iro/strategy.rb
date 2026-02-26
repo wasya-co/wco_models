@@ -45,6 +45,7 @@ class Iro::Strategy
     KIND_LONG_ONLY,
   ];
   field :kind
+  validates :kind, presence: true
 
   def put_call
     case kind
@@ -75,7 +76,11 @@ class Iro::Strategy
     end
   end
 
-  field :buffer_above_water,  type: :float
+
+  field     :threshold_usd_above_mark, type: :float
+  validates :threshold_usd_above_mark, presence: true
+  def buffer_above_water; threshold_usd_above_mark; end
+
   field :threshold_pos_delta, type: :float # offensive: roll b/c markets are going my way
   field :threshold_neg_delta, type: :float # defensive: roll b/c markets are going against me
   field :threshold_netp,      type: :float
@@ -86,7 +91,10 @@ class Iro::Strategy
   field :next_outer_delta,        type: :float
   field :next_outer_strike,       type: :float
   field :next_spread_amount,      type: :float # e.g. $20 for a $2000 NVDA spread
-  field :next_buffer_above_water, type: :float
+
+  field     :next_threshold_usd_above_mark, type: :float
+  validates :next_threshold_usd_above_mark, presence: true
+  def next_buffer_above_water; next_threshold_usd_above_mark; end
 
   def begin_delta_covered_call p
     p.inner.begin_delta

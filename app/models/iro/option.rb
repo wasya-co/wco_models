@@ -16,7 +16,8 @@ class Iro::Option
   CALL = 'CALL'
   PUT  = 'PUT'
 
-  field :symbol
+  ## for now, recompute every time
+  # field :symbol
   ## each option can be a leg in a position, no uniqueness
   # validates :symbol, uniqueness: true, presence: true
 
@@ -70,7 +71,8 @@ class Iro::Option
   field :last, type: :float
 
   ## for TDA
-  def symbol
+  ## "COST_030626C1030"
+  def symbol_old
     if !self[:symbol]
       p_c_ = put_call == 'PUT' ? 'P' : 'C'
       strike_ = strike.to_i == strike ? strike.to_i : strike
@@ -80,6 +82,26 @@ class Iro::Option
     end
     self[:symbol]
   end
+
+  ## for schwab
+  ## "COST  260306C01030000"
+  def symbol
+    p_c_ = put_call == 'PUT' ? 'P' : 'C'
+    strike_ = format("%08d", (strike.to_f * 1000).round)
+    sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
+  end
+=begin
+  def symbol_trash ## it persists - which I dont do right now
+    if !self[:symbol]
+      p_c_ = put_call == 'PUT' ? 'P' : 'C'
+      strike_ = format("%08d", (strike.to_f * 1000).round)
+      sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
+      self[:symbol] = sym
+      save
+    end
+    self[:symbol]
+  end
+=end
 
   # before_save :sync, if: ->() { !Rails.env.test? } ## do not sync in test
   def sync

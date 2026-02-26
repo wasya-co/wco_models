@@ -5,23 +5,26 @@ class Iro::Position
   include Mongoid::Paranoia
   store_in collection: 'iro_positions'
 
-  field :prev_gain_loss_amount, type: :float
-  attr_accessor :next_gain_loss_amount
-  def prev_gain_loss_amount
-    out  = autoprev.outer.end_price - autoprev.inner.end_price
-    out += inner.begin_price - outer.begin_price
-  end
+  ## @trash, use next_gain_loss_amount instead
+  # field :prev_gain_loss_amount, type: :float
+  # def prev_gain_loss_amount
+  #   out  = autoprev.outer.end_price - autoprev.inner.end_price
+  #   out += inner.begin_price - outer.begin_price
+  # end
+  field :next_gain_loss_amount, type: :float
 
 
   STATUS_ACTIVE   = 'active'
   STATUS_CLOSED   = 'closed'
+  STATUS_PREPARE  = 'prepare'
   STATUS_PROPOSED = 'proposed'
   ## one more, 'selected' after proposed?
   STATUS_PENDING  = 'pending' ## 'working'
-  STATUSES = [ nil, STATUS_CLOSED, STATUS_ACTIVE, STATUS_PROPOSED, STATUS_PENDING ]
+  STATUSES = [ nil, STATUS_CLOSED, STATUS_ACTIVE, STATUS_PREPARE, STATUS_PROPOSED, STATUS_PENDING ]
   field :status
   validates :status, presence: true
   scope :active, ->{ where( status: 'active' ) }
+  field :schwab_status
 
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions
   index({ purse_id: 1, ticker: 1 })
@@ -43,11 +46,14 @@ class Iro::Position
   belongs_to :next_strategy, class_name: 'Iro::Strategy', inverse_of: :next_position, optional: true
 
 
-  belongs_to :prev, class_name: 'Iro::Position', inverse_of: :nxts, optional: true
-  belongs_to :autoprev, class_name: 'Iro::Position', inverse_of: :autonxt, optional: true
   ## there are many of these, for viewing on the 'roll' view
-  has_many :nxts,     class_name: 'Iro::Position', inverse_of: :prev
-  has_one :autonxt, class_name: 'Iro::Position', inverse_of: :autoprev
+  belongs_to :prev,     class_name: 'Iro::Position', inverse_of: :nxts,    optional: true
+  has_many   :nxts,     class_name: 'Iro::Position', inverse_of: :prev
+
+  ## 2026-02-26 using this one.
+  belongs_to :autonxt,  class_name: 'Iro::Position', inverse_of: :autoprev, optional: true
+  has_one    :autoprev, class_name: 'Iro::Position', inverse_of: :autonxt
+
 
   ## Options
 
@@ -75,6 +81,8 @@ class Iro::Position
   field :begin_on
 
   field :end_on
+
+  field :schwab_order_id, type: :integer
 
   def begin_delta
     strategy.send("begin_delta_#{strategy.kind}", self)
@@ -127,7 +135,7 @@ class Iro::Position
   def roll_price
     pos = self
     out = pos.autoprev.outer.end_price - pos.autoprev.inner.end_price + pos.inner.begin_price - pos.outer.begin_price
-    return out
+    return out.round(2)
   end
 
 
@@ -158,6 +166,18 @@ class Iro::Position
 
 
   def sync
+    if schwab_order_id
+      outs = Tda::Order.check_status schwab_order_id
+      update({ schwab_status: outs['status'] })
+      if [ Tda::Order::STATUS_FILLED, Tda::Order::STATUS_REPLACED ].include?( outs['status'] )
+        ## update amounts.
+        purse.update({ available_amount: purse.available_amount + next_gain_loss_amount*quantity*100 })
+        ## make this one active
+        update({ status: Iro::Position::STATUS_ACTIVE, next_gain_loss_amount: nil })
+        ## make previous one closed
+        autoprev.update({ status: Iro::Position::STATUS_CLOSED })
+      end
+    end
     inner.sync
     outer.sync
   end
@@ -286,7 +306,6 @@ class Iro::Position
         end_delta:     outer[:delta],
       })
       autonxt_attrs = {
-        prev_gain_loss_amount: 'a',
         put_call:     pos.put_call,
         status:      'proposed',
         stock:        strategy.stock,

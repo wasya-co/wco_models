@@ -21,6 +21,7 @@ class Wco::Profile
   field :schwab_exec_access_token,  type: :string
   field :schwab_exec_refresh_token, type: :string
   field :schwab_exec_id_token,      type: :string
+  field :schwab_account_hash,       type: :string
 
 
   has_many :newsvideos, class_name: 'Wco::Newsvideo'
@@ -44,6 +45,10 @@ class Wco::Profile
 
   def self.ai_writer
     find_or_create_by email: 'ai-writer@wasya.co'
+  end
+
+  def self.pi
+    find_by email: 'piousbox@gmail.com'
   end
 
   def to_s

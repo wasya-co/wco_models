@@ -74,14 +74,16 @@ class WcoHosting::ApplianceTmpl
   # validates :image, presence: true
 
   field :volume_zip_url
-  field :volume_zip_exe
+  field :volume_zip_rb
   def volume_zip
-    if volume_zip_exe
-      eval( volume_zip_exe )
+    if volume_zip_rb
+      eval( volume_zip_rb )
     else
       volume_zip_url
     end
   end
+
+  field :db_zip_url
 
 
 
@@ -110,6 +112,9 @@ class WcoHosting::ApplianceTmpl
 
   def to_s
     "#{kind}-#{version}"
+  end
+  def self.list
+    all.map { |apl| [apl.to_s, apl.id.to_s] }
   end
 end
 AppTmpl = WcoHosting::ApplianceTmpl

@@ -17,6 +17,11 @@ RSpec.describe WcoHosting::Appliance do
     })
   end
 
+  it '#list' do
+    outs = WcoHosting::ApplianceTmpl.list
+    outs[0][1].should eql @tmpl.id.to_s
+  end
+
 end
 
 

@@ -30,6 +30,8 @@ FactoryBot.define do
 
 
   factory :appliance, class: 'WcoHosting::Appliance' do
+    appliance_tmpl {  WcoHosting::ApplianceTmpl.all.first }
+
     after :build do |doc|
       doc.subscription = create( :subscription, leadset: doc.leadset )
     end

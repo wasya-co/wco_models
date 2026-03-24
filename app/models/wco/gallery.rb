@@ -52,7 +52,7 @@ class Wco::Gallery
     %w| name subhead descr |
   end
 
-  has_and_belongs_to_many :tags
+  has_and_belongs_to_many :tags, class_name: 'Wco::Tag'
 
 
   has_many :oats, class_name: 'Wco::OfficeActionTemplate'

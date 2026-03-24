@@ -17,15 +17,15 @@ class Wco::Tag
   has_many :email_templates, class_name: 'WcoEmail::EmailTemplate', inverse_of: :tag
 
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation', index: true
-  has_and_belongs_to_many :galleries
+  has_and_belongs_to_many :galleries,     class_name: 'Wco::Gallery'
   has_and_belongs_to_many :headlines # ,     class_name: 'Headline'
-  has_and_belongs_to_many :leads, index: true # ,         class_name: 'Lead'
-  has_and_belongs_to_many :leadsets # ,      class_name: 'Leadset'
+  has_and_belongs_to_many :leads,         class_name: 'Wco::Lead',    index: true
+  has_and_belongs_to_many :leadsets,      class_name: 'Wco::Leadset'
   has_and_belongs_to_many :logs
   has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
-  has_and_belongs_to_many :newsvideos
-  has_and_belongs_to_many :reports
-  has_and_belongs_to_many :videos
+  has_and_belongs_to_many :newsvideos, class_name: 'Wco::Newsvideo'
+  has_and_belongs_to_many :reports,    class_name: 'Wco::Report'
+  has_and_belongs_to_many :videos,     class_name: 'Wco::Video'
 
 
 

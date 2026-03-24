@@ -41,8 +41,9 @@ Wco::Engine.routes.draw do
   resources :invoices
 
   get  'leads/new',    to: 'leads#new'
+  get  'leads/import', to: 'leads#new_import', as: :new_leads
+  post 'leads/import', to: 'leads#create_import'
   post 'leads/bulkop', to: 'leads#bulkop'
-  post 'leads/import', to: 'leads#import', as: :leads_import
   get  'leads/:id',    to: 'leads#show', id: /[^\/]+/
   resources :leads
   resources :leadsets

@@ -21,10 +21,10 @@
         %tr
           %th= check_box_tag :selectAll
           %th Name/Email
-          %th
+          %th PFP
           %th.company Company
           %th Phone, address
-          %th Tag
+          %th Tags
           %th created_at
 
           - if defined?( wco_email )
@@ -45,7 +45,9 @@
             %td
               .a= lead.phone   if lead.phone.present?
               .a= lead.address if lead.address.present?
-            %td
+            %td.tags
+              - lead.tags.each do |tag|
+                .chip= tag.to_s
             %td= lead.created_at.to_s[0..10]
 
 

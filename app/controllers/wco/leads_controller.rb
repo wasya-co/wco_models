@@ -26,6 +26,38 @@ class Wco::LeadsController < Wco::ApplicationController
     redirect_to action: :index
   end
 
+  def create_import
+    authorize! :create, Wco::Lead
+    file = params[:file]
+    selected_tag_ids = params[:tags] || []
+
+    if file.nil?
+      redirect_back fallback_location: root_path, alert: "No file selected" and return
+    end
+
+    CSV.foreach(file.path, headers: true) do |row|
+      lead_attrs = {
+        email:   row['email'] || row['Email'],
+        name:    row['name'] || row['Name'],
+        phone:   row['phone'] || row['Phone'],
+        address: row['address'] || row['Address']
+      }.compact ## skip missing columns
+
+      lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil
+      lead ||= Wco::Lead.create!(lead_attrs)
+
+      # Assign selected tags
+      selected_tag_ids.each do |tag_id|
+        lead.tags << Wco::Tag.find(tag_id)
+      end
+      # lead.save!
+    end
+
+    redirect_to wco.leads_path, notice: "Leads imported successfully"
+  rescue => e
+    redirect_back fallback_location: root_path, alert: "Error: #{e.message}"
+  end
+
   def edit
     authorize! :edit, Wco::Lead
     @lead = Wco::Lead.find params[:id]
@@ -48,12 +80,17 @@ class Wco::LeadsController < Wco::ApplicationController
       end
     end
 
+    @leads = @leads.includes( :tags )
     @leads = @leads.page( params[:leads_page ] ).per( current_profile.per_page )
   end
 
   def new
     authorize! :new, Wco::Lead
     @lead = Wco::Lead.new
+  end
+
+  def new_import
+    authorize! :new, Wco::Lead
   end
 
   def show

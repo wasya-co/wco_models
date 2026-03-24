@@ -12,8 +12,8 @@ class WcoEmail::EmailFilterCondition
   field :field
   validates :field, presence: true
 
-  field :operator, type: String
-  validates :operator, presence: true, inclusion: ::WcoEmail::OPERATORS
+  field :matchtype, type: String
+  validates :matchtype, presence: true, inclusion: WcoEmail::EmailFilter::MATCHTYPE_OPTS
 
   field :value
   validates :value, presence: true
@@ -41,14 +41,14 @@ class WcoEmail::EmailFilterCondition
 
 
   def to_s
-    "<EFC #{field} #{operator} #{value} />"
+    "<EFC #{field} #{matchtype} #{value} />"
   end
   def to_s_full indent: 0
     _value = value
-    if [ ::WcoEmail::OPERATOR_HAS_TAG, ::WcoEmail::OPERATOR_NOT_HAS_TAG ].include?( operator )
+    if [ ::WcoEmail::OPERATOR_HAS_TAG, ::WcoEmail::OPERATOR_NOT_HAS_TAG ].include?( matchtype )
       _value = Wco::Tag.find( value )
     end
-    "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{_value}` />\n"
+    "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{matchtype} `#{_value}` />\n"
   end
 end
 

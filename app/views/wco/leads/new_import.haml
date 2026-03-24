@@ -1,0 +1,20 @@
+
+.leads-new-import.maxwidth
+
+  .text-center
+    %h5.title Import Leads
+    %span from a CSV file
+
+  .row
+    .col-12
+      .descr
+        %p Header should be present. The header cells should correspond to lead fields in any order: email, name, phone, address.
+      = form_tag wco.new_leads_path, multipart: true do
+        = file_field_tag :file
+        .tags-list
+          - @tags_list.drop(1).each do |tag|
+            %label.chip
+              = check_box_tag "tags[]", tag[1]
+              = tag[0]
+        .actions
+          = submit_tag "Upload"

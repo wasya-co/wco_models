@@ -19,6 +19,40 @@ RSpec::describe Wco::LeadsController do
     Wco::Lead.all.length.should eql( n + 1 )
   end
 
+  describe '#create_import' do
+    let!(:tag1) { Wco::Tag.create!(name: "Tag 1") }
+    let!(:tag2) { Wco::Tag.create!(name: "Tag 2") }
+
+    let(:csv_content) do
+      CSV.generate(headers: true) do |csv|
+        csv << ["email", "name", "phone", "address"]
+        csv << ["test1@example.com", "Alice", "123", "Addr1"]
+        csv << ["test2@example.com", "Bob", "456", "Addr2"]
+      end
+    end
+
+    let(:file) { Tempfile.new(['leads', '.csv']) }
+
+    before do
+      file.write(csv_content)
+      file.rewind
+    end
+
+    after { file.close! }
+
+    it "creates leads and assigns tags" do
+      expect {
+        post :new_leads, params: { file: Rack::Test::UploadedFile.new(file.path, 'text/csv'),
+                                   tags: [tag1.id, tag2.id] }
+      }.to change(Wco::Lead, :count).by(2)
+
+      lead = Wco::Lead.find_by(email: "test1@example.com")
+      expect(lead.name).to eq("Alice")
+      expect(lead.phone).to eq("123")
+      expect(lead.tags.map(&:id)).to match_array([tag1.id, tag2.id])
+    end
+  end
+
   it '#edit' do
     get :edit, params: { id: @lead.id }
     response.code.should eql '200'

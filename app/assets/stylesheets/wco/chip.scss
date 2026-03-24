@@ -4,6 +4,8 @@
 
 .chip,
 .Chip {
+  white-space: nowrap;
+
   background: var(--wco-color-2);
   border-radius: 1em 0 0 1em;
 

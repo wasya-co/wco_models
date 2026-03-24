@@ -17,7 +17,7 @@ require 'mail'
 require 'mongoid'
 require 'mongoid_paranoia'
 
-require "omniauth-keycloak"
+# require "omniauth-keycloak"
 
 # require 'select2-rails'
 require 'sass-rails'

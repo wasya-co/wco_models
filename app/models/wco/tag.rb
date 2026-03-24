@@ -13,7 +13,8 @@ class Wco::Tag
   has_many :sons, class_name: 'Wco::Tag', inverse_of: :parent
 
   belongs_to :site, class_name: 'Wco::Site', optional: true
-  has_many :email_filters, class_name: 'WcoEmail::EmailFilter', inverse_of: :tag
+  has_many :email_filters,   class_name: 'WcoEmail::EmailFilter',   inverse_of: :tag
+  has_many :email_templates, class_name: 'WcoEmail::EmailTemplate', inverse_of: :tag
 
   has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation', index: true
   has_and_belongs_to_many :galleries

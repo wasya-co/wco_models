@@ -1,7 +1,8 @@
 
 .tags-show.padded
 
-  %h5 Tag `#{@tag.slug}`
+  .text-center
+    %h5 Tag `#{@tag.slug}`
 
   %ul
     - if defined? wco_email
@@ -10,6 +11,11 @@
         - if @tag.conversations.present?
           .Conversations
             = render '/wco_email/conversations/table', convs: @tag.conversations.page( params[::WcoEmail::Conversation::PAGE_PARAM_NAME] )
+      %li.d-flex
+        <b>EmailTemplates (#{@tag.email_templates.length}):&nbsp;</b>
+        - if @tag.email_templates.present?
+          .EmailTemplates
+            = render '/wco_email/email_templates/index_mini', email_templates: @tag.email_templates
       %li.d-flex
         <b>Message Stubs (#{@tag.message_stubs.length}):&nbsp;</b>
         = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs.page( params[::WcoEmail::MessageStub::PAGE_PARAM_NAME] )

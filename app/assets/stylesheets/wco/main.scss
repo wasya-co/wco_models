@@ -86,7 +86,10 @@ textarea.monospace {
 
 .descr {
   border: 1px solid red;
+  border-radius: 0.5em;
+
   padding: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 /* E */
@@ -167,6 +170,14 @@ textarea.monospace {
   display: none !important;
 }
 
+/* I */
+
+input[type=file] {
+  margin: 0.5em 0;
+  border: 2px solid white;
+  border-radius: 0.5em;
+  padding: 0.5em;
+}
 
 /* M */
 

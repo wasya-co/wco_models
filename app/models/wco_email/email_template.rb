@@ -127,6 +127,8 @@ class WcoEmail::EmailTemplate
   has_many :email_filters,  class_name: '::WcoEmail::EmailFilter'
   has_many :unsubscribes,   class_name: '::WcoEmail::Unsubscribe'
 
+  belongs_to :tag, class_name: '::Wco::Tag', inverse_of: :email_templates, optional: true
+
   SLUG_BLANK = 'blank'
   def self.blank_template
     out = Tmpl.find_or_create_by({ slug: SLUG_BLANK })

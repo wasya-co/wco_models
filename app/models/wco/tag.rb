@@ -9,23 +9,23 @@ class Wco::Tag
   validates :slug, presence: true, uniqueness: true
   index({ slug: -1 })
 
-  belongs_to :parent, class_name: 'Wco::Tag', inverse_of: :sons, optional: true
-  has_many :sons, class_name: 'Wco::Tag', inverse_of: :parent
+  belongs_to :parent, class_name: '::Wco::Tag', inverse_of: :sons, optional: true
+  has_many :sons,     class_name: '::Wco::Tag', inverse_of: :parent
 
-  belongs_to :site, class_name: 'Wco::Site', optional: true
-  has_many :email_filters,   class_name: 'WcoEmail::EmailFilter',   inverse_of: :tag
-  has_many :email_templates, class_name: 'WcoEmail::EmailTemplate', inverse_of: :tag
+  belongs_to :site,          class_name: '::Wco::Site', optional: true
+  has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
+  has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
 
-  has_and_belongs_to_many :conversations, class_name: 'WcoEmail::Conversation', index: true
-  has_and_belongs_to_many :galleries,     class_name: 'Wco::Gallery'
+  has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation', index: true
+  has_and_belongs_to_many :galleries,     class_name: '::Wco::Gallery'
   has_and_belongs_to_many :headlines # ,     class_name: 'Headline'
-  has_and_belongs_to_many :leads,         class_name: 'Wco::Lead',    index: true
-  has_and_belongs_to_many :leadsets,      class_name: 'Wco::Leadset'
+  has_and_belongs_to_many :leads,         class_name: '::Wco::Lead',    index: true
+  has_and_belongs_to_many :leadsets,      class_name: '::Wco::Leadset'
   has_and_belongs_to_many :logs
-  has_and_belongs_to_many :message_stubs, class_name: 'WcoEmail::MessageStub'
-  has_and_belongs_to_many :newsvideos, class_name: 'Wco::Newsvideo'
-  has_and_belongs_to_many :reports,    class_name: 'Wco::Report'
-  has_and_belongs_to_many :videos,     class_name: 'Wco::Video'
+  has_and_belongs_to_many :message_stubs, class_name: '::WcoEmail::MessageStub'
+  has_and_belongs_to_many :newsvideos, class_name: '::Wco::Newsvideo'
+  has_and_belongs_to_many :reports,    class_name: '::Wco::Report'
+  has_and_belongs_to_many :videos,     class_name: '::Wco::Video'
 
 
 

@@ -26,7 +26,8 @@ class WcoEmail::MessageStub
   scope :pending, ->{ where( status: STATUS_PENDING ) }
   scope :failed,  ->{ where( status: STATUS_FAILED  ) }
 
-  field     :bucket # 'ish-ses' (current), 'ish-ses-2024'
+  field :bucket # 'ish-ses' (current), 'ish-ses-2024'
+  field :format, type: String, default: 'raw' ## or 'json'
 
   field     :object_key
   validates :object_key, presence: true, uniqueness: true

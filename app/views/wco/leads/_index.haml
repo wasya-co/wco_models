@@ -1,7 +1,10 @@
 
-%ul.leads--list
-  - leads.each do |lead|
-    %li.item
-      = image_tag lead.photo.photo.url(:thumb) if lead.photo
-      = link_to lead, lead_path(lead)
-      = link_to '[~]', edit_lead_path(lead)
+.Leads.leads--index.--index
+  <b>Leads:</b>
+  %ul
+    - leads.each do |lead|
+      %li.item
+        = image_tag lead.photo.photo.url(:thumb) if lead.photo
+        = link_to lead, wco.lead_path(lead)
+        = link_to '[~]', wco.edit_lead_path(lead)
+        <b>Tags:</b> #{ lead.tags.map { |tag| tag.to_s } }

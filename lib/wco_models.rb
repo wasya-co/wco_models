@@ -46,7 +46,7 @@ module WcoEmail
   FIELD_BODY    = 'body'
   FIELD_EXE     = 'exe'
   FIELD_FROM    = 'from'
-  FIELD_LEADSET = 'leadset'
+  FIELD_LEADSET = 'leadset_id'
   FIELD_SUBJECT = 'subject'
   FIELD_TO      = 'to'
 

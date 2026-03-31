@@ -1,0 +1,10 @@
+
+.Leadsets.--index
+  .d-inline <b>Leadsets (#{leadsets.length}):</b>
+  = paginate leadsets, :param_name => ::Wco::Leadset::PAGE_PARAM_NAME, :views_prefix => 'wco'
+  %ul
+    - leadsets.each do |ls|
+      %li
+        = link_to ls.company_url, wco.leadset_path( ls )
+        = link_to '[~]', wco.edit_leadset_path( ls )
+        <b>Tags:</b> #{ ls.tags.map { |tag| tag.to_s } }

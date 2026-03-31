@@ -11,38 +11,35 @@
           %li <b>Email:</b> #{@leadset.email}
           %li <b>company_url</b>: #{@leadset.company_url}
           %li <b>customer_id</b>: #{@leadset.customer_id}
-      -# tags
       .col-6
+        -# tags
         Tags:
         = render '/wco/tags/index_chips', tags: @leadset.tags
 
-    %hr
-    .row
-      -# serverhosts
-      .col-6.border-right
-        = render 'wco_hosting/serverhosts/list', serverhosts: @leadset.serverhosts
-      .col-6
-        &nbsp;
-
-    %hr
-    .row
-      -# environments
-      .col-md-6
-        - if defined?( wco_hosting )
+    -# false
+    - if false && defined?( wco_hosting )
+      %hr
+      .row
+        .col-8.border-right
+          -# serverhosts
+          = render 'wco_hosting/serverhosts/list', serverhosts: @leadset.serverhosts
+        .col-4
+          -# environments
           .header
             %h5.title Environments (#{@leadset.environments.length}) #{link_to '[+]', wco_hosting.new_environment_path({ leadset_id: @leadset.id }) }
           %ul
             - @leadset.environments.each do |env|
               %li= env
+
+          -# appliances
+          .header
+            %h5.title Appliances (#{@leadset.appliances.length})
+          = render 'wco_hosting/appliances/list', appliances: @leadset.appliances
+
     %hr
     .row
-      -# appliances
       .col-md-6.border-right
-        .header
-          %h5.title Appliances (#{@leadset.appliances.length})
-
-      -# subscriptions
-      .col-md-6
+        -# subscriptions
         .header
           %h5.title.collapse-expand#subscriptionsList
             Subscriptions (#{@subscriptions.length})
@@ -56,18 +53,15 @@
             %tr
               %td= i.product.name
               %td= i.price
-
-    %hr
-    .row
-      -# invoices
-      .col-md-12
+      .col-md-6
+        -# invoices
         .header
           %h5.title.collapse-expand#invoicesList
             Invoices  (#{@leadset.invoices.length})
             = link_to '[+stripe]', new_invoice_stripe_path({ leadset_id: @leadset.id })
             = link_to '[+pdf]', new_invoice_pdf_path({ leadset_id: @leadset.id })
 
-        = render '/wco/invoices/index_list', invoices: @invoices
+        = render '/wco/invoices/list', invoices: @invoices
 
         %p Next invoice number: #{@leadset.next_invoice_number}
 
@@ -78,11 +72,10 @@
           = check_box_tag 'replace'
           = submit_tag 'Go >', data: { confirm: 'Are you sure?' }
 
-    %hr
-    .row
-      -# leads
+    .row.mt-3
       .col-12
-        .header
-          %h5.title.collapse-expand#leads Leads
         = render '/wco/leads/index', leads: @leads
 
+    .row.mt-3
+      .col-12
+        = render '/wco/logs/index', logs: @logs

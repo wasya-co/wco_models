@@ -27,7 +27,8 @@ class Wco::Leadset
     find_or_create_by( company_url: _domain )
   end
 
-
+  field :company_name # for chatgpt scraping
+  has_many :logs, inverse_of: :obj
 
   field :email
   index({ email: 1 }, { name: 'email' })

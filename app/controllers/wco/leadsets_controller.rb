@@ -61,6 +61,7 @@ class Wco::LeadsetsController < Wco::ApplicationController
     end
 
     @leads         = @leadset.leads.page( params[:leads_page] ).per( current_profile.per_page )
+    @logs          = @leadset.logs.page( params[:logs_page] ).per( current_profile.per_page )
     @subscriptions = @leadset.subscriptions
     @invoices      = @leadset.invoices
   end

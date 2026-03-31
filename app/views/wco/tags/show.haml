@@ -21,17 +21,15 @@
         = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs.page( params[::WcoEmail::MessageStub::PAGE_PARAM_NAME] )
 
     %li.d-flex
-      <b>Galleries (#{@galleries.length}):&nbsp;</b>
       = render '/wco/galleries/index', galleries: @galleries.page( params[::Wco::Gallery::PAGE_PARAM_NAME] ), config: { skip_tags: true }
-    %li.d-flex
-      <b>Headlines (#{@tag.headlines.length}):&nbsp;</b>
-      = render '/wco/headlines/index', headlines: @tag.headlines.page( params[::Wco::Headline::PAGE_PARAM_NAME] )
+
+    -# %li.d-flex
+    -#   <b>Headlines (#{@tag.headlines.length}):&nbsp;</b>
+    -#   = render '/wco/headlines/index', headlines: @tag.headlines.page( params[::Wco::Headline::PAGE_PARAM_NAME] )
 
     %li.d-flex
-      <b>Leadsets (#{@tag.leadsets.length}):&nbsp;</b>
-      = render '/wco/leadsets/index_list', leadsets: @tag.leadsets.page( params[::Wco::Leadset::PAGE_PARAM_NAME] )
+      = render '/wco/leadsets/index', leadsets: @leadsets
     %li.d-flex
-      <b>Leads (#{@tag.leads.length}):&nbsp;</b>
       = render '/wco/leads/index', leads: @tag.leads.page( params[::Wco::Lead::PAGE_PARAM_NAME] )
 
     %li.d-flex

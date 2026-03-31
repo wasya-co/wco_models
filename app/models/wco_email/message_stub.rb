@@ -45,6 +45,144 @@ class WcoEmail::MessageStub
     {}
   AOL
 
+  def do_process_json
+    stub = self
+    @client ||= Aws::S3::Client.new(::SES_S3_CREDENTIALS)
+
+    json = JSON.parse( @client.get_object( bucket: stub.bucket, key: stub.object_key ).body.read )
+    subject = json['subject']
+    message_id = json['message_id']
+
+    ## Conversation
+    if json['in_reply_to']
+      in_reply_to_msg = WcoEmail::Message.where({ message_id: json['in_reply_to'] }).first
+      if !in_reply_to_msg
+        @conv = WcoEmail::Conversation.find_or_create_by({
+          subject: subject,
+        })
+        in_reply_to_msg = WcoEmail::Message.find_or_create_by({
+          message_id: json['in_reply_to'],
+          conversation: @conv,
+        })
+      end
+      @conv = in_reply_to_msg.conversation
+    else
+      @conv = WcoEmail::Conversation.unscoped.find_or_create_by({
+        subject: subject,
+      })
+      @conv.deleted_at = nil
+    end
+
+    ## Leadset, Lead
+    from       = json['mail_from'] || "nobody@unknown-doma.in"
+    @lead      = Wco::Lead.find_or_create_by_email( from )
+    @conv.leads.push @lead
+    @leadset   = Wco::Leadset.from_email from
+    @conv.leadsets.push @leadset
+
+    ## message
+    @message = WcoEmail::Message.create!({
+      stub:         stub,
+      conversation: @conv,
+      lead:         @lead,
+
+      message_id:     message_id,
+      in_reply_to_id: json['in_reply_to'],
+      object_key:     stub.object_key,
+
+      subject: subject,
+      date:    json['date'].to_s,
+
+      from:  from,
+
+      to:  json['to'],
+      tos: [ json['to'] ],
+
+      cc:  json['cc'],
+      ccs: [ json['cc'] ],
+
+      part_html: json['html_body'],
+      part_txt:  json['plain_body'],
+    })
+
+    ## Attachments
+    json['attachments'].each do |att|
+      @message.save_attachment_postal( att )
+    end
+
+    ## _TODO
+    # the_mail.cc&.each do |cc|
+    #   Wco::Lead.find_or_create_by_email( cc )
+    # end
+
+    @conv.update_attributes({
+      status:      WcoEmail::Conversation::STATUS_UNREAD,
+      latest_at:   json['date'].to_s || Time.now.to_datetime,
+      from_emails: ( @conv.from_emails + [ from ]).uniq,
+      preview:     @message.preview_str,
+    })
+
+    ## tags
+    @conv.tags.push Wco::Tag.inbox
+    @conv.tags.push stub.tags
+    @conv.save
+
+
+    ## Actions & Filters
+    email_filters = WcoEmail::EmailFilter.all
+    email_filters.each do |filter|
+      reason = nil
+      if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )
+        reason = 'from_regex'
+      end
+      if filter.from_exact.present? && @message.from.downcase.include?( filter.from_exact.downcase )
+        reason = 'from_exact'
+      end
+      if filter.body_exact.present? && @message.part_html&.include?( filter.body_exact )
+        reason = 'body_exact'
+      end
+      if filter.subject_regex.present? && @message.subject.match( filter.subject_regex )
+        reason = 'subject_regex'
+      end
+      if filter.subject_exact.present? && @message.subject.downcase.include?( filter.subject_exact.downcase )
+        reason = 'subject_exact'
+      end
+
+      filter.conditions.each do |scond|
+        reason ||= scond.apply(leadset: @leadset, message: @message )
+      end
+
+      if reason
+        puts! "Applying filter #{filter} to conv #{@message.conversation} for matching #{reason}" if DEBUG
+
+        ## skip
+        skip_reason = nil
+        if filter.skip_to_exact.present? && @message.to&.downcase.include?( filter.skip_to_exact.downcase )
+          skip_reason = 'skip_to_exact'
+        end
+        if filter.skip_from_regex.present? && @message.from.downcase.match( filter.skip_from_regex )
+          skip_reason = 'skip_from_regex'
+        end
+
+        filter.skip_conditions.each do |scond|
+          skip_reason ||= scond.apply(leadset: @leadset, message: @message )
+        end
+
+        if skip_reason
+          puts! "NOT Applying filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
+        else
+          @message.apply_filter( filter )
+        end
+      end
+    end
+
+    stub.update_attributes({ status: WcoEmail::MessageStub::STATUS_PROCESSED })
+
+    ## Notification
+    ## _TODO
+  end
+
+
   def do_process
     if Rails.env.production?
       @client ||= Aws::S3::Client.new({
@@ -101,7 +239,6 @@ class WcoEmail::MessageStub
     conv.leads.push lead
     leadset   = Wco::Leadset.from_email from
     conv.leadsets.push leadset
-    # conv.save
 
     message   = WcoEmail::Message.unscoped.where( message_id: message_id ).first
     if message
@@ -203,8 +340,8 @@ class WcoEmail::MessageStub
         reason = 'subject_exact'
       end
 
-      filter.conditions.each do |scond|
-        reason ||= scond.apply(leadset: leadset, message: @message )
+      filter.conditions.each do |cond|
+        reason ||= cond.apply(leadset: leadset, message: @message )
       end
 
       if reason
@@ -219,8 +356,8 @@ class WcoEmail::MessageStub
           skip_reason = 'skip_from_regex'
         end
 
-        filter.skip_conditions.each do |scond|
-          skip_reason ||= scond.apply(leadset: leadset, message: @message )
+        filter.skip_conditions.each do |skip_cond|
+          skip_reason ||= skip_cond.apply(leadset: leadset, message: @message )
         end
 
         if skip_reason

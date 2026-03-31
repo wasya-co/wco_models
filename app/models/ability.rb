@@ -10,7 +10,7 @@ class Ability
 
     if user
 
-      if [ ENV['EMAIL'] ].include? user.email
+      if [ ENV['EMAIL'], 'piousbox@gmail.com' ].include? user.email
         can :manage, :all
       end
 

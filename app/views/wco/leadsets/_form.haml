@@ -3,12 +3,18 @@
 
 = form_for leadset, :as => :leadset, :url => url do |f|
 
-  .field
-    = f.label :company_url
-    = f.text_field :company_url
+  .row
+    .col-6
+      .field
+        %label company_url
+        = f.text_field :company_url
+    .col-6
+      .field
+        %label company_name
+        = f.text_field :company_name
 
   .field
-    = f.label :email
+    %label email
     = f.text_field :email
   .field
     %label mangle_subject

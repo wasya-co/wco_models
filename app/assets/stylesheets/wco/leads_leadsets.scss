@@ -1,13 +1,10 @@
 
-.Leads {
+.--index,
+.Leads,
+.Leadsets, {
   border: 1px solid var(--wco-color-2);
-  border-radius: .5em;
+  border-radius: 0.5em;
   padding: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-
-.Leadsets {
-  border: 1px solid var(--wco-color-2);
-  border-radius: .5em;
-  padding: 0.5em;
-}

@@ -9,7 +9,7 @@ class Wco::Log
   field :label,   type: :string ## can be the stream: 'stdout' or 'stderr'
   field :message, type: :string ## can be json
 
-  belongs_to :obj, polymorphic: true, optional: true
+  belongs_to :obj, polymorphic: true, optional: true # eg site
 
   has_and_belongs_to_many :tags
 

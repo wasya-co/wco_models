@@ -65,11 +65,9 @@ class Wco::TagsController < Wco::ApplicationController
     @tag = Wco::Tag.find params[:id]
     authorize! :show, @tag
 
-    @galleries = @tag.galleries(
-      ).page( params[:galleries_page] ).per( current_profile.per_page )
-
-    @reports = @tag.reports(
-      ).page( params[:reports_page] ).per( current_profile.per_page )
+    @galleries = @tag.galleries.page( params[:galleries_page] ).per( current_profile.per_page )
+    @leadsets = @tag.leadsets.page( params[::Wco::Leadset::PAGE_PARAM_NAME] ).per( current_profile.per_page )
+    @reports = @tag.reports.page( params[:reports_page] ).per( current_profile.per_page )
 
   end
 

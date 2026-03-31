@@ -14,6 +14,8 @@ class WcoEmail::EmailFilterCondition
 
   field :matchtype, type: String
   validates :matchtype, presence: true, inclusion: WcoEmail::EmailFilter::MATCHTYPE_OPTS
+  def operator;    matchtype;     end
+  def operator= a; matchtype = a; end
 
   field :value
   validates :value, presence: true
@@ -28,7 +30,7 @@ class WcoEmail::EmailFilterCondition
         if leadset.tags.include?( this_tag )
           ;
         else
-          reason = "{email_skip_filter ? 'skip_' : ''}condition leadset not-has-tag #{this_tag} NOT met"
+          reason = "#{email_skip_filter ? 'skip_' : ''}condition leadset not-has-tag #{this_tag} NOT met"
         end
       end
     when WcoEmail::FIELD_TO

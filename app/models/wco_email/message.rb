@@ -229,6 +229,26 @@ class WcoEmail::Message
     end
   end
 
+  def save_attachment_postal att
+    if att['content_type'].include? 'image'
+      photo = ::Wco::Photo.new({
+        content_type:      att['content_type'],
+        email_message_id:  self.id,
+        image_data:        att['data'],
+        original_filename: att['filename'],
+      })
+      photo.decode_base64_image ## _TODO: why?
+      puts! photo.save, 'saved image attachment?'
+    else
+      asset = ::Wco::Asset.new({
+        email_message: self,
+        filename:      att['filename'],
+        object:        att['data'],
+      })
+      puts! asset.save, 'saved non-img asset?'
+    end
+  end
+
   def save_attachment att, filename: "no-filename-specified"
     config = JSON.parse(stub.config)
     if defined?( config['process_images'] ) &&

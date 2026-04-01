@@ -70,6 +70,19 @@ table.bordered {
   }
 }
 
+table {
+  thead.sticky {
+    background: #ccc;
+
+    th {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
+  }
+}
+
 /* C */
 
 .code,

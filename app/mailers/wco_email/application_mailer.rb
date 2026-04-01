@@ -51,14 +51,22 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
       subject:      rendered_subject,
     })
 
+    profile = Wco::Profile.find_by email: @ctx.from_email
+    delivery_options = {
+      user_name: profile.smtp_username,
+      password: profile.smtp_password,
+      address: profile.smtp_host,
+      post: profile.smtp_port,
+    };
+
     mail( from:    @ctx.from_email,
           to:      @ctx.to_email,
           cc:      @ctx.cc,
-          ## 2024-07-30 I'm no longer sending these to google.
-          # bcc:     "poxlovibb1@gmail.com",
+          bcc:     DEFAULT_BCC,
           subject: rendered_subject,
           body:    rendered_str,
-          content_type: "text/html" )
+          content_type: "text/html",
+          delivery_method_options: delivery_options )
   end
 
   def shared_galleries profiles, gallery

@@ -103,8 +103,9 @@ class WcoEmail::EmailTemplate
   ];
   field :from_email
   def self.from_emails_list
-    # [ [nil, nil] ] + FROM_EMAILS.map { |i| [i, i] }
-    FROM_EMAILS_2
+    [[nil,nil]] + Wco::Profile.where( smtp_enabled: true ).map do |p|
+      [ "#{p.name} <#{p.email}>", p.email ]
+    end
   end
 
   SIGNATURE = <<~AOL

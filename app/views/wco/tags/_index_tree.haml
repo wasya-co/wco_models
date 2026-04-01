@@ -1,0 +1,9 @@
+
+%ul
+  - nodes.each do |node|
+    %li
+      = link_to '[~]', wco.edit_tag_path(node[:tag][:id])
+      = link_to node[:tag].slug, wco.tag_path(node[:tag][:id])
+
+      - if node[:sons].present?
+        = render 'wco/tags/index_tree', nodes: node[:sons]

@@ -9,6 +9,8 @@ class Wco::Profile
   index({ email: 1 }, { name: 'email' })
   validates :email, presence: true, uniqueness: true
 
+  field :name
+
 
   field :per_page, type: :integer, default: 25
   field :show_n_thumbs, type: :integer, default: 8
@@ -22,6 +24,12 @@ class Wco::Profile
   field :schwab_exec_refresh_token, type: :string
   field :schwab_exec_id_token,      type: :string
   field :schwab_account_hash,       type: :string
+
+  field :smtp_enabled, type: Boolean
+  field :smtp_host
+  field :smtp_username
+  field :smtp_password
+  field :smtp_port
 
 
   has_many :newsvideos, class_name: 'Wco::Newsvideo'

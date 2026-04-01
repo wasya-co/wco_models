@@ -1,9 +1,16 @@
 
 .tags-index.padded
   .header
-    %h5.title Tags (#{@tags.length})
+    %h5.title
+      Tags #{@template} (#{@tags.length})&nbsp;
+      = link_to( '[#]', url_for(params.to_unsafe_h.merge(template: "index_table")) )
+      &nbsp;
+      = link_to( '[/|\\]', url_for(params.to_unsafe_h.merge(template: "index_tree")) )
 
-  = render 'index_table', tags: @tags
+  - if 'index_table' == @template
+    = render @template, tags: @tags
+  - else
+    = render @template, nodes: @tree
 
   %hr
 

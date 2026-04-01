@@ -1,6 +1,8 @@
 
 .d-flex
   = link_to "Tags (#{Wco::Tag.all.length})", wco.tags_path
+  = link_to '[#]', wco.tags_path(template: 'index_table')
+  = link_to '[/|\\]', wco.tags_path(template: 'index_tree')
   &nbsp;
   .inline-search
     = form_tag wco.tags_path, method: :get do

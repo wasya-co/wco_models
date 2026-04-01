@@ -1,41 +1,71 @@
 
 .profiles--form
   = form_for profile do |f|
-    .field
-      %label email
-      = f.text_field :email
 
-    .field
-      %label role
-      = f.select :role, options_for_select(Wco::Profile.roles_list, selected: profile.role )
+    .row
 
-    .field
-      %label schwab_access_token
-      = f.text_field :schwab_access_token
-    .field
-      %label schwab_refresh_token
-      = f.text_field :schwab_refresh_token
-    .field
-      %label schwab_id_token
-      = f.text_field :schwab_id_token
+      .field
+        %label email
+        = f.text_field :email
 
-    %br
-    %br
-    .field
-      %label schwab_exec_access_token
-      = f.text_field :schwab_exec_access_token
-    .field
-      %label schwab_exec_refresh_token
-      = f.text_field :schwab_exec_refresh_token
-    .field
-      %label schwab_exec_id_token
-      = f.text_field :schwab_exec_id_token
+      .field
+        %label name
+        = f.text_field :name
+
+      .field
+        %label role
+        = f.select :role, options_for_select(Wco::Profile.roles_list, selected: profile.role )
+
+      .field
+        %label leadset
+        = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset_id )
 
     %hr
+    .row
+      .col-6
+        .field
+          %label schwab_access_token
+          = f.text_field :schwab_access_token
+        .field
+          %label schwab_refresh_token
+          = f.text_field :schwab_refresh_token
+        .field
+          %label schwab_id_token
+          = f.text_field :schwab_id_token
+      .col-6
+        .field
+          %label schwab_exec_access_token
+          = f.text_field :schwab_exec_access_token
+        .field
+          %label schwab_exec_refresh_token
+          = f.text_field :schwab_exec_refresh_token
+        .field
+          %label schwab_exec_id_token
+          = f.text_field :schwab_exec_id_token
 
-    .field
-      %label leadset
-      = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset_id )
+    %hr
+    .row
+      .col-2
+        .field
+          %label smtp_enabled
+          = f.check_box :smtp_enabled
+      .col-10
+        .field
+          %label smtp_host
+          = f.text_field :smtp_host
+
+        .field
+          %label smtp_username
+          = f.text_field :smtp_username
+
+        .field
+          %label smtp_password
+          = f.text_field :smtp_password
+
+        .field
+          %label smtp_port
+          = f.text_field :smtp_port
+
 
     .actions
       = f.submit 'Go'

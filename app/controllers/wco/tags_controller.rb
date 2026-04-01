@@ -33,6 +33,17 @@ class Wco::TagsController < Wco::ApplicationController
   def index
     authorize! :index, Wco::Tag
     @tags = Wco::Tag.all
+
+    tags = Wco::Tag.all.to_a.group_by(&:parent_id)
+    build_tree = lambda do |parent_id|
+      (tags[parent_id] || []).sort_by { |tag| tag.slug.downcase }.map do |tag|
+        { tag: tag, sons: build_tree.call(tag.id) }
+      end
+    end
+    @tree = build_tree.call(nil)
+
+
+    @template = params[:template] || 'index_tree'
   end
 
   def new

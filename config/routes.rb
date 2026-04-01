@@ -71,6 +71,7 @@ Wco::Engine.routes.draw do
   resources :office_action_templates
 
   post 'office_actions/:id/run', to: 'office_actions#do_run', as: :run_office_action
+  get  'office_actions/active', to: 'office_actions#index', defaults: { status: 'active' }, as: :active_office_actions
   resources :office_actions
 
   resources :prices

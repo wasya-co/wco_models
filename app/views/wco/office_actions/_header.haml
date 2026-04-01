@@ -1,5 +1,7 @@
 
 = link_to "Office Actions (#{Wco::OfficeAction.all.length})", wco.office_actions_path
+= link_to '[A]', wco.office_actions_path(status: 'active')
+&nbsp;
 .inline-search
   = form_tag wco.office_actions_path, method: :get do
     = text_field_tag :q

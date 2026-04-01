@@ -42,6 +42,9 @@ class Wco::OfficeActionsController < Wco::ApplicationController
   def index
     authorize! :index, OA
     @oas = OA.all
+    if params[:status]
+      @oas = @oas.where( status: params[:status] )
+    end
   end
 
   def new

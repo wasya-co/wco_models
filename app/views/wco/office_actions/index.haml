@@ -1,7 +1,7 @@
 
 .office-actions-index.maxwidth
 
-  %h5 Office actions (#{@oas.length})
+  %h5.text-center Office actions `#{params[:status]}` (#{@oas.length})
 
   = render 'index', oas: @oas
 

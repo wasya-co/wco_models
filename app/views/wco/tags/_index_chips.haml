@@ -10,11 +10,11 @@
         = check_box_tag 'tag_ids[]', tag.id
       = link_to tag.slug, wco.tag_path( tag )
       - if defined? resource
-        .mini.d-inline-block= button_to 'x', remove_tag_from_path(id: tag.id, resource: resource.class, resource_id: resource.id, ), method: 'delete', data: { confirm: 'Are you sure?' }
+        .mini.d-inline-block= button_to 'x', wco.remove_tag_from_path(id: tag.id, resource: resource.class, resource_id: resource.id, ), method: 'delete', data: { confirm: 'Are you sure?' }
 
   - if defined? resource
     .d-inline-block
-      = form_tag add_tag_to_path( resource: resource.class, resource_id: resource.id ) do
+      = form_tag wco.add_tag_to_path( resource: resource.class, resource_id: resource.id ) do
         .d-inline-block= select_tag :id, options_for_select( @tags_list ), class: 'select2'
         = submit_tag '+Tag', data: { confirm: 'Are you sure?' }
 

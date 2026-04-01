@@ -4,34 +4,46 @@
   .text-center
     %h5 Tag `#{@tag.slug}`
 
-  %ul
-    - if defined? wco_email
-      %li.d-flex
-        <b>Conversations (#{@tag.conversations.length}):&nbsp;</b>
-        - if @tag.conversations.present?
-          .Conversations
-            = render '/wco_email/conversations/table', convs: @tag.conversations.page( params[::WcoEmail::Conversation::PAGE_PARAM_NAME] )
-      %li.d-flex
-        <b>EmailTemplates (#{@tag.email_templates.length}):&nbsp;</b>
-        - if @tag.email_templates.present?
-          .EmailTemplates
-            = render '/wco_email/email_templates/index_mini', email_templates: @tag.email_templates
-      %li.d-flex
-        <b>Message Stubs (#{@tag.message_stubs.length}):&nbsp;</b>
-        = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs.page( params[::WcoEmail::MessageStub::PAGE_PARAM_NAME] )
+  - if defined?( wco_email )
+    .a
+      - if @tag.conversations.present?
+        %i.fa.fa-compress.collapse-expand#conversations
+          Conversations (#{@tag.conversations.length}):
+        .descr= render '/wco_email/conversations/table', convs: @tag.conversations.page( params[::WcoEmail::Conversation::PAGE_PARAM_NAME] )
 
-    %li.d-flex
-      = render '/wco/galleries/index', galleries: @galleries.page( params[::Wco::Gallery::PAGE_PARAM_NAME] ), config: { skip_tags: true }
+    .a
+      - if @tag.email_templates.present?
+        %hr
+        %i.fa.fa-compress.collapse-expand#emailTemplates
+          EmailTemplates (#{@tag.email_templates.length}):
+        .EmailTemplates
+          = render '/wco_email/email_templates/index_mini', email_templates: @tag.email_templates
 
-    -# %li.d-flex
-    -#   <b>Headlines (#{@tag.headlines.length}):&nbsp;</b>
-    -#   = render '/wco/headlines/index', headlines: @tag.headlines.page( params[::Wco::Headline::PAGE_PARAM_NAME] )
+    .a
+      %hr
+      %i.fa.fa-compress.collapse-expand#messageStubs
+        Message Stubs (#{@tag.message_stubs.length}):
+      = render '/wco_email/message_stubs/index', stubs: @tag.message_stubs.page( params[::WcoEmail::MessageStub::PAGE_PARAM_NAME] )
 
-    %li.d-flex
-      = render '/wco/leadsets/index', leadsets: @leadsets
-    %li.d-flex
-      = render '/wco/leads/index', leads: @tag.leads.page( params[::Wco::Lead::PAGE_PARAM_NAME] )
+  %hr
+  %i.fa.fa-compress.collapse-expand#galleries
+    Galleries (#{@galleries.length}):
+  = render '/wco/galleries/index', galleries: @galleries.page( params[::Wco::Gallery::PAGE_PARAM_NAME] ), config: { skip_tags: true }
 
-    %li.d-flex
-      <b>Reports (#{@reports.length}):&nbsp;</b>
-      = render '/wco/reports/index', reports: @reports.page( params[::Wco::Report::PAGE_PARAM_NAME] ), config: { skip_tags: true }
+  %hr
+  %i.fa.fa-compress.collapse-expand#leadsets
+    Leadsets: (#{@leadsets.length}):
+  = render '/wco/leadsets/index', leadsets: @leadsets
+
+  %hr
+  %i.fa.fa-compress.collapse-expand#leads
+    Leads: (#{@tag.leads.length}):
+  = render '/wco/leads/index', leads: @tag.leads.page( params[::Wco::Lead::PAGE_PARAM_NAME] )
+
+  %hr
+  %i.fa.fa-compress.collapse-expand#reports
+    Reports: (#{@reports.length}):
+  .d-flex
+    = render '/wco/reports/index', reports: @reports.page( params[::Wco::Report::PAGE_PARAM_NAME] ), config: { skip_tags: true }
+
+

@@ -1,0 +1,13 @@
+
+
+.tags--actions.bordered.inline-block.mb-2.descr
+  %label tags/_actions
+  .d-inline-block
+    = select_tag :a_tag, options_for_select(@tags_list), class: 'select2'
+  %a.btn.bordered.add-tag-many-btn{ href: "javascript: void(0)", data: { url: wco.add_tag_to_many_path(resource) } }
+    %i.material-icons add
+    tag
+  %a.btn.bordered.rm-tag-many-btn{ href: "javascript: void(0)", data: { url: wco.rm_tag_from_many_path(resource) } }
+    %i.material-icons remove
+    tag
+

@@ -95,8 +95,12 @@ Wco::Engine.routes.draw do
   resources :sitemap_paths, as: :spaths
   resources :subscriptions
 
+  ## only one resource
   delete 'tags/remove/:id/from/:resource/:resource_id', to: 'tags#remove_from', as: :remove_tag_from
   post   'tags/add-to/:resource/:resource_id', to: 'tags#add_to', as: :add_tag_to
+  ## many resources
+  post   'tags/add-to-many/:resource',  to: 'tags#add_to_many',  as: :add_tag_to_many
+  post   'tags/rm-from-many/:resource', to: 'tags#rm_from_many', as: :rm_tag_from_many
   resources :tags
 
   ## In order to have unsubscribes_url , unsubscribes must be in wco .

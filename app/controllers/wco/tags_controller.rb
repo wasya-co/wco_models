@@ -50,6 +50,20 @@ class Wco::TagsController < Wco::ApplicationController
     redirect_to request.referrer
   end
 
+  def add_to_many
+    @tag = Wco::Tag.find params[:id]
+    resources = params[:resource].constantize.find params[:resource_ids]
+    authorize! :update, @tag
+
+    flags = []
+    resources.each do |resource|
+      resource.tags.push @tag
+      flags.push resource.save
+    end
+    flash_notice flags
+    # redirect_to request.referrer
+  end
+
   def remove_from
     @tag = Wco::Tag.find params[:id]
     resource = params[:resource].constantize.find params[:resource_id]
@@ -59,6 +73,20 @@ class Wco::TagsController < Wco::ApplicationController
     flag = resource.save
     flash_notice 'maybe?'
     redirect_to request.referrer
+  end
+
+  def remove_from_many
+    @tag = Wco::Tag.find params[:id]
+    resources = params[:resource].constantize.find params[:resource_ids]
+    authorize! :update, @tag
+
+    flags = []
+    resources.each do |resource|
+      resource.tags.delete @tag
+      flags.push resource.save
+    end
+    flash_notice flags
+    # redirect_to request.referrer
   end
 
   def show

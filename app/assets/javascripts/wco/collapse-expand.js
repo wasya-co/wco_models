@@ -27,4 +27,5 @@ $(function () {
   })
 
   console.log('Loaded wco/collapse-expand.js')
+
 }); // END

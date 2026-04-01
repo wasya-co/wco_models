@@ -14,7 +14,8 @@ class Wco::Lead
   field :name
   field :phone
   field :address
-  field :comment
+  field :comment ## _TODO: replace with log?
+  field :memory, type: Hash, default: {}
 
   belongs_to :leadset, class_name: 'Wco::Leadset'
   before_validation :set_leadset, on: :create

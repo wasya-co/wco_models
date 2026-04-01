@@ -24,6 +24,10 @@
           %li
             Comment:
             %pre.descr #{raw @lead.comment}
+        %li
+          memory:
+          = @lead.memory
+
 
     .col-md-6
       - if @lead.photo

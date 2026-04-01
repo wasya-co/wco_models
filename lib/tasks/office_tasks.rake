@@ -7,7 +7,7 @@ namespace :wco do
 
   desc 'run office actions'
   task run_office_actions: :environment do
-    puts! "Starting wco_email:run_office_actions..."
+    puts! "Starting wco_email:run_office_actions in #{Rails.env}..."
     while true do
 
       schs = Wco::OfficeAction.active.where({ :perform_at.lte => Time.now })

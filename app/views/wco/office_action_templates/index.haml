@@ -3,20 +3,21 @@
   .header
     %h5.title Office Action Templates
 
-  %ul
+  .a
     - @oats.each do |oat|
-      %li
-        .d-flex
-          = link_to '[~]', edit_office_action_template_path(oat)
-          &nbsp;
-          = button_to 'x', office_action_template_path(oat), method: :delete, data: { confirm: 'Are you sure?' }
-          &nbsp;
-          = link_to oat.slug, office_action_template_path(oat)
-          &nbsp;
-          = button_to 'Run w/convos', oat_perform_with_conversations_path(oat), data: { confirm: 'Are you sure?' }
-
-        = render '/wco/office_action_templates/ties', ties: oat.ties, oat: oat
-        -# = oat.inspect
+      .Oat.descr
+        .row
+          .col-6
+            .d-flex
+              = link_to '[~]', edit_office_action_template_path(oat)
+              &nbsp;
+              = button_to 'x', office_action_template_path(oat), method: :delete, data: { confirm: 'Are you sure?' }
+              &nbsp;
+              = link_to oat.slug, office_action_template_path(oat)
+              &nbsp;
+              = button_to 'Run w/convos', oat_perform_with_conversations_path(oat), data: { confirm: 'Are you sure?' }
+          .col-6
+            = render '/wco/office_action_templates/ties', ties: oat.ties, oat: oat
 
   %hr
   = render 'form', oat: @new_oat

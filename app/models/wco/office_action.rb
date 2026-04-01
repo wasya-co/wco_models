@@ -20,31 +20,33 @@ class Wco::OfficeAction
   STATUSS         = [ STATUS_ACTIVE, STATUS_INACTIVE ]
   field :status, type: :string
   scope :active, ->{ where( status: STATUS_ACTIVE ) }
+  attr_accessor :deactivate
 
   field :perform_at, type: :time
 
   def do_run
-    sch = self
-    sch.update!({ status: STATUS_INACTIVE })
+    @oa = self
+    @oa.update!({ status: STATUS_INACTIVE })
 
     begin
-      eval( sch.tmpl.action_exe )
+      eval( @oa.tmpl.action_exe )
     rescue => err
       puts! err, "Wco::OfficeAction#do_run"
-      ::ExceptionNotifier.notify_exception(
-        err,
-        data: { office_action: self }
-      )
+      ::ExceptionNotifier.notify_exception( err, data: { office_action: self } )
     end
 
-    # schedule next actions & update the action
-    sch.tmpl.ties.each do |tie|
-      next_sch = self.class.find_or_initialize_by({
-        office_action_template_id: tie.next_tmpl.id,
-      })
-      next_sch.perform_at = eval(tie.next_at_exe)
-      next_sch.status     = STATUS_ACTIVE
-      next_sch.save!
+    if @oa.deactivate
+      ; # nothing
+    else
+      # schedule next actions & update the action
+      @oa.tmpl.ties.each do |tie|
+        next_oa = self.class.find_or_initialize_by({
+          office_action_template_id: tie.next_tmpl.id,
+        })
+        next_oa.perform_at = eval(tie.next_at_exe)
+        next_oa.status     = STATUS_ACTIVE
+        next_oa.save!
+      end
     end
   end
 

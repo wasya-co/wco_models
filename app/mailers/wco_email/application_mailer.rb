@@ -14,6 +14,17 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
           subject: "POX::#{@msg.subject}" )
   end
 
+  def notify_self params
+    subject = params[:subject] || 'default subject'
+    body = params[:body] || 'default body'
+    mail( from: DEFAULT_FROM,
+      to:       DEFAULT_RECIPIENT,
+      subject:  subject,
+      body:     body,
+      content_type: "text/text",
+    );
+  end
+
   def option_alert option
     @option = option
     mail({
@@ -53,10 +64,10 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
 
     profile = Wco::Profile.find_by email: @ctx.from_email
     delivery_options = {
+      address:   profile.smtp_host,
+      password:  profile.smtp_password,
+      port:      profile.smtp_port,
       user_name: profile.smtp_username,
-      password: profile.smtp_password,
-      address: profile.smtp_host,
-      post: profile.smtp_port,
     };
 
     mail( from:    @ctx.from_email,

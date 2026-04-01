@@ -13,7 +13,7 @@
       %label action_type
       = f.select :action_type, options_for_select( [ nil, 'js', 'rb', 'sh' ], selected: oat.action_type )
     .descr
-      rb available vars: @conversations , @oat ,
+      rb available vars: @conversations , @oat , @oa ,
     .field
       %label action_exe
       = f.text_area :action_exe, class: :monospace

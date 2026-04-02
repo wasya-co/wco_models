@@ -15,7 +15,7 @@ class Wco::Tag
   belongs_to :site,          class_name: '::Wco::Site', optional: true
   has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
   has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
-  has_many :abjects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :abject
+  has_many :ajects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject
 
   has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation', index: true
   has_and_belongs_to_many :galleries,     class_name: '::Wco::Gallery'

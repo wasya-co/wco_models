@@ -6,20 +6,22 @@ class WcoEmail::EmailFilterAction
 
   belongs_to :email_filter
 
-  ## deprecated, use obj
-  KIND_EXE         = 'exe'
-  KIND_REMOVE_TAG  = ::WcoEmail::ACTION_REMOVE_TAG
-  KIND_ADD_TAG     = ::WcoEmail::ACTION_ADD_TAG
-  KIND_AUTORESPOND = ::WcoEmail::ACTION_AUTORESPOND
-  KIND_SCHEDULE_EMAIL_ACTION = 'autorespond-email-action'
-  KIND_REMOVE_EMAIL_ACTION   = 'remove-email-action'
+  KIND_AUTORESPOND = 'autorespond-template'
+  KIND_EXE_RB      = 'exe-rb'
+  KIND_ADD_TAG     = 'add-tag'
+  KIND_RM_TAG      = 'rm-tag'
+  # KIND_EAT         = 'email-action'
+  # KIND_RM_EAT      = 'rm-email-action'
+  KIND_OAT         = 'office-action-template'
+  KIND_RM_OAT      = 'rm-office-action-template'
+  KINDS = [ KIND_ADD_TAG, KIND_RM_TAG, KIND_AUTORESPOND, KIND_OAT ]
   field :kind
-  validates :kind, inclusion: ::WcoEmail::ACTIONS
+  validates :kind, inclusion: KINDS
 
-  ## deprecated, use abject
-  field :value # tag_id , or email_template , or email_action_template (not used)
+  ## for exe_rb only. use aject
+  field :value
 
-  belongs_to :abject, polymorphic: true, optional: true # eg tag, EAT, OAT
+  belongs_to :aject, polymorphic: true, optional: true # eg tag, EAT, OAT
 
   before_validation :check_value
   def check_value

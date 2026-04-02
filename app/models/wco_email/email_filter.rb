@@ -24,7 +24,7 @@ class WcoEmail::EmailFilter
   field :skip_to_exact
 
   has_many :actions, class_name: '::WcoEmail::EmailFilterAction', inverse_of: :email_filter
-  accepts_nested_attributes_for :actions, allow_destroy: true
+  accepts_nested_attributes_for :actions, allow_destroy: true, reject_if: :all_blank
   # validate :validate_actions
   def validate_actions
     if actions.length == 0
@@ -34,11 +34,11 @@ class WcoEmail::EmailFilter
 
   ## 'and' - all conditions must match, for filter to match
   has_many :conditions,      class_name: '::WcoEmail::EmailFilterCondition', inverse_of: :email_filter
-  accepts_nested_attributes_for :conditions, allow_destroy: true
+  accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
   ## 'and' - all conditions must match, for filter to match
   has_many :skip_conditions, class_name: '::WcoEmail::EmailFilterCondition', inverse_of: :email_skip_filter
-  accepts_nested_attributes_for :skip_conditions, allow_destroy: true
+  accepts_nested_attributes_for :skip_conditions, allow_destroy: true, reject_if: :all_blank
 
   # validate :validate_conditions
   def validate_conditions
@@ -62,8 +62,8 @@ class WcoEmail::EmailFilter
   KIND_DELETE      = 'delete'      ## @deprecated, use add-tag
   KIND_SKIP_INBOX  = 'skip-inbox'  ## @deprecated, use remove-tag
 
-  KINDS = [ nil, KIND_OAT, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS]
-  field :kind
+  KINDS = [ nil, KIND_OAT, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS ]
+  field :kind ## @deprecated, use filter.action.aject.kind
 
 
   belongs_to :email_template,         class_name: '::WcoEmail::EmailTemplate',        optional: true

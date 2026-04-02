@@ -8,9 +8,21 @@ class WcoEmail::EmailFilterCondition
   belongs_to :email_filter,      class_name: '::WcoEmail::EmailFilter', inverse_of: :conditions,      optional: true
   belongs_to :email_skip_filter, class_name: '::WcoEmail::EmailFilter', inverse_of: :skip_conditions, optional: true
 
-  ## see WcoEmail::FIELD_*
+  # FIELD_BODY    = 'body'
+  # FIELD_EXE     = 'exe'
+  # FIELD_FROM    = 'from'
+  # FIELD_LEADSET = 'leadset_id'
+  # FIELD_SUBJECT = 'subject'
+  # FIELD_TO      = 'to'
+
   field :field
   validates :field, presence: true
+
+  OPERATOR_EQUALS      = 'eq'
+  OPERATOR_HAS_TAG     = 'has-tag'
+  OPERATOR_NOT_HAS_TAG = 'not-has-tag'
+  # OPERATOR_TEXT_INPUT  = 'text-input'
+  OPERATORS = [ 'equals', 'has-tag', 'not-has-tag', 'text-input' ]
 
   field :operator, type: String
   validates :operator, presence: true, inclusion: WcoEmail::EmailFilter::OPERATOR_OPTS

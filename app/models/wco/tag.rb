@@ -15,13 +15,13 @@ class Wco::Tag
   belongs_to :site,          class_name: '::Wco::Site', optional: true
   has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
   has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
+  has_many :abjects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :abject
 
   has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation', index: true
   has_and_belongs_to_many :galleries,     class_name: '::Wco::Gallery'
-  has_and_belongs_to_many :headlines # ,     class_name: 'Headline'
   has_and_belongs_to_many :leads,         class_name: '::Wco::Lead',    index: true
   has_and_belongs_to_many :leadsets,      class_name: '::Wco::Leadset'
-  has_and_belongs_to_many :logs
+  has_many :logs, inverse_of: :obj
   has_and_belongs_to_many :message_stubs, class_name: '::WcoEmail::MessageStub'
   has_and_belongs_to_many :newsvideos, class_name: '::Wco::Newsvideo'
   has_and_belongs_to_many :reports,    class_name: '::Wco::Report'

@@ -50,10 +50,10 @@ module WcoEmail
   FIELD_SUBJECT = 'subject'
   FIELD_TO      = 'to'
 
-  OPERATOR_EQUALS      = 'equals'
+  OPERATOR_EQUALS      = 'eq'
   OPERATOR_HAS_TAG     = 'has-tag'
   OPERATOR_NOT_HAS_TAG = 'not-has-tag'
-  OPERATOR_TEXT_INPUT  = 'text-input'
+  # OPERATOR_TEXT_INPUT  = 'text-input'
   OPERATORS = [ 'equals', 'has-tag', 'not-has-tag', 'text-input' ]
 end
 

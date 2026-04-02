@@ -33,6 +33,8 @@ class Wco::OfficeActionTemplate
   # has_and_belongs_to_many :email_filters, class_name: WcoEmail::EmailFilter
   has_many :email_filters, class_name: '::WcoEmail::EmailFilter', inverse_of: :office_action_template
 
+  has_many :abjects, inverse_of: :abject ## email action object
+
   def to_s
     "#{slug}"
   end

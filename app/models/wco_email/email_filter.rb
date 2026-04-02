@@ -7,8 +7,9 @@ class WcoEmail::EmailFilter
 
   PAGE_PARAM_NAME = :filters_page
 
-  FIELD_OPTS     = [ 'subject', 'from', 'to', 'to_and_cc', 'body', ] ## 'lead_tag_id'
-  MATCHTYPE_OPTS = [ 'regex', 'exact_insensitive' ]
+  FIELD_OPTS     = [ 'subject', 'from', 'to', 'to-or-cc', 'body', ] ## 'lead_tag_id'
+
+  OPERATOR_OPTS = [ 'regex', 'eq', 'match-i' ]
 
 
   field :from_regex
@@ -71,7 +72,7 @@ class WcoEmail::EmailFilter
   ## no habtm please
   # has_and_belongs_to_many :action_tmpls, class_name: '::Wco::OfficeActionTemplate'
   belongs_to :office_action_template, class_name: '::Wco::OfficeActionTemplate', optional: true
-  belongs_to :tag,                    class_name: '::Wco::Tag',                       optional: true, inverse_of: :email_filters
+  belongs_to :tag,                    class_name: '::Wco::Tag',                  optional: true, inverse_of: :email_filters
 
   ## @TODO: change to has_and_belongs_to_many, test-driven.
   has_many :conversations, class_name: '::WcoEmail::Conversation', inverse_of: :filter

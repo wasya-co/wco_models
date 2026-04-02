@@ -6,6 +6,7 @@ class WcoEmail::EmailFilterAction
 
   belongs_to :email_filter
 
+  ## deprecated, use obj
   KIND_EXE         = 'exe'
   KIND_REMOVE_TAG  = ::WcoEmail::ACTION_REMOVE_TAG
   KIND_ADD_TAG     = ::WcoEmail::ACTION_ADD_TAG
@@ -15,8 +16,10 @@ class WcoEmail::EmailFilterAction
   field :kind
   validates :kind, inclusion: ::WcoEmail::ACTIONS
 
-  field :value # the id of a tag, or email template, or email action
+  ## deprecated, use abject
+  field :value # tag_id , or email_template , or email_action_template (not used)
 
+  belongs_to :abject, polymorphic: true, optional: true # eg tag, EAT, OAT
 
   before_validation :check_value
   def check_value
@@ -34,14 +37,15 @@ class WcoEmail::EmailFilterAction
   def to_s
     "<EFA #{kind} #{value} />\n"
   end
-  def to_s_full indent: 0
-    _value = value
-    if [ KIND_ADD_TAG, KIND_REMOVE_TAG ].include?( kind )
-      _value = Wco::Tag.find( value )
-    end
-    if [ KIND_AUTORESPOND ].include?( kind )
-      _value = WcoEmail::EmailTemplate.find( value )
-    end
-    "#{" " * indent }<EFAction #{kind} `#{_value}` />\n"
-  end
+  # def to_s_full indent: 0
+  #   _value = value
+  #   if [ KIND_ADD_TAG, KIND_REMOVE_TAG ].include?( kind )
+  #     _value = Wco::Tag.find( value )
+  #   end
+  #   if [ KIND_AUTORESPOND ].include?( kind )
+  #     _value = WcoEmail::EmailTemplate.find( value )
+  #   end
+  #   "#{" " * indent }<EFAction #{kind} `#{_value}` />\n"
+  # end
+
 end

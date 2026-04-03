@@ -230,6 +230,13 @@ input[type=file] {
   margin: 15px; // bootstrap has 15px gutters
 }
 
+table pre {
+  max-width: 50vw;
+  max-height: 50vh;
+  border: 1px solid #ccc;
+  padding: 1em;
+}
+
 /* R */
 
 .red {

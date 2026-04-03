@@ -35,6 +35,10 @@ class WcoEmail::Conversation
 
   belongs_to :filter, class_name: 'WcoEmail::EmailFilter', inverse_of: :conversations, optional: true
 
+=begin
+  current_profile = OpenStruct.new per_page: 25
+  params = { tagname: 'inbox' }
+=end
   def self.load_conversations_messages_tag_by_params_and_profile params, current_profile
     @conversations = WcoEmail::Conversation.all
 

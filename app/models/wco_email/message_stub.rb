@@ -117,7 +117,7 @@ class WcoEmail::MessageStub
 
     @conv.update_attributes({
       status:      WcoEmail::Conversation::STATUS_UNREAD,
-      latest_at:   json['date'].to_s || Time.now.to_datetime,
+      latest_at:   json['date'].to_time.to_s || Time.now.to_datetime,
       from_emails: ( @conv.from_emails + [ from ]).uniq,
       preview:     @message.preview_str,
     })

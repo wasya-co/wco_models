@@ -3,9 +3,11 @@
 ## skip: careers@wasya.co
 ## skip: mishellduvrazka2023|wasteplacellc|smttest42|robincroom|acelec|rleer24|statusunknown03|claricefth|abogadooctavioarango|claudenicefh|email4gregory|morishitaarata|314658|alisa406|dawnmeverly|faizana1298|jandrews555|midwestksp|mj8712|msohaibhere|piousbox|poxlovi|snehagophane99|stephenkim79
 ##
+## exceptions: finradrnm@finra.org
+##
 
 filter = nil
-WcoEmail::EmailFilter.active.limit(25).each do |_filter|
+WcoEmail::EmailFilter.active.each do |_filter|
   filter = _filter
   case filter.kind
   when WcoEmail::EmailFilter::KIND_ADD_TAG,
@@ -66,21 +68,26 @@ WcoEmail::EmailFilter.active.limit(25).each do |_filter|
     end
 
     cond_field = WcoEmail::EmailFilterCondition::FIELD_FROM
-    cond_value = filter.from_exact
     cond_op = WcoEmail::EmailFilterCondition::OPERATOR_MATCH
+    cond_value = filter.from_exact
     if cond_value.blank?
       cond_field = WcoEmail::EmailFilterCondition::FIELD_SUBJECT
       cond_value = filter.subject_exact
     end
     if cond_value.blank?
       cond_field = WcoEmail::EmailFilterCondition::FIELD_FROM
-      cond_value = filter.from_regex
       cond_op = WcoEmail::EmailFilterCondition::OPERATOR_REGEX
+      cond_value = filter.from_regex
     end
     if cond_value.blank?
       cond_field = WcoEmail::EmailFilterCondition::FIELD_SUBJECT
-      cond_value = filter.subject_regex
       cond_op = WcoEmail::EmailFilterCondition::OPERATOR_REGEX
+      cond_value = filter.subject_regex
+    end
+    if cond_value.blank?
+      cond_field = WcoEmail::EmailFilterCondition::FIELD_BODY
+      cond_op = WcoEmail::EmailFilterCondition::OPERATOR_MATCH
+      cond_value = filter.body_exact
     end
     if cond_value.blank?
       throw '+++ cond_value cannot be blank'

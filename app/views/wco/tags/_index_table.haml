@@ -6,7 +6,7 @@
       %th N Conv
       %th N Stubs
 
-      %th N Headlines
+      -# %th N Headlines
 
       %th N Galleries
       %th N Reports
@@ -24,7 +24,7 @@
           = link_to tag.slug, tag_path(tag)
         %td= tag.conversations.length
         %td= tag.message_stubs.length
-        %td= tag.headlines.length
+        -# %td= tag.headlines.length
         %td= tag.galleries.length
         %td= tag.reports.length
         %td= tag.videos.length

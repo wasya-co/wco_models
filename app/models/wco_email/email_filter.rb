@@ -5,13 +5,11 @@ class WcoEmail::EmailFilter
   include Mongoid::Paranoia
   store_in collection: 'office_email_filters' ## 'wco_email_email_filters'
 
+  field :descr, type: :string
+
   PAGE_PARAM_NAME = :filters_page
 
-  FIELD_OPTS     = [ 'subject', 'from', 'to', 'to-or-cc', 'body', ] ## 'lead_tag_id'
-
-  OPERATOR_OPTS = [ 'regex', 'eq', 'match-i' ]
-
-
+  ## @deprecated, use email_filter_conditions
   field :from_regex
   field :from_exact
   field :subject_regex
@@ -22,6 +20,11 @@ class WcoEmail::EmailFilter
 
   field :skip_from_regex
   field :skip_to_exact
+
+  STATUS_ACTIVE   = 'active'
+  STATUS_INACTIVE = 'inactive'
+  field :status, type: :string, default: STATUS_ACTIVE
+  def self.active; where( :status.in => [ nil, STATUS_ACTIVE ] ); end
 
   has_many :actions, class_name: '::WcoEmail::EmailFilterAction', inverse_of: :email_filter
   accepts_nested_attributes_for :actions, allow_destroy: true, reject_if: :all_blank
@@ -49,7 +52,7 @@ class WcoEmail::EmailFilter
 
   has_and_belongs_to_many :leadsets,     class_name: '::Wco::Leadset'
 
-
+  ## @deprecated 2026-04-02
   KIND_AUTORESPOND_TMPL = 'autorespond-template'
   KIND_AUTORESPOND_EACT = 'autorespond-email-action'
   KIND_REMOVE_TAG       = 'remove-tag'
@@ -63,7 +66,7 @@ class WcoEmail::EmailFilter
   KIND_SKIP_INBOX  = 'skip-inbox'  ## @deprecated, use remove-tag
 
   KINDS = [ nil, KIND_OAT, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS ]
-  field :kind ## @deprecated, use filter.action.aject.kind
+  field :kind ## @deprecated, use filter.action.aject.kind 2026-04-02
 
 
   belongs_to :email_template,         class_name: '::WcoEmail::EmailTemplate',        optional: true
@@ -85,11 +88,11 @@ class WcoEmail::EmailFilter
     # inn = "#{inn}#{conditions.map { |c| c.to_s_full }.join }" if conditions.present?
     # inn = "#{inn}#{skip_conditions.map { |c| c.to_s_full }.join }" if skip_conditions.present?
     out =<<-AOL
-<EmailFilter #{from_regex} #{from_exact}>
+<EmailFilter >
 #{conditions.map { |c| c.to_s_full( indent: 2) }.join }
 #{skip_conditions.map { |c| c.to_s_full( indent: 2) }.join }
 #{actions.map { |c| c.to_s_full( indent: 2) }.join }
-</EmailFilter>"
+</EmailFilter>
 AOL
     while out.match(/\n\n/) do
       out = out.gsub(/\n\n/, "\n")

@@ -15,6 +15,8 @@ class WcoEmail::EmailActionTemplate
 
   belongs_to :email_template, class_name: 'EmailTemplate'
 
+  has_many :ajects, inverse_of: :aject ## email action object
+
   has_many :email_actions, class_name: 'EmailAction'
 
   has_many :ties,      class_name: '::WcoEmail::EmailActionTemplateTie', inverse_of: :tmpl

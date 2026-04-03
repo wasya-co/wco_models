@@ -11,7 +11,7 @@ class WcoEmail::EmailTemplate
   validates :slug, presence: true, uniqueness: true
   index({ slug: 1 }, { unique: true, name: "slug_idx" })
   def to_s
-    "Tmpl:#{slug}"
+    "#{slug}"
   end
 
   field :preview_str, type: :string

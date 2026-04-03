@@ -8,27 +8,32 @@ class WcoEmail::EmailFilterCondition
   belongs_to :email_filter,      class_name: '::WcoEmail::EmailFilter', inverse_of: :conditions,      optional: true
   belongs_to :email_skip_filter, class_name: '::WcoEmail::EmailFilter', inverse_of: :skip_conditions, optional: true
 
-  # FIELD_BODY    = 'body'
-  # FIELD_EXE     = 'exe'
-  # FIELD_FROM    = 'from'
-  # FIELD_LEADSET = 'leadset_id'
-  # FIELD_SUBJECT = 'subject'
-  # FIELD_TO      = 'to'
-
+  FIELD_BODY    = 'body'
+  FIELD_FROM    = 'from'
+  FIELD_TAGGED  = 'leadset-tagged'
+  FIELD_NOT_TAGGED  = 'leadset-not-tagged'
+  FIELD_SUBJECT  = 'subject'
+  # FIELD_TO       = 'to'
+  FIELD_TO_OR_CC = 'to-or-cc'
+  FIELD_OPTS     = [ FIELD_SUBJECT, FIELD_FROM, FIELD_TO_OR_CC, FIELD_TAGGED, FIELD_NOT_TAGGED, FIELD_BODY ]
   field :field
-  validates :field, presence: true
+  validates :field, presence: true, inclusion: FIELD_OPTS
 
-  OPERATOR_EQUALS      = 'eq'
-  OPERATOR_HAS_TAG     = 'has-tag'
-  OPERATOR_NOT_HAS_TAG = 'not-has-tag'
-  # OPERATOR_TEXT_INPUT  = 'text-input'
-  OPERATORS = [ 'equals', 'has-tag', 'not-has-tag', 'text-input' ]
-
-  field :operator, type: String
-  validates :operator, presence: true, inclusion: WcoEmail::EmailFilter::OPERATOR_OPTS
+  OPERATOR_EQUALS      = 'eq-i'
+  # OPERATOR_HAS_TAG     = 'has-tag'
+  # OPERATOR_NOT_HAS_TAG = 'not-has-tag'
+  OPERATOR_REGEX = 'regex'
+  OPERATOR_MATCH = 'match-i'
+  OPERATOR__ID = '_id'
+  OPERATOR_SLUG = 'slug'
+  OPERATOR_OPTS = [ OPERATOR_REGEX, OPERATOR_MATCH, OPERATOR__ID, OPERATOR_SLUG ]
+  field :operator
+  validates :operator, presence: true, inclusion: OPERATOR_OPTS
 
   field :value
   validates :value, presence: true
+
+  index({ email_filter_id: 1, field: 1, operator: 1, value: 1 }, unique: true )
 
   def apply leadset:, message:
     cond = self
@@ -53,16 +58,11 @@ class WcoEmail::EmailFilterCondition
 
 
   def to_s
-    "<EFC #{field} #{operator} #{value} />"
+    "<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` />"
   end
-  ## lets not do this. 2026-04-02
-  # def to_s_full indent: 0
-  #   _value = value
-  #   if [ ::WcoEmail::OPERATOR_HAS_TAG, ::WcoEmail::OPERATOR_NOT_HAS_TAG ].include?( operator )
-  #     _value = Wco::Tag.find( value )
-  #   end
-  #   "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{_value}` />\n"
-  # end
+  def to_s_full indent: 0
+    "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` />\n"
+  end
 
 end
 

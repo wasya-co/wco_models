@@ -38,6 +38,12 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     @renderer    = self.class.renderer ctx: @ctx
     rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
 
+    if @ctx.lead.unsubscribed_at
+      @ctx.update({
+        unsubscribed_at:      Time.now,
+      })
+      return
+    end
 
     rendered_subject = ERB.new( @ctx.subject ).result( @ctx.get_binding )
     if @ctx.lead.leadset.mangle_subject || @ctx.email_template.mangle_subject

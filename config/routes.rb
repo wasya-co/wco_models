@@ -105,7 +105,9 @@ Wco::Engine.routes.draw do
   resources :tags
 
   ## In order to have unsubscribes_url , unsubscribes must be in wco .
-  get 'unsubscribes/analytics', to: 'unsubscribes#analytics'
+  get  'unsubscribes/analytics',            to: 'unsubscribes#analytics'
+  get  'api/unsubscribes/by-token/:token',  to: 'unsubscribes#new', as: :unsubscribe_by_token
+  post 'api/unsubscribes/by-token/:token',  to: 'unsubscribes#do_unsubscribe'
   resources :unsubscribes
 
   resources :videos

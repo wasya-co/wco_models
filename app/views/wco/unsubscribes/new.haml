@@ -1,0 +1,10 @@
+
+.unsubscribes--new{ style: "font-size: 2em;" }
+  %h5.text-center
+    Unsubscribe from WasyaCo emails
+
+  = form_tag do
+    %label email
+    = text_field_tag :email, params[:email], style: "min-width: 300px; padding: 1em;"
+    = submit_tag 'Unsubscribe'
+

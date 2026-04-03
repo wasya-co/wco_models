@@ -18,3 +18,8 @@
     .mini{ style: "font-size: 0.7em; color: gray; text-align: right" } Your previous message is shown below.
     %hr
     = raw @ctx.reply_to_message.part_html_sanitized
+
+%br
+= link_to 'unsubscribe', wco.unsubscribe_by_token_url( token: @ctx.lead.unsubscribe_token, email: @ctx.lead.email ), style: "color: #999;"
+%br
+.div{ style: "color: #999;" } WasyaCo 201 W 5th St 11th Floor, Austin, TX 78701

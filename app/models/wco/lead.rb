@@ -80,6 +80,7 @@ class Wco::Lead
     end
     self[:unsubscribe_token]
   end
+  field :unsubscribed_at
 
   def to_s
     # "`#{name}` <#{email}>"

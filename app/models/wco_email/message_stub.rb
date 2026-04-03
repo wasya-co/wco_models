@@ -81,6 +81,8 @@ class WcoEmail::MessageStub
     @conv.leadsets.push @leadset
 
     ## message
+    old_message   = WcoEmail::Message.unscoped.where( message_id: message_id ).first
+    old_message.destroy! if old_message
     @message = WcoEmail::Message.create!({
       stub:         stub,
       conversation: @conv,

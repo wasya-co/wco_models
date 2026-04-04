@@ -138,7 +138,7 @@ class Wco::LeadsController < Wco::ApplicationController
   private
 
   def set_lists
-    @email_campaigns_list = [[nil,nil]] + WcoEmail::Campaign.all.map { |c| [ c.slug, c.id ] }
+    @email_campaigns_list = [[nil,nil]] + WcoEmail::Campaign.all.map { |c| [ c.tmpl, c.id ] }
     @email_templates_list = WcoEmail::EmailTemplate.list
     @leads_list           = Wco::Lead.list
     @leadsets_list        = Wco::Leadset.list

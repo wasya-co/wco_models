@@ -2,7 +2,16 @@
 .tags-show.padded
 
   .text-center
-    %h5 Tag `#{@tag.slug}`
+    %h5
+      #{link_to '[~]', wco.edit_tag_path(@tag)}
+      Tag `#{@tag.slug}`
+      - if @tag.parent
+        parent: #{link_to @tag.parent, wco.tag_path(@tag.parent)}
+
+  %hr
+  %i.fa.fa-compress.collapse-expand#tags
+    Tags (#{@tag.sons.length}):
+  = render '/wco/tags/index', tags: @tag.sons
 
   - if defined?( wco_email )
     .a

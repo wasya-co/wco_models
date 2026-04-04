@@ -127,7 +127,9 @@ class WcoEmail::EmailTemplate
   has_many :email_contexts, class_name: '::WcoEmail::Context'
   has_many :email_filters,  class_name: '::WcoEmail::EmailFilter'
   has_many :unsubscribes,   class_name: '::WcoEmail::Unsubscribe'
-  has_many :ajects, inverse_of: :aject ## email action object
+  has_many :ajects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject ## email action object
+
+  belongs_to :photo,  class_name: '::Wco::Photo', optional: true # , dependent: :destroy, inverse_of: :email_template
 
   belongs_to :tag, class_name: '::Wco::Tag', inverse_of: :email_templates, optional: true
 

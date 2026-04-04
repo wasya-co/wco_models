@@ -5,10 +5,15 @@
     = f.label :name
     = f.text_field :name
 
-  .field
-    %label.required Email
-    = f.text_field :email, required: true
-    .small.gray Required to create a leadset
+  .row
+    .col-8
+      .field
+        %label.required Email
+        = f.text_field :email, required: true
+    .col-4
+      .field
+        %label unsubscribed_at
+        = f.text_field :unsubscribed_at
 
   .field
     = f.label :phone

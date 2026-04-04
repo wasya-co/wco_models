@@ -14,8 +14,10 @@ class Wco::Lead
   field :name
   def name
     if !self[:name].present?
-      _name = (email[/\A[a-zA-Z]+/] || 'associate').capitalize
-      update_attributes( name: _name )
+      if email
+        _name = (email[/\A[a-zA-Z]+/] || 'associate').capitalize
+        update_attributes( name: _name )
+      end
     end
     self[:name]
   end

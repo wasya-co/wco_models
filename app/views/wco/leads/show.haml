@@ -10,7 +10,11 @@
     .col-md-6
       %ul
         %li Name: #{@lead.name}
-        %li Email: #{@lead.email}
+        %li
+          Email: #{@lead.email}
+          - if @lead.unsubscribed_at
+            <b>unsubscribed_at:</b>
+            = @lead.unsubscribed_at
         %li
           Leadset:
           = link_to @lead.leadset.company_url, leadset_path(@lead.leadset)
@@ -82,3 +86,6 @@
       = render 'wco_email/conversations/table', convs: @convs
       = paginate @convs, param_name: :convs_page
 
+  %hr
+  .row
+    = @lead.inspect

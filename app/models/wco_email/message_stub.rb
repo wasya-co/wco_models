@@ -74,7 +74,8 @@ class WcoEmail::MessageStub
     end
 
     ## Leadset, Lead
-    from       = json['mail_from'] || "nobody@unknown-doma.in"
+    # from       = json['mail_from'] || "nobody@unknown-doma.in"
+    from       = json['from'][/<([^>]+)>/, 1].downcase rescue json['mail_from']
     @lead      = Wco::Lead.find_or_create_by_email( from )
     @conv.leads.push @lead
     @leadset   = Wco::Leadset.from_email from
@@ -146,8 +147,8 @@ class WcoEmail::MessageStub
         reason = 'subject_exact'
       end
 
-      filter.conditions.each do |scond|
-        reason ||= scond.apply(leadset: @leadset, message: @message )
+      filter.conditions.each do |cond|
+        reason ||= cond.apply(leadset: @leadset, message: @message )
       end
 
       if reason

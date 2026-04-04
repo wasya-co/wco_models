@@ -83,26 +83,26 @@ class WcoEmail::Message
   has_many :photos,  class_name: '::Wco::Photo'
   has_many :replies, class_name: '::WcoEmail::Context', inverse_of: :reply_to_message
 
-  def apply2_filter filter
-    conv.filter = filter
-    filter.actions each do |action|
-      case action.kind
-      when WcoEmail::EmailFilterAction::KIND_OAT
+  def apply_filter_action action
+    message = self
 
-        config = {
-          'email_message_id' => self.id,
-          'lead_id' => lead_id,
-          'message_id' => self.id,
-          'stub_id' => stub_id,
-        }
-        oa = Wco::OfficeAction.create!({
-          office_action_template: filter.aject,
-          status:                 'active',
-          perform_at:             Time.now,
-          config:                 config,
-        })
+    case action.kind
+    when WcoEmail::EmailFilterAction::KIND_OAT
 
-      end
+      config = {
+        'email_message_id' => message.id.to_s,
+        'lead_id'          => message.lead_id.to_s,
+        # 'message_id'       => message.id.to_s,
+        'stub_id'          => message.stub_id.to_s,
+      }
+      oa = Wco::OfficeAction.create!({
+        office_action_template: action.aject,
+        status:                 'active',
+        perform_at:             Time.now,
+        config:                 config,
+      })
+
+
     end
   end
 

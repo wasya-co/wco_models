@@ -170,7 +170,10 @@ class WcoEmail::MessageStub
         if skip_reason
           puts! "NOT Applying filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
         else
-          @message.apply2_filter( filter )
+          @conv.filter = filter; @conv.save
+          filter.actions.each do |action|
+            @message.apply_filter_action( action )
+          end
         end
       end
     end

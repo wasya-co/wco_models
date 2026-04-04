@@ -45,7 +45,13 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
       return
     end
 
-    rendered_subject = ERB.new( @ctx.subject ).result( @ctx.get_binding )
+    ## for binding only
+    @lead        = @ctx.lead
+    lead = @lead
+    @leadset     = @ctx.lead.leadset
+    leadset = @leadset
+    rendered_subject = ERB.new( @ctx.subject ).result( binding )
+
     if @ctx.lead.leadset.mangle_subject || @ctx.email_template.mangle_subject
       ## From: https://www.ascii-code.com/
       n1 = 33
@@ -63,9 +69,9 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     end
 
     @ctx.update({
-      rendered_str: rendered_str,
-      sent_at:      Time.now,
-      subject:      rendered_subject,
+      rendered_str:     rendered_str,
+      sent_at:          Time.now,
+      rendered_subject: rendered_subject,
     })
 
     profile = Wco::Profile.find_by email: @ctx.from_email
@@ -114,6 +120,7 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     out = self.new
     out.instance_variable_set( :@ctx,              ctx )
     out.instance_variable_set( :@lead,             ctx.lead )
+    out.instance_variable_set( :@leadset,          ctx.lead.leadset )
     out.instance_variable_set( :@utm_tracking_str, ctx.utm_tracking_str )
     out.instance_variable_set( :@unsubscribe_url,  ctx.unsubscribe_url )
     out.instance_variable_set( :@config,           ctx.config )

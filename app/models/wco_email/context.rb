@@ -53,6 +53,7 @@ class WcoEmail::Context
   end
 
   field :subject
+  field :rendered_subject
   def subject
     self[:subject].presence || tmpl&.subject
   end

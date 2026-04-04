@@ -12,6 +12,14 @@ class Wco::Lead
   index({ email: -1 }, { unique: true })
 
   field :name
+  def name
+    if !self[:name].present?
+      _name = (email[/\A[a-zA-Z]+/] || 'associate').capitalize
+      update_attributes( name: _name )
+    end
+    self[:name]
+  end
+
   field :phone
   field :address
   field :comment ## _TODO: replace with log?

@@ -77,6 +77,8 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     profile = Wco::Profile.find_by email: @ctx.from_email
     delivery_options = {
       address:   profile.smtp_host,
+      authentication:      'login',
+      enable_starttls_auto: true,
       password:  profile.smtp_password,
       port:      profile.smtp_port,
       user_name: profile.smtp_username,

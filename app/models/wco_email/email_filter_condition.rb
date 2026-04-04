@@ -40,20 +40,27 @@ class WcoEmail::EmailFilterCondition
     cond = self
     reason = nil
     case cond.field
-    when WcoEmail::FIELD_LEADSET
-      if cond.operator == WcoEmail::OPERATOR_NOT_HAS_TAG
-        this_tag = Wco::Tag.find cond.value
-        if leadset.tags.include?( this_tag )
-          ;
-        else
-          reason = "#{email_skip_filter ? 'skip_' : ''}condition leadset not-has-tag #{this_tag} NOT met"
+    ## from match-i <value>
+    when WcoEmail::EmailFilterCondition::FIELD_FROM
+      if cond.operator == WcoEmail::EmailFilterCondition::OPERATOR_MATCH
+        if message.from.downcase.include?( value.downcase )
+          reason = "#{email_skip_filter ? 'skip_' : ''}condition from match-i `#{value}`"
         end
       end
-    when WcoEmail::FIELD_TO
-      if message.to == cond.value
-        reason = "{email_skip_filter ? 'skip_' : ''}condition to = #{cond.value}"
-      end
-    end
+    # when WcoEmail::FIELD_LEADSET
+    #   if cond.operator == WcoEmail::OPERATOR_NOT_HAS_TAG
+    #     this_tag = Wco::Tag.find cond.value
+    #     if leadset.tags.include?( this_tag )
+    #       ;
+    #     else
+    #       reason = "#{email_skip_filter ? 'skip_' : ''}condition leadset not-has-tag #{this_tag} NOT met"
+    #     end
+    #   end
+    # when WcoEmail::FIELD_TO
+    #   if message.to == cond.value
+    #     reason = "{email_skip_filter ? 'skip_' : ''}condition to = #{cond.value}"
+    #   end
+    # end
     return reason
   end
 

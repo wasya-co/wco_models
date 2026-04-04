@@ -47,6 +47,7 @@ class WcoEmail::EmailFilterCondition
           reason = "#{email_skip_filter ? 'skip_' : ''}condition from match-i `#{value}`"
         end
       end
+    end
     # when WcoEmail::FIELD_LEADSET
     #   if cond.operator == WcoEmail::OPERATOR_NOT_HAS_TAG
     #     this_tag = Wco::Tag.find cond.value

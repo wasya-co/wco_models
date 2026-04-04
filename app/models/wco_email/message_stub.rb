@@ -95,13 +95,9 @@ class WcoEmail::MessageStub
       subject: subject,
       date:    json['date'].to_s,
 
-      from:  from,
-
-      to:  json['to'],
-      tos: [ json['to'] ],
-
-      cc:  json['cc'],
-      ccs: [ json['cc'] ],
+      from: from,
+      to:   json['to'],
+      cc:   json['cc'],
 
       part_html: json['html_body'],
       part_txt:  json['plain_body'],
@@ -155,7 +151,7 @@ class WcoEmail::MessageStub
       end
 
       if reason
-        puts! "Applying filter #{filter} to conv #{@message.conversation} for matching #{reason}" if DEBUG
+        puts! "Applying2 filter #{filter} to conv #{@message.conversation} for matching #{reason}" if DEBUG
 
         ## skip
         skip_reason = nil
@@ -173,7 +169,7 @@ class WcoEmail::MessageStub
         if skip_reason
           puts! "NOT Applying filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
         else
-          @message.apply_filter( filter )
+          @message.apply2_filter( filter )
         end
       end
     end

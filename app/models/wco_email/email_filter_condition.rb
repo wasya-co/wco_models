@@ -9,13 +9,14 @@ class WcoEmail::EmailFilterCondition
   belongs_to :email_skip_filter, class_name: '::WcoEmail::EmailFilter', inverse_of: :skip_conditions, optional: true
 
   FIELD_BODY    = 'body'
+  FIELD_BODY_PLAIN = 'body-plain'
   FIELD_FROM    = 'from'
   FIELD_TAGGED  = 'leadset-tagged'
   FIELD_NOT_TAGGED  = 'leadset-not-tagged'
   FIELD_SUBJECT  = 'subject'
   # FIELD_TO       = 'to'
   FIELD_TO_OR_CC = 'to-or-cc'
-  FIELD_OPTS     = [ FIELD_SUBJECT, FIELD_FROM, FIELD_TO_OR_CC, FIELD_TAGGED, FIELD_NOT_TAGGED, FIELD_BODY ]
+  FIELD_OPTS     = [ FIELD_SUBJECT, FIELD_FROM, FIELD_TO_OR_CC, FIELD_TAGGED, FIELD_NOT_TAGGED, FIELD_BODY, FIELD_BODY_PLAIN ]
   field :field
   validates :field, presence: true, inclusion: FIELD_OPTS
 

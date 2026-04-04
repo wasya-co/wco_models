@@ -83,6 +83,29 @@ class WcoEmail::Message
   has_many :photos,  class_name: '::Wco::Photo'
   has_many :replies, class_name: '::WcoEmail::Context', inverse_of: :reply_to_message
 
+  def apply2_filter filter
+    conv.filter = filter
+    filter.actions each do |action|
+      case action.kind
+      when WcoEmail::EmailFilterAction::KIND_OAT
+
+        config = {
+          'email_message_id' => self.id,
+          'lead_id' => lead_id,
+          'message_id' => self.id,
+          'stub_id' => stub_id,
+        }
+        oa = Wco::OfficeAction.create!({
+          office_action_template: filter.aject,
+          status:                 'active',
+          perform_at:             Time.now,
+          config:                 config,
+        })
+
+      end
+    end
+  end
+
   def apply_filter filter
     puts! filter, 'WcoEmail::Message#apply_filter' if DEBUG
     conv.filter = filter

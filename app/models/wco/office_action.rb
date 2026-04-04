@@ -23,10 +23,12 @@ class Wco::OfficeAction
   attr_accessor :deactivate
 
   field :perform_at, type: :time
+  field :config, type: Hash, default: {}
 
   def do_run
     @oa = self
     @oa.update!({ status: STATUS_INACTIVE })
+    @oat = @oa.office_action_template
 
     begin
       eval( @oa.tmpl.action_exe )

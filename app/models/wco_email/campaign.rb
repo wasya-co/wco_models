@@ -53,7 +53,7 @@ class WcoEmail::Campaign
   end
 
   def self.list
-    [[nil,nil]] + all.map { |p| [ p.slug, p.id ] }
+    [[nil,nil]] + all.map { |p| [ p.email_template, p.id ] }
   end
 
 end

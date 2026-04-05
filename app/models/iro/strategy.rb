@@ -277,7 +277,7 @@ class Iro::Strategy
 
     if ( stock.last - threshold_usd_above_mark ) < p.inner.strike
       return [ 0.95, ":threshold_usd_above_mark <br />Last $#{'%.2f' % stock.last} is " +
-        "#{'%.2f' % [stock.last - p.inner.strike]} above #{p.inner.strike} but should be more than #{threshold_usd_above_mark} ." ]
+        "#{'%.2f' % [stock.last - p.inner.strike]} near #{p.inner.strike} but should be greater than #{threshold_usd_above_mark} ." ]
     end
 
     if p.inner.end_delta.abs < threshold_pos_delta
@@ -287,8 +287,10 @@ class Iro::Strategy
       return [ 0.79, ":threshold_neg_delta <br />Defensive roll: delta #{p.inner.end_delta} is higher than #{threshold_neg_delta} ." ]
     end
 
-    if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
-      return [ 0.51, ":threshold_netp <br />made enough #{'%.02f' % [(1.0 - p.inner.end_price/p.inner.begin_price )*100]}% profit^" ]
+    if threshold_netp.present?
+      if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
+        return [ 0.51, ":threshold_netp <br />made enough #{'%.02f' % [(1.0 - p.inner.end_price/p.inner.begin_price )*100]}% profit^" ]
+      end
     end
 
     return [ 0.33, '-' ]
@@ -331,7 +333,7 @@ class Iro::Strategy
 
     if stock.last + threshold_usd_above_mark > p.inner.strike
       return [ 0.95, ":threshold_usd_above_mark <br />Last $#{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [stock.last - p.inner.strike]} above #{p.inner.strike} but <br />threshold is #{threshold_usd_above_mark} ." ]
+          "#{'%.2f' % [p.inner.strike - stock.last]} near #{p.inner.strike} but should be greater than #{threshold_usd_above_mark} ." ]
     end
 
     ## defensive
@@ -345,8 +347,10 @@ class Iro::Strategy
       return [ 0.69, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} offensive threshold." ]
     end
 
-    if p.net_percent > threshold_netp
-      return [ 0.51, "made enough #{'%.0f' % [p.net_percent*100]}% > #{"%.2f" % [threshold_netp*100]}% profit," ]
+    if threshold_netp.present?
+      if p.net_percent > threshold_netp
+        return [ 0.51, "made enough #{'%.0f' % [p.net_percent*100]}% > #{"%.2f" % [threshold_netp*100]}% profit," ]
+      end
     end
 
     return [ 0.33, '-' ]

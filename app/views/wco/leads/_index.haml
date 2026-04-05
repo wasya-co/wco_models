@@ -1,6 +1,7 @@
 
 .Leads.leads--index.--index
   <b>Leads:</b>
+  = paginate leads, param_name: Wco::Lead::PAGE_PARAM_NAME
   %ul
     - leads.each do |lead|
       %li.item

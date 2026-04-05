@@ -12,7 +12,7 @@ class Wco::Leadset
   index({ company_url: 1 }, { unique: true, name: 'company_url' })
   before_validation :normalize_company_url, on: :create
   def normalize_company_url
-    company_url.downcase rescue company_url
+    company_url.downcase
   end
   def domain; company_url; end # for anti-spam
   def self.from_email email

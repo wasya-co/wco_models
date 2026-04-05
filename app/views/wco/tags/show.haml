@@ -46,8 +46,8 @@
 
   %hr
   %i.fa.fa-compress.collapse-expand#leads
-    Leads: (#{@tag.leads.length}):
-  = render '/wco/leads/index', leads: @tag.leads.page( params[::Wco::Lead::PAGE_PARAM_NAME] )
+    Leads: (#{@leads.length}):
+  = render '/wco/leads/index', leads: @leads
 
   %hr
   %i.fa.fa-compress.collapse-expand#reports

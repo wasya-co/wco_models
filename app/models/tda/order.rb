@@ -33,6 +33,7 @@ class Tda::Order
     puts! results, 'results'
   end
 
+  ## obsolete, I don't do covered calls anymore?
   def self.roll_covered_call_q pos
     roll_price = pos.inner.begin_price - pos.autoprev.inner.end_price
     query = {
@@ -67,12 +68,12 @@ class Tda::Order
     return query
   end
 
-  def self.roll_short_credit_call_spread_q pos
+  def self.roll_credit_call_spread_q pos
     query = {
-      orderType: "NET_CREDIT", ## pos.roll_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
+      orderType: pos.roll_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
       session: "NORMAL",
       duration: "DAY",
-      price: ( pos.roll_price + 100 ).to_s, ## _TODO this order will never fill (net credit only)
+      price: pos.roll_price.abs.to_s,
       orderStrategyType: "SINGLE",
       orderLegCollection: [
         ## close

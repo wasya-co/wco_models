@@ -5,12 +5,6 @@ class Iro::Position
   include Mongoid::Paranoia
   store_in collection: 'iro_positions'
 
-  ## @trash, use next_gain_loss_amount instead
-  # field :prev_gain_loss_amount, type: :float
-  # def prev_gain_loss_amount
-  #   out  = autoprev.outer.end_price - autoprev.inner.end_price
-  #   out += inner.begin_price - outer.begin_price
-  # end
   field :next_gain_loss_amount, type: :float
 
 
@@ -231,33 +225,35 @@ class Iro::Position
     # puts! outs, '#calc_nxt.outs -> 2'
 
     ## next_inner_strike
-    outs = outs.select do |out|
-      if Iro::Strategy::CREDIT == pos.credit_or_debit
-        if Iro::Strategy::SHORT == pos.long_or_short
-          ## short credit call
-          out[:strikePrice] >= strategy.next_inner_strike
-        elsif Iro::Strategy::LONG == pos.long_or_short
-          ## long credit put
-          out[:strikePrice] <= strategy.next_inner_strike
+    if strategy.next_inner_strike.present?
+      outs = outs.select do |out|
+        if Iro::Strategy::CREDIT == pos.credit_or_debit
+          if Iro::Strategy::SHORT == pos.long_or_short
+            ## short credit call
+            out[:strikePrice] >= strategy.next_inner_strike
+          elsif Iro::Strategy::LONG == pos.long_or_short
+            ## long credit put
+            out[:strikePrice] <= strategy.next_inner_strike
+          end
+        else
+          raise 'zt3 - @TODO: implement, debit spreads'
         end
-      else
-        raise 'zt3 - @TODO: implement, debit spreads'
       end
+      puts! outs[0][:strikePrice], 'after calc next_inner_strike'
+      # puts! outs, 'outs'
     end
-    puts! outs[0][:strikePrice], 'after calc next_inner_strike'
-    # puts! outs, 'outs'
 
-    ## next_buffer_above_water
+    ## next_usd_above_mark
     outs = outs.select do |out|
       if Iro::Strategy::SHORT == pos.long_or_short
-        out[:strikePrice] > strategy.next_buffer_above_water + strategy.stock.last
+        out[:strikePrice] > strategy.next_usd_above_mark + strategy.stock.last
       elsif Iro::Strategy::LONG == pos.long_or_short
-        out[:strikePrice] < strategy.stock.last - strategy.next_buffer_above_water
+        out[:strikePrice] < strategy.stock.last - strategy.next_usd_above_mark
       else
         raise 'zt4 - this cannot happen'
       end
     end
-    puts! outs[0][:strikePrice], 'after calc next_buffer_above_water'
+    puts! outs[0][:strikePrice], 'after calc next_usd_above_mark'
     puts! outs, 'outs'
 
     ## next_inner_delta
@@ -310,7 +306,9 @@ class Iro::Position
         status:      'proposed',
         stock:        strategy.stock,
         inner_strike: inner_attrs[:strike],
+        inner_attributes: inner_attrs,
         outer_strike: outer_attrs[:strike],
+        outer_attributes: outer_attrs,
         begin_on:     Time.now.to_date,
         expires_on:   next_expires_on,
         purse:        purse,

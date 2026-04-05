@@ -79,7 +79,6 @@ class Iro::Strategy
 
   field     :threshold_usd_above_mark, type: :float
   validates :threshold_usd_above_mark, presence: true
-  def buffer_above_water; threshold_usd_above_mark; end
 
   field :threshold_pos_delta, type: :float # offensive: roll b/c markets are going my way
   field :threshold_neg_delta, type: :float # defensive: roll b/c markets are going against me
@@ -206,6 +205,7 @@ class Iro::Strategy
   ## decisions
   ##
 
+  ## do not use!
   def calc_rollp_covered_call p
     stock.reload
 
@@ -213,10 +213,10 @@ class Iro::Strategy
       return [ 0.99, '0 DTE, must exit' ]
     end
 
-    if ( stock.last - buffer_above_water ) < p.inner.strike
+    if ( stock.last - threshold_usd_above_mark ) < p.inner.strike
       return [ 0.98, "Last #{'%.2f' % stock.last} is " +
-        "#{'%.2f' % [p.inner.strike + buffer_above_water - stock.last]} " +
-        "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
+        "#{'%.2f' % [p.inner.strike + threshold_usd_above_mark - stock.last]} " +
+        "below #{'%.2f' % [p.inner.strike + threshold_usd_above_mark]} water" ]
     end
 
     if p.inner.end_delta < threshold_pos_delta
@@ -230,7 +230,7 @@ class Iro::Strategy
     return [ 0.33, '-' ]
   end
 
-  ## _TODO
+  ## do not use!
   def calc_rollp_long_debit_call_spread p
     stock.reload
 
@@ -241,10 +241,10 @@ class Iro::Strategy
       return [ 0.99, '1 DTE, must exit' ]
     end
 
-    if ( stock.last - buffer_above_water ) < p.inner.strike
+    if ( stock.last - threshold_usd_above_mark ) < p.inner.strike
       return [ 0.95, "Last #{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [stock.last - p.inner.strike - buffer_above_water]} " +
-          "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
+          "#{'%.2f' % [stock.last - p.inner.strike - threshold_usd_above_mark]} " +
+          "below #{'%.2f' % [p.inner.strike + threshold_usd_above_mark]} water" ]
     end
 
     if p.inner.end_delta < threshold_pos_delta
@@ -258,14 +258,15 @@ class Iro::Strategy
     return [ 0.33, '-' ]
   end
 
-  ## 2025-10-12 _TODO
+  ## 2025-10-12 continue
+  ## 2026-04-05 continue
   def calc_rollp_long_credit_put_spread p
     stock.reload
 
     # puts! p, '#calc_rollp_long_credit_put_spread'
     # puts! p.inner, 'p.inner'
-    puts! stock, 'stock'
-    puts! attributes, 'strategy attributes'
+    # puts! stock, 'stock'
+    # puts! attributes, 'strategy attributes'
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i < 1
       return [ 0.99, '0 DTE, must exit' ]
@@ -274,24 +275,26 @@ class Iro::Strategy
       return [ 0.99, '1 DTE, must exit' ]
     end
 
-    if ( stock.last - buffer_above_water ) < p.inner.strike
-      return [ 0.95, "Last #{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [stock.last - p.inner.strike - buffer_above_water]} " +
-          "below #{'%.2f' % [p.inner.strike + buffer_above_water]} water" ]
+    if ( stock.last - threshold_usd_above_mark ) < p.inner.strike
+      return [ 0.95, ":threshold_usd_above_mark <br />Last $#{'%.2f' % stock.last} is " +
+        "#{'%.2f' % [stock.last - p.inner.strike]} above #{p.inner.strike} but should be more than #{threshold_usd_above_mark} ." ]
     end
 
-    if p.inner.end_delta < threshold_pos_delta
-      return [ 0.79, "Delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} threshold." ]
+    if p.inner.end_delta.abs < threshold_pos_delta
+      return [ 0.79, ":threshold_pos_delta <br />Offensive roll: delta #{p.inner.end_delta} is lower than #{threshold_pos_delta} ." ]
+    end
+    if p.inner.end_delta.abs > threshold_neg_delta
+      return [ 0.79, ":threshold_neg_delta <br />Defensive roll: delta #{p.inner.end_delta} is higher than #{threshold_neg_delta} ." ]
     end
 
     if 1 - p.inner.end_price/p.inner.begin_price > threshold_netp
-      return [ 0.51, "made enough #{'%.02f' % [(1.0 - p.inner.end_price/p.inner.begin_price )*100]}% profit^" ]
+      return [ 0.51, ":threshold_netp <br />made enough #{'%.02f' % [(1.0 - p.inner.end_price/p.inner.begin_price )*100]}% profit^" ]
     end
 
     return [ 0.33, '-' ]
   end
 
-  ## _TODO
+  ## do not use!
   def calc_rollp_short_debit_put_spread p
     stock.reload
 
@@ -299,10 +302,10 @@ class Iro::Strategy
       return [ 0.99, "< #{threshold_dte}DTE, must exit" ]
     end
 
-    if stock.last + buffer_above_water > p.inner.strike
+    if stock.last + threshold_usd_above_mark > p.inner.strike
       return [ 0.98, "Last #{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [stock.last + buffer_above_water - p.inner.strike]} " +
-          "above #{'%.2f' % [p.inner.strike - buffer_above_water]} water" ]
+          "#{'%.2f' % [stock.last + threshold_usd_above_mark - p.inner.strike]} " +
+          "above #{'%.2f' % [p.inner.strike - threshold_usd_above_mark]} water" ]
     end
 
     if p.inner.end_delta.abs < threshold_pos_delta.abs
@@ -317,6 +320,7 @@ class Iro::Strategy
   end
 
   ## 2026-02-21 ok
+  ## 2026-04-05 ok
   def calc_rollp_short_credit_call_spread p
     puts! p, 'calc_rollp_short_credit_call_spread...'
     stock.reload
@@ -325,10 +329,9 @@ class Iro::Strategy
       return [ 0.99, "< #{threshold_dte}DTE, must exit" ]
     end
 
-    if stock.last + buffer_above_water > p.inner.strike
-      return [ 0.95, "Last #{'%.2f' % stock.last} is " +
-          "#{'%.2f' % [stock.last + buffer_above_water - p.inner.strike]} " +
-          "above #{'%.2f' % [p.inner.strike - buffer_above_water]} water" ]
+    if stock.last + threshold_usd_above_mark > p.inner.strike
+      return [ 0.95, ":threshold_usd_above_mark <br />Last $#{'%.2f' % stock.last} is " +
+          "#{'%.2f' % [stock.last - p.inner.strike]} above #{p.inner.strike} but <br />threshold is #{threshold_usd_above_mark} ." ]
     end
 
     ## defensive

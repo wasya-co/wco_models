@@ -25,7 +25,7 @@ RSpec.describe Iro::Strategy do
 
       next_inner_delta: 0.15,
       next_inner_strike: 900,
-      next_buffer_above_water: 0,
+      next_threshold_usd_above_mark: 0,
     })
     out = @strategy.next_inner_strike_on( '2025-10-17' )
     out.should eql 920
@@ -39,7 +39,7 @@ RSpec.describe Iro::Strategy do
       before do
         @nvda = create( :stock, ticker: 'NVDA', last: 892.0 )
         @strategy = create(:strategy, stock: @nvda,
-          buffer_above_water: 10.0,
+          threshold_usd_above_mark: 10.0,
           threshold_netp: 0.99,
           threshold_pos_delta: 0.1 )
         @inner    = create( :option, strike: 90,  begin_price: 1.99, end_price: 0.5  )
@@ -65,7 +65,7 @@ RSpec.describe Iro::Strategy do
       before do
         @msft     = create(:stock, ticker: 'MSFT', last: 397.05)
         @strategy = create(:strategy, stock: @msft,
-          buffer_above_water: 10.0,
+          threshold_usd_above_mark: 10.0,
           threshold_dte: 2,
           threshold_neg_delta: 0.6,
           threshold_netp: 0.99,

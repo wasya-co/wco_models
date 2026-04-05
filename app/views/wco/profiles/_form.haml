@@ -24,6 +24,9 @@
     .row
       .col-6
         .field
+          %label schwab_account_hash
+          = f.text_field :schwab_account_hash
+        .field
           %label schwab_access_token
           = f.text_field :schwab_access_token
         .field
@@ -33,6 +36,8 @@
           %label schwab_id_token
           = f.text_field :schwab_id_token
       .col-6
+        .field
+          %label &nbsp;
         .field
           %label schwab_exec_access_token
           = f.text_field :schwab_exec_access_token

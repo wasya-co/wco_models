@@ -5,7 +5,7 @@ class Iro::Strategy
   include Mongoid::Paranoia
   store_in collection: 'iro_strategies'
 
-  field :description
+  field :descr
 
   LONG  = 'long'
   SHORT = 'short'
@@ -17,11 +17,11 @@ class Iro::Strategy
   field     :credit_or_debit, type: :string, default: 'credit'
   validates :credit_or_debit, presence: true
 
-
   has_many :positions,     class_name: 'Iro::Position', inverse_of: :strategy,     dependent: :destroy
-  has_one  :next_position, class_name: 'Iro::Position', inverse_of: :next_strategy ## _TODO: makes no sense...
+  ## _TODO: makes no sense...
+  has_one  :next_position, class_name: 'Iro::Position', inverse_of: :next_strategy
   belongs_to :stock,       class_name: 'Iro::Stock',    inverse_of: :strategies
-  # has_and_belongs_to_many :purses, class_name: 'Iro::Purse',    inverse_of: :strategies
+  belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :strategies
 
   KIND_COVERED_CALL             = 'covered_call'
   KIND_IRON_CONDOR              = 'iron_condor'
@@ -87,14 +87,13 @@ class Iro::Strategy
   field :threshold_dte,       type: :integer, default: 1
 
   field :next_inner_delta,        type: :float
-  field :next_inner_strike,       type: :float
+  field :next_inner_strike,       type: :float ## can be nil, poor design?
   field :next_outer_delta,        type: :float
   field :next_outer_strike,       type: :float
   field :next_spread_amount,      type: :float # e.g. $20 for a $2000 NVDA spread
 
-  field     :next_threshold_usd_above_mark, type: :float
-  validates :next_threshold_usd_above_mark, presence: true
-  def next_buffer_above_water; next_threshold_usd_above_mark; end
+  field     :next_usd_above_mark, type: :float
+  validates :next_usd_above_mark, presence: true
 
   def begin_delta_covered_call p
     p.inner.begin_delta
@@ -362,7 +361,7 @@ class Iro::Strategy
   #   "#{kind} #{stock}"
   # end
   def to_s
-    "#{kind} #{stock}"
+    "#{kind} #{stock} #{descr}"
   end
   def self.list long_or_short = nil
     these = long_or_short ? where( long_or_short: long_or_short ) : all

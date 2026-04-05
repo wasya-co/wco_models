@@ -70,16 +70,14 @@ table.bordered {
   }
 }
 
-table {
-  thead.sticky {
-    background: #ccc;
+table.sticky thead,
+table thead.sticky {
+  background: #ccc;
 
-    th {
-      position: sticky;
-      top: 0;
-      background: white;
-      z-index: 10;
-    }
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 }
 

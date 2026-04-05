@@ -14,8 +14,7 @@ class Iro::Purse
 
   has_many :positions,  class_name: 'Iro::Position', inverse_of: :purse
 
-  # has_and_belongs_to_many :strategies, class_name: 'Iro::Strategy', inverse_of: :purses
-  # belongs_to :stock, class_name: 'Iro::Stock', inverse_of: :strategies
+  has_many :strategies, class_name: 'Iro::Strategy', inverse_of: :purse
 
   field :unit,             type: :integer, default: 10
   ## with unit 10,  .001

@@ -33,35 +33,6 @@ class Iro::Purse
     available_amount
   end
 
-  # def balance
-  #   0.01
-  # end
-
-  def delta_wt_avg( begin_end, long_short, inner_outer )
-    max_loss_total = 0
-
-    out = positions.send( long_short ).map do |pos|
-      max_loss_total += pos.max_loss * pos.q
-      pos.max_loss * pos.q * pos.send( inner_outer ).send( "#{begin_end}_delta" )
-    end
-    # puts! out, 'delta_wt_avg 1'
-    out = out.reduce( &:+ ) / max_loss_total rescue 0
-    # puts! out, 'delta_wt_avg 2'
-    return out
-  end
-  ## delta to plot percentage
-  ## convert to normal between 0 and 3 std
-  def delta_to_plot_p( *args )
-    x = delta_wt_avg( *args ).abs
-    if x < 0.5
-      y = 1
-    else
-      y = 2 - 1/( 1.5 - x )
-    end
-    y_ = "#{ (y*100) .to_i}%"
-    return y_
-  end
-
   def to_s
     slug
   end

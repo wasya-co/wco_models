@@ -34,8 +34,8 @@ module Wco::ApplicationHelper
   end
 
   def pp_amount a, config = { precision: 2 }
-    return '-' if !a
-    return '-' if a.class == String
+    return '___' if !a
+    return '___' if a.class == String
     return number_to_currency a, precision: config[:precision]
     # "$#{'%.2f' % a}"
   end

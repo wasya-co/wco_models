@@ -18,7 +18,7 @@ class Tda::Order
       },
     })
     puts! results, 'results'
-    return results
+    return results.deep_symbolize_keys
   end
 
   ## not used - the hash is stored
@@ -31,6 +31,69 @@ class Tda::Order
       },
     } )
     puts! results, 'results'
+  end
+
+  def self.get_orders
+    profile = Wco::Profile.pi
+    today = Time.now.strftime("%Y-%m-%d")
+    results = self.get("/accounts/#{profile.schwab_account_hash}/orders", {
+      headers: {
+        accept:        'application/json',
+        Authorization: "Bearer #{profile[:schwab_exec_access_token]}",
+      },
+      query: {
+        fromEnteredTime: "#{today}T00:00:00Z",
+        toEnteredTime: "#{today}T23:59:59Z",
+      },
+    })
+    puts! results, 'get_orders() results'
+    puts! results.code, 'results.code'
+    return results
+  end
+
+  def self.cancel_order!( id )
+    profile = Wco::Profile.pi
+    results = self.delete("/accounts/#{profile.schwab_account_hash}/orders/#{id}", {
+      headers: {
+        accept:        'application/json',
+        Authorization: "Bearer #{profile[:schwab_exec_access_token]}",
+      },
+    })
+    puts! results, 'cancel_order!() results'
+    puts! results.code, 'results.code'
+    # if !results.code == '200'
+    #   throw 'could not cancel order'
+    # end
+  end
+
+  def self.credit_spread_q pos
+    query = {
+      orderType: pos.place2_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
+      session: "NORMAL",
+      duration: "DAY",
+      price: pos.pending_price,
+      orderStrategyType: "SINGLE",
+      orderLegCollection: [
+        ## open
+        {
+          instruction: "BUY_TO_OPEN",
+          quantity: pos.q,
+          instrument: {
+            symbol: pos.outer.symbol,
+            assetType: "OPTION",
+          },
+        },
+        {
+          instruction: "SELL_TO_OPEN",
+          quantity: pos.q,
+          instrument: {
+            symbol: pos.inner.symbol,
+            assetType: "OPTION",
+          },
+        },
+      ],
+    }
+    return query
   end
 
   ## obsolete, I don't do covered calls anymore?
@@ -117,8 +180,8 @@ class Tda::Order
     return query
   end
 
-  def self.place_order query
-    puts! query, '#place_order'
+  def self.place_order! query
+    # puts! query, '#place_order'
 
     profile = Wco::Profile.pi
     results = self.post("/accounts/#{profile.schwab_account_hash}/orders", {
@@ -129,8 +192,14 @@ class Tda::Order
       },
       body: query.to_json,
     })
+    puts! results, 'place_order!() results'
+    puts! results.code, 'results.code'
+    # if 201 != results.code
+    #   throw results
+    # end
     order_id = results.headers['location'].split('/').last
-    return order_id
+    # response = JSON.parse results.body
+    return { schwab_order_id: order_id, schwab_status: 'WORKING' }
   end
 
 end

@@ -10,16 +10,9 @@ class Iro::Option
 
   belongs_to :stock, class_name: 'Iro::Stock', inverse_of: :strategies
   def ticker; stock.ticker; end
-  # field :ticker
-  # validates :ticker, presence: true
 
   CALL = 'CALL'
   PUT  = 'PUT'
-
-  ## for now, recompute every time
-  # field :symbol
-  ## each option can be a leg in a position, no uniqueness
-  # validates :symbol, uniqueness: true, presence: true
 
   field :put_call, type: :string # 'PUT' or 'CALL'
   validates :put_call, presence: true
@@ -28,11 +21,6 @@ class Iro::Option
 
   field :strike, type: :float
   validates :strike, presence: true
-
-  def to_s
-    "#{symbol} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
-  end
-
 
   field :expires_on, type: :date
   validates :expires_on, presence: true
@@ -70,38 +58,13 @@ class Iro::Option
 
   field :last, type: :float
 
-  ## for TDA
-  ## "COST_030626C1030"
-  def symbol_old
-    if !self[:symbol]
-      p_c_ = put_call == 'PUT' ? 'P' : 'C'
-      strike_ = strike.to_i == strike ? strike.to_i : strike
-      sym = "#{stock.ticker}_#{expires_on.strftime("%m%d%y")}#{p_c_}#{strike_}" # XYZ_011819P45
-      self[:symbol] = sym
-      save
-    end
-    self[:symbol]
-  end
-
-  ## for schwab
+  ## for schwab, eg:
   ## "COST  260306C01030000"
   def symbol
     p_c_ = put_call == 'PUT' ? 'P' : 'C'
     strike_ = format("%08d", (strike.to_f * 1000).round)
     sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
   end
-=begin
-  def symbol_trash ## it persists - which I dont do right now
-    if !self[:symbol]
-      p_c_ = put_call == 'PUT' ? 'P' : 'C'
-      strike_ = format("%08d", (strike.to_f * 1000).round)
-      sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
-      self[:symbol] = sym
-      save
-    end
-    self[:symbol]
-  end
-=end
 
   # before_save :sync, if: ->() { !Rails.env.test? } ## do not sync in test
   def sync
@@ -117,65 +80,7 @@ class Iro::Option
     self.save! ## 2026-02-19 this must be present.
   end
 
-  def self.max_pain hash
-    outs = {}
-
-    %w| put call |.each do |contractType|
-      dates = hash["#{contractType}ExpDateMap"]
-      dates.each do |_date, strikes| ## _date="2023-02-10:5"
-        date = _date.split(':')[0].to_date.to_s
-        outs[date] ||= {
-          'all'  => {},
-          'call' => {},
-          'put'  => {},
-          'summary' => {},
-        }
-
-        strikes.each do |_strike, _v| ## _strike="18.5"
-          strike = _strike.to_f
-
-          ## calls
-          mem_c = 0
-          strikes.keys.reverse.each do |_key|
-            if _key == _strike
-              break
-            end
-            key = _key.to_f
-            tmp = hash["callExpDateMap"][_date][_key][0]['openInterest'] * ( key - strike )
-            mem_c += tmp
-          end
-          outs[date]['call'][_strike] = mem_c
-
-          ## puts
-          mem_p = 0
-          strikes.keys.each do |_key|
-            if _key == _strike
-              break
-            end
-            key = _key.to_f
-            tmp = hash["putExpDateMap"][_date][_key][0]['openInterest'] * ( strike - key )
-            mem_p += tmp
-          end
-          outs[date]['put'][_strike] = mem_p
-          outs[date]['all'][_strike] = mem_c + mem_p
-
-        end
-      end
-    end
-
-    ## compute summary
-    outs.each do |date, types|
-      all = types['all']
-      outs[date]['summary'] = { 'value' => all.keys[0] }
-      all.each do |strike, amount|
-        if amount < all[ outs[date]['summary']['value'] ]
-          outs[date]['summary']['value'] = strike
-        end
-      end
-    end
-
-    return outs
+  def to_s
+    "#{symbol} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
   end
-
-
 end

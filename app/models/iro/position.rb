@@ -17,8 +17,9 @@ class Iro::Position
   STATUSES = [ nil, STATUS_CLOSED, STATUS_ACTIVE, STATUS_PREPARE, STATUS_PROPOSED, STATUS_PENDING ]
   field :status
   validates :status, presence: true
-  scope :active, ->{ where( status: 'active' ) }
-  field :schwab_status
+  scope :active,   ->{ where( status: 'active' ) }
+  scope :proposed, ->{ where( status: 'proposed' ) }
+
 
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions
   index({ purse_id: 1, ticker: 1 })
@@ -77,6 +78,7 @@ class Iro::Position
   field :end_on
 
   field :schwab_order_id, type: :integer
+  field :schwab_status
 
   def begin_delta
     strategy.send("begin_delta_#{strategy.kind}", self)
@@ -124,6 +126,16 @@ class Iro::Position
       end_price: out[:last],
     })
     print '^'
+  end
+
+
+  field :pending_price
+
+  ## place2 = credit-spread
+  def place2_price
+    pos = self
+    out = pos.inner.begin_price - pos.outer.begin_price
+    return out.round(2)
   end
 
   def roll_price

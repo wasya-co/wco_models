@@ -94,6 +94,12 @@ class Iro::Strategy
   field     :next_usd_above_mark, type: :float
   validates :next_usd_above_mark, presence: true
 
+  INTENT_CLOSE = 'try-close'
+  INTENT_ROLL = 'try-roll'
+  INTENTS = [ nil, INTENT_CLOSE, INTENT_ROLL ]
+  field :intent
+
+
   def begin_delta_covered_call p
     p.inner.begin_delta
   end
@@ -365,7 +371,7 @@ class Iro::Strategy
 
 
   def to_s
-    "#{kind} #{stock} #{descr}"
+    "#{kind} #{stock} #{next_spread_amount}- #{intent} | #{descr}"
   end
   def self.list long_or_short = nil
     these = long_or_short ? where( long_or_short: long_or_short ) : all

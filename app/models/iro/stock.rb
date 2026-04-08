@@ -198,4 +198,14 @@ class ::Iro::Stock
     end
   end
 
+  def self.sync
+    tickers = Iro::Stock.all.map { |s| s.ticker }.join(',')
+    outs = Tda::Stock.get_quotes tickers
+    outs.map do |out|
+      Iro::Stock.where( ticker: out[:symbol] ).update_all( last: out[:last] )
+    end
+    puts "+++ Synced stocks."
+  end
+
+
 end

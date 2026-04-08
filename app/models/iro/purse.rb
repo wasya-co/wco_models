@@ -12,6 +12,9 @@ class Iro::Purse
   validates :slug, presence: true, uniqueness: true
   index({ slug: -1 }, { unique: true })
 
+  TEMPLATE_GAMEUI = 'gameui'
+  TEMPLATE_TABLE  = 'show'
+
   has_many :positions,  class_name: 'Iro::Position', inverse_of: :purse
 
   has_many :strategies, class_name: 'Iro::Strategy', inverse_of: :purse

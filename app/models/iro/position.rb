@@ -25,8 +25,6 @@ class Iro::Position
     return labels[st] || st
   end
 
-  INTENT_CLOSE = 'close.'
-  INTENTS = [ nil, INTENT_CLOSE ]
   field :intent
 
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions

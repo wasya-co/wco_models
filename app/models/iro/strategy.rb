@@ -364,9 +364,6 @@ class Iro::Strategy
   end
 
 
-  # def slug
-  #   "#{kind} #{stock}"
-  # end
   def to_s
     "#{kind} #{stock} #{descr}"
   end

@@ -25,7 +25,14 @@ class Iro::Position
   index({ purse_id: 1, ticker: 1 })
 
   belongs_to :stock, class_name: 'Iro::Stock',    inverse_of: :positions
-  delegate :ticker, to: :stock
+  field :ticker
+  def ticker
+    if !self[:ticker]
+      self[:ticker] = stock.ticker
+      self.save
+    end
+    self[:ticker]
+  end
 
   belongs_to :strategy, class_name: 'Iro::Strategy', inverse_of: :positions
   delegate :long_or_short,   to: :strategy

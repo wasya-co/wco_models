@@ -66,6 +66,34 @@ class Iro::Option
     sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
   end
 
+=begin
+  symbol = "META  260424P00500000"
+=end
+  def self.symbol_to_h symbol
+    ticker = symbol[0,6].strip
+    date_str = symbol[6,6]
+    type = symbol[12] == 'P' ? 'PUT' : 'CALL'
+    strike_str = symbol[13,8]
+    expires_on = Date.strptime(date_str, "%y%m%d")
+    strike = strike_str.to_i / 1000.0
+    return {
+      ticker: ticker,
+      strike: strike,
+      put_call: type,
+      expires_on: expires_on,
+    }
+  end
+
+  def matches_h h
+    if h[:put_call] == put_call &&
+       h[:strike] == strike &&
+       h[:expires_on] == expires_on
+      return true
+    else
+      return false
+    end
+  end
+
   # before_save :sync, if: ->() { !Rails.env.test? } ## do not sync in test
   def sync
     out = Tda::Option.get_quote({

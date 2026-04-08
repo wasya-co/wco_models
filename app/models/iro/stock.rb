@@ -73,7 +73,38 @@ class ::Iro::Stock
 
 =end
   field :volatility, type: :float
+  field :volatility_annual
+  field :volatility_monthly
+  field :volatility_daily
   def volatility duration: 1.year, recompute: false
+    if self[:volatility]
+      if !recompute
+        return self[:volatility]
+      end
+    end
+    stock = self
+    begin_on = Time.now - duration
+    points = ::Iro::Datapoint.where( kind: 'STOCK', symbol: stock.ticker,
+      :date.gte => begin_on,
+    ).order_by( date: :asc )
+
+    returns = []
+    points.each_cons(2) do |prev, curr|
+      returns << Math.log(curr.value / prev.value)
+    end
+    # puts! returns, 'returns'
+
+    mean = returns.sum / returns.size
+    variance = returns.sum { |r| (r - mean) ** 2 } / (returns.size - 1)
+
+    daily_vol   = Math.sqrt(variance)
+    monthly_vol = daily_vol * Math.sqrt(21)
+    annual_vol  = daily_vol * Math.sqrt(252)
+
+    self.update(volatility_annual: annual_vol, volatility_monthly: monthly_vol, volatility_daily: daily_vol)
+    annual_vol
+  end
+  def volatility_old duration: 1.year, recompute: false
     if self[:volatility]
       if !recompute
         return self[:volatility]
@@ -107,10 +138,8 @@ class ::Iro::Stock
 
     # n_periods = begin_on.to_date.business_days_until( Date.today )
     out = Math.sqrt( sum_of_sq )*sqrt( n )
-    adjustment = 2.0
-    out = out * adjustment
     puts! out, 'volatility (adjusted)'
-    self.update volatility: out
+    self.update( volatility: out, volatility_annual: out )
     return out
   end
 
@@ -147,7 +176,7 @@ class ::Iro::Stock
     date_from ||= Time.now - 1.year - 1.week
     date_to   ||= date_from + 180.days
     date_from = date_from.strftime('%Y-%m-%d')
-    date_to = date_to.strftime('%Y-%m-%d')
+    date_to   = date_to.strftime('%Y-%m-%d')
     puts! [ticker, date_from, date_to], "ticker,date_from,date_to"
     outs = HTTParty.get("https://api.stockdata.org/v1/data/eod?symbols=#{ticker}&date_from=#{date_from}&date_to=#{date_to}&api_token=#{STOCKDATA_ORG_KEY}")
     outs['data'].each do |datum|

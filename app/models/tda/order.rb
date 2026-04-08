@@ -66,6 +66,39 @@ class Tda::Order
     # end
   end
 
+
+  def self.close_credit_spread_q pos
+    query = {
+      orderType: pos.pending_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
+      session: "NORMAL",
+      duration: "DAY",
+      price: pos.pending_price.abs,
+      orderStrategyType: "SINGLE",
+      orderLegCollection: [
+        ## close
+        {
+          instruction: "BUY_TO_CLOSE",
+          quantity: pos.q,
+          instrument: {
+            symbol: pos.inner.symbol,
+            assetType: "OPTION",
+          },
+        },
+        {
+          instruction: "SELL_TO_CLOSE",
+          quantity: pos.q,
+          instrument: {
+            symbol: pos.outer.symbol,
+            assetType: "OPTION",
+          },
+        },
+
+      ],
+    }
+    return query
+  end
+
+  ## open credit spread?!
   def self.credit_spread_q pos
     query = {
       orderType: pos.place2_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
@@ -95,6 +128,30 @@ class Tda::Order
     }
     return query
   end
+
+
+  def self.place_order! query
+    # puts! query, '#place_order'
+
+    profile = Wco::Profile.pi
+    results = self.post("/accounts/#{profile.schwab_account_hash}/orders", {
+      headers: {
+        'content-type' => 'application/json',
+        accept:        'application/json',
+        Authorization: "Bearer #{profile[:schwab_exec_access_token]}",
+      },
+      body: query.to_json,
+    })
+    puts! results, 'place_order!() results'
+    puts! results.code, 'results.code'
+    # if 201 != results.code
+    #   throw results
+    # end
+    order_id = results.headers['location'].split('/').last
+    # response = JSON.parse results.body
+    return { schwab_order_id: order_id, schwab_status: 'WORKING' }
+  end
+
 
   ## obsolete, I don't do covered calls anymore?
   def self.roll_covered_call_q pos
@@ -178,28 +235,6 @@ class Tda::Order
     }
     # puts! query, 'query'
     return query
-  end
-
-  def self.place_order! query
-    # puts! query, '#place_order'
-
-    profile = Wco::Profile.pi
-    results = self.post("/accounts/#{profile.schwab_account_hash}/orders", {
-      headers: {
-        'content-type' => 'application/json',
-        accept:        'application/json',
-        Authorization: "Bearer #{profile[:schwab_exec_access_token]}",
-      },
-      body: query.to_json,
-    })
-    puts! results, 'place_order!() results'
-    puts! results.code, 'results.code'
-    # if 201 != results.code
-    #   throw results
-    # end
-    order_id = results.headers['location'].split('/').last
-    # response = JSON.parse results.body
-    return { schwab_order_id: order_id, schwab_status: 'WORKING' }
   end
 
 end

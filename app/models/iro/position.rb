@@ -7,7 +7,6 @@ class Iro::Position
 
   field :next_gain_loss_amount, type: :float
 
-
   STATUS_ACTIVE   = 'active'
   STATUS_CLOSED   = 'closed'
   STATUS_PREPARE  = 'prepare'
@@ -20,6 +19,15 @@ class Iro::Position
   scope :active,   ->{ where( status: 'active' ) }
   scope :proposed, ->{ where( status: 'proposed' ) }
 
+  def status_label st
+    labels = {}
+    labels[STATUS_PROPOSED] = 'Selected.'
+    return labels[st] || st
+  end
+
+  INTENT_CLOSE = 'close.'
+  INTENTS = [ nil, INTENT_CLOSE ]
+  field :intent
 
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions
   index({ purse_id: 1, ticker: 1 })
@@ -138,6 +146,13 @@ class Iro::Position
 
   field :pending_price
 
+  ## credit spread only
+  def close_price
+    pos = self
+    out = pos.outer.end_price - pos.inner.end_price
+    return out.round(2)
+  end
+
   ## place2 = credit-spread
   def place2_price
     pos = self
@@ -207,8 +222,6 @@ class Iro::Position
   def calc_rollp
     pos = self
     pos.next_reasons = []
-    # pos.next_symbol  = nil
-    # pos.next_delta   = nil
 
     out = strategy.send("calc_rollp_#{strategy.kind}", pos )
 

@@ -99,6 +99,10 @@ class Iro::Strategy
   INTENTS = [ nil, INTENT_CLOSE, INTENT_ROLL ]
   field :intent
 
+  field :sentiment,        type: :float
+  field :sentiment_sector, type: :float
+  field :sentiment_market, type: :float
+
 
   def begin_delta_covered_call p
     p.inner.begin_delta
@@ -330,7 +334,7 @@ class Iro::Strategy
   ## 2026-02-21 ok
   ## 2026-04-05 ok
   def calc_rollp_short_credit_call_spread p
-    puts! p, 'calc_rollp_short_credit_call_spread...'
+    # puts! p, 'calc_rollp_short_credit_call_spread...'
     stock.reload
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i <= threshold_dte

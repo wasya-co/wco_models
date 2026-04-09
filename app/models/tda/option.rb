@@ -12,7 +12,7 @@ end
 class Tda::Option
 
   include ::HTTParty
-  debug_output $stdout
+  # debug_output $stdout
   base_uri 'https://api.schwabapi.com/marketdata/v1'
 
 
@@ -43,7 +43,7 @@ class Tda::Option
         query: query }
       timestamp = DateTime.parse out.headers['date']
       out = out.parsed_response
-      puts! out, 'outs'
+      # puts! out, 'outs'
 
       outs = []
       %w| put call |.each do |contractType|
@@ -109,7 +109,7 @@ class Tda::Option
   ## 2023-02-06 _vp_ :: Continue.
   ##
   def self.get_quotes params
-    puts! params, 'core Tda::Option#get_quotes...'
+    # puts! params, 'core Tda::Option#get_quotes...'
 
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
@@ -178,7 +178,7 @@ class Tda::Option
 
   ## 2026-02-23 use this instead.
   def self.get_quotes_h params
-    puts! params, 'Tda::Option#get_quotes_h ...'
+    # puts! params, 'Tda::Option#get_quotes_h ...'
 
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
@@ -214,7 +214,7 @@ class Tda::Option
 
     ## query = { contractType: "PUT", toDate: "2026-02-26", fromDate: "2026-02-26", symbol: "TSLA", strike: 395.0}
     query = { }.merge opts
-    puts! query, 'query'
+    # puts! query, 'query'
 
     results = self.get( "/chains", {
       headers: {
@@ -296,7 +296,7 @@ class Tda::Option
       ],
     }
     File.write('tmp/query.json', JSON.pretty_generate( query ))
-    puts! query, 'query'
+    # puts! query, 'query'
 
     return
 
@@ -305,11 +305,11 @@ class Tda::Option
     }
 
     path = "/v1/accounts/#{::TD_AMERITRADE[:accountId]}/orders"
-    puts! path, 'path'
+    # puts! path, 'path'
     out = self.post path, { query: query, headers: headers }
     timestamp = DateTime.parse out.headers['date']
     out = out.parsed_response.deep_symbolize_keys
-    puts! out, 'created credit call?'
+    # puts! out, 'created credit call?'
   end
   def self.create_long_debit_call_spread
   end

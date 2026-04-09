@@ -208,6 +208,37 @@ class Iro::Position
     outer.sync
   end
 
+  def self.sync_all
+    @positions = Iro::Position.where( :status.in => [ 'active', 'pending' ] )
+    expiration_dates = @positions.map { |p| p.expires_on.to_s }.sort
+    # puts! expiration_dates, 'expiration_dates'
+
+    count = 1
+    @positions.each do |pos|
+      # puts! pos.to_s, 'pos TMP'
+
+      quotes_h = Tda::Option.get_quotes_h({
+        contractType: 'ALL',
+        ticker:  pos.ticker,
+        fromDate: expiration_dates.first,
+        toDate: expiration_dates.last,
+      })
+
+      pos.inner.end_price = quotes_h[pos.expires_on.to_s][pos.put_call][pos.inner.strike][:price]
+      pos.inner.end_delta = quotes_h[pos.expires_on.to_s][pos.put_call][pos.inner.strike][:delta]
+      pos.inner.save ? print("#{count}^") : print("#{count}X")
+      if [ Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD, Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD ].include?( pos.strategy.kind )
+        pos.outer.end_price = quotes_h[pos.expires_on.to_s][pos.put_call][pos.outer.strike][:price]
+        pos.outer.end_delta = quotes_h[pos.expires_on.to_s][pos.put_call][pos.outer.strike][:delta]
+        pos.outer.save ? print('^') : print('X')
+      end
+      count = count+1
+    end
+
+    print 'synced-all.'
+  end
+
+
 
   ##
   ## decisions
@@ -230,7 +261,7 @@ class Iro::Position
 
   def calc_nxt
     pos = self
-    puts! pos, '#calc_nxt...'
+    # puts! pos, '#calc_nxt...'
 
     ## 7 days ahead - not configurable
     params = {
@@ -238,9 +269,9 @@ class Iro::Position
       expirationDate: next_expires_on,
       ticker: ticker,
     }
-    puts! params, 'ze params'
+    # puts! params, 'ze params'
     outs = Tda::Option.get_quotes(params)
-    puts! outs, 'outs'
+    # puts! outs, 'outs'
     outs_bk = outs.dup
 
     outs = outs.select do |out|
@@ -269,7 +300,7 @@ class Iro::Position
           raise 'zt3 - @TODO: implement, debit spreads'
         end
       end
-      puts! outs[0][:strikePrice], 'after calc next_inner_strike'
+      # puts! outs[0][:strikePrice], 'after calc next_inner_strike'
       # puts! outs, 'outs'
     end
 
@@ -283,8 +314,8 @@ class Iro::Position
         raise 'zt4 - this cannot happen'
       end
     end
-    puts! outs[0][:strikePrice], 'after calc next_usd_above_mark'
-    puts! outs, 'outs'
+    # puts! outs[0][:strikePrice], 'after calc next_usd_above_mark'
+    # puts! outs, 'outs'
 
     ## next_inner_delta
     outs = outs.select do |out|
@@ -298,8 +329,8 @@ class Iro::Position
         raise 'zt5 - this cannot happen'
       end
     end
-    puts! outs[0][:strikePrice], 'after calc next_inner_delta'
-    puts! outs, 'outs'
+    # puts! outs[0][:strikePrice], 'after calc next_inner_delta'
+    # puts! outs, 'outs'
 
     inner = outs[0]
     outs = outs.select do |out|

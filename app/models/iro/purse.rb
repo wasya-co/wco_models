@@ -13,7 +13,7 @@ class Iro::Purse
   index({ slug: -1 }, { unique: true })
 
   TEMPLATE_GAMEUI = 'gameui'
-  TEMPLATE_TABLE  = 'show'
+  TEMPLATE_TABLE  = 'table'
 
   has_many :positions,  class_name: 'Iro::Position', inverse_of: :purse
 

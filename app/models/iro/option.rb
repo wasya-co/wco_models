@@ -102,7 +102,7 @@ class Iro::Option
       expirationDate: expires_on.strftime('%Y-%m-%d'),
       ticker: ticker,
     })
-    puts! out, "option sync of `#{self.to_s}`"
+    # puts! out, "option sync of `#{self.to_s}`"
     self.end_price = ( out.bid + out.ask ) / 2 rescue 0
     self.end_delta = out.delta ? out.delta : 0.0
     self.save! ## 2026-02-19 this must be present.

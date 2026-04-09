@@ -98,10 +98,10 @@ class Tda::Order
     return query
   end
 
-  ## open credit spread?!
+  ## open credit spread
   def self.credit_spread_q pos
     query = {
-      orderType: pos.place2_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
+      orderType: pos.pending_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
       session: "NORMAL",
       duration: "DAY",
       price: pos.pending_price,
@@ -190,10 +190,10 @@ class Tda::Order
 
   def self.roll_credit_call_spread_q pos
     query = {
-      orderType: pos.roll_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
+      orderType: pos.pending_price > 0 ? "NET_CREDIT" : "NET_DEBIT",
       session: "NORMAL",
       duration: "DAY",
-      price: pos.roll_price.abs.to_s,
+      price: pos.pending_price.abs.to_s,
       orderStrategyType: "SINGLE",
       orderLegCollection: [
         ## close

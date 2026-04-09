@@ -142,7 +142,7 @@ class Iro::Position
   end
 
 
-  field :pending_price
+  field :pending_price, type: :float
 
   ## credit spread only
   def close_price
@@ -151,8 +151,8 @@ class Iro::Position
     return out.round(2)
   end
 
-  ## place2 = credit-spread
-  def place2_price
+  ## credit-spread
+  def open_price
     pos = self
     out = pos.inner.begin_price - pos.outer.begin_price
     return out.round(2)
@@ -206,6 +206,19 @@ class Iro::Position
     end
     inner.sync
     outer.sync
+  end
+
+  def schwab_query
+    pos = self
+    case pos.intent
+    when Iro::Strategy::INTENT_OPEN
+      the_q = Tda::Order.credit_spread_q pos
+    when Iro::Strategy::INTENT_ROLL
+      the_q = Tda::Order.roll_credit_call_spread_q pos
+    else
+      throw "prp - #schwab_query undefined for position #{pos.inspect}"
+    end
+    return the_q
   end
 
   def self.sync_all
@@ -274,6 +287,11 @@ class Iro::Position
     # puts! outs, 'outs'
     outs_bk = outs.dup
 
+    ## cleanup mid-increments
+    outs = outs.select do |out|
+      ( out[:strikePrice] - pos.inner.strike ) % strategy.stock.options_price_increment == 0
+    end
+
     outs = outs.select do |out|
       out[:bidSize] + out[:askSize] > 0
     end
@@ -319,15 +337,8 @@ class Iro::Position
 
     ## next_inner_delta
     outs = outs.select do |out|
-      if 'CALL' == pos.put_call
-        out_delta  = out[:delta] rescue 1
-        out_delta <= strategy.next_inner_delta
-      elsif 'PUT' == pos.put_call
-        out_delta  = out[:delta] rescue 0
-        out_delta <= strategy.next_inner_delta
-      else
-        raise 'zt5 - this cannot happen'
-      end
+      out_delta  = out[:delta].abs rescue 0
+      out_delta <= strategy.next_inner_delta
     end
     # puts! outs[0][:strikePrice], 'after calc next_inner_delta'
     # puts! outs, 'outs'

@@ -379,7 +379,7 @@ class Iro::Strategy
 
 
   def to_s
-    "#{kind} #{stock} #{next_spread_amount}- #{intent} | #{descr}"
+    "#{kind} #{stock} #{next_spread_amount}- #{intent} #{descr}"
   end
   def self.list long_or_short = nil
     these = long_or_short ? where( long_or_short: long_or_short ) : all

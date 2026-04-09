@@ -94,14 +94,18 @@ class Iro::Strategy
   field     :next_usd_above_mark, type: :float
   validates :next_usd_above_mark, presence: true
 
+
   INTENT_CLOSE = 'try-close'
-  INTENT_ROLL = 'try-roll'
-  INTENTS = [ nil, INTENT_CLOSE, INTENT_ROLL ]
+  INTENT_OPEN  = 'try-open'
+  INTENT_ROLL  = 'try-roll'
+  INTENTS      = [ nil, INTENT_CLOSE, INTENT_ROLL ]
   field :intent
 
   field :sentiment,        type: :float
   field :sentiment_sector, type: :float
   field :sentiment_market, type: :float
+
+  field :tgt_exposure, type: :float
 
 
   def begin_delta_covered_call p

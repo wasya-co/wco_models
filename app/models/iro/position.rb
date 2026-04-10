@@ -435,13 +435,13 @@ class Iro::Position
     out = "#{stock} (#{q}) #{expires_on.to_datetime.strftime('%b %d')} #{strategy.long_or_short} ["
     if Iro::Strategy::LONG == long_or_short
       if outer&.strike
-        out = out + "$#{outer.strike} <- "
+        out = out + "$#{outer.strike} << "
       end
       out = out + "$#{inner.strike}"
     else
       out = out + "$#{inner.strike}"
       if outer&.strike
-        out = out + " -> $#{outer.strike}"
+        out = out + " >> $#{outer.strike}"
       end
     end
     out += "] "

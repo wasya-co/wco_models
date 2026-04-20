@@ -10,6 +10,7 @@ class Wco::Profile
   validates :email, presence: true, uniqueness: true
 
   field :name
+  field :descr
 
 
   field :per_page, type: :integer, default: 25

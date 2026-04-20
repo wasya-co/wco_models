@@ -3,22 +3,26 @@
   = form_for profile do |f|
 
     .row
+      .col-6
+        .field
+          %label email
+          = f.text_field :email
 
-      .field
-        %label email
-        = f.text_field :email
+        .field
+          %label name
+          = f.text_field :name
 
-      .field
-        %label name
-        = f.text_field :name
+        .field
+          %label leadset
+          = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset_id ), {}, { class: 'select2' }
 
-      .field
-        %label role
-        = f.select :role, options_for_select(Wco::Profile.roles_list, selected: profile.role )
-
-      .field
-        %label leadset
-        = f.select :leadset, options_for_select(Wco::Leadset.list, selected: profile.leadset_id ), {}, { class: 'select2' }
+      .col-6
+        .field
+          %label role
+          = f.select :role, options_for_select(Wco::Profile.roles_list, selected: profile.role )
+        .field
+          %label descr
+          = f.text_area :descr
 
     %hr
     .row

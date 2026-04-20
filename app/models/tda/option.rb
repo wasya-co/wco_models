@@ -178,7 +178,7 @@ class Tda::Option
 
   ## 2026-02-23 use this instead.
   def self.get_quotes_h params
-    # puts! params, 'Tda::Option#get_quotes_h ...'
+    puts! params, 'Tda::Option#get_quotes_h params ...'
 
     profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
@@ -214,7 +214,7 @@ class Tda::Option
 
     ## query = { contractType: "PUT", toDate: "2026-02-26", fromDate: "2026-02-26", symbol: "TSLA", strike: 395.0}
     query = { }.merge opts
-    # puts! query, 'query'
+    puts! query, 'query'
 
     results = self.get( "/chains", {
       headers: {
@@ -223,7 +223,7 @@ class Tda::Option
       },
       query: query,
     })
-    # puts! results, '/chains --'
+    puts! results, '/chains --'
     timestamp = DateTime.parse results.headers['date']
     results = results.parsed_response.deep_symbolize_keys
 

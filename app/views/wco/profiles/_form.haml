@@ -75,6 +75,22 @@
           %label smtp_port
           = f.text_field :smtp_port
 
+    %hr
+    .row
+      .col-2
+        linkedin
+      .col-10
+        .field
+          %label linkedin_client_id
+          = f.text_field :linkedin_client_id
+
+        .field
+          %label linkedin_client_secret
+          = f.text_field :linkedin_client_secret
+
+        .field
+          %label linkedin_access_token
+          = f.text_field :linkedin_access_token
 
     .actions
       = f.submit 'Go'

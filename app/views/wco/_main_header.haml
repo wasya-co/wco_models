@@ -19,6 +19,7 @@
             %li= link_to '/hosting', '/hosting'
           - if defined? iro
             %li= link_to '/trading', '/trading'
+          %li= link_to '[linkedin sync]', wco.linkedin_sync_path
 
         %ul
           %li= render '/wco/invoices/header'

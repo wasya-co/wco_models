@@ -32,6 +32,10 @@ class Wco::Profile
   field :smtp_password
   field :smtp_port
 
+  field :linkedin_client_id
+  field :linkedin_client_secret
+  field :linkedin_access_token
+
 
   has_many :newsvideos, class_name: 'Wco::Newsvideo'
   has_many :reports, class_name: 'Wco::Report'

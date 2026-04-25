@@ -41,7 +41,11 @@ class Iro::Position
   end
 
   belongs_to :strategy, class_name: 'Iro::Strategy', inverse_of: :positions
-  delegate :long_or_short,   to: :strategy
+  field :long_or_short, type: String
+  before_save do
+    self.long_or_short = strategy.long_or_short
+  end
+
   delegate :credit_or_debit, to: :strategy
 
   field :put_call, type: :string

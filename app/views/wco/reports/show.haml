@@ -13,6 +13,11 @@
 
   .descr= raw @report.body
 
+  %hr
+  .actions
+    %ul
+      %li= button_to 'Post on Linkedin', report_to_linkedin_path(@report), data: { confirm: 'Are you sure?' }
+
 -## this is in newspartials, newsvideos.
 -#
   .Timeline{ style: "height: #{@duration_ms*height_ms}px" }

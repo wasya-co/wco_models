@@ -19,7 +19,9 @@ Wco::Engine.routes.draw do
     post 'videos', to: 'videos#create'
   end
 
-  get 'application/tinymce', to: 'application#tinymce'
+  get 'application/tinymce',       to: 'application#tinymce'
+  get 'linkedin_sync', to: 'application#linkedin_sync', as: :linkedin_sync
+  match 'linkedin_cb',   to: 'application#linkedin_cb',   as: :linkedin_cb, via: [ :post, :get ]
 
   resources :assets
   # get 'assets/:id', to: 'assets#show', as: :asset
@@ -87,6 +89,8 @@ Wco::Engine.routes.draw do
 
   get 'reports',         to: 'reports#index',  as: :reports, defaults: { deleted: false }
   get 'reports/deleted', to: 'reports#index',  as: :deleted_reports, defaults: { deleted: true } ## must be before resources, because 'deleted' is not an id.
+  match 'reports/:id/to-linkedin', to: 'reports#to_linkedin', as: :report_to_linkedin, via: [ :get, :post ]
+  match 'reports/:id/to-company-linkedin', to: 'reports#to_company_linkedin', as: :report_to_company_linkedin, via: [ :get, :post ]
   resources :reports
 
   post 'sites/:id/check_sitemap', to: 'sites#check_sitemap', as: :check_sitemap

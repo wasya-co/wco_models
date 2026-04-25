@@ -29,6 +29,47 @@ class Wco::ApplicationController < ActionController::Base
     render layout: false
   end
 
+  def linkedin_cb
+    authorize! :open_permission, Wco
+    code = params[:code]
+    pi = Wco::Profile.pi
+
+    uri = URI("https://www.linkedin.com/oauth/v2/accessToken")
+    res = Net::HTTP.post_form(uri, {
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: linkedin_cb_url,
+      client_id: pi.linkedin_client_id,
+      client_secret: pi.linkedin_client_secret,
+    })
+    data = JSON.parse(res.body)
+    pi.update({ linkedin_access_token: data['access_token'] })
+    flash[:notice] = 'Ok.'
+    redirect_to '/'
+  end
+
+  def linkedin_sync
+    authorize! :open_permission, Wco
+
+    pi = Wco::Profile.pi
+    redirect_uri = linkedin_cb_url
+
+    base_url = "https://www.linkedin.com/oauth/v2/authorization"
+
+    params = {
+      response_type: "code",
+      client_id: pi.linkedin_client_id,
+      redirect_uri: redirect_uri,
+
+      scope: "openid profile email w_member_social"  ## r_organization_admin w_organization_social
+    }
+
+    url = "#{base_url}?#{URI.encode_www_form(params)}"
+
+    puts! url, "linkedin_oauth_url"
+
+    redirect_to url, allow_other_host: true
+  end
 
   ##
   ## private

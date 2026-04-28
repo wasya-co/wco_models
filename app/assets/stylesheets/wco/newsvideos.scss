@@ -1,8 +1,17 @@
 
+.zero-height {
+  position: absolute;
+}
+
 .NewsoverlayTimeline {
   border: 5px solid green;
   position: absolute;
   left: 230px;
+}
+
+.NewspartialTimelineW {
+  position: relative;
+  min-height: 50px;
 }
 
 .NewspartialTimeline {
@@ -28,9 +37,20 @@
       min-width: 300px;
     }
 
+    .full-textC {
+      z-index: 4;
+      position: relative;
+      background: white;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+
   }
 
   .main {
+
+
     width: 200px;
   }
 

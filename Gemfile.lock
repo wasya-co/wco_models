@@ -26,6 +26,7 @@ PATH
       sass-rails (~> 6.0)
       selenium-webdriver (~> 4.9.0)
       sidekiq (~> 7.2.0)
+      streamio-ffmpeg
       stripe (~> 10.4.0)
 
 GEM
@@ -259,6 +260,7 @@ GEM
       mongoid
     mongoid_paranoia (0.6.0)
       mongoid (>= 7.3)
+    multi_json (1.15.0)
     multi_xml (0.6.0)
     net-imap (0.4.17)
       date
@@ -411,6 +413,8 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    streamio-ffmpeg (3.0.2)
+      multi_json (~> 1.8)
     stringio (3.1.2)
     stripe (10.4.0)
     temple (0.10.4)

@@ -58,5 +58,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'selenium-webdriver', "~> 4.9.0"
   spec.add_dependency 'sidekiq', '~> 7.2.0'
   spec.add_dependency 'stripe',      "~> 10.4.0"
+  spec.add_dependency 'streamio-ffmpeg'
+
 
 end

@@ -92,18 +92,10 @@ class Wco::Newspartial
     return out
   end
 
-  ## can I make do without puppet driver?
+  ##
+  ## Can I make do without puppet driver? Probably not: I need the audio worklet.
+  ##
   def generate_video
-    this = self
-    page_url = "#{WCO_ORIGIN}/2025/talkinghead_example.html?wco_origin=#{WCO_ORIGIN}&newspartial_id=#{this.id.to_s}&api_key=#{WCO_SIMPLE_API_KEY}&api_secret=#{WCO_SIMPLE_API_SECRET}"
-    puts!(page_url, 'page_url')
-
-    puts "Sleeping 10..."
-    sleep 10
-    return
-  end
-
-  def generate_video_old
     cmd = "cd #{ISHLIB3JS_ROOT} ;
       node ./src/talking_head/example_puppeteer_wired.js \
         --api_key=#{WCO_SIMPLE_API_KEY} \

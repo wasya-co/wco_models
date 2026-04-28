@@ -3,6 +3,10 @@
 //   display: block;
 // }
 
+// .tmp-1 {
+//   float: right;
+// }
+
 hr {
   border-top: 1px solid red;
 }
@@ -14,6 +18,13 @@ textarea {
   width: 100%;
 
   min-height: 300px;
+}
+
+/* A */
+
+.absolute {
+  border: 1px solid pink;
+  position: absolute;
 }
 
 /* B */

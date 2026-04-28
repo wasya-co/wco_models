@@ -33,9 +33,6 @@ class Wco::Video
 
   field :duration_ms, type: :integer
 
-  # belongs_to :user_profile,                  :class_name => 'Ish::UserProfile', :inverse_of => :videos
-  # has_and_belongs_to_many :shared_profiles,  :class_name => 'Ish::UserProfile', :inverse_of => :shared_videos
-
   belongs_to :lead,        optional: true
   belongs_to :newspartial, optional: true
   belongs_to :newsvideo,   optional: true
@@ -75,6 +72,14 @@ class Wco::Video
 
   def export_fields
     %w| name descr |
+  end
+
+  before_create :set_duration_ms
+  def set_duration_ms
+    return unless video.queued_for_write[:original]
+    path = video.queued_for_write[:original].path
+    movie = FFMPEG::Movie.new(path)
+    self.duration_ms = (movie.duration * 1000).to_i if movie.duration
   end
 
   def self.list

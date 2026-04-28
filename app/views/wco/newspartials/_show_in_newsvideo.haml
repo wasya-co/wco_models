@@ -1,34 +1,39 @@
 
-.NewspartialTimeline{ style: "height: #{newspartial.duration_ms*HEIGHT_MS}px; min-height: 100px;" }
-  .main
-    - newspartial.config['wtimes']&.each_with_index do |wtime, idx|
+.NewspartialTimelineW
+  .zero-height.collapse-expand{ id: "#{newspartial.id.to_s}-wrapped-1" } <>
+  .NewspartialTimeline{ style: "height: #{newspartial.duration_ms*HEIGHT_MS}px; min-height: 100px;" }
 
-      %div.timestamp{ style: "top: #{wtime.to_f*HEIGHT_MS}px"}
-        .wtime= wtime
-        .word= newspartial.config['words'][idx]
+    .main
+      - newspartial.config['wtimes']&.each_with_index do |wtime, idx|
 
-  .full-text
-    .header
-      Newspartial
-      = link_to '[~]', edit_newspartial_path(newspartial)
-      .d-inline-block= button_to 'x', newspartial_path(newspartial), method: :delete, :data => { :confirm => 'Are you sure?' }
-      %span{ class: 'gray' } #{newspartial.id}
-      = link_to '[api]', api_newspartial_config_path(newspartial, format: :json, api_key: WCO_SIMPLE_API_KEY, api_secret: WCO_SIMPLE_API_SECRET ), target: :_blank
+        %div.timestamp{ style: "top: #{wtime.to_f*HEIGHT_MS}px"}
+          .wtime= wtime
+          .word= newspartial.config['words'][idx]
 
-    .flex-row
-      .a Duration: `#{newspartial.duration_ms}`ms
-      .descr= newspartial.body
-      .d-flex.flex-column
-        = button_to 'Generate video', newspartial_generate_video_path(newspartial), :data => { :confirm => 'Are you sure?' }
-        .small.gray ISHLIB3JS_ROOT
-        Video:
-        - if newspartial.video
-          = image_tag newspartial.video.thumb.url(:thumb), class: 'thumb'
-      .d-flex.flex-column
-        = button_to 'Generate speech', newspartial_generate_speech_path(newspartial), :data => { :confirm => 'Are you sure?' }
-        .small.gray Requires HeadTTS.git on :8882
-        Audio:
-        - if newspartial.audio.present?
-          %audio{ controls: true }
-            %source{ src: newspartial.audio, type: "audio/wav" }
-            Your browser does not support the audio element.
+
+    .full-text
+      .header.collapse-expand{ id: newspartial.id.to_s }
+        Newspartial
+        = link_to '[~]', edit_newspartial_path(newspartial)
+        .d-inline-block= button_to 'x', newspartial_path(newspartial), method: :delete, :data => { :confirm => 'Are you sure?' }
+        %span{ class: 'gray' } #{newspartial.id}
+        = link_to '[api]', api_newspartial_config_path(newspartial, format: :json, api_key: WCO_SIMPLE_API_KEY, api_secret: WCO_SIMPLE_API_SECRET ), target: :_blank
+
+      .full-textC
+        .flex-row
+          .a Duration: `#{newspartial.duration_ms}`ms
+          .descr= newspartial.body
+          .d-flex.flex-column
+            = button_to 'Generate video', newspartial_generate_video_path(newspartial), :data => { :confirm => 'Are you sure?' }
+            .small.gray ISHLIB3JS_ROOT
+            Video:
+            - if newspartial.video
+              = image_tag newspartial.video.thumb.url(:thumb), class: 'thumb'
+          .d-flex.flex-column
+            = button_to 'Generate speech', newspartial_generate_speech_path(newspartial), :data => { :confirm => 'Are you sure?' }
+            .small.gray Requires HeadTTS.git on :8882
+            Audio:
+            - if newspartial.audio.present?
+              %audio{ controls: true }
+                %source{ src: newspartial.audio, type: "audio/wav" }
+                Your browser does not support the audio element.

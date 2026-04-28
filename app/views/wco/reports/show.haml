@@ -1,6 +1,8 @@
 
 - height_ms = 100.0/1000
 
+= render 'wco/reports/to_facebook.html'
+
 .reports-show.maxwidth
   %h5
     = link_to '[~]', edit_report_path(@report)
@@ -17,6 +19,7 @@
   .actions
     %ul
       %li= button_to 'Post on Linkedin', report_to_linkedin_path(@report), data: { confirm: 'Are you sure?' }
+      %li= button_to 'Post on Facebook', report_to_facebook_path(@report), data: { confirm: 'Are you sure?' }
 
 -## this is in newspartials, newsvideos.
 -#

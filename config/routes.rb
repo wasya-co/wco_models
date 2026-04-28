@@ -90,6 +90,7 @@ Wco::Engine.routes.draw do
   get 'reports',         to: 'reports#index',  as: :reports, defaults: { deleted: false }
   get 'reports/deleted', to: 'reports#index',  as: :deleted_reports, defaults: { deleted: true } ## must be before resources, because 'deleted' is not an id.
   match 'reports/:id/to-linkedin', to: 'reports#to_linkedin', as: :report_to_linkedin, via: [ :get, :post ]
+  match 'reports/:id/to-facebook', to: 'reports#to_facebook', as: :report_to_facebook, via: [ :get, :post ]
   match 'reports/:id/to-company-linkedin', to: 'reports#to_company_linkedin', as: :report_to_company_linkedin, via: [ :get, :post ]
   resources :reports
 

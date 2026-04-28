@@ -102,6 +102,22 @@ class Wco::ReportsController < Wco::ApplicationController
     puts res.body
   end
 
+  def to_facebook
+    @report = Wco::Report.unscoped.find params[:id]
+    authorize! :edit, @report
+    pi = Wco::Profile.pi
+
+    text = @report.body
+    text.gsub!(%r{</p\s*>}i, "\n")
+    text.gsub!(%r{<p\s*/?>}i, "")
+    text.gsub!(%r{<[^>]*>}, "")
+    text.strip.gsub(/\n{3,}/, "\n\n")
+
+    Wco::FacebookPoster.new.post("#{@report.title}\n\n#{text}")
+    flash_notice 'Probably ok.'
+    redirect_to request.referrer
+  end
+
   def to_linkedin
     @report = Wco::Report.unscoped.find params[:id]
     authorize! :edit, @report

@@ -3,12 +3,21 @@
   %h5.text-center
     Newsvideo `#{@newsvideo.title}`
     #{link_to '[~]', edit_newsvideo_path(@newsvideo)}
-    .d-inline-block= button_to 'split', split_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+
     = link_to '[+ newspartial]', new_newspartial_path(newsvideo_id: @newsvideo.id)
     = link_to '[search illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
-    .d-inline-block= button_to 'generate', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
 
-  .descr= @newsvideo.body
+
+  %ul.actions
+    %li
+      .d-inline-block= button_to 'split', split_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+      .small.gray
+        Uses sentences_to_phrases to reasonably create Wco::Newspartial's
+    %li
+      .d-inline-block= button_to 'generate', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+
+  %i.fa.fa-compress.collapse-expand{ id: @newsvideo.id.to_s } Descr
+  .descr= raw @newsvideo.body.gsub(/(\r?\n){2}/, "<br /><br />")
   %br
   %br
 

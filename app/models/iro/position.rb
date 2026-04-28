@@ -29,6 +29,12 @@ class Iro::Position
 
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :positions
   index({ purse_id: 1, ticker: 1 })
+  index({ deleted_at: 1,
+          status: 1,
+          expires_on: 1,
+          ticker: 1,
+          long_or_short: 1,
+          inner_strike: 1 })
 
   belongs_to :stock, class_name: 'Iro::Stock',    inverse_of: :positions
   field :ticker

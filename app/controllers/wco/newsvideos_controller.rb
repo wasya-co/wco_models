@@ -86,13 +86,14 @@ class Wco::NewsvideosController < Wco::ApplicationController
 
     sentences = PragmaticSegmenter::Segmenter.new(text: @newsvideo.body).segment
     phrases = sentences_to_phrases(sentences)
-    # puts! phrases, 'phrases'
+    puts! phrases, 'phrases'
+
     phrases.each do |phrase|
       newspartial = Wco::Newspartial.new body: phrase, newsvideo: @newsvideo
       newspartial.save!
     end
 
-    flash_notice 'All done.'
+    flash_notice 'Done spliting the video.'
     redirect_to request.referrer
   end
 

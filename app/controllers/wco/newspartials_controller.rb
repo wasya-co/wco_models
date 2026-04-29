@@ -84,7 +84,7 @@ class Wco::NewspartialsController < Wco::ApplicationController
     else
       flash_alert "Cannot update newspartial: #{@newspartial.errors.messages}"
     end
-    redirect_to action: 'index'
+    redirect_to newsvideo_path(@newspartial.newsvideo_id)
   end
 
   ##

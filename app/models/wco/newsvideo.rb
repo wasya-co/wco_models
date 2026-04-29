@@ -26,6 +26,8 @@ class Wco::Newsvideo
   field :config_json, type: :string
   field :duration_ms, type: :integer
 
+  field :w_px, type: Integer
+  field :h_px, type: Integer
   field :x, :type => Float
   field :y, :type => Float
   field :z, :type => Float

@@ -11,9 +11,16 @@
       %label Slug
       = f.text_field :slug, class: 'w-100'
 
-    .field
-      %label deleted_at
-      = f.text_field :deleted_at
+    .row
+      .field
+        %label deleted_at
+        = f.text_field :deleted_at
+      .field
+        %label w_px
+        = f.text_field :w_px
+      .field
+        %label h_px
+        = f.text_field :h_px
 
     .field
       %label Body

@@ -3,6 +3,31 @@
   position: absolute;
 }
 
+.timeline-stamps {
+  border: 1px solid red;
+  width: 50px;
+
+  position: absolute;
+  top: 3px; // border
+
+  height: 100%;
+
+  .tick {
+    position: absolute;
+    left: 0;
+    font-size: 10px;
+    transform: translateY(-50%);
+    border-top: 1px solid black;
+    height: 5px;
+    background: white;
+  }
+
+}
+
+
+
+
+
 .NewsoverlayTimeline {
   border: 5px solid green;
   position: absolute;

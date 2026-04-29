@@ -1,5 +1,6 @@
 
 require 'mongoid_paperclip'
+require 'streamio-ffmpeg'
 
 class Wco::Video
   include Mongoid::Document
@@ -78,14 +79,33 @@ class Wco::Video
   def set_duration_ms
     return unless video.queued_for_write[:original]
     path = video.queued_for_write[:original].path
-    movie = FFMPEG::Movie.new(path)
+    movie = ::FFMPEG::Movie.new(path)
     self.duration_ms = (movie.duration * 1000).to_i if movie.duration
+  end
+
+  before_create :set_title
+  def set_title
+    return unless video.present?
+    filename = video_file_name # Paperclip metadata
+    return unless filename
+    self.name = File.basename(filename, ".*") if self.name.blank?
   end
 
   def self.list
     [['', nil]] + self.unscoped.order_by( :created_at => :desc ).map do |item|
       [ "#{item.created_at.strftime('%Y%m%d')} #{item.name}", item.id ]
     end
+  end
+
+  def generate_thumbnail
+    return unless video.queued_for_write[:original]
+
+    input_path  = video.queued_for_write[:original].path
+    output_path = Rails.root.join('tmp', "thumb_#{SecureRandom.hex}.jpg")
+    movie = ::FFMPEG::Movie.new(input_path)
+    movie.screenshot(output_path.to_s, seek_time: 1) ## at time 00:00:01 seconds
+    self.thumb = File.open(output_path)
+    File.delete(output_path) if File.exist?(output_path)
   end
 
 end

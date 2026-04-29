@@ -9,6 +9,10 @@ class Wco::VideosController < Wco::ApplicationController
     @video = Wco::Video.new params[:video].permit!
     authorize! :create, @video
 
+    if !params[:video][:thumb]
+      @video.generate_thumbnail
+    end
+
     if @video.save
       flash[:notice] = 'Success'
       redirect_to videos_path

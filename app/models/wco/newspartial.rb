@@ -101,6 +101,8 @@ class Wco::Newspartial
         --api_key=#{WCO_SIMPLE_API_KEY} \
         --api_secret=#{WCO_SIMPLE_API_SECRET} \
         --wco_origin=#{WCO_ORIGIN} \
+        --w_px=#{newsvideo.w_px} \
+        --h_px=#{newsvideo.h_px} \
         --newspartial_id=#{self[:id]} ";
 
     puts "+++ cmd:"

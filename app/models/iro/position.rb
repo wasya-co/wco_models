@@ -142,7 +142,7 @@ class Iro::Position
   end
   def breakeven_diag_long_call_spread
     p = self
-    realized_gl + p.outer.strike - p.outer.begin_price + p.inner.begin_price ## completely unverified 2026-04-29
+    realized_gl + p.outer.strike + p.outer.begin_price - p.inner.begin_price
   end
   def breakeven_diag_short_put_spread
     p = self

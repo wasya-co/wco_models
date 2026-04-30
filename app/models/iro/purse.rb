@@ -24,8 +24,7 @@ class Iro::Purse
   ## with unit 100, .0001
   field :summary_unit,    type: :float, default: 0.001
 
-  ## for rolling only:
-  field :height,           type: :integer, default: 100
+  field :height,           type: :integer, default: 100 ## px/q, units modal
 
   field :mark_every_n_usd, type: :float, default: 1
   field :n_next_positions, type: :integer, default: 5

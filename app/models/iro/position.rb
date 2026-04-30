@@ -5,7 +5,9 @@ class Iro::Position
   include Mongoid::Paranoia
   store_in collection: 'iro_positions'
 
-  field :next_gain_loss_amount, type: :float
+  field :next_gain_loss_amount,     type: :float
+  field :realized_gain_loss_amount, type: :float, default: 0.0 ## for diagonals only
+  def realized_gl; realized_gain_loss_amount; end
 
   STATUS_ACTIVE   = 'active'
   STATUS_CLOSED   = 'closed'
@@ -77,9 +79,11 @@ class Iro::Position
 
   belongs_to :inner, class_name: 'Iro::Option', inverse_of: :pos_of_inner
   validates_associated :inner
+  has_many :inners, class_name: 'Iro::Option', inverse_of: :poss_of_inner ## for history and diagonals
 
   belongs_to :outer, class_name: 'Iro::Option', inverse_of: :pos_of_outer, optional: true
   validates_associated :outer
+  has_many :outers, class_name: 'Iro::Option', inverse_of: :poss_of_outer ## for history and diagonals
 
   accepts_nested_attributes_for :inner, :outer
 
@@ -102,6 +106,11 @@ class Iro::Position
 
   field :schwab_order_id, type: :integer
   field :schwab_status
+
+  def diag_weeks
+    pos = self
+    ((pos.outer.expires_on - pos.inner.expires_on)/7).to_i
+  end
 
   def begin_delta
     strategy.send("begin_delta_#{strategy.kind}", self)
@@ -130,6 +139,14 @@ class Iro::Position
   def breakeven_long_credit_put_spread
     p = self
     p.inner.strike - p.max_gain
+  end
+  def breakeven_diag_long_call_spread
+    p = self
+    realized_gl + p.outer.strike - p.outer.begin_price + p.inner.begin_price ## completely unverified 2026-04-29
+  end
+  def breakeven_diag_short_put_spread
+    p = self
+    p.inner.strike + p.max_gain + p.realized_gl
   end
 
 
@@ -191,6 +208,12 @@ class Iro::Position
   ## 2026-02-19 tested
   def net_amount_short_credit_call_spread
     return net_amount_long_credit_put_spread
+  end
+  def net_amount_diag_long_call_spread
+    inner.begin_price - outer.begin_price + outer.end_price - inner.end_price + realized_gl
+  end
+  def net_amount_diag_short_put_spread
+    net_amount_diag_long_call_spread
   end
 
   def max_gain # each

@@ -24,6 +24,8 @@ class Iro::Strategy
   belongs_to :purse, class_name: 'Iro::Purse',    inverse_of: :strategies
 
   KIND_COVERED_CALL             = 'covered_call'
+  KIND_DIAG_LONG_CALL_SPREAD    = 'diag_long_call_spread'
+  KIND_DIAG_SHORT_PUT_SPREAD    = 'diag_short_put_spread'
   KIND_IRON_CONDOR              = 'iron_condor'
   KIND_LONG_CREDIT_PUT_SPREAD   = 'long_credit_put_spread'
   KIND_LONG_DEBIT_CALL_SPREAD   = 'long_debit_call_spread'
@@ -36,6 +38,8 @@ class Iro::Strategy
   KIND_WHEEL  = 'wheel'  ## @deprecated, use covered_call
   KINDS = [ nil,
     KIND_COVERED_CALL,
+    KIND_DIAG_LONG_CALL_SPREAD,
+    KIND_DIAG_SHORT_PUT_SPREAD,
     KIND_IRON_CONDOR,
     KIND_LONG_CREDIT_PUT_SPREAD,
     KIND_LONG_DEBIT_CALL_SPREAD,
@@ -49,6 +53,12 @@ class Iro::Strategy
 
   def put_call
     case kind
+    when Iro::Strategy::KIND_COVERED_CALL
+      put_call = 'CALL'
+    when Iro::Strategy::KIND_DIAG_LONG_CALL_SPREAD
+      put_call = 'CALL'
+    when Iro::Strategy::KIND_DIAG_SHORT_PUT_SPREAD
+      put_call = 'PUT'
     when Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD
       put_call = 'PUT'
     when Iro::Strategy::KIND_LONG_DEBIT_CALL_SPREAD
@@ -57,8 +67,7 @@ class Iro::Strategy
       put_call = 'CALL'
     when Iro::Strategy::KIND_SHORT_DEBIT_PUT_SPREAD
       put_call = 'PUT'
-    when Iro::Strategy::KIND_COVERED_CALL
-      put_call = 'CALL'
+
     when Iro::Strategy::KIND_SPREAD
       if credit_or_debit == CREDIT
         if long_or_short == LONG
@@ -123,6 +132,13 @@ class Iro::Strategy
   def begin_delta_short_credit_call_spread p
     _begin_delta_spread p
   end
+  def begin_delta_diag_long_call_spread p
+    _begin_delta_spread p
+  end
+  def begin_delta_diag_short_put_spread p
+    _begin_delta_spread p
+  end
+
 
   def end_delta_covered_call p
     p.inner.end_delta
@@ -139,7 +155,21 @@ class Iro::Strategy
   def end_delta_short_credit_call_spread p
     _end_delta_spread p
   end
+  def end_delta_diag_long_call_spread p
+    _end_delta_spread p
+  end
+  def end_delta_diag_short_put_spread p
+    _end_delta_spread p
+  end
 
+
+  def max_gain_diag_long_call_spread p ## each
+    # p.outer.strike - p.inner.strike + p.outer.begin_price - p.inner.begin_price
+    p.inner.strike - p.outer.strike - p.outer.begin_price + p.inner.begin_price
+  end
+  def max_gain_diag_short_put_spread p ## each
+    p.outer.strike - p.inner.strike - p.outer.begin_price + p.inner.begin_price
+  end
 
   def max_gain_covered_call p ## each
     p.inner.begin_price # - 0.66
@@ -168,18 +198,25 @@ class Iro::Strategy
   end
 
 
+  def max_loss_diag_long_call_spread p
+    # p.inner.strike - p.outer.strike + p.inner.begin_price + p.outer.begin_price
+    p.outer.begin_price - p.inner.begin_price - p.realized_gl
+  end
+  def max_loss_diag_short_put_spread p
+    p.outer.begin_price - p.inner.begin_price - p.realized_gl ## same as above, max_loss_diag_long_call_spread
+  end
   def max_loss_covered_call p
     p.inner.begin_price*10 # just suppose 10,000%
   end
   def max_loss_long_credit_put_spread p
     out = p.inner.strike - p.outer.strike
   end
-  def max_loss_long_debit_call_spread p
-    out = p.outer.strike - p.inner.strike
-  end
-  def max_loss_short_debit_put_spread p # different
-    out = p.inner.strike - p.outer.strike
-  end
+  # def max_loss_long_debit_call_spread p
+  #   out = p.outer.strike - p.inner.strike
+  # end
+  # def max_loss_short_debit_put_spread p # different
+  #   out = p.inner.strike - p.outer.strike
+  # end
   def max_loss_short_credit_call_spread p
     out = p.outer.strike - p.inner.strike
   end
@@ -193,26 +230,9 @@ class Iro::Strategy
 
 
   def net_amount_spread p
-    p.inner.begin_price - p.inner.end_price
+    p.inner.begin_price - p.inner.end_price - p.outer.begin_price + p.outer.end_price
   end
-  # def net_amount_long_credit_put_spread p
-  #   p.inner.begin_price - p.inner.end_price
-  # end
 
-
-  ## 2024-05-09 _TODO
-  ## 2025-10-11 _TODO
-  ## 2026-02-23 trash, makes no sense.
-=begin
-  def next_inner_strike_on expires_on
-    outs = ::Tda::Option.get_quotes({
-      contractType: put_call,
-      expirationDate: expires_on,
-      ticker: stock.ticker,
-    })
-    puts! outs, 'next_inner_strike_on -> outs'
-  end
-=end
 
 
   ##
@@ -276,11 +296,6 @@ class Iro::Strategy
   ## 2026-04-05 continue
   def calc_rollp_long_credit_put_spread p
     stock.reload
-
-    # puts! p, '#calc_rollp_long_credit_put_spread'
-    # puts! p.inner, 'p.inner'
-    # puts! stock, 'stock'
-    # puts! attributes, 'strategy attributes'
 
     if ( p.expires_on.to_date - Time.now.to_date ).to_i < 1
       return [ 0.99, '0 DTE, must exit' ]

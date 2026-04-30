@@ -17,8 +17,6 @@ class Iro::Option
   field :put_call, type: :string # 'PUT' or 'CALL'
   validates :put_call, presence: true
 
-  field :delta, type: :float
-
   field :strike, type: :float
   validates :strike, presence: true
 
@@ -52,9 +50,10 @@ class Iro::Option
   field :end_price, type: :float
   field :end_delta, type: :float
 
-
   has_one :pos_of_outer, class_name: 'Iro::Position', inverse_of: :outer
   has_one :pos_of_inner, class_name: 'Iro::Position', inverse_of: :inner
+  belongs_to :poss_of_inner, class_name: 'Iro::Position', inverse_of: :inners, optional: true
+  belongs_to :poss_of_outer, class_name: 'Iro::Position', inverse_of: :outers, optional: true
 
   field :last, type: :float
 

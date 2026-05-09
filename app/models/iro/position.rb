@@ -54,7 +54,8 @@ class Iro::Position
     self.long_or_short = strategy.long_or_short
   end
 
-  delegate :credit_or_debit, to: :strategy
+  # delegate :credit_or_debit, to: :strategy
+  field :credit_or_debit, type: String # , default: 'credit'
 
   field :put_call, type: :string
   validates :put_call, presence: true
@@ -93,8 +94,12 @@ class Iro::Position
   field     :inner_strike, type: :float
   validates :inner_strike, presence: true ## 2026-02-24 only to make finding easier.
 
-  field :expires_on
+  field :expires_on, type: :string
   validates :expires_on, presence: true
+  before_save :trim_expires_on
+  def trim_expires_on
+    self.expires_on = expires_on.to_s[0, 10] if expires_on.present?
+  end
 
   field :quantity, type: :integer
   validates :quantity, presence: true
@@ -113,10 +118,12 @@ class Iro::Position
   end
 
   def begin_delta
-    strategy.send("begin_delta_#{strategy.kind}", self)
+    # strategy.send("begin_delta_#{strategy.kind}", self)
+    strategy.begin_delta self
   end
   def end_delta
-    strategy.send("end_delta_#{strategy.kind}", self)
+    # strategy.send("end_delta_#{strategy.kind}", self)
+    strategy.end_delta self
   end
 
   def breakeven
@@ -134,6 +141,10 @@ class Iro::Position
   def breakeven_short_credit_call_spread
     p = self
     p.inner.strike + p.max_gain
+  end
+  def breakeven_short_debit_put_spread
+    p = self
+    p.inner.strike - p.inner.begin_price + p.outer.begin_price
   end
   ## 2026-02-23
   def breakeven_long_credit_put_spread
@@ -209,6 +220,9 @@ class Iro::Position
   def net_amount_short_credit_call_spread
     return net_amount_long_credit_put_spread
   end
+  def net_amount_short_debit_put_spread
+    inner.end_price - inner.begin_price + outer.begin_price - outer.end_price
+  end
   def net_amount_diag_long_call_spread
     inner.begin_price - outer.begin_price + outer.end_price - inner.end_price + realized_gl
   end
@@ -261,7 +275,7 @@ class Iro::Position
 
     count = 1
     @positions.each do |pos|
-      # puts! pos.to_s, 'pos TMP'
+      # puts! pos.id.to_s, '#sync_all.pos'
 
       quotes_h = Tda::Option.get_quotes_h({
         contractType: 'ALL',
@@ -270,12 +284,17 @@ class Iro::Position
         toDate: expiration_dates.last,
       })
 
-      pos.inner.end_price = quotes_h[pos.expires_on.to_s][pos.put_call][pos.inner.strike][:price]
-      pos.inner.end_delta = quotes_h[pos.expires_on.to_s][pos.put_call][pos.inner.strike][:delta]
+      pos.inner.end_price = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.inner.strike][:price]
+      pos.inner.end_delta = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.inner.strike][:delta]
       pos.inner.save ? print("#{count}^") : print("#{count}X")
-      if [ Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD, Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD ].include?( pos.strategy.kind )
-        pos.outer.end_price = quotes_h[pos.expires_on.to_s][pos.put_call][pos.outer.strike][:price]
-        pos.outer.end_delta = quotes_h[pos.expires_on.to_s][pos.put_call][pos.outer.strike][:delta]
+
+      # if [ Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD,
+      #      Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD,
+      #      Iro::Strategy::KIND_DIAG_LONG_CALL_SPREAD,
+      #      Iro::Strategy::KIND_DIAG_SHORT_PUT_SPREAD ].include?( pos.strategy.kind )
+      if pos.outer
+        pos.outer.end_price = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.outer.strike][:price]
+        pos.outer.end_delta = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.outer.strike][:delta]
         pos.outer.save ? print('^') : print('X')
       end
       count = count+1
@@ -466,7 +485,9 @@ class Iro::Position
 
   def to_s
     out = "#{stock} (#{q}) #{expires_on.to_datetime.strftime('%b %d')} #{strategy.long_or_short} ["
-    if Iro::Strategy::LONG == long_or_short
+    if Iro::Strategy::KIND_SHORT_DEBIT_PUT_SPREAD == strategy.kind
+      out = out + "$#{outer.strike} << $#{inner.strike}"
+    elsif Iro::Strategy::LONG == long_or_short
       if outer&.strike
         out = out + "$#{outer.strike} << "
       end

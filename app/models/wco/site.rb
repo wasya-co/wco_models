@@ -25,7 +25,7 @@ class Wco::Site
   validates :slug, presence: true, uniqueness: true
 
   field :origin # http://pi.local
-  validates :origin, presence: true, uniqueness: true
+  # validates :origin, presence: true, uniqueness: true
 
   field :post_path # /node?_format=hal_json
   field :username
@@ -39,7 +39,7 @@ class Wco::Site
   end
 
   def self.list
-    [[nil,nil]] + all.map { |s| [ s.origin, s.id ] }
+    [[nil,nil]] + all.map { |s| [ s.slug, s.id ] }
   end
 
   def body

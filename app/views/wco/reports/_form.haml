@@ -24,9 +24,18 @@
       -# = render '/wco/tags/index', tags: report.tags
       = f.select :tag_ids, options_for_select(@tags_list, selected: report.tag_ids), {}, { multiple: true, class: 'select2' }
 
+
     .field
-      %label Newsvideo:
-      = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: report.newsvideo_id), {}, {}
+      %label image
+      = f.file_field :image_thumb
+
+      - if report.image_thumb&.image?
+        %p Current:
+        = image_tag report.image_thumb.image.url(:thumb)
+
+    -# .field
+    -#   %label Newsvideo:
+    -#   = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: report.newsvideo_id), {}, {}
 
     .actions
       = f.submit

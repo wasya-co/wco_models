@@ -15,6 +15,8 @@ class Wco::Photo
   belongs_to :gallery,        class_name: 'Wco::Gallery',      optional: true
   belongs_to :lead,           class_name: 'Wco::Lead',         optional: true
 
+  belongs_to :report,        class_name: 'Wco::Report',      optional: true
+
   has_many :email_templates, class_name: 'WcoEmail::EmailTemplate'
   # belongs_to :newsitem,      :optional => true
 

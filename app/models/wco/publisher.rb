@@ -36,6 +36,8 @@ class Wco::Publisher
     body = JSON.parse tmpl.result(binding)
     puts! body, 'body'
 
+
+
     out = Wco::HTTParty.post( "#{@site.origin}#{post_path}", {
       body: body.to_json,
       headers: @headers,

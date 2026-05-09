@@ -1,9 +1,5 @@
 
-# require 'httparty'
-
 class Wco::PublishersController < Wco::ApplicationController
-
-  ## Alphabetized : )
 
   def create
     @publisher = Wco::Publisher.new params[:publisher].permit!
@@ -16,6 +12,7 @@ class Wco::PublishersController < Wco::ApplicationController
     redirect_to action: 'index'
   end
 
+  ## this is becoming obsolete - try using do_run_any
   def do_run
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
@@ -27,6 +24,17 @@ class Wco::PublishersController < Wco::ApplicationController
     flash_notice "Probably ok"
 
     redirect_to action: 'index'
+  end
+
+  def do_run_any
+    @publisher = Wco::Publisher.find params[:id]
+    authorize! :do_run, @publisher
+
+    @publisher.props = OpenStruct.new( JSON.parse params[:props] )
+    @publisher.do_run
+
+    flash_notice "Probably ok"
+    redirect_to request.referrer || { action: 'index' }
   end
 
   def edit

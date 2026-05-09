@@ -13,7 +13,7 @@ class Wco::Report
 
   field :title
   validates :title, presence: true # , uniqueness: true
-  index({ title: 1 }, { unique: true })
+  index({ title: 1 })
   def name ; title ; end
 
   field :subtitle
@@ -25,6 +25,9 @@ class Wco::Report
   before_validation :set_slug, on: :create
 
   field :body
+  def body_json
+    body.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />').to_json
+  end
 
   field :x, :type => Float
   field :y, :type => Float
@@ -32,8 +35,8 @@ class Wco::Report
 
   belongs_to :author, class_name: 'Wco::Profile'
 
-  # has_one :image_thumb
-  # has_one :image_hero
+  has_one :image_thumb, class_name: 'Wco::Photo', inverse_of: :report, dependent: :destroy
+  accepts_nested_attributes_for :image_thumb
 
   has_and_belongs_to_many :tags
 

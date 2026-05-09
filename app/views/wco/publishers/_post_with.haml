@@ -1,0 +1,7 @@
+
+.publishers--post-with
+  = form_tag run_any_publisher_path do
+    .d-flex
+      = select_tag :id, options_for_select(@publishers_list), class: 'select2'
+      = hidden_field_tag :props, props.to_json
+      = submit_tag 'Go', data: { confirm: 'Are you sure?' }

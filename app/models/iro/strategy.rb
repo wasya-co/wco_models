@@ -117,12 +117,12 @@ class Iro::Strategy
   field :tgt_exposure, type: :float
 
 
+  def begin_delta p
+    _begin_delta_spread p
+  end
   def begin_delta_covered_call p
     p.inner.begin_delta
   end
-  # def begin_delta_wheel p
-  #   p.inner.begin_delta
-  # end
   def _begin_delta_spread p
     p.inner.begin_delta - p.outer.begin_delta
   end
@@ -139,13 +139,12 @@ class Iro::Strategy
     _begin_delta_spread p
   end
 
-
+  def end_delta p
+    _end_delta_spread p
+  end
   def end_delta_covered_call p
     p.inner.end_delta
   end
-  # def end_delta_wheel p
-  #   p.inner.end_delta
-  # end
   def _end_delta_spread p
     p.inner.end_delta - p.outer.end_delta
   end
@@ -219,6 +218,9 @@ class Iro::Strategy
   # end
   def max_loss_short_credit_call_spread p
     out = p.outer.strike - p.inner.strike
+  end
+  def max_loss_short_debit_put_spread p
+    p.inner.begin_price - p.outer.begin_price
   end
   def max_loss_spread p
     ( p.outer.strike - p.inner.strike ).abs

@@ -40,6 +40,7 @@ class Wco::Profile
   has_many :newsvideos, class_name: 'Wco::Newsvideo'
   has_many :reports, class_name: 'Wco::Report'
   has_many :stocks, class_name: 'Iro::Stock'
+  has_many :sidebar_tags, class_name: 'Wco::Tag', inverse_of: :sidebar_profile
 
   belongs_to :leadset, class_name: 'Wco::Leadset', inverse_of: :profile
   has_many :newsitems, class_name: 'Wco::Newsitem'

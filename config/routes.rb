@@ -108,6 +108,9 @@ Wco::Engine.routes.draw do
   ## many resources
   post   'tags/add-to-many/:resource',  to: 'tags#add_to_many',  as: :add_tag_to_many
   post   'tags/rm-from-many/:resource', to: 'tags#rm_from_many', as: :rm_tag_from_many
+  get 'tags/new-for-sidebar', to: 'tags#new_for_sidebar', as: :new_sidebar_tag
+  post 'tags/new-for-sidebar', to: 'tags#create_for_sidebar'
+  get 'tags/:id/show2', to: 'tags#show', as: :tag_show2, defaults: { template: 'show2' }
   resources :tags
 
   ## In order to have unsubscribes_url , unsubscribes must be in wco .

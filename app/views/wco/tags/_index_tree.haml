@@ -2,7 +2,8 @@
 %ul
   - nodes.each do |node|
     %li
-      = link_to '[~]', wco.edit_tag_path(node[:tag][:id])
+      = link_to  '[~]', wco.edit_tag_path(node[:tag][:id])
+      = button_to 'x',  wco.tag_path(node[:tag][:id]), method: :delete, data: { confirm: 'Are you sure?' }, form_class: 'd-inline-block'
       = link_to node[:tag].slug, wco.tag_path(node[:tag][:id])
 
       - if node[:sons].present?

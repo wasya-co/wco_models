@@ -1,0 +1,9 @@
+
+.tags-new-for-sidebar.maxwidth
+  .header
+    %h5.title New for sidebar
+
+  = form_tag wco.new_sidebar_tag_path do
+    = select_tag :tag_id, options_for_select(@tags_list), class: 'select2'
+    = submit_tag 'Go'
+

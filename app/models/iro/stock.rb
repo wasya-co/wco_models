@@ -32,6 +32,26 @@ class ::Iro::Stock
 
   field :descr, type: :string
 
+  ## for charting:
+  field :min,  type: :integer
+  field :max,  type: :integer
+  field :step, type: :integer, default: 1.0 ## for histograms. I liked 50 bars, that's $1-3 bucket size.
+
+  validate :step_must_fit_range
+  def step_must_fit_range
+    return if min.blank? || max.blank? || step.blank?
+
+    range = max. - min.to_i
+    step_val = step.to_i
+
+
+    if !((max - min) % step).zero?
+      errors.add(:step, "must evenly divide (max-min)/step")
+    end
+  end
+
+
+
   has_many :positions,  class_name: '::Iro::Position', inverse_of: :stock
   has_many :strategies, class_name: '::Iro::Strategy', inverse_of: :stock
   # has_many :purses,     class_name: '::Iro::Purse',    inverse_of: :stock

@@ -16,11 +16,13 @@
       %th N Leads
 
       %th N Logs
+      %th N tags
   %tbody
     - tags.each do |tag|
       %tr
         %td
           = link_to '[~]', edit_tag_path(tag)
+          = button_to 'x', wco.tag_path(tag), method: :delete, data: { confirm: 'Are you sure?' }, form_class: 'd-inline-block'
           = link_to tag.slug, tag_path(tag)
         %td= tag.conversations.length
         %td= tag.message_stubs.length
@@ -31,3 +33,4 @@
         %td= tag.leadsets.length
         %td= tag.leads.length
         %td= tag.logs.length
+        %td.text-center= tag.sons.length > 0 ? tag.sons.length : '-'

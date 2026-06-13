@@ -9,10 +9,13 @@ class Wco::Tag
   validates :slug, presence: true, uniqueness: true
   index({ slug: -1 })
 
+  field :weight, type: :string, default: 'jjj'
+
   belongs_to :parent, class_name: '::Wco::Tag', inverse_of: :sons, optional: true
   has_many :sons,     class_name: '::Wco::Tag', inverse_of: :parent
 
   belongs_to :site,          class_name: '::Wco::Site', optional: true
+  belongs_to :sidebar_profile, class_name: 'Wco::Profile', optional: true
   has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
   has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
   has_many :ajects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject

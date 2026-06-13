@@ -1,0 +1,21 @@
+
+.application--sidebar
+  sidebar tags
+  = link_to '[+]', wco.new_sidebar_tag_path
+  (#{@sidebar_tags.length}):
+  %ul.mr-2
+    - @sidebar_tags.each do |si_tag|
+      %li.text-nowrap= link_to si_tag, wco.tag_show2_path(si_tag)
+
+  %i.fa.fa-compress.collapse-expand{ id: 'allTags' } all tags:
+  %ul.tags-list
+    - @tags.each do |tag|
+      %li
+        = link_to tag.slug, wco.tag_path( tag )
+        - if defined?( wco_email )
+          = link_to '[convs]', wco_email.conversations_in_path( tag.slug )
+          -# <b>#{tag.conversations.unread.length}</b>
+          -# (#{tag.conversations.length})
+          \|
+          = link_to "not", wco_email.conversations_not_in_path( tag.slug )
+

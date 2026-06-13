@@ -22,7 +22,7 @@ class Wco::TagsController < Wco::ApplicationController
     else
       flash_alert 'No luck.'
     end
-    redirect_to action: 'index'
+    redirect_to request.referrer
   end
 
   def edit
@@ -32,7 +32,7 @@ class Wco::TagsController < Wco::ApplicationController
 
   def index
     authorize! :index, Wco::Tag
-    @tags = Wco::Tag.all
+    @tags = Wco::Tag.all.order_by( slug: :asc )
 
     tags = Wco::Tag.all.to_a.group_by(&:parent_id)
     build_tree = lambda do |parent_id|
@@ -48,6 +48,18 @@ class Wco::TagsController < Wco::ApplicationController
 
   def new
     authorize! :new, Wco::Tag
+  end
+
+  def new_for_sidebar
+    authorize! :new, Wco::Tag
+  end
+  def create_for_sidebar
+    authorize! :create, Wco::Tag
+    @current_profile.sidebar_tags.push Wco::Tag.find(params[:tag_id])
+    @current_profile.save
+
+    flash_notice 'Ok'
+    redirect_to request.referrer
   end
 
   def add_to
@@ -108,6 +120,8 @@ class Wco::TagsController < Wco::ApplicationController
     @leads     = @tag.leads.page( params[::Wco::Lead::PAGE_PARAM_NAME] ).per( current_profile.per_page )
     @leadsets  = @tag.leadsets.page( params[::Wco::Leadset::PAGE_PARAM_NAME] ).per( current_profile.per_page )
     @reports   = @tag.reports.page( params[:reports_page] ).per( current_profile.per_page )
+
+    # render params['template'] || 'show'
   end
 
   def update
@@ -127,10 +141,9 @@ class Wco::TagsController < Wco::ApplicationController
   private
 
   def set_lists
-    @new_tag = Wco::Tag.new
+    super
+
     @sites_list = Wco::Site.list
-    @tags = Wco::Tag.all.order_by( slug: :asc )
-    @tags_list = Wco::Tag.list
   end
 
 

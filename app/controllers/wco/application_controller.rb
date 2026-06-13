@@ -124,6 +124,10 @@ class Wco::ApplicationController < ActionController::Base
   end
 
   def set_lists
+    @new_tag      = Wco::Tag.new
+    @sidebar_tags = @current_profile.sidebar_tags
+    @tags         = Wco::Tag.all.order_by( slug: :asc )
+    @tags_list    = Wco::Tag.list
   end
 
 end

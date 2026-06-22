@@ -82,41 +82,47 @@ RSpec.describe WcoEmail::MessageStub do
       n_in_inbox.should eql 0
       n_in_trash = Wco::Tag.trash.conversations.length
       n_in_trash.should eql 0
-      n_contexts = WcoEmail::Context.all.length
+      n_messages = WcoEmail::Message.all.length
       filter = WcoEmail::EmailFilter.create!({
         conditions_attributes: [
-          { field: 'leadset', operator: 'not-has-tag', value: @not_spam.id },
+          { field:    WcoEmail::EmailFilterCondition::FIELD_LEADSET,
+            operator: WcoEmail::EmailFilterCondition::OPERATOR_NOT_HAS_TAG,
+            value:    @not_spam.id },
         ],
         actions_attributes: [
-          { kind: 'remove-tag',   value: Wco::Tag.inbox.id },
-          { kind: 'add-tag',      value: Wco::Tag.trash.id },
-          { kind: ::WcoEmail::EmailFilterAction::ACTION_AUTORESPOND, value: @email_template.id },
+          { kind: EFA::KIND_RM_TAG,      aject: Wco::Tag.inbox },
+          { kind: EFA::KIND_ADD_TAG,     aject: Wco::Tag.trash },
+          { kind: EFA::KIND_AUTORESPOND, aject: @email_template },
         ],
       })
       stub = create( :message_stub, bucket: ::SES_S3_BUCKET, object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
 
       stub.do_process
-      Wco::Tag.inbox.conversations.length.should eql 0
-      Wco::Tag.trash.conversations.length.should eql 1
-      WcoEmail::Context.all.length.should eql( n_contexts + 1 )
+      Wco::Tag.inbox.conversations.length.should eql n_in_inbox
+      Wco::Tag.trash.conversations.length.should eql n_in_trash
+      WcoEmail::Message.all.length.should eql( n_messages + 1 )
     end
 
     it 'Applies conditions: to,
            skip_conditions:
                    actions: autorespond' do
-      n_contexts = WcoEmail::Context.all.length
+      message_id = '<010001898e753cc6-f804bb00-f4da-4546-b387-8261caad96da-000000@email.amazonses.com>'
+      message   = WcoEmail::Message.unscoped.where( message_id: message_id ).first
+      message.delete if message
+
+      n_messages = WcoEmail::Message.all.length
       filter = WcoEmail::EmailFilter.create!({
         conditions_attributes: [
-          { field: 'to', operator: 'text-input', value: 'info-jpmorgan-lfetgfmltj@wasya.co' },
+          { field: WcoEmail::EmailFilterCondition::FIELD_TO_OR_CC, operator: EFC::OPERATOR_EQUALS, value: 'info-jpmorgan-lfetgfmltj@wasya.co' },
         ],
         actions_attributes: [
-          { kind: ::WcoEmail::ACTION_AUTORESPOND, value: @email_template.id },
+          { kind: ::WcoEmail::EmailFilterAction::KIND_AUTORESPOND, aject: @email_template },
         ],
       })
       stub = create( :message_stub, bucket: ::SES_S3_BUCKET, object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )
 
       stub.do_process
-      WcoEmail::Context.all.length.should eql( n_contexts + 1 )
+      WcoEmail::Message.all.length.should eql( n_messages + 1 )
     end
 
     it 'Applies conditions: to,
@@ -131,7 +137,7 @@ RSpec.describe WcoEmail::MessageStub do
           { field: 'to', operator: 'text-input', value: 'info-jpmorgan-lfetgfmltj@wasya.co' },
         ],
         actions_attributes: [
-          { kind: ::WcoEmail::ACTION_AUTORESPOND, value: @email_template.id },
+          { kind: ::WcoEmail::EmailFilterAction::KIND_AUTORESPOND, value: @email_template.id },
         ],
       })
       stub = create( :message_stub, bucket: ::SES_S3_BUCKET, object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )

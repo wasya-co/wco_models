@@ -29,14 +29,19 @@ class WcoEmail::EmailFilterCondition
   validates :field, presence: true, inclusion: FIELD_OPTS
 
   OPERATOR_EQUALS      = 'eq-i'
-  # OPERATOR_HAS_TAG     = 'has-tag'
-  # OPERATOR_NOT_HAS_TAG = 'not-has-tag'
+  OPERATOR_HAS_TAG     = 'has-tag'
+  OPERATOR_NOT_HAS_TAG = 'not-has-tag'
   OPERATOR_REGEX = 'regex'
   OPERATOR_MATCH = 'match-i'
   OPERATOR__ID   = '_id'
   OPERATOR_SLUG  = 'slug'
-  OPERATOR_OPTS = [ OPERATOR_EQUALS,
-    OPERATOR_REGEX, OPERATOR_MATCH, OPERATOR__ID, OPERATOR_SLUG ]
+  OPERATOR_OPTS = [ OPERATOR__ID,
+    OPERATOR_EQUALS,
+    OPERATOR_HAS_TAG,
+    OPERATOR_MATCH,
+    OPERATOR_NOT_HAS_TAG,
+    OPERATOR_REGEX,
+    OPERATOR_SLUG, ]
   field :operator
   validates :operator, presence: true, inclusion: OPERATOR_OPTS
 
@@ -82,5 +87,6 @@ class WcoEmail::EmailFilterCondition
     "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` />\n"
   end
 
-end
 
+end
+::EFC = ::WcoEmail::EmailFilterCondition

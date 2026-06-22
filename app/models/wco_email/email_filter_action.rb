@@ -46,3 +46,4 @@ class WcoEmail::EmailFilterAction
   end
 
 end
+EFA = WcoEmail::EmailFilterAction

@@ -390,7 +390,7 @@ class WcoEmail::MessageStub
       end
     end
 
-    puts 'ok'
+    puts 'stub-ok'
   end
 
   ## This only saves a local message from mbox to s3.

@@ -186,6 +186,7 @@ class WcoEmail::MessageStub
 
 
   def do_process
+    ## _TODO: remove this fork, be consistent across environments. _vp_ 2026-06-22
     if Rails.env.production?
       @client ||= Aws::S3::Client.new({
         region:            ::S3_CREDENTIALS[:region_ses],

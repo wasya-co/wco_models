@@ -63,7 +63,7 @@ RSpec.describe WcoEmail::MessageStub do
         stub.do_process
       end
 
-      it 'does not send if not in inbox' do
+      it 'does not notify if not in inbox' do
         filter = create( :email_filter, {
           from_regex: '.',
           kind:       WcoEmail::EmailFilter::KIND_REMOVE_TAG,
@@ -90,7 +90,7 @@ RSpec.describe WcoEmail::MessageStub do
         actions_attributes: [
           { kind: 'remove-tag',   value: Wco::Tag.inbox.id },
           { kind: 'add-tag',      value: Wco::Tag.trash.id },
-          { kind: ::WcoEmail::ACTION_AUTORESPOND, value: @email_template.id },
+          { kind: ::WcoEmail::EmailFilterAction::ACTION_AUTORESPOND, value: @email_template.id },
         ],
       })
       stub = create( :message_stub, bucket: ::SES_S3_BUCKET, object_key: '00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1' )

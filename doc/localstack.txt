@@ -4,20 +4,20 @@
 ##
 
   dc up -d localstack_development
-  ./scripts/login_mac  localstack
+  ./scripts/login_mac localstack
     awslocal s3 mb s3://wco-email-development
     awslocal s3 mb s3://wco-email-ses-development
     awslocal s3 ls
 
-  cd /opt/tmp
-  awslocal s3api put-object --bucket wco-email-ses-development \
-    --key 2021-10-18T18_41_17Fanand_phoenixwebgroup_co \
-    --body /opt/tmp/2021-10-18T18_41_17Fanand_phoenixwebgroup_co
+    cd /opt/tmp
+    awslocal s3api put-object --bucket wco-email-ses-development \
+      --key 2021-10-18T18_41_17Fanand_phoenixwebgroup_co \
+      --body /opt/tmp/2021-10-18T18_41_17Fanand_phoenixwebgroup_co
 
-  cd /opt/tmp
-  awslocal s3api put-object --bucket wco-email-ses-development \
-    --key 00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1 \
-    --body /opt/tmp/00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1
+    cd /opt/tmp
+    awslocal s3api put-object --bucket wco-email-ses-development \
+      --key 00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1 \
+      --body /opt/tmp/00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1
 
-  awslocal s3api list-objects --bucket wco-email-ses-development
+    awslocal s3api list-objects --bucket wco-email-ses-development
 

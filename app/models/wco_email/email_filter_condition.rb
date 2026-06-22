@@ -8,15 +8,23 @@ class WcoEmail::EmailFilterCondition
   belongs_to :email_filter,      class_name: '::WcoEmail::EmailFilter', inverse_of: :conditions,      optional: true
   belongs_to :email_skip_filter, class_name: '::WcoEmail::EmailFilter', inverse_of: :skip_conditions, optional: true
 
-  FIELD_BODY    = 'body'
-  FIELD_BODY_PLAIN = 'body-plain'
-  FIELD_FROM    = 'from'
-  FIELD_TAGGED  = 'leadset-tagged'
+  FIELD_BODY        = 'body'
+  FIELD_BODY_PLAIN  = 'body-plain'
+  FIELD_FROM        = 'from'
+  FIELD_LEADSET     = 'from-leadset'
   FIELD_NOT_TAGGED  = 'leadset-not-tagged'
-  FIELD_SUBJECT  = 'subject'
-  # FIELD_TO       = 'to'
-  FIELD_TO_OR_CC = 'to-or-cc'
-  FIELD_OPTS     = [ FIELD_SUBJECT, FIELD_FROM, FIELD_TO_OR_CC, FIELD_TAGGED, FIELD_NOT_TAGGED, FIELD_BODY, FIELD_BODY_PLAIN ]
+  FIELD_SUBJECT     = 'subject'
+  FIELD_TAGGED      = 'leadset-tagged'
+  FIELD_TO_OR_CC    = 'to-or-cc'
+  FIELD_OPTS = [
+    FIELD_BODY, FIELD_BODY_PLAIN,
+    FIELD_FROM,
+    FIELD_LEADSET,
+    FIELD_NOT_TAGGED,
+    FIELD_SUBJECT,
+    FIELD_TAGGED,
+    FIELD_TO_OR_CC,
+  ];
   field :field
   validates :field, presence: true, inclusion: FIELD_OPTS
 
@@ -25,9 +33,10 @@ class WcoEmail::EmailFilterCondition
   # OPERATOR_NOT_HAS_TAG = 'not-has-tag'
   OPERATOR_REGEX = 'regex'
   OPERATOR_MATCH = 'match-i'
-  OPERATOR__ID = '_id'
-  OPERATOR_SLUG = 'slug'
-  OPERATOR_OPTS = [ OPERATOR_REGEX, OPERATOR_MATCH, OPERATOR__ID, OPERATOR_SLUG ]
+  OPERATOR__ID   = '_id'
+  OPERATOR_SLUG  = 'slug'
+  OPERATOR_OPTS = [ OPERATOR_EQUALS,
+    OPERATOR_REGEX, OPERATOR_MATCH, OPERATOR__ID, OPERATOR_SLUG ]
   field :operator
   validates :operator, presence: true, inclusion: OPERATOR_OPTS
 

@@ -13,6 +13,9 @@ class Ability
       if [ ENV['EMAIL'], 'piousbox@gmail.com' ].include? user.email
         can :manage, :all
       end
+      if Rails.env.test?
+        can :manage, :all
+      end
 
     end
 

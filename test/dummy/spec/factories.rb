@@ -85,12 +85,13 @@ FactoryBot.define do
   end
 
   factory :email_filter_action, class: 'WcoEmail::EmailFilterAction' do
-    kind { 'exe' }
+    kind { WcoEmail::EmailFilterAction::KIND_ADD_TAG }
+    aject { Wco::Tag.all.first }
   end
 
   factory :email_filter_condition, class: 'WcoEmail::EmailFilterCondition' do
-    field { 'leadset' }
-    operator { 'equals' }
+    field { WcoEmail::EmailFilterCondition::FIELD_LEADSET }
+    operator { WcoEmail::EmailFilterCondition::OPERATOR_EQUALS }
     value { Wco::Leadset.all.first.id }
   end
 
@@ -207,7 +208,7 @@ FactoryBot.define do
 
   factory :message_stub, class: 'WcoEmail::MessageStub' do
     object_key { generate('object_key') }
-    config { { process_images: false }.to_json }
+    config     { { process_images: false }.to_json }
   end
 
   ## O

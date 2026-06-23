@@ -1,0 +1,4 @@
+
+in test:
+  PI_DRUP_PROD_USERNAME
+  PI_DRUP_PROD_PASSWD

@@ -259,16 +259,14 @@ FactoryBot.define do
 
     factory :publisher_pi_drup_prod_report do
       context_eval { <<~AOL
-        @headers['Content-Type'] = 'application/json'
-        @report                  = Wco::Report.find @props[:report_id]
+        @headers['Content-Type']  = 'application/json'
+        @headers['Authorization'] = "Basic base64(\#{@site.username}:\#{@site.password})"
+        @report                   = Wco::Report.find @props[:report_id]
         AOL
       }
-      post_path { '/node?_format=hal_json' }
+      post_path { '/node?_format=json' }
       post_body_tmpl { <<~AOL
         {
-          "_links": {
-            "type":{"href":"<%= @site.origin %>/rest/type/node/article"}
-          },
           "title":[{"value":"Test Au <%= @report.title.gsub('"', '\"')     %>" }],
           "body":[{"value": "<%= @report.body.gsub('"', '\"')      %>" }],
           "type":[{"target_id":"article"}]

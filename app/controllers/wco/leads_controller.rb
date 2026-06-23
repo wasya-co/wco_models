@@ -46,11 +46,9 @@ class Wco::LeadsController < Wco::ApplicationController
       lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil
       lead ||= Wco::Lead.create!(lead_attrs)
 
-      # Assign selected tags
       selected_tag_ids.each do |tag_id|
         lead.tags << Wco::Tag.find(tag_id)
       end
-      # lead.save!
     end
 
     redirect_to wco.leads_path, notice: "Leads imported successfully"

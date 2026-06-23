@@ -1,3 +1,4 @@
+require 'csv'
 
 RSpec::describe Wco::LeadsController do
   render_views
@@ -20,8 +21,8 @@ RSpec::describe Wco::LeadsController do
   end
 
   describe '#create_import' do
-    let!(:tag1) { Wco::Tag.create!(name: "Tag 1") }
-    let!(:tag2) { Wco::Tag.create!(name: "Tag 2") }
+    let!(:tag1) { Wco::Tag.create!(slug: "Tag-1") }
+    let!(:tag2) { Wco::Tag.create!(slug: "Tag-2") }
 
     let(:csv_content) do
       CSV.generate(headers: true) do |csv|
@@ -42,8 +43,8 @@ RSpec::describe Wco::LeadsController do
 
     it "creates leads and assigns tags" do
       expect {
-        post :new_leads, params: { file: Rack::Test::UploadedFile.new(file.path, 'text/csv'),
-                                   tags: [tag1.id, tag2.id] }
+        post :create_import, params: { file: Rack::Test::UploadedFile.new(file.path, 'text/csv'),
+                                       tags: [tag1.id, tag2.id] }
       }.to change(Wco::Lead, :count).by(2)
 
       lead = Wco::Lead.find_by(email: "test1@example.com")

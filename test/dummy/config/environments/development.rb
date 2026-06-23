@@ -1,5 +1,6 @@
 require "active_support/core_ext/integer/time"
 
+Rails.application.routes.default_url_options[:host] = "email.local:3002"
 Rails.application.configure do
   config.hosts << "wco.local"
 

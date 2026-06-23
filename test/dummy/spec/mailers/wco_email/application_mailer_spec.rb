@@ -2,7 +2,9 @@
 RSpec.describe WcoEmail::ApplicationMailer do
 
   before do
-    destroy_every( Wco::Lead, WcoEmail::Context, WcoEmail::EmailTemplate )
+    destroy_every( Wco::Lead, Wco::Profile,
+      WcoEmail::Context, WcoEmail::EmailTemplate )
+    @profile = create(:profile, email: 'no-reply@wasya.co')
   end
 
   it 'sanity' do

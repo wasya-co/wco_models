@@ -87,7 +87,7 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     mail( from:    @ctx.from_email,
           to:      @ctx.to_email,
           cc:      @ctx.cc,
-          bcc:     DEFAULT_BCC,
+          bcc:     @ctx.from_email, # DEFAULT_BCC,
           subject: rendered_subject,
           body:    rendered_str,
           content_type: "text/html",

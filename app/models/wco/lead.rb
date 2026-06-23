@@ -28,11 +28,6 @@ class Wco::Lead
   field :memory, type: Hash, default: {}
 
   belongs_to :leadset, class_name: 'Wco::Leadset'
-  before_validation :set_leadset, on: :create
-  def set_leadset
-    domain         = email.split('@')[1]
-    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: domain })
-  end
   before_validation :normalize_email, on: :create
   def normalize_email
     self[:email] = email.downcase
@@ -49,6 +44,12 @@ class Wco::Lead
     end
     return a
   end
+  before_validation :set_leadset, on: :create
+  def set_leadset
+    domain         = email.split('@')[1]
+    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: domain })
+  end
+
   def self.find_or_create_by_email email
     email = self.normalize_email email
     out = where( email: email ).first

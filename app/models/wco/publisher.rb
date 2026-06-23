@@ -28,15 +28,13 @@ class Wco::Publisher
     @headers = {}
     @ctx     = OpenStruct.new
 
-    puts! context_eval, 'context_eval'
+    # puts! context_eval, 'context_eval'
     eval( context_eval )
-    puts! @ctx, '@ctx'
+    # puts! @ctx, '@ctx'
 
     tmpl = ERB.new post_body_tmpl
     body = JSON.parse tmpl.result(binding)
-    puts! body, 'body'
-
-
+    # puts! body, 'body'
 
     out = Wco::HTTParty.post( "#{@site.origin}#{post_path}", {
       body: body.to_json,

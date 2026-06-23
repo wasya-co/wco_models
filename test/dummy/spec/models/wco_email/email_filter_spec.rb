@@ -9,6 +9,7 @@ RSpec.describe WcoEmail::EmailFilter, type: :model do
       Wco::Tag,
     )
     create( :leadset )
+    create( :tag )
   end
 
   it 'habtm leadsets' do

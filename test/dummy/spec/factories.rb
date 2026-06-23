@@ -259,7 +259,7 @@ FactoryBot.define do
 
     factory :publisher_pi_drup_prod_report do
       context_eval { <<~AOL
-        @headers['Content-Type'] = 'application/hal+json'
+        @headers['Content-Type'] = 'application/json'
         @report                  = Wco::Report.find @props[:report_id]
         AOL
       }

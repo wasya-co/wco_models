@@ -86,11 +86,11 @@ class Iro::Strategy
   end
 
 
-  field     :threshold_usd_above_mark, type: :float
+  field     :threshold_usd_above_mark, type: :float, default: 1.00
   validates :threshold_usd_above_mark, presence: true
 
   field :threshold_pos_delta, type: :float # offensive: roll b/c markets are going my way
-  field :threshold_neg_delta, type: :float # defensive: roll b/c markets are going against me
+  field :threshold_neg_delta, type: :float, default: 0.8 # defensive: roll b/c markets are going against me
   field :threshold_netp,      type: :float
   field :threshold_dte,       type: :integer, default: 1
 
@@ -100,7 +100,7 @@ class Iro::Strategy
   field :next_outer_strike,       type: :float
   field :next_spread_amount,      type: :float # e.g. $20 for a $2000 NVDA spread
 
-  field     :next_usd_above_mark, type: :float
+  field     :next_usd_above_mark, type: :float, default: 1.00
   validates :next_usd_above_mark, presence: true
 
 

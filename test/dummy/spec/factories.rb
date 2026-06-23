@@ -134,7 +134,8 @@ FactoryBot.define do
 
   factory :stock, class: '::Iro::Stock' do
     ticker { 'XXX' }
-    last { 400 }
+    last   { 400 }
+    options_price_increment { 5 }
   end
 
   factory :strategy, class: '::Iro::Strategy' do
@@ -142,6 +143,7 @@ FactoryBot.define do
     long_or_short { ::Iro::Strategy::LONG }
     after :build do |doc|
       doc.stock    = Iro::Stock.all.first
+      doc.purse    = Iro::Purse.all.first
     end
 
     ## @deprecated, just create a strategy.

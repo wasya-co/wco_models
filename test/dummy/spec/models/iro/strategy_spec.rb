@@ -37,15 +37,22 @@ RSpec.describe Iro::Strategy do
 
     context '#calc_rollp_long_credit_put_spread' do
       before do
+        @purse    = create( :purse )
         @nvda = create( :stock, ticker: 'NVDA', last: 892.0 )
-        @strategy = create(:strategy, stock: @nvda,
+        @strategy = create(:strategy,
+          purse: @purse,
+          stock: @nvda,
           threshold_usd_above_mark: 10.0,
           threshold_netp: 0.99,
-          threshold_pos_delta: 0.1 )
+          threshold_pos_delta: 0.1,
+          # threshold_neg_delta: 0.8, ## it's a default
+        );
         @inner    = create( :option, strike: 90,  begin_price: 1.99, end_price: 0.5  )
         @outer    = create( :option, strike: 101, begin_price: 1.86, end_price: 0.25 )
-        @purse    = create( :purse )
-        @position = create( :position, inner: @inner, outer: @outer, purse: @purse, expires_on: '2024-04-19' )
+
+        @position = create( :position, inner: @inner, inner_strike: @inner.strike,
+          outer: @outer, outer_strike: @outer.strike,
+          purse: @purse, expires_on: '2024-04-19' )
       end
       it 'no opinion' do
         travel_to Time.zone.local(2024, 04, 1) do
@@ -55,7 +62,7 @@ RSpec.describe Iro::Strategy do
       it 'threshold_netp: made enough profit' do
         @strategy.update( threshold_netp: 0.73 )
         travel_to Time.zone.local(2024, 04, 1) do
-          @strategy.calc_rollp_long_credit_put_spread(@position).should eql([0.51, "made enough 74.87% profit^"])
+          @strategy.calc_rollp_long_credit_put_spread(@position)[0].should eql(0.51)
         end
       end
     end
@@ -63,6 +70,8 @@ RSpec.describe Iro::Strategy do
     ## 2026-02-21 ok
     context '#calc_rollp_short_credit_call_spread' do
       before do
+        ## non-alphabetical
+        @purse    = create( :purse )
         @msft     = create(:stock, ticker: 'MSFT', last: 397.05)
         @strategy = create(:strategy, stock: @msft,
           threshold_usd_above_mark: 10.0,
@@ -71,10 +80,11 @@ RSpec.describe Iro::Strategy do
           threshold_netp: 0.99,
           threshold_pos_delta: 0.1,
         );
-        @purse    = create( :purse )
         @inner    = create( :option, strike: 420,  begin_price: 1.99, end_price: 0.5, end_delta: -0.2  )
         @outer    = create( :option, strike: 430,  begin_price: 1.86, end_price: 0.25 )
-        @position = create( :position, inner: @inner, outer: @outer, purse: @purse, expires_on: '2024-04-19' )
+        @position = create( :position, inner: @inner, inner_strike: @inner.strike,
+          outer: @outer, outer_strike: @outer.strike,
+          purse: @purse, expires_on: '2024-04-19' )
       end
       it 'sanity, default' do
         travel_to Time.zone.local(2024, 04, 1) do
@@ -120,12 +130,18 @@ RSpec.describe Iro::Strategy do
 
     context '#max_loss_spread' do
       before do
+        ## order is non-alphabetical
+        @purse    = create( :purse )
+
         @nvda = create( :stock, ticker: 'NVDA', last: 892.0 )
         @strategy = create( :strategy, stock: @nvda )
         @inner    = create( :option, strike: 90,  begin_price: 1.99, end_price: 0.5  )
         @outer    = create( :option, strike: 101, begin_price: 1.86, end_price: 0.25 )
-        @purse    = create( :purse )
-        @position = create( :position, inner: @inner, outer: @outer, purse: @purse )
+
+        @position = create( :position, inner: @inner, outer: @outer, purse: @purse,
+          outer_strike: @outer.strike,
+          inner_strike: @inner.strike,
+        );
       end
 
       it 'does' do

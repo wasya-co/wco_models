@@ -1,3 +1,10 @@
 ---
 - name: docker localstack_development
-- name: docker mongo_development
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - include_role:
+        name: roles/localstack
+        tasks_from: do_setup
+

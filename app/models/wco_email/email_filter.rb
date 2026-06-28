@@ -28,7 +28,7 @@ class WcoEmail::EmailFilter
 
   has_many :actions, class_name: '::WcoEmail::EmailFilterAction', inverse_of: :email_filter
   accepts_nested_attributes_for :actions, allow_destroy: true, reject_if: :all_blank
-  # validate :validate_actions
+  validate :validate_actions
   def validate_actions
     if actions.length == 0
       errors.add(:actions, 'must be present')

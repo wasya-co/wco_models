@@ -22,6 +22,7 @@ class WcoEmail::EmailFilterAction
   field :value
 
   belongs_to :aject, polymorphic: true # , optional: true # eg tag, EAT, OAT
+  accepts_nested_attributes_for :aject, allow_destroy: true, reject_if: :all_blank
   # validates :aject_id, presence: true
 
   ## 2026-04-02 not anymore.

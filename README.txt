@@ -7,14 +7,16 @@ WasyaCo Models. The functionality shared across all (most) projects, including:
 
 = Setup =
 
-Docker is reqiured for development. It is used for mongo, and localstack.
+Docker is reqiured for development. It is used for mongo (?), and localstack.
 
-Some infrastructure is driven by ansible - therefore, local python is required:
+Some infrastructure is driven by ansible - therefore, local python3 and ansible are required:
 
   python3 -m venv zenv
   . zenv/bin/activate
+  pip install -r requirements.txt
 
 = Test =
+
 See doc/localstack.txt
 
 In ruby console:

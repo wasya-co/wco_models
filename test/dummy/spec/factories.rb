@@ -133,9 +133,12 @@ FactoryBot.define do
   end
 
   factory :stock, class: '::Iro::Stock' do
-    ticker { 'XXX' }
     last   { 400 }
+    min { 300 }
+    max { 500 }
     options_price_increment { 5 }
+    step { 5 }
+    ticker { 'XXX' }
   end
 
   factory :strategy, class: '::Iro::Strategy' do

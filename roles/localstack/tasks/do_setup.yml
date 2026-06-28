@@ -1,13 +1,11 @@
 ---
 
-- name: create buckets
+- name: create bucket wco-email-development
   community.docker.docker_container_exec:
-    - container: localstack
-    - command: awslocal s3 mb s3://wco-email-development
+    container: wco_models_localstack
+    command: awslocal s3 mb s3://wco-email-development
 
-- name: create buckets
+- name: create bucket wco-email-ses-development
   community.docker.docker_container_exec:
-    - container: localstack
-    - command: awslocal s3 mb s3://wco-email-ses-development
-
-# - name: create one message_stub
+    container: wco_models_localstack
+    command: awslocal s3 mb s3://wco-email-ses-development

@@ -19,7 +19,7 @@ class WcoEmail::Conversation
   field :subject
   index({ subject: -1 })
 
-  field :latest_at
+  field :latest_at, type: Time
   index({ latest_at: -1 })
 
   field :from_emails, type: :array, default: []

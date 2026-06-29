@@ -17,9 +17,9 @@
             %ul
               %li
                 <b>Email:</b> #{@current_profile.email}
-                = button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
+                .d-inline-block= button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
               %li= link_to 'sidekiq', '/sidekiq', target: :_blank
-              %li= link_to 'Iron Warbler', '/iron_warbler'
+              %li= link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
 
 
           .col-sm-4
@@ -28,10 +28,11 @@
               %li
                 = pp_date Time.now
                 = pp_time Time.now
+              %li wco_models: v#{File.read(Gem.loaded_specs["wco_models"].full_gem_path + '/VERSION')}
 
           .col-sm-4
             = render '/wco/profiles/form_extra', profile: @current_profile
-            = link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
+
         = render 'wco/application/debug' if !Rails.env.production?
 
       .c

@@ -121,6 +121,8 @@ class Wco::TagsController < Wco::ApplicationController
     @leadsets  = @tag.leadsets.page( params[::Wco::Leadset::PAGE_PARAM_NAME] ).per( current_profile.per_page )
     @reports   = @tag.reports.page( params[:reports_page] ).per( current_profile.per_page )
 
+    @conversations, @messages, _ = WcoEmail::Conversation.load_conversations_messages_tag_by_params_and_profile( {tagname: @tag.slug}, current_profile )
+
     # render params['template'] || 'show'
   end
 

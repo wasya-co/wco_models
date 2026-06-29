@@ -24,10 +24,13 @@
 
     - if defined?( wco_email )
 
-      - if @tag.conversations.present?
+      - if @conversations.present?
         %i.fa.fa-compress.collapse-expand#conversations
-          Conversations (#{@tag.conversations.length}):
-        .descr= render '/wco_email/conversations/table', convs: @tag.conversations.page( params[::WcoEmail::Conversation::PAGE_PARAM_NAME] )
+          Conversations (#{@conversations.length}):
+        .descr
+          = render '/wco/paginate', resource: @conversations, param_name: ::WcoEmail::Conversation::PAGE_PARAM_NAME
+          = render '/wco_email/conversations/table', convs: @conversations
+          = render '/wco/paginate', resource: @conversations, param_name: ::WcoEmail::Conversation::PAGE_PARAM_NAME
 
       - if @tag.email_templates.present?
         %hr

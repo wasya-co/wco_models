@@ -135,6 +135,27 @@ RSpec.describe WcoEmail::Message do
 
   end
 
+  context '#apply_filter_action' do
+    before do
+      destroy_every( Wco::Lead,
+        WcoEmail::Message, WcoEmail::MessageStub, WcoEmail::EmailFilterAction )
+      @lead = create(:lead)
+      @message = create(:email_message, lead: @lead, conversation: @conv, object_key: 'any' )
+    end
+    it 'KIND_OAT' do
+      n = Wco::OfficeAction.all.count
+      @message.apply_filter_action( build( :email_filter_action, kind: EFA::KIND_OAT ))
+      Wco::OfficeAction.all.count.should eql( n + 1 )
+    end
+    it 'KIND_AUTORESPOND' do
+      n = WcoEmail::Context.all.count
+      @message.apply_filter_action( build( :email_filter_action,
+        kind: EFA::KIND_AUTORESPOND, aject: build(:email_template) ))
+      WcoEmail::Context.all.count.should eql( n + 1 )
+    end
+
+  end
+
 end
 
 

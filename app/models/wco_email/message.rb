@@ -102,6 +102,16 @@ class WcoEmail::Message
         config:                 config,
       })
 
+    when WcoEmail::EmailFilterAction::KIND_AUTORESPOND
+      ctx = WcoEmail::Context.new({
+        email_template: action.email_template,
+        lead_id:        message.lead_id,
+        send_at:        Time.now,
+      })
+      if action.email_template.respond_inline
+        ctx.reply_to_message_id = self.id
+      end
+      ctx.save!
 
     end
   end

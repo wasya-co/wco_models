@@ -24,6 +24,13 @@ class WcoEmail::EmailFilterAction
   belongs_to :aject, polymorphic: true # , optional: true # eg tag, EAT, OAT
   accepts_nested_attributes_for :aject, allow_destroy: true, reject_if: :all_blank
   # validates :aject_id, presence: true
+  def email_template
+    if aject.class == WcoEmail::EmailTemplate
+      return aject
+    else
+      throw 'this email_filter_action does not have an email_template'
+    end
+  end
 
   ## 2026-04-02 not anymore.
   # before_validation :check_value

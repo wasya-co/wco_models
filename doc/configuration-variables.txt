@@ -2,3 +2,8 @@
 in test:
   PI_DRUP_PROD_USERNAME
   PI_DRUP_PROD_PASSWD
+
+STRIPE_PK = '<>'
+STRIPE_SK = '<>'
+Stripe.api_key = ::STRIPE_SK
+Stripe.api_version = '2020-08-27'

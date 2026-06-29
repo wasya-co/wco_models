@@ -9,3 +9,20 @@
   community.docker.docker_container_exec:
     container: wco_models_localstack
     command: awslocal s3 mb s3://wco-email-ses-development
+
+- name: opload email object 1
+  community.docker.docker_container_exec:
+    container: wco_models_localstack
+    command: >
+      awslocal s3api put-object --bucket wco-email-ses-development
+        --key 2021-10-18T18_41_17Fanand_phoenixwebgroup_co
+        --body /opt/tmp/2021-10-18T18_41_17Fanand_phoenixwebgroup_co
+
+- name: opload email object 2
+  community.docker.docker_container_exec:
+    container: wco_models_localstack
+    command: >
+      awslocal s3api put-object --bucket wco-email-ses-development
+        --key 00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1
+        --body /opt/tmp/00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1
+

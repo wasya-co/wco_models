@@ -32,8 +32,7 @@ class WcoEmail::Conversation
   has_and_belongs_to_many :tags,     class_name: 'Wco::Tag',     index: true
   has_and_belongs_to_many :leadsets, class_name: 'Wco::Leadset', index: true
   has_and_belongs_to_many :leads,    class_name: 'Wco::Lead',    index: true
-
-  belongs_to :filter, class_name: 'WcoEmail::EmailFilter', inverse_of: :conversations, optional: true
+  has_and_belongs_to_many :filters,  class_name: 'WcoEmail::EmailFilter', index: true
 
 =begin
   current_profile = OpenStruct.new per_page: 25

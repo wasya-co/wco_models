@@ -4,7 +4,7 @@
 ##
 
   dc up -d localstack_development
-  ./scripts/login_mac localstack
+  ./scripts/login localstack
     awslocal s3 mb s3://wco-email-development
     awslocal s3 mb s3://wco-email-ses-development
     awslocal s3 ls

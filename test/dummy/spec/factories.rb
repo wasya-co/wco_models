@@ -99,7 +99,7 @@ FactoryBot.define do
     object_key { generate('object_key') }
     message_id { generate('message_id') }
     after :build do |doc|
-      doc.stub = create( :message_stub )
+      doc.stub ||= create( :message_stub )
     end
   end
 
@@ -212,6 +212,7 @@ FactoryBot.define do
   ## M
 
   factory :message_stub, class: 'WcoEmail::MessageStub' do
+    bucket { 'wco-email-ses-development' }
     object_key { generate('object_key') }
     config     { { process_images: false }.to_json }
   end

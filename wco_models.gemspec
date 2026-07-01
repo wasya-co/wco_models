@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.275"
+  spec.version     = "3.1.0.276"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   ##
   ## Edit the template!
   ##
-  spec.add_dependency 'ahoy_matey'
   spec.add_dependency 'aws-sdk-s3'
 
   spec.add_dependency 'business_time'

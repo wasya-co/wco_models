@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   ##
   ## Edit the template!
   ##
-  spec.add_dependency 'ahoy_matey'
   spec.add_dependency 'aws-sdk-s3'
 
   spec.add_dependency 'business_time'

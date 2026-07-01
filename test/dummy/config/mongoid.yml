@@ -2,7 +2,8 @@
 development:
   clients:
     default:
-      database: ish_mac13_import
+      # database: ish_mac13_import ## trash, remove _vp_ 2026-06-30
+      database: micros_email_development
       hosts:
         - localhost:27017
 

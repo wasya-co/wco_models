@@ -77,8 +77,7 @@ class WcoEmail::EmailFilter
   belongs_to :office_action_template, class_name: '::Wco::OfficeActionTemplate', optional: true
   belongs_to :tag,                    class_name: '::Wco::Tag',                  optional: true, inverse_of: :email_filters
 
-  ## @TODO: change to has_and_belongs_to_many, test-driven.
-  has_many :conversations, class_name: '::WcoEmail::Conversation', inverse_of: :filter
+  has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation'
 
   def to_s
     "EmailFilter: #{from_regex} #{from_exact} #{conditions.map { |c| c.to_s }.join }"
@@ -87,8 +86,14 @@ class WcoEmail::EmailFilter
     # inn = ""
     # inn = "#{inn}#{conditions.map { |c| c.to_s_full }.join }" if conditions.present?
     # inn = "#{inn}#{skip_conditions.map { |c| c.to_s_full }.join }" if skip_conditions.present?
+
+    attrs = ''
+    if from_regex || from_exact
+      attrs = "#{attrs} from=#{from_regex}#{from_exact}"
+    end
+
     out =<<-AOL
-<EmailFilter >
+<EmailFilter#{attrs} >
 #{conditions.map { |c| c.to_s_full( indent: 2) }.join }
 #{skip_conditions.map { |c| c.to_s_full( indent: 2) }.join }
 #{actions.map { |c| c.to_s_full( indent: 2) }.join }

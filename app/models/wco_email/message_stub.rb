@@ -170,7 +170,7 @@ class WcoEmail::MessageStub
         if skip_reason
           puts! "NOT Applying filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
         else
-          @conv.filter = filter; @conv.save
+          @conv.filters << filter; @conv.save
           filter.actions.each do |action|
             @message.apply_filter_action( action )
           end
@@ -186,16 +186,7 @@ class WcoEmail::MessageStub
 
 
   def do_process
-    ## _TODO: remove this fork, be consistent across environments. _vp_ 2026-06-22
-    if Rails.env.production?
-      @client ||= Aws::S3::Client.new({
-        region:            ::S3_CREDENTIALS[:region_ses],
-        access_key_id:     ::S3_CREDENTIALS[:access_key_id_ses],
-        secret_access_key: ::S3_CREDENTIALS[:secret_access_key_ses],
-      })
-    else
-      @client ||= Aws::S3::Client.new(::SES_S3_CREDENTIALS)
-    end
+    @client ||= Aws::S3::Client.new(::SES_S3_CREDENTIALS)
 
     stub = self
 

@@ -1,5 +1,4 @@
 
-# require 'aws-sdk'
 require 'mongoid_paperclip'
 
 class Wco::Asset
@@ -8,6 +7,8 @@ class Wco::Asset
   include Mongoid::Paperclip
   include Mongoid::Paranoia
   include Wco::Utils
+
+  store_in collection: 'wco_assets'
 
   field :filename
 

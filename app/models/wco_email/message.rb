@@ -118,7 +118,7 @@ class WcoEmail::Message
 
   def apply_filter filter
     puts! filter, 'WcoEmail::Message#apply_filter' if DEBUG
-    conv.filter = filter
+    conv.filters << filter
 
     case filter.kind
 

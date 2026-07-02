@@ -128,7 +128,7 @@ class WcoEmail::MessageStub
 
 
     ## Actions & Filters
-    email_filters = WcoEmail::EmailFilter.all
+    email_filters = WcoEmail::EmailFilter.all.active
     email_filters.each do |filter|
       reason = nil
       if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )
@@ -315,7 +315,7 @@ class WcoEmail::MessageStub
 
 
     ## Actions & Filters
-    email_filters = WcoEmail::EmailFilter.all
+    email_filters = WcoEmail::EmailFilter.all.active
     email_filters.each do |filter|
       reason = nil
       if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )

@@ -45,10 +45,6 @@ class WcoEmail::EmailFilter
   end
   def to_s_full
     attrs = ''
-    if from_regex || from_exact
-      attrs = "#{attrs} from=#{from_regex}#{from_exact}"
-    end
-
     out =<<-AOL
 <EmailFilter#{attrs} >
 #{conditions.map { |c| c.to_s_full( indent: 2) }.join }

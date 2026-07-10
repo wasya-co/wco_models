@@ -41,7 +41,7 @@ class WcoEmail::EmailFilter
   belongs_to :tag,                    class_name: '::Wco::Tag',                  optional: true, inverse_of: :email_filters
 
   def to_s
-    "EmailFilter: #{from_regex} #{from_exact} #{conditions.map { |c| c.to_s }.join }"
+    "EmailFilter (#{conditions.length}) `#{slug}`"
   end
   def to_s_full
     attrs = ''

@@ -85,22 +85,16 @@ class WcoEmail::Message
 
   def apply_filter_action action
     message = self
-
+    aject = action.aject
     case action.kind
-    when WcoEmail::EmailFilterAction::KIND_OAT
+    when WcoEmail::EmailFilterAction::KIND_ADD_TAG
+      conv.tags.push aject
+      if aject == Wco::Tag.trash || aject == Wco::Tag.spam
+        conv.tags -= [ Wco::Tag.inbox ]
+      end
 
-      config = {
-        'email_message_id' => message.id.to_s,
-        'lead_id'          => message.lead_id.to_s,
-        # 'message_id'       => message.id.to_s,
-        'stub_id'          => message.stub_id.to_s,
-      }
-      oa = Wco::OfficeAction.create!({
-        office_action_template: action.aject,
-        status:                 'active',
-        perform_at:             Time.now,
-        config:                 config,
-      })
+    when WcoEmail::EmailFilterAction::KIND_RM_TAG
+      conv.tags -= [ aject ]
 
     when WcoEmail::EmailFilterAction::KIND_AUTORESPOND
       ctx = WcoEmail::Context.new({
@@ -113,80 +107,29 @@ class WcoEmail::Message
       end
       ctx.save!
 
+    when WcoEmail::EmailFilterAction::KIND_OAT
+      config = {
+        'email_message_id' => message.id.to_s,
+        # 'lead_id'          => message.lead_id.to_s,
+        # 'stub_id'          => message.stub_id.to_s,
+      }
+      oa = Wco::OfficeAction.create!({
+        office_action_template: aject,
+        lead:                   message.lead,
+        status:                 'active',
+        perform_at:             Time.now,
+        config:                 config,
+      })
+
+    when WcoEmail::EmailFilterAction::KIND_RM_OAT
+      oa = Wco::OfficeAction.where({
+        office_action_template: aject,
+        lead: message.lead }).first
+      oa.update_attributes!({ status: 'inactive' })
+
     end
   end
 
-  def apply_filter filter
-    puts! filter, 'WcoEmail::Message#apply_filter' if DEBUG
-    conv.filters << filter
-
-    case filter.kind
-
-    when WcoEmail::EmailFilter::KIND_DESTROY_SCHS
-      conv.tags.push   Wco::Tag.trash
-      conv.tags -= [ Wco::Tag.inbox ]
-      lead.schs.each do |sch|
-        sch.update_attributes!({ state: ::Sch::STATE_TRASH })
-      end
-
-    when WcoEmail::EmailFilter::KIND_ADD_TAG
-      conv.tags.push filter.tag
-      if filter.tag == Wco::Tag.trash || filter.tag == Wco::Tag.spam
-        conv.tags -= [ Wco::Tag.inbox ]
-      end
-
-    when WcoEmail::EmailFilter::KIND_REMOVE_TAG
-      conv.tags -= [ filter.tag ]
-
-    when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
-      ctx = WcoEmail::Context.new({
-        email_template: filter.email_template,
-        lead_id:        lead.id,
-        send_at:        Time.now,
-      })
-      if filter.email_template.respond_inline
-        ctx.reply_to_message_id = self.id
-      end
-      ctx.save!
-
-    when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
-      ##
-      ## This error is normal:
-      ## Mongoid::Errors::Validations `Email action template is already taken`
-      ##
-      out = Sch.create({
-        email_action_template: filter.email_action_template,
-        status:                Sch::STATUS_ACTIVE,
-        lead_id:               lead.id,
-        perform_at:            Time.now,
-      })
-
-    else
-      if filter.actions.present?
-        filter.actions.each do |act|
-          case act.kind
-          when ::WcoEmail::ACTION_REMOVE_TAG
-            this_tag = Wco::Tag.find( act.value )
-            conv.tags -= [ this_tag ]
-          when ::WcoEmail::ACTION_ADD_TAG
-            this_tag = Wco::Tag.find( act.value )
-            conv.tags += [ this_tag ]
-          when ::WcoEmail::ACTION_AUTORESPOND
-            this_template = WcoEmail::EmailTemplate.find( act.value )
-            WcoEmail::Context.create!({
-              email_template: this_template,
-              lead_id:        lead.id,
-              send_at:        Time.now,
-            })
-          end
-        end
-      else
-        raise "unknown filter kind: #{filter.kind}"
-      end
-    end
-
-    conv.save!
-  end
 
   ## From: https://stackoverflow.com/questions/24672834/how-do-i-remove-emoji-from-string/24673322
   def self.strip_emoji(text)
@@ -323,6 +266,82 @@ class WcoEmail::Message
 end
 ::Msg = WcoEmail::Message
 
+=begin
 
+
+  ## @deprecated, use apply_filter_action ONLY
+  def apply_filter filter
+    puts! filter, 'WcoEmail::Message#apply_filter' if DEBUG
+    conv.filters << filter
+
+    case filter.kind
+
+    when WcoEmail::EmailFilter::KIND_DESTROY_SCHS
+      conv.tags.push   Wco::Tag.trash
+      conv.tags -= [ Wco::Tag.inbox ]
+      lead.schs.each do |sch|
+        sch.update_attributes!({ state: ::Sch::STATE_TRASH })
+      end
+
+    when WcoEmail::EmailFilter::KIND_ADD_TAG
+      conv.tags.push filter.tag
+      if filter.tag == Wco::Tag.trash || filter.tag == Wco::Tag.spam
+        conv.tags -= [ Wco::Tag.inbox ]
+      end
+
+    when WcoEmail::EmailFilter::KIND_REMOVE_TAG
+      conv.tags -= [ filter.tag ]
+
+    when WcoEmail::EmailFilter::KIND_AUTORESPOND_TMPL
+      ctx = WcoEmail::Context.new({
+        email_template: filter.email_template,
+        lead_id:        lead.id,
+        send_at:        Time.now,
+      })
+      if filter.email_template.respond_inline
+        ctx.reply_to_message_id = self.id
+      end
+      ctx.save!
+
+    when WcoEmail::EmailFilter::KIND_AUTORESPOND_EACT
+      ##
+      ## This error is normal:
+      ## Mongoid::Errors::Validations `Email action template is already taken`
+      ##
+      out = Sch.create({
+        email_action_template: filter.email_action_template,
+        status:                Sch::STATUS_ACTIVE,
+        lead_id:               lead.id,
+        perform_at:            Time.now,
+      })
+
+    else
+      if filter.actions.present?
+        filter.actions.each do |act|
+          case act.kind
+          when ::WcoEmail::ACTION_REMOVE_TAG
+            this_tag = Wco::Tag.find( act.value )
+            conv.tags -= [ this_tag ]
+          when ::WcoEmail::ACTION_ADD_TAG
+            this_tag = Wco::Tag.find( act.value )
+            conv.tags += [ this_tag ]
+          when ::WcoEmail::ACTION_AUTORESPOND
+            this_template = WcoEmail::EmailTemplate.find( act.value )
+            WcoEmail::Context.create!({
+              email_template: this_template,
+              lead_id:        lead.id,
+              send_at:        Time.now,
+            })
+          end
+        end
+      else
+        raise "unknown filter kind: #{filter.kind}"
+      end
+    end
+
+    conv.save!
+  end
+
+=end
 
 

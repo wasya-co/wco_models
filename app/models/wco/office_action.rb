@@ -11,13 +11,15 @@ class Wco::OfficeAction
   # field :descr, type: :string ## optional
 
   belongs_to :office_action_template, inverse_of: :office_action
+  belongs_to :lead, class_name: '::Wco::Lead'
+
   def tmpl
     office_action_template
   end
 
   STATUS_ACTIVE   = 'active'
   STATUS_INACTIVE = 'inactive'
-  STATUSS         = [ STATUS_ACTIVE, STATUS_INACTIVE ]
+  STATUSES        = [ STATUS_ACTIVE, STATUS_INACTIVE ]
   field :status, type: :string
   scope :active, ->{ where( status: STATUS_ACTIVE ) }
   attr_accessor :deactivate

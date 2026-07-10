@@ -6,15 +6,16 @@ class WcoEmail::EmailFilterAction
 
   belongs_to :email_filter
 
-  KIND_AUTORESPOND = 'autorespond-template'
-  # KIND_EXE_RB      = 'exe-rb'
   KIND_ADD_TAG     = 'add-tag'
   KIND_RM_TAG      = 'remove-tag'
-  KIND_EAT         = 'autorespond-email-action'
-  KIND_RM_EAT      = 'rm-email-action'
+  KIND_AUTORESPOND = 'autorespond-template'
+  # KIND_EAT         = 'autorespond-email-action' ## _TODO: not implemented!
+  # KIND_RM_EAT      = 'rm-email-action'          ## _TODO: not implemented!
   KIND_OAT         = 'office-action-template'
   KIND_RM_OAT      = 'rm-office-action-template'
-  KINDS = [ KIND_ADD_TAG, KIND_RM_TAG, KIND_AUTORESPOND, KIND_OAT, KIND_EAT, KIND_RM_EAT ]
+  KINDS = [ KIND_ADD_TAG, KIND_RM_TAG, KIND_AUTORESPOND, KIND_OAT,
+    # KIND_EAT, KIND_RM_EAT,
+  ];
   field :kind
   validates :kind, inclusion: KINDS
 

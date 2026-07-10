@@ -17,5 +17,9 @@
       --key 00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1 \
       --body /opt/tmp/00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1
 
+    awslocal s3api put-object --bucket wco-email-ses-development \
+      --key 00nn652jk1395ujdr3l11ib06jam0oevjqv2o4g1 \
+      --body /opt/tmp/json-email-1
+
     awslocal s3api list-objects --bucket wco-email-ses-development
 

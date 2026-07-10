@@ -86,7 +86,7 @@ FactoryBot.define do
 
   factory :email_filter_action, class: 'WcoEmail::EmailFilterAction' do
     kind { WcoEmail::EmailFilterAction::KIND_ADD_TAG }
-    aject { Wco::Tag.all.first }
+    aject { Wco::Tag.all.first || Wco::Tag.inbox }
   end
 
   factory :email_filter_condition, class: 'WcoEmail::EmailFilterCondition' do
@@ -219,9 +219,9 @@ FactoryBot.define do
 
   ## O
 
-  factory :obf, class: 'Wco::ObfuscatedRedirect' do
-    slug    { 'some-slug' }
-    to_link { 'https://test.com' }
+  factory :oat, class: 'Wco::OfficeActionTemplate' do
+    slug { 'some-slug' }
+    action_exe { 'puts! "ok" ' }
   end
 
   ## P

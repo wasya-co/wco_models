@@ -9,6 +9,7 @@ key = '01070861907736276273039d9ee-c69a3509-5c85-481d-822e-ba65c204e1ba-000000@e
 ## Only object_key, no validations.
 ## 2023-12-28 _vp_ Continue.
 ## 2024-01-05 LFG
+## 2026-07-10 LFG
 ##
 class WcoEmail::MessageStub
   include Mongoid::Document
@@ -131,21 +132,6 @@ class WcoEmail::MessageStub
     email_filters = WcoEmail::EmailFilter.all.active
     email_filters.each do |filter|
       reason = nil
-      if filter.from_regex.present? && @message.from.downcase.match( filter.from_regex )
-        reason = 'from_regex'
-      end
-      if filter.from_exact.present? && @message.from.downcase.include?( filter.from_exact.downcase )
-        reason = 'from_exact'
-      end
-      if filter.body_exact.present? && @message.part_html&.include?( filter.body_exact )
-        reason = 'body_exact'
-      end
-      if filter.subject_regex.present? && @message.subject.match( filter.subject_regex )
-        reason = 'subject_regex'
-      end
-      if filter.subject_exact.present? && @message.subject.downcase.include?( filter.subject_exact.downcase )
-        reason = 'subject_exact'
-      end
 
       filter.conditions.each do |cond|
         reason ||= cond.apply(leadset: @leadset, message: @message )
@@ -156,19 +142,13 @@ class WcoEmail::MessageStub
 
         ## skip
         skip_reason = nil
-        if filter.skip_to_exact.present? && @message.to&.downcase.include?( filter.skip_to_exact.downcase )
-          skip_reason = 'skip_to_exact'
-        end
-        if filter.skip_from_regex.present? && @message.from.downcase.match( filter.skip_from_regex )
-          skip_reason = 'skip_from_regex'
-        end
 
         filter.skip_conditions.each do |scond|
           skip_reason ||= scond.apply(leadset: @leadset, message: @message )
         end
 
         if skip_reason
-          puts! "NOT Applying filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
+          puts! "NOT Applying2 filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
         else
           @conv.filters << filter; @conv.save
           filter.actions.each do |action|
@@ -185,6 +165,12 @@ class WcoEmail::MessageStub
   end
 
 
+
+end
+
+=begin
+
+  ## @obsolete - I moved away from amazon.
   def do_process
     @client ||= Aws::S3::Client.new(::SES_S3_CREDENTIALS)
 
@@ -461,4 +447,4 @@ class WcoEmail::MessageStub
     message = ''
   end
 
-end
+=end

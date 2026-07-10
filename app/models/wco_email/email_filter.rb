@@ -63,9 +63,10 @@ AOL
   end
 
 
+end
+::EF = WcoEmail::EmailFilter
 
-
-
+=begin
 
   ##
   ## deprecated
@@ -84,17 +85,15 @@ AOL
   field :skip_to_exact
 
   ## @deprecated 2026-04-02, use email_filter_action::<KIND>
-  KIND_AUTORESPOND_TMPL = 'autorespond-template'
-  KIND_AUTORESPOND_EACT = 'autorespond-email-action'
-  KIND_REMOVE_TAG       = 'remove-tag'
-  KIND_ADD_TAG          = 'add-tag'
-  KIND_DESTROY_SCHS     = 'destroy-schs'
-  KIND_OAT              = 'office-action'
-
-  ## @deprecated
-  KIND_AUTORESPOND = 'autorespond' ## @deprecated, DO NOT USE!
-  KIND_DELETE      = 'delete'      ## @deprecated, use add-tag
-  KIND_SKIP_INBOX  = 'skip-inbox'  ## @deprecated, use remove-tag
+  # KIND_AUTORESPOND_TMPL = 'autorespond-template'
+  # KIND_AUTORESPOND_EACT = 'autorespond-email-action'
+  # KIND_REMOVE_TAG       = 'remove-tag'
+  # KIND_ADD_TAG          = 'add-tag'
+  # KIND_DESTROY_SCHS     = 'destroy-schs'
+  # KIND_OAT              = 'office-action'
+  # KIND_AUTORESPOND = 'autorespond' ## @deprecated, DO NOT USE!
+  # KIND_DELETE      = 'delete'      ## @deprecated, use add-tag
+  # KIND_SKIP_INBOX  = 'skip-inbox'  ## @deprecated, use remove-tag
 
   KINDS = [ nil, KIND_OAT, KIND_AUTORESPOND_TMPL, KIND_AUTORESPOND_EACT, KIND_ADD_TAG, KIND_REMOVE_TAG, KIND_DESTROY_SCHS ]
   field :kind ## @deprecated, use filter.action.aject.kind 2026-04-02
@@ -117,5 +116,7 @@ AOL
   #   return "<EF #{attrs}>#{children}</EF>\n"
   # end
 
-end
-::EF = WcoEmail::EmailFilter
+=end
+
+
+

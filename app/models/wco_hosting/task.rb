@@ -1,4 +1,7 @@
 
+##
+## not used? no collection
+##
 class WcoHosting::Task
   include Mongoid::Document
   include Mongoid::Timestamps

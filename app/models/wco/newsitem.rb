@@ -1,5 +1,7 @@
 
-
+##
+## not used?! there is no collection _vp_ 2026-07-12
+##
 class Wco::Newsitem
   include Mongoid::Document
   include Mongoid::Timestamps

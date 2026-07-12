@@ -1,4 +1,6 @@
-
+##
+## not used? no collection
+##
 class WcoEmail::Config
   include Mongoid::Document
   include Mongoid::Timestamps

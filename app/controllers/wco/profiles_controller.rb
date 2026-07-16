@@ -13,6 +13,18 @@ class Wco::ProfilesController < Wco::ApplicationController
     end
   end
 
+  def destroy
+    @profile = Wco::Profile.unscoped.find params[:id]
+    authorize! :create, @profile
+
+    if @profile.destroy
+      flash_notice 'Deleted Wco::Profile'
+    else
+      flash_alert "Cannot destroy profile: #{@profile.errors.fill_messages.join(', ')}."
+    end
+    redirect_to request.referrer || { action: 'index' }
+  end
+
   def edit
     @profile = Wco::Profile.find params[:id]
     authorize! :update, @profile

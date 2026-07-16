@@ -1,0 +1,103 @@
+
+duplicates = Wco::Lead.collection.aggregate([
+  {
+    "$group" => {
+      "_id" => "$email",
+      "count" => { "$sum" => 1 },
+      "ids" => { "$push" => "$_id" }
+    }
+  },
+  {
+    "$match" => {
+      "_id" => { "$ne" => nil },
+      "count" => { "$gt" => 1 }
+    }
+  }
+])
+duplicates.each do |dup|
+  puts "#{dup['_id']}: #{dup['count']}"
+end
+
+
+Wco::Lead.collection.aggregate([
+  {
+    "$match" => {
+      "email" => { "$ne" => nil }
+    }
+  },
+  {
+    "$sort" => {
+      "created_at" => 1
+    }
+  },
+  {
+    "$group" => {
+      "_id" => "$email",
+      "ids" => { "$push" => "$_id" },
+      "count" => { "$sum" => 1 }
+    }
+  },
+  {
+    "$match" => {
+      "count" => { "$gt" => 1 }
+    }
+  }
+]).each do |dup|
+  newest_id = dup["ids"].last
+  Wco::Lead.where(id: newest_id).delete
+end
+
+
+
+Wco::Lead.collection.aggregate([
+  {
+    "$match" => {
+      "email" => { "$ne" => nil }
+    }
+  },
+  {
+    "$group" => {
+      "_id" => { "$toLower" => "$email" },
+      "count" => { "$sum" => 1 },
+      "emails" => { "$push" => "$email" },
+      "ids" => { "$push" => "$_id" }
+    }
+  },
+  {
+    "$match" => {
+      "count" => { "$gt" => 1 }
+    }
+  }
+]).each do |dup|
+  puts "#{dup['_id']} (#{dup['count']})"
+  p dup['emails']
+end
+
+
+Wco::Lead.collection.aggregate([
+  {
+    "$match" => {
+      "email" => { "$ne" => nil }
+    }
+  },
+  {
+    "$group" => {
+      "_id" => { "$toLower" => "$email" },
+      "ids" => { "$push" => "$_id" },
+      "emails" => { "$push" => "$email" },
+      "count" => { "$sum" => 1 }
+    }
+  },
+  {
+    "$match" => {
+      "count" => { "$gt" => 1 }
+    }
+  }
+]).each do |dup|
+  dup["ids"].zip(dup["emails"]).each do |id, email|
+    if email != email.downcase
+      puts "Deleting #{email}"
+      Wco::Lead.where(id: id).delete
+    end
+  end
+end

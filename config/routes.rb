@@ -2,6 +2,8 @@
 Wco::Engine.routes.draw do
   root to: 'application#home'
 
+  get '/error', to: 'application#error'
+
   namespace :api do
     get 'leads/index_hash', to: 'leads#index_hash'
 

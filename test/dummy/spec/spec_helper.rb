@@ -49,6 +49,4 @@ def setup_users
   sign_in user
 end
 
-Wco::Obf = Wco::ObfuscatedRedirect
-
 EPSILON = 0.0001

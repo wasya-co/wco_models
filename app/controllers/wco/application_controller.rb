@@ -20,6 +20,10 @@ class Wco::ApplicationController < ActionController::Base
   before_action :current_profile
   before_action :set_lists
 
+  def error
+    throw 'uncaught error'
+  end
+
   def home
     authorize! :home, Wco
   end

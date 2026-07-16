@@ -7,5 +7,6 @@
     - @profiles.each do |profile|
       %li
         = link_to '[~]', edit_profile_path(profile)
+        .d-inline-block= button_to 'x', profile_path(profile), method: :delete, data: { confirm: 'Are you sure?' }
         = profile.email
         <b>Leadset:</b> #{link_to profile.leadset, leadset_path(profile.leadset)}

@@ -42,7 +42,7 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     @renderer    = self.class.renderer ctx: @ctx
     rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
 
-    if @ctx.lead.unsubscribed_at
+    if @ctx.lead.unsubscribed_at.present?
       @ctx.update({
         unsubscribed_at:      Time.now,
       })

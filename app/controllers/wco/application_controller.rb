@@ -13,7 +13,7 @@ require_relative '../../../lib/shortcuts'
 
 class Wco::ApplicationController < ActionController::Base
   include Wco::ApplicationHelper
-  rescue_from Exception, with: :exception_notifier if Rails.env.production?
+  # rescue_from Exception, with: :exception_notifier if Rails.env.production?
 
   check_authorization
 
@@ -21,7 +21,8 @@ class Wco::ApplicationController < ActionController::Base
   before_action :set_lists
 
   def error
-    throw 'uncaught error'
+    raise "test exception notifier"
+    out = 5 / 0
   end
 
   def home

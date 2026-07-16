@@ -1,5 +1,9 @@
 # encoding: utf-8
 
+##
+## test:
+##   WcoEmail::ApplicationMailer.test_email.deliver_now
+##
 class WcoEmail::ApplicationMailer < ActionMailer::Base
 
   default from: 'WasyaCo Consulting <no-reply@wasya.co>'

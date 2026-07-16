@@ -52,6 +52,11 @@ class Wco::Tag
     find_or_create_by({ slug: TRASH })
   end
 
+  DONOTSEND = 'donotsend'
+  def self.donotsend
+    find_or_create_by({ slug: DONOTSEND })
+  end
+
   def to_s
     slug
   end

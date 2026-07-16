@@ -42,10 +42,14 @@ class WcoEmail::ApplicationMailer < ActionMailer::Base
     @renderer    = self.class.renderer ctx: @ctx
     rendered_str = @renderer.render_to_string("/wco_email/email_layouts/_#{@ctx.tmpl.layout}")
 
+    donotsend_tags = Wco::Tag.donotsend.sons + [ Wco::Tag.donotsend ]
+    if ( @ctx.lead.tags & donotsend_tags ).any?
+      @ctx.update({ unsubscribed_at: Time.now })
+      return
+    end
+
     if @ctx.lead.unsubscribed_at.present?
-      @ctx.update({
-        unsubscribed_at:      Time.now,
-      })
+      @ctx.update({ unsubscribed_at: Time.now })
       return
     end
 

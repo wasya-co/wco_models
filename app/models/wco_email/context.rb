@@ -14,6 +14,8 @@ class WcoEmail::Context
   field :slug
   validates_uniqueness_of :slug, allow_nil: true
 
+  field :bcc_self, type: :boolean, default: false
+
   field :preview_str, type: :string
   def preview_str
     if self[:preview_str].presence

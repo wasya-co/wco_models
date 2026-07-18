@@ -31,6 +31,10 @@ class Wco::Tag
   has_and_belongs_to_many :videos,     class_name: '::Wco::Video'
 
 
+  BOUNCE = 'bounce'
+  def self.bounce
+    find_or_create_by({ slug: BOUNCE })
+  end
 
   INBOX = 'inbox'
   def self.inbox

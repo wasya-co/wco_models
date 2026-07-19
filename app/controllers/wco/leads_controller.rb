@@ -44,7 +44,7 @@ class Wco::LeadsController < Wco::ApplicationController
       }.compact ## skip missing columns
       lead_attrs[:email] = lead_attrs[:email].downcase
 
-      if lead_attrs['email']
+      if lead_attrs[:email]
         lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil
         lead ||= Wco::Lead.create(lead_attrs)
 

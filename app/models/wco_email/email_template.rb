@@ -137,7 +137,7 @@ class WcoEmail::EmailTemplate
 
   SLUG_BLANK = 'blank'
   def self.blank_template
-    out = Tmpl.find_or_create_by({ slug: SLUG_BLANK })
+    out = self.find_or_create_by({ slug: SLUG_BLANK })
   end
   def self.blank; self.blank_template; end
 

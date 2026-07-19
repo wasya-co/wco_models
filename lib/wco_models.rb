@@ -24,7 +24,6 @@ require 'sass-rails'
 require 'stripe'
 
 require "wco/engine"
-require 'wco/ai_writer'
 
 ACTIVE   = 'active'
 INACTIVE = 'inactive'

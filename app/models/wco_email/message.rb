@@ -26,6 +26,9 @@ class WcoEmail::Message
   field :subject
 
   field :part_html
+  def part_txt
+    part_html_sanitized
+  end
 
   field :read_at, type: DateTime
   index({ read_at: -1 })

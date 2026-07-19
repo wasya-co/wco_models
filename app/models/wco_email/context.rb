@@ -80,7 +80,7 @@ class WcoEmail::Context
   field :send_at,         type: DateTime
   index({ send_at: -1 })
   field :unsubscribed_at, type: DateTime
-
+  index({ sent_at: -1, send_at: -1 })
 
   def self.notsent
     where( sent_at: nil, unsubscribed_at: nil )

@@ -3,7 +3,6 @@
 class Wco::Headline
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_content_headlines'
 
   PAGE_PARAM_NAME = 'headlines_page'

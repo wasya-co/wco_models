@@ -3,7 +3,6 @@
 class Wco::Log
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_logs'
 
   field :label,   type: :string ## can be the stream: 'stdout' or 'stderr'

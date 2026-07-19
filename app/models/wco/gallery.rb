@@ -2,7 +2,6 @@
 class Wco::Gallery
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   # include Wco::PremiumItem
   include Wco::Utils
   store_in collection: 'galleries'

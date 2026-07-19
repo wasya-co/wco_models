@@ -8,7 +8,6 @@ require 'mongoid-paranoia'
 class WcoEmail::EmailAction
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'office_scheduled_email_actions'
 
 

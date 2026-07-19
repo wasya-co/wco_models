@@ -2,7 +2,6 @@
 class WcoEmail::Conversation
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'office_email_conversations'
 
   PAGE_PARAM_NAME = 'conv_page'

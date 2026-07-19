@@ -2,7 +2,6 @@
 class Wco::Tag
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_tags'
 
   field :slug

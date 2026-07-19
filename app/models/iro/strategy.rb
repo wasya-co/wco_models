@@ -2,7 +2,6 @@
 class Iro::Strategy
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'iro_strategies'
 
   field :descr

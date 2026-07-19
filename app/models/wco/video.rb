@@ -5,7 +5,6 @@ require 'streamio-ffmpeg'
 class Wco::Video
   include Mongoid::Document
   include Mongoid::Paperclip
-  include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Wco::Utils
   store_in collection: 'videos'

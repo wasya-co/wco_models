@@ -2,7 +2,6 @@
 class WcoEmail::EmailFilterCondition
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'office_email_filter_conditions'
 
   belongs_to :email_filter,      class_name: '::WcoEmail::EmailFilter', inverse_of: :conditions,      optional: true

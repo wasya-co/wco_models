@@ -4,7 +4,6 @@ require 'mongoid_paperclip'
 class Wco::Newspartial
   include Mongoid::Document
   include Mongoid::Paperclip
-  include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Wco::Utils
   store_in collection: 'wco_newspartials'

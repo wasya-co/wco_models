@@ -14,7 +14,6 @@ key = '01070861907736276273039d9ee-c69a3509-5c85-481d-822e-ba65c204e1ba-000000@e
 class WcoEmail::MessageStub
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_email_message_stub'
 
   PAGE_PARAM_NAME = 'stubs_page'

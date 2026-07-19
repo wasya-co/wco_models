@@ -2,7 +2,6 @@
 class Iro::Position
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'iro_positions'
 
   field :next_gain_loss_amount,     type: :float

@@ -2,7 +2,6 @@
 class Wco::Publisher
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_publishers'
 
   field :slug

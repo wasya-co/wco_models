@@ -2,7 +2,6 @@
 class Wco::Lead
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_leads'
 
   PAGE_PARAM_NAME = 'leads_page'

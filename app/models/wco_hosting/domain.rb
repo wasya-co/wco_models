@@ -2,7 +2,6 @@
 class WcoHosting::Domain
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_dns_domains'
 
   field :name

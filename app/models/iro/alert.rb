@@ -2,7 +2,6 @@
 class Iro::Alert
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'iro_alerts'
 
   # SLEEP_TIME_SECONDS = Rails.env.production? ? 60 : 15

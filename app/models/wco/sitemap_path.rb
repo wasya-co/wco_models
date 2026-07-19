@@ -2,7 +2,6 @@
 class Wco::SitemapPath
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_sitemap_paths'
 
   belongs_to :site, class_name: 'Wco::Site'

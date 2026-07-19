@@ -2,7 +2,6 @@
 class Wco::Site
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_sites'
 
   KIND_DRUPAL = 'drupal'

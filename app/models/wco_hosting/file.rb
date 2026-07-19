@@ -5,7 +5,6 @@
 class WcoHosting::File
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_hosting_files'
 
   belongs_to :serverhost, class_name: 'WcoHosting::Serverhost'

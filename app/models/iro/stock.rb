@@ -7,7 +7,6 @@ require 'business_time'
 class ::Iro::Stock
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'iro_stocks'
 
   STATUS_ACTIVE   = 'active'

@@ -2,7 +2,6 @@
 class WcoEmail::EmailFilter
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'office_email_filters'
 
   field :slug, type: :string

@@ -2,7 +2,6 @@
 class Wco::Price
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
   store_in collection: 'wco_prices'
 
   ## Wco::Product, WcoHosting::ApplianceTmpl

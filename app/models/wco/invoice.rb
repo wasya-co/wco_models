@@ -11,7 +11,6 @@ class Wco::Invoice
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Autoinc
-  include Mongoid::Paranoia
   store_in collection: 'ish_invoice'
 
   attr_accessor :is_stripe

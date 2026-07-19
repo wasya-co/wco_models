@@ -115,6 +115,10 @@ class WcoEmail::EmailTemplate
     </div><hr /><br /><br /><br />
   AOL
 
+  def self.blank
+    WcoEmail::EmailTemplate.where( slug: 'blank' ).first
+  end
+
   ## 2023-03-04 _vp_ This works!
   def get_binding
     # @lead = Lead.where( email: 'stub@wasya.co' ).first

@@ -42,7 +42,7 @@ class Wco::LeadsController < Wco::ApplicationController
         phone:   row['phone'] || row['Phone'],
         address: row['address'] || row['Address']
       }.compact ## skip missing columns
-      lead_attrs['email'] = lead_attrs['email'].downcase
+      lead_attrs[:email] = lead_attrs[:email].downcase
 
       if lead_attrs['email']
         lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil

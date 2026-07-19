@@ -5,7 +5,7 @@
 class WcoEmail::Context
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Paranoia
+  # include Mongoid::Paranoia
   store_in collection: 'ish_email_contexts'
 
   PAGE_PARAM_NAME = 'email_contexts_page'

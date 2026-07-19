@@ -12,6 +12,8 @@ class Wco::Lead
   index({ email: -1 }, { unique: true })
 
   field :name
+  validates :name, uniqueness: true
+  index({ name: -1 })
   def name
     if !self[:name].present?
       if email
@@ -21,6 +23,7 @@ class Wco::Lead
     end
     self[:name]
   end
+
 
   field :phone
   field :address

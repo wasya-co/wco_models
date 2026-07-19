@@ -5,6 +5,7 @@ Wco::Engine.routes.draw do
   get '/error', to: 'application#error'
 
   namespace :api do
+    get 'leads',            to: 'leads#index'
     get 'leads/index_hash', to: 'leads#index_hash'
 
     get 'obf',              to: 'obfuscated_redirects#show' ## testing only.

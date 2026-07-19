@@ -129,7 +129,7 @@ class WcoEmail::MessageStub
 
 
     ## Actions & Filters
-    email_filters = WcoEmail::EmailFilter.all.active
+    email_filters = WcoEmail::EmailFilter.all.active.includes(:conditions)
     email_filters.each do |filter|
       reason = nil
 

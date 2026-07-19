@@ -55,9 +55,6 @@ class Wco::NewspartialsController < Wco::ApplicationController
   def index
     authorize! :index, Wco::Newspartial
     @newspartials = Wco::Newspartial.all
-    if params[:deleted]
-      @newspartials = Wco::Newspartial.unscoped.where( :deleted_at.ne => nil )
-    end
     @newspartials = @newspartials.page( params[:newspartials_page] ).per( current_profile.per_page )
   end
 

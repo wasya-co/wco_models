@@ -20,6 +20,10 @@ class Wco::Gallery
   index({ created_at: -1 })
   index({ created_at: -1, name: -1 })
 
+  field :deleted_at, type: Time
+
+
+
   field :subhead
   field :descr,   :as => :description
 

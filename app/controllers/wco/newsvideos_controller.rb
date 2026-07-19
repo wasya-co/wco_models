@@ -54,9 +54,6 @@ class Wco::NewsvideosController < Wco::ApplicationController
   def index
     authorize! :index, Wco::Newsvideo
     @newsvideos = Wco::Newsvideo.all.order_by( created_at: :desc )
-    if params[:deleted]
-      @newsvideos = Wco::Newsvideo.unscoped.where( :deleted_at.ne => nil )
-    end
     @newsvideos = @newsvideos.page( params[:newsvideos_page] ).per( current_profile.per_page )
   end
 

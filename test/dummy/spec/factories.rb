@@ -192,6 +192,7 @@ FactoryBot.define do
 
   factory :lead, class: 'Wco::Lead' do
     email { generate(:email) }
+    name { generate(:email) }
     after :build do |doc|
       doc.leadset ||= Wco::Leadset.where( company_url: doc.email.split('@')[1] ).first
       doc.leadset ||= create(:leadset, email: doc.email)

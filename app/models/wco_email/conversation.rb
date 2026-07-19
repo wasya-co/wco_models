@@ -21,6 +21,8 @@ class WcoEmail::Conversation
   field :latest_at, type: Time
   index({ latest_at: -1 })
 
+  field :deleted_at, type: Time ## just in case... should be unused. _vp_ 2026-07-19
+
   field :from_emails, type: :array, default: []
   index({ from_emails: -1 })
 

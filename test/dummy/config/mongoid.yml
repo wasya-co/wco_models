@@ -10,7 +10,7 @@ development:
 test:
   clients:
     default:
-      database: micros_email_test
+      database: micros_email_test_2
       hosts:
         - localhost:27017
       options:

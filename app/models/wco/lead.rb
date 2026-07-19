@@ -11,7 +11,7 @@ class Wco::Lead
   index({ email: -1 }, { unique: true })
 
   field :name
-  validates :name, uniqueness: true
+  # validates :name, allow_nil: true, uniqueness: true
   index({ name: -1 })
   def name
     if !self[:name].present?

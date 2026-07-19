@@ -42,12 +42,15 @@ class Wco::LeadsController < Wco::ApplicationController
         phone:   row['phone'] || row['Phone'],
         address: row['address'] || row['Address']
       }.compact ## skip missing columns
+      lead_attrs['email'] = lead_attrs['email'].downcase
 
-      lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil
-      lead ||= Wco::Lead.create!(lead_attrs)
+      if lead_attrs['email']
+        lead   = Wco::Lead.find_by( email: lead_attrs[:email] ) rescue nil
+        lead ||= Wco::Lead.create(lead_attrs)
 
-      selected_tag_ids.each do |tag_id|
-        lead.tags << Wco::Tag.find(tag_id)
+        selected_tag_ids.each do |tag_id|
+          lead.tags << Wco::Tag.find(tag_id)
+        end
       end
     end
 

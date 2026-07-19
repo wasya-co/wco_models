@@ -13,6 +13,7 @@ class WcoEmail::Context
 
   field :slug
   validates_uniqueness_of :slug, allow_nil: true
+  index({ slug: -1 })
 
   field :bcc_self, type: :boolean, default: false
 
@@ -53,12 +54,14 @@ class WcoEmail::Context
       return DEFAULT_FROM_EMAIL
     end
   end
+  index({ from_email: -1 })
 
   field :subject
   field :rendered_subject
   def subject
     self[:subject].presence || tmpl&.subject
   end
+  index({ subject: -1 })
 
   belongs_to :reply_to_message, class_name: 'WcoEmail::Message', inverse_of: :replies, optional: true
 
@@ -73,12 +76,17 @@ class WcoEmail::Context
   field :rendered_str
 
   field :sent_at,         type: DateTime
+  index({ sent_at: -1 })
   field :send_at,         type: DateTime
+  index({ send_at: -1 })
   field :unsubscribed_at, type: DateTime
 
 
   def self.notsent
     where( sent_at: nil, unsubscribed_at: nil )
+  end
+  def self.not_sent
+    self.notsent
   end
 
   def self.scheduled

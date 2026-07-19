@@ -1,103 +1,175 @@
 
-duplicates = Wco::Lead.collection.aggregate([
-  {
-    "$group" => {
-      "_id" => "$email",
-      "count" => { "$sum" => 1 },
-      "ids" => { "$push" => "$_id" }
+-=---
+
+  duplicates = Wco::Lead.collection.aggregate([
+    {
+      "$group" => {
+        "_id" => "$email",
+        "count" => { "$sum" => 1 },
+        "ids" => { "$push" => "$_id" }
+      }
+    },
+    {
+      "$match" => {
+        "_id" => { "$ne" => nil },
+        "count" => { "$gt" => 1 }
+      }
     }
-  },
-  {
-    "$match" => {
-      "_id" => { "$ne" => nil },
-      "count" => { "$gt" => 1 }
-    }
-  }
-])
-duplicates.each do |dup|
-  puts "#{dup['_id']}: #{dup['count']}"
-end
+  ])
+  duplicates.each do |dup|
+    puts "#{dup['_id']}: #{dup['count']}"
+  end
 
 
-Wco::Lead.collection.aggregate([
-  {
-    "$match" => {
-      "email" => { "$ne" => nil }
+  Wco::Lead.collection.aggregate([
+    {
+      "$match" => {
+        "email" => { "$ne" => nil }
+      }
+    },
+    {
+      "$sort" => {
+        "created_at" => 1
+      }
+    },
+    {
+      "$group" => {
+        "_id" => "$email",
+        "ids" => { "$push" => "$_id" },
+        "count" => { "$sum" => 1 }
+      }
+    },
+    {
+      "$match" => {
+        "count" => { "$gt" => 1 }
+      }
     }
-  },
-  {
-    "$sort" => {
-      "created_at" => 1
-    }
-  },
-  {
-    "$group" => {
-      "_id" => "$email",
-      "ids" => { "$push" => "$_id" },
-      "count" => { "$sum" => 1 }
-    }
-  },
-  {
-    "$match" => {
-      "count" => { "$gt" => 1 }
-    }
-  }
-]).each do |dup|
-  newest_id = dup["ids"].last
-  Wco::Lead.where(id: newest_id).delete
-end
+  ]).each do |dup|
+    newest_id = dup["ids"].last
+    Wco::Lead.where(id: newest_id).delete
+  end
 
 
+-=---
 
-Wco::Lead.collection.aggregate([
-  {
-    "$match" => {
-      "email" => { "$ne" => nil }
+  Wco::Lead.collection.aggregate([
+    {
+      "$match" => {
+        "email" => { "$ne" => nil }
+      }
+    },
+    {
+      "$group" => {
+        "_id" => { "$toLower" => "$email" },
+        "count" => { "$sum" => 1 },
+        "emails" => { "$push" => "$email" },
+        "ids" => { "$push" => "$_id" }
+      }
+    },
+    {
+      "$match" => {
+        "count" => { "$gt" => 1 }
+      }
     }
-  },
-  {
-    "$group" => {
-      "_id" => { "$toLower" => "$email" },
-      "count" => { "$sum" => 1 },
-      "emails" => { "$push" => "$email" },
-      "ids" => { "$push" => "$_id" }
-    }
-  },
-  {
-    "$match" => {
-      "count" => { "$gt" => 1 }
-    }
-  }
-]).each do |dup|
-  puts "#{dup['_id']} (#{dup['count']})"
-  p dup['emails']
-end
+  ]).each do |dup|
+    puts "#{dup['_id']} (#{dup['count']})"
+    p dup['emails']
+  end
 
 
-Wco::Lead.collection.aggregate([
-  {
-    "$match" => {
-      "email" => { "$ne" => nil }
+  Wco::Lead.collection.aggregate([
+    {
+      "$match" => {
+        "email" => { "$ne" => nil }
+      }
+    },
+    {
+      "$group" => {
+        "_id" => { "$toLower" => "$email" },
+        "ids" => { "$push" => "$_id" },
+        "emails" => { "$push" => "$email" },
+        "count" => { "$sum" => 1 }
+      }
+    },
+    {
+      "$match" => {
+        "count" => { "$gt" => 1 }
+      }
     }
-  },
-  {
-    "$group" => {
-      "_id" => { "$toLower" => "$email" },
-      "ids" => { "$push" => "$_id" },
-      "emails" => { "$push" => "$email" },
-      "count" => { "$sum" => 1 }
-    }
-  },
-  {
-    "$match" => {
-      "count" => { "$gt" => 1 }
-    }
-  }
-]).each do |dup|
-  dup["ids"].zip(dup["emails"]).each do |id, email|
-    if email != email.downcase
-      puts "Deleting #{email}"
-      Wco::Lead.where(id: id).delete
+  ]).each do |dup|
+    dup["ids"].zip(dup["emails"]).each do |id, email|
+      if email != email.downcase
+        puts "Deleting #{email}"
+        Wco::Lead.where(id: id).delete
+      end
     end
   end
-end
+
+
+
+-=--- 2026-07-19
+
+  duplicates = Wco::Leadset.collection.aggregate([
+    {
+      '$match' => {
+        'company_url' => { '$ne' => nil }
+      }
+    },
+    {
+      '$group' => {
+        '_id' => '$company_url',
+        'ids' => { '$push' => '$_id' },
+        'count' => { '$sum' => 1 }
+      }
+    },
+    {
+      '$match' => {
+        'count' => { '$gt' => 1 }
+      }
+    }
+  ])
+
+  duplicates.each do |dup|
+    newest_id = dup["ids"].last
+    Wco::Leadset.where(id: newest_id).delete
+  end
+
+  duplicates.each do |dup|
+    puts "#{dup['_id']}: #{dup['count']}"
+  end
+
+-=----- email filter conditions
+
+  dups = WcoEmail::OfficeEmailFilterCondition.collection.aggregate([
+    {
+      '$group' => {
+        '_id' => {
+          email_filter_id: '$email_filter_id',
+          field: '$field',
+          operator: '$operator',
+          value: '$value'
+        },
+        ids: { '$push' => '$_id' },
+        count: { '$sum' => 1 }
+      }
+    },
+    {
+      '$match' => {
+        count: { '$gt' => 1 }
+      }
+    }
+  ]).to_a
+
+  dups.each do |dup|
+    puts dup.inspect
+  end
+
+  dups.each do |dup|
+    ids_to_delete = dup['ids'][1..]
+
+    WcoEmail::EmailFilterCondition.where(
+      :id.in => ids_to_delete
+    ).delete_all
+
+    puts "Deleted #{ids_to_delete.size} duplicates"
+  end

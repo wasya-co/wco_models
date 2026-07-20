@@ -1,5 +1,5 @@
 
--=---
+## -=---
 
   duplicates = Wco::Lead.collection.aggregate([
     {
@@ -50,7 +50,7 @@
   end
 
 
--=---
+## -=---
 
   Wco::Lead.collection.aggregate([
     {
@@ -107,7 +107,7 @@
 
 
 
--=--- 2026-07-19
+## -=--- 2026-07-19
 
   duplicates = Wco::Leadset.collection.aggregate([
     {
@@ -138,7 +138,7 @@
     puts "#{dup['_id']}: #{dup['count']}"
   end
 
--=----- email filter conditions
+## -=----- email filter conditions
 
   dups = WcoEmail::OfficeEmailFilterCondition.collection.aggregate([
     {

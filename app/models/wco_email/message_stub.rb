@@ -75,6 +75,7 @@ class WcoEmail::MessageStub
     ## Leadset, Lead
     # from       = json['mail_from'] || "nobody@unknown-doma.in"
     from       = json['from'][/<([^>]+)>/, 1].downcase rescue json['mail_from']
+    mail_from  = json['mail_from']
     @lead      = Wco::Lead.find_or_create_by_email( from )
     @conv.leads.push @lead
     @leadset   = Wco::Leadset.from_email from
@@ -95,7 +96,8 @@ class WcoEmail::MessageStub
       subject: subject,
       date:    json['date'].to_s,
 
-      from: from,
+      from:      from,
+      mail_from: mail_from,
       to:   json['to'],
       cc:   json['cc'],
 
@@ -154,6 +156,11 @@ class WcoEmail::MessageStub
           end
         end
       end
+    end
+
+    if 'Spam' == json['spam_status']
+      @conv.tags.push Wco::Tag.spam
+      conv.tags -= [ Wco::Tag.inbox ]
     end
 
     stub.update_attributes({ status: WcoEmail::MessageStub::STATUS_PROCESSED })

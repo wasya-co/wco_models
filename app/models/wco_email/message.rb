@@ -59,15 +59,16 @@ class WcoEmail::Message
 
   field :part_txt
 
-  field :from,   type: :string
-  field :froms,  type: Array, default: []
+  field :from,      type: :string
+  field :mail_from, type: :string
+  field :spam_status, type: :string
   belongs_to :lead, class_name: 'Wco::Lead', inverse_of: :email_messages
 
   field :to,     type: :string
   field :tos,    type: Array, default: []
   field :cc,     type: :string
   field :ccs,    type: Array, default: []
-  def all_ccs; (tos||[]) + (ccs||[]) + (froms||[]); end
+  def all_ccs; (tos||[]) + (ccs||[]) + [from] + [mail_from]; end ## this is uncertain... _vp_ 2026-07-20
   field :bcc,    type: :string
   field :bccs,   type: Array, default: []
 

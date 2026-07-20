@@ -2,6 +2,11 @@
 class Wco::Api::LeadsController < Wco::ApiController
 
   skip_before_action :decode_jwt
+  before_action      :check_credentials, only: [ :by_email ]
+
+  def by_email
+    @lead = Wco::Lead.where( email: params[:email] ).first
+  end
 
   ## select2-leads-ajax
   def index

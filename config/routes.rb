@@ -6,7 +6,9 @@ Wco::Engine.routes.draw do
 
   namespace :api do
     get 'leads',            to: 'leads#index'
+    get 'leads/by-email/:email', to: 'leads#by_email', constraints: { email: /[^\/]+/ }
     get 'leads/index_hash', to: 'leads#index_hash'
+
 
     get 'obf',              to: 'obfuscated_redirects#show' ## testing only.
     get 'obf/:id',          to: 'obfuscared_redirects#show'

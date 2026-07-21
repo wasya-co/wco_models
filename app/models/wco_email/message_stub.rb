@@ -98,6 +98,7 @@ class WcoEmail::MessageStub
 
       from:      from,
       mail_from: mail_from,
+      spam_status: json['spam_status'],
       to:   json['to'],
       cc:   json['cc'],
 

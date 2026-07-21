@@ -160,7 +160,7 @@ class WcoEmail::MessageStub
 
     if 'Spam' == json['spam_status']
       @conv.tags.push Wco::Tag.spam
-      conv.tags -= [ Wco::Tag.inbox ]
+      @conv.tags -= [ Wco::Tag.inbox ]
     end
 
     stub.update_attributes({ status: WcoEmail::MessageStub::STATUS_PROCESSED })

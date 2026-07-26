@@ -31,7 +31,7 @@ class Wco::Leadset
 
   field :email
   index({ email: 1 }, { name: 'email' })
-  validates :email, uniqueness: { allow_nil: true } # presence: true
+  # validates :email, uniqueness: { allow_nil: true } # presence: true
 
 
   has_many :appliances,      class_name: '::WcoHosting::Appliance',   inverse_of: :leadset

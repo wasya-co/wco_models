@@ -94,6 +94,7 @@ class Wco::Newspartial
   ##
   ## Can I make do without puppet driver? Probably not: I need the audio worklet.
   ## uses ishlib3js v0.0.2, not 0.1.0!!!
+  ## @deprecated, this is being brought into wco_models
   ##
   def generate_video
     cmd = "cd #{Wco::Setting.get('ISHLIB3JS_ROOT')} ;

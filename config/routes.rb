@@ -64,6 +64,7 @@ Wco::Engine.routes.draw do
   resources :newsoverlays
 
   match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
+  ## @deprecated, just url to the studio_1 for now.
   match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video',  as: :newspartial_generate_video,  via: [ :get, :post ]
   resources :newspartials
 

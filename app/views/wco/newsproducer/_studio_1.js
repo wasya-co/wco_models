@@ -43,17 +43,28 @@ let totalFrames
 
 let camera, controls, head, renderer, scene;
 let faceTarget = new THREE.Vector3();
+let chunkedInput = null;
 var capturer = new CCapture( { format: 'webm', framerate: FPS } );
 
 async function init() {
   if (newspartial_id) {
-    const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
-    let chunkedInput = await fetch(url).then(r => r.json())
-    logg(chunkedInput, 'chunkedInput')
-    const last = chunkedInput.wtimes.length-1
-    const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
-    logg(duration_ms, 'duration_ms')
-    totalFrames = duration_ms/1000*FPS;
+    try {
+      const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
+      chunkedInput = await fetch(url).then(r => r.json())
+      // API may return a JSON string payload
+      if (typeof chunkedInput === 'string') {
+        chunkedInput = JSON.parse(chunkedInput)
+      }
+      logg(chunkedInput, 'chunkedInput')
+      const last = chunkedInput.wtimes.length-1
+      const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
+      logg(duration_ms, 'duration_ms')
+      totalFrames = duration_ms/1000*FPS;
+    } catch (error) {
+      console.log(error);
+      chunkedInput = null;
+      totalFrames = undefined;
+    }
   }
 
   scene = new THREE.Scene();
@@ -78,13 +89,10 @@ async function init() {
   const nodeAvatar = document.getElementById('avatar');
   head = new TalkingHead( nodeAvatar, {
     avatarOnly: true,
+    avatarOnlyScene: scene,
     avatarOnlyCamera: camera,
 
     lipsyncModules: ["en"],
-    // cameraView: "upper",
-    // update: function () {
-    //   capturer.capture( renderer.domElement );
-    // }
   });
   logg(head, 'head')
 
@@ -137,21 +145,14 @@ async function init() {
     camera.lookAt(faceTarget);
 
     await head.streamStart({
-          sampleRate: config.sampleRate,
-          mood: config.mood,
-          gain: config.gain,
-          lipsyncType: config.lipsyncType,
-          lipsyncLang: config.lipsyncLang,
-          waitForAudioChunks: config.waitForAudioChunks,
-          // Configure metrics: enabled/disabled and reporting rate
-          metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
-        })
-
-    if (newspartial_id) {
-      capturer.start();
-      logg('capturer.start')
-      head.streamAudio(chunkedInput);
-    }
+      sampleRate: config.sampleRate,
+      mood: config.mood,
+      gain: config.gain,
+      lipsyncType: config.lipsyncType,
+      lipsyncLang: config.lipsyncLang,
+      waitForAudioChunks: config.waitForAudioChunks,
+      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
+    })
 
   } catch (error) {
     console.log(error);
@@ -193,6 +194,13 @@ async function init() {
 
   // Keep rendering so OrbitControls drag/damping stay live
   renderer.setAnimationLoop(animate);
+
+  // Start capture/audio only after the renderer exists
+  if (newspartial_id && chunkedInput) {
+    capturer.start();
+    logg('capturer.start')
+    head.streamAudio(chunkedInput);
+  }
 }
 
 let semafore = false
@@ -204,9 +212,9 @@ document.addEventListener('DOMContentLoaded', async function(e) {
 })
 
 function onWindowResize() {
-  camera.aspect = w / h;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize( w, h );
+  renderer.setSize( width, height );
   render();
 }
 
@@ -224,6 +232,7 @@ function animate() {
     capturer.capture( renderer.domElement );
     frame++;
     if (frame >= totalFrames) {
+      totalFrames = false
       renderer.setAnimationLoop(null);
       capturer.stop();
       logg('capturer.stop')

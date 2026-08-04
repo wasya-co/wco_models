@@ -10,7 +10,7 @@ class Wco::AiWriter
     response = post(
       "/v1/chat/completions",
       headers: {
-        "Authorization" => "Bearer #{OPENAI_API_KEY}",
+        "Authorization" => "Bearer #{Wco::Setting.get('OPENAI_API_KEY')}",
         "Content-Type" => "application/json"
       },
       body: {
@@ -27,6 +27,7 @@ class Wco::AiWriter
         ]
       }.to_json
     )
+    puts! response, 'response'
 
     response.dig("choices", 0, "message", "content")
   end

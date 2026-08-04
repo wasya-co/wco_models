@@ -52,6 +52,27 @@ class Wco::ReportsController < Wco::ApplicationController
     @new_report = Wco::Report.new
   end
 
+  def rewrite
+    @report = Wco::Report.unscoped.find params[:id]
+    authorize! :update, @report
+
+    out = Wco::AiWriter.do_call("You are a journalist writer. Write an article with the following title:", @report.title)
+    @report.update( body: out )
+
+    flash_notice 'Probably ok'
+    redirect_to request.referrer || '/'
+  end
+
+  def md_to_html
+    @report = Wco::Report.unscoped.find params[:id]
+    authorize! :update, @report
+
+    @report.update( body: CommonMarker.render_html(@report.body) )
+
+    flash_notice 'Probably ok'
+    redirect_to request.referrer || '/'
+  end
+
   def show
     @report = Wco::Report.unscoped.find params[:id]
     authorize! :show, @report

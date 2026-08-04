@@ -1,5 +1,6 @@
 
 WasyaCo Models. The functionality shared across all (most) projects, including:
+
 * the ActiveRecord models
 * some stylesheets
 * some javascript

@@ -58,7 +58,7 @@ class Wco::Newspartial
   end
 
   def generate_speech
-    out = HTTParty.post( "#{HEAD_TTS_ORIGIN}/v1/synthesize",
+    out = HTTParty.post( "#{Wco::Setting.get('HEAD_TTS_ORIGIN')}/v1/synthesize",
       headers: {
         'Content-Type' => 'application/json',
         'Accept' => 'application/json',
@@ -70,7 +70,7 @@ class Wco::Newspartial
       }.to_json
     );
     out = out.body
-    puts! out, 'out'
+    # puts! out, 'out'
 
     self[:config_json] = out
     tmp = JSON.parse( out )
@@ -93,13 +93,14 @@ class Wco::Newspartial
 
   ##
   ## Can I make do without puppet driver? Probably not: I need the audio worklet.
+  ## uses ishlib3js v0.0.2, not 0.1.0!!!
   ##
   def generate_video
-    cmd = "cd #{ISHLIB3JS_ROOT} ;
+    cmd = "cd #{Wco::Setting.get('ISHLIB3JS_ROOT')} ;
       node ./src/talking_head/example_puppeteer_wired.js \
-        --api_key=#{WCO_SIMPLE_API_KEY} \
-        --api_secret=#{WCO_SIMPLE_API_SECRET} \
-        --wco_origin=#{WCO_ORIGIN} \
+        --api_key=#{Wco::Setting.get('WASYACO_SIMPLE_API_KEY')} \
+        --api_secret=#{Wco::Setting.get('WASYACO_SIMPLE_API_SECRET')} \
+        --wco_origin=#{Wco::Setting.get('WASYACO_ORIGIN')} \
         --w_px=#{newsvideo.w_px} \
         --h_px=#{newsvideo.h_px} \
         --newspartial_id=#{self[:id]} ";

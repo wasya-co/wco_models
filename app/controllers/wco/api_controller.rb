@@ -24,8 +24,11 @@ class Wco::ApiController < ActionController::Base
   end
 
   def decode_simple_api_key
-    if params[:api_key] === WCO_SIMPLE_API_KEY &&
-       params[:api_secret] === WCO_SIMPLE_API_SECRET
+    if params[:api_key].present? &&
+       params[:api_secret].present? &&
+       params[:api_key]    === Wco::Setting.get('WASYACO_SIMPLE_API_KEY') &&
+       params[:api_secret] === Wco::Setting.get('WASYACO_SIMPLE_API_SECRET')
+
       user = User.find_by({ email: 'piousbox@gmail.com' })
       sign_in user
     else

@@ -17,7 +17,7 @@
         = link_to '[~]', edit_newspartial_path(newspartial)
         .d-inline-block= button_to 'x', newspartial_path(newspartial), method: :delete, :data => { :confirm => 'Are you sure?' }
         %span{ class: 'gray' } #{newspartial.id}
-        = link_to '[api]', api_newspartial_config_path(newspartial, format: :json, api_key: WCO_SIMPLE_API_KEY, api_secret: WCO_SIMPLE_API_SECRET ), target: :_blank
+        = link_to '[api]', api_newspartial_config_path(newspartial, format: :json, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret:  Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') ), target: :_blank
 
       .full-textC
         .flex-row

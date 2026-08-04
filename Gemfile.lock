@@ -139,6 +139,7 @@ GEM
     climate_control (1.2.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    commonmarker (0.23.12)
     concurrent-ruby (1.2.2)
     connection_pool (2.5.5)
     crass (1.0.6)
@@ -439,6 +440,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  commonmarker
   exception_notification (~> 4.5.0)
   factory_bot_rails
   ffi (~> 1.16.3)

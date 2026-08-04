@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
+gem 'commonmarker'
 gem 'exception_notification', "~> 4.5.0"
 gem 'ffi', '~> 1.16.3'
 gem 'omniauth',                       '~> 2.1.1'

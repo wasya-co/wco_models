@@ -25,14 +25,13 @@ class Wco::ApplicationController < ActionController::Base
     out = 5 / 0
   end
 
+  def grapesjs
+  end
+
   def home
     authorize! :home, Wco
   end
 
-  def tinymce
-    authorize! :home, Wco
-    render layout: false
-  end
 
   def linkedin_cb
     authorize! :open_permission, Wco
@@ -75,6 +74,33 @@ class Wco::ApplicationController < ActionController::Base
 
     redirect_to url, allow_other_host: true
   end
+
+  def settings
+    authorize! :home, Wco
+    @settings = {}
+    Wco::Setting.all.to_a.map do |item|
+      @settings[item.key] = item.value
+    end
+  end
+
+  def set_settings
+    authorize! :home, Wco
+    params.fetch(:settings, {}).each do |key, value|
+      next unless Wco::Setting::KEYS.include?(key)
+
+      setting = Wco::Setting.find_or_initialize_by(key: key)
+      setting.value = value.strip
+      setting.save!
+    end
+
+    redirect_to settings_path, notice: 'Settings updated.'
+  end
+
+  def tinymce
+    authorize! :home, Wco
+    render layout: false
+  end
+
 
   ##
   ## private
@@ -125,7 +151,7 @@ class Wco::ApplicationController < ActionController::Base
   end
 
   def my_truthy? which
-    ["1", "t", "T", "true"].include?( which )
+    ["1", "t", "true"].include?( which.downcase )
   end
 
   def set_lists

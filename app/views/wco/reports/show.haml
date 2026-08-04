@@ -1,7 +1,7 @@
 
 - height_ms = 100.0/1000
 
-= render 'wco/reports/to_facebook.html'
+= render 'wco/reports/to_facebook_js.html'
 
 .reports-show.maxwidth
   %h5
@@ -13,18 +13,23 @@
 
   = render 'wco/tags/index_chips', tags: @report.tags
 
-  - if @report.image_thumb
-    = image_tag @report.image_thumb.photo.url(:thumb)
-
-  .descr= raw @report.body
+  .actions
+    %ul
+      %li= button_to 'Rewrite',    report_rewrite_path(@report),    data: { confirm: 'Are you sure?' }
+      %li= button_to 'md-to-html', report_md_to_html_path(@report), data: { confirm: 'Are you sure?' }
 
   %hr
+  - if @report.image_thumb
+    = image_tag @report.image_thumb.photo.url(:thumb)
+  .descr= raw @report.body
+  %hr
+
   .actions
     %ul
       %li= button_to 'Post on Linkedin', report_to_linkedin_path(@report), data: { confirm: 'Are you sure?' }
       %li= button_to 'Post on Facebook', report_to_facebook_path(@report), data: { confirm: 'Are you sure?' }
       %li
-        .a
+        .d-flex
           %label Post with a publisher
           = render 'wco/publishers/post_with', props: { report_id: @report.id.to_s }
 

@@ -1,0 +1,19 @@
+
+.application-settings.maxwidth
+  %h5.text-center Settings
+
+  = form_with url: wco.settings_path do
+    %table.table
+      %thead
+        %tr
+          %th Key
+          %th Value
+      %tbody
+        - Wco::Setting::KEYS.each do |key|
+          %tr
+            %td
+              %strong= key
+            %td
+              = text_field_tag "settings[#{key}]", @settings[key], class: "form-control"
+
+    = submit_tag "UPDATE ALL", class: "btn btn-primary"

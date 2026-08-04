@@ -20,6 +20,7 @@
                 .d-inline-block= button_to 'Logout', main_app.destroy_user_session_path, :method => :delete, data: { confirm: 'Are you sure?' }
               %li= link_to 'sidekiq', '/sidekiq', target: :_blank
               %li= link_to 'RTEditor', wco.application_tinymce_path, target: :_blank
+              %li= link_to 'GrapesJs', wco.application_grapesjs_path, target: :_blank
 
 
           .col-sm-4
@@ -29,6 +30,7 @@
                 = pp_date Time.now
                 = pp_time Time.now
               %li wco_models: v#{File.read(Gem.loaded_specs["wco_models"].full_gem_path + '/VERSION')}
+              %li= link_to 'settings', wco.settings_path
 
           .col-sm-4
             = render '/wco/profiles/form_extra', profile: @current_profile

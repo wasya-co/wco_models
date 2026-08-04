@@ -33,6 +33,7 @@
             Video:
             - if newspartial.video
               = image_tag newspartial.video.thumb.url(:thumb), class: 'thumb'
+              = link_to 'view', video_path(newspartial.video)
           .d-flex.flex-column
             = button_to 'Generate speech', newspartial_generate_speech_path(newspartial), :data => { :confirm => 'Are you sure?' }
             .small.gray Requires HeadTTS.git on :8882

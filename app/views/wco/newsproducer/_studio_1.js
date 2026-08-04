@@ -56,18 +56,23 @@ async function init() {
   }
 
   scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xd3d3d3);
 
   /* fov — Camera frustum vertical field of view.
-    * aspect — Camera frustum aspect ratio.
-    * near — Camera frustum near plane.
-    * far — Camera frustum far plane.
-  **/ //
-  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 10 )
-  camera.position.set( 0, 0, 0 )
-  camera.rotation.set( 0, 0, 0 )
+   * aspect — Camera frustum aspect ratio.
+   * near — Camera frustum near plane.
+   * far — Camera frustum far plane.
+  **/
+  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  camera.position.set( 0, 2, 8 )
+  camera.lookAt( 0, 0, 0 )
 
   const ambientLight = new THREE.AmbientLight( 0xffffff );
   scene.add( ambientLight );
+
+  const grid = new THREE.GridHelper(10, 10, 0x888888, 0xbbbbbb);
+  grid.position.y = 0;
+  scene.add(grid);
 
   const nodeAvatar = document.getElementById('avatar');
   head = new TalkingHead( nodeAvatar, {
@@ -100,9 +105,21 @@ async function init() {
     });
     nodeLoading.style.display = 'none';
 
-    head.armature.position.set(0,-3,0);
-    head.armature.rotation.set(0,1,0);
-    // scene.add(head.armature);
+    head.armature.position.set(0, 0, 0);
+    head.armature.rotation.set(0, 0, 0);
+    scene.add(head.armature);
+
+    // Put feet at the origin
+    head.armature.updateMatrixWorld(true);
+    const leftToe = new THREE.Vector3();
+    const rightToe = new THREE.Vector3();
+    head.objectLeftToeBase.getWorldPosition(leftToe);
+    head.objectRightToeBase.getWorldPosition(rightToe);
+    head.armature.position.set(
+      -(leftToe.x + rightToe.x) / 2,
+      -Math.min(leftToe.y, rightToe.y),
+      -(leftToe.z + rightToe.z) / 2
+    );
 
     await head.streamStart({
           sampleRate: config.sampleRate,
@@ -133,19 +150,24 @@ async function init() {
     alpha: false,
     antialias: true,
   } );
+  renderer.setClearColor(0xd3d3d3, 1);
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( width, height );
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById('rotatingC').appendChild( renderer.domElement );
 
   //
 
   controls = new OrbitControls( camera, renderer.domElement );
   controls.enableDamping = true;
+  controls.enableRotate = true;
+  controls.enablePan = true;
+  controls.enableZoom = true;
   controls.minDistance = 0.5;
   controls.maxDistance = 100;
+  controls.target.set( 0, 0, 0 );
   controls.autoRotate = false;
   controls.update();
 
@@ -154,8 +176,8 @@ async function init() {
   window.addEventListener( 'resize', onWindowResize );
 
 
-  // renderer.setAnimationLoop(animate);
-  animate()
+  // Keep rendering so OrbitControls drag/damping stay live
+  renderer.setAnimationLoop(animate);
 }
 
 let semafore = false
@@ -179,41 +201,42 @@ function render() {
 
 function animate() {
   const t = frame / FPS;
-  head.animate(1000/FPS);
+  if (head) head.animate(1000/FPS);
   controls.update();
   renderer.render( scene, camera );
-  capturer.capture( renderer.domElement );
 
-  frame++;
-  if (frame < totalFrames) {
-    requestAnimationFrame(animate)
-  } else {
-    capturer.stop();
-    logg('capturer.stop')
+  if (totalFrames) {
+    capturer.capture( renderer.domElement );
+    frame++;
+    if (frame >= totalFrames) {
+      renderer.setAnimationLoop(null);
+      capturer.stop();
+      logg('capturer.stop')
 
-    if (newspartial_id) {
-      capturer.save((blob) => {
-        logg(blob, 'blob')
-        renderer.domElement.toBlob((thumb) => {
-          logg(thumb, 'thumb')
-          const form = new FormData();
-          form.append('video', blob, 'lips.webm')
-          form.append('name', '<ccapturejs>')
-          form.append('thumb', thumb)
-          form.append('newspartial_id', newspartial_id)
+      if (newspartial_id) {
+        capturer.save((blob) => {
+          logg(blob, 'blob')
+          renderer.domElement.toBlob((thumb) => {
+            logg(thumb, 'thumb')
+            const form = new FormData();
+            form.append('video', blob, 'lips.webm')
+            form.append('name', '<ccapturejs>')
+            form.append('thumb', thumb)
+            form.append('newspartial_id', newspartial_id)
 
-          fetch(wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret, {
-            method: 'POST',
-            headers: {
-              // 'Content-Type': 'video/webm',
-            },
-            body: form,
+            fetch(wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret, {
+              method: 'POST',
+              headers: {
+                // 'Content-Type': 'video/webm',
+              },
+              body: form,
+            })
           })
-        })
-      });
+        });
+      }
+      // Resume interactive orbit after capture
+      renderer.setAnimationLoop(animate);
     }
-
-
   }
 }
 

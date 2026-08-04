@@ -42,6 +42,7 @@ const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
 let camera, controls, head, renderer, scene;
+let faceTarget = new THREE.Vector3();
 var capturer = new CCapture( { format: 'webm', framerate: FPS } );
 
 async function init() {
@@ -120,6 +121,20 @@ async function init() {
       -Math.min(leftToe.y, rightToe.y),
       -(leftToe.z + rightToe.z) / 2
     );
+    head.armature.updateMatrixWorld(true);
+
+    // Camera at head level, pointed at the face
+    const leftEye = new THREE.Vector3();
+    const rightEye = new THREE.Vector3();
+    head.objectLeftEye.getWorldPosition(leftEye);
+    head.objectRightEye.getWorldPosition(rightEye);
+    faceTarget.copy(leftEye).add(rightEye).multiplyScalar(0.5);
+
+    const camPos = new THREE.Vector3(0, 0, 2);
+    camPos.applyQuaternion(head.armature.quaternion);
+    camPos.add(faceTarget);
+    camera.position.copy(camPos);
+    camera.lookAt(faceTarget);
 
     await head.streamStart({
           sampleRate: config.sampleRate,
@@ -167,7 +182,7 @@ async function init() {
   controls.enableZoom = true;
   controls.minDistance = 0.5;
   controls.maxDistance = 100;
-  controls.target.set( 0, 0, 0 );
+  controls.target.copy(faceTarget);
   controls.autoRotate = false;
   controls.update();
 

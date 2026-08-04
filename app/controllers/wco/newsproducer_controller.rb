@@ -12,5 +12,11 @@ class Wco::NewsproducerController < Wco::ApplicationController
     render 'canvas_minimal', layout: false
   end
 
+
+  def studio_1
+    authorize! :home, Wco
+    render layout: false
+  end
+
 end
 

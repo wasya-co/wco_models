@@ -1,0 +1,232 @@
+
+/*
+**/
+const logg = (a, b="", c=null) => {
+  if ('undefined' === typeof window) { return }
+  c = "string" === typeof c ? c : b.replace(/\W/g, "");
+  if (c.length > 0) {
+    window[c] = a;
+  }
+  console.log(`+++ ${b}:`, a); // eslint-disable-line no-console
+};
+
+let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.0.3/public/vendor/models/avatars/brunette.glb'
+
+import * as THREE from 'three';
+
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+import { TalkingHead } from "talkinghead";
+
+const params = new URLSearchParams(window.location.search);
+
+let config = {
+    sampleRate: 8000,
+    mood: 'neutral',
+    gain: 0.5,
+    lipsyncType: "visemes",
+    lipsyncLang: "en",
+    waitForAudioChunks: false,
+    enableMetrics: false,
+  };
+let width = 640;
+let height = 480;
+const FPS = 24;
+
+let frame = 0;
+const api_key    = params.get('api_key')
+const api_secret = params.get('api_secret')
+const wco_origin = params.get('wco_origin')
+const newspartial_id = params.get('newspartial_id')
+let totalFrames
+
+let camera, controls, head, renderer, scene;
+var capturer = new CCapture( { format: 'webm', framerate: FPS } );
+
+async function init() {
+  if (newspartial_id) {
+    const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
+    let chunkedInput = await fetch(url).then(r => r.json())
+    logg(chunkedInput, 'chunkedInput')
+    const last = chunkedInput.wtimes.length-1
+    const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
+    logg(duration_ms, 'duration_ms')
+    totalFrames = duration_ms/1000*FPS;
+  }
+
+  scene = new THREE.Scene();
+
+  /* fov — Camera frustum vertical field of view.
+    * aspect — Camera frustum aspect ratio.
+    * near — Camera frustum near plane.
+    * far — Camera frustum far plane.
+  **/ //
+  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 10 )
+  camera.position.set( 0, 0, 0 )
+  camera.rotation.set( 0, 0, 0 )
+
+  const ambientLight = new THREE.AmbientLight( 0xffffff );
+  scene.add( ambientLight );
+
+  const nodeAvatar = document.getElementById('avatar');
+  head = new TalkingHead( nodeAvatar, {
+    avatarOnly: true,
+    avatarOnlyCamera: camera,
+
+    lipsyncModules: ["en"],
+    // cameraView: "upper",
+    // update: function () {
+    //   capturer.capture( renderer.domElement );
+    // }
+  });
+  logg(head, 'head')
+
+
+
+  const nodeLoading = document.getElementById('loading');
+  try {
+    nodeLoading.textContent = "Loading...";
+    await head.showAvatar( {
+      url: avatar_url,
+      body: 'F',
+      avatarMood: 'neutral',
+      lipsyncLang: 'en'
+    }, (ev) => {
+      if ( ev.lengthComputable ) {
+        let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ));
+        nodeLoading.textContent = "Loading " + val + "%";
+      }
+    });
+    nodeLoading.style.display = 'none';
+
+    head.armature.position.set(0,-3,0);
+    head.armature.rotation.set(0,1,0);
+    // scene.add(head.armature);
+
+    await head.streamStart({
+          sampleRate: config.sampleRate,
+          mood: config.mood,
+          gain: config.gain,
+          lipsyncType: config.lipsyncType,
+          lipsyncLang: config.lipsyncLang,
+          waitForAudioChunks: config.waitForAudioChunks,
+          // Configure metrics: enabled/disabled and reporting rate
+          metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
+        })
+
+    if (newspartial_id) {
+      capturer.start();
+      logg('capturer.start')
+      head.streamAudio(chunkedInput);
+    }
+
+  } catch (error) {
+    console.log(error);
+    nodeLoading.textContent = error.toString();
+  }
+
+
+  //
+
+  renderer = new THREE.WebGLRenderer( {
+    alpha: false,
+    antialias: true,
+  } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( width, height );
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  document.getElementById('rotatingC').appendChild( renderer.domElement );
+
+  //
+
+  controls = new OrbitControls( camera, renderer.domElement );
+  controls.enableDamping = true;
+  controls.minDistance = 0.5;
+  controls.maxDistance = 100;
+  controls.autoRotate = false;
+  controls.update();
+
+  //
+
+  window.addEventListener( 'resize', onWindowResize );
+
+
+  // renderer.setAnimationLoop(animate);
+  animate()
+}
+
+let semafore = false
+document.addEventListener('DOMContentLoaded', async function(e) {
+  if (!semafore) {
+    semafore = true
+    await init()
+  }
+})
+
+function onWindowResize() {
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize( w, h );
+  render();
+}
+
+function render() {
+  renderer.render( scene, camera );
+}
+
+function animate() {
+  const t = frame / FPS;
+  head.animate(1000/FPS);
+  controls.update();
+  renderer.render( scene, camera );
+  capturer.capture( renderer.domElement );
+
+  frame++;
+  if (frame < totalFrames) {
+    requestAnimationFrame(animate)
+  } else {
+    capturer.stop();
+    logg('capturer.stop')
+
+    if (newspartial_id) {
+      capturer.save((blob) => {
+        logg(blob, 'blob')
+        renderer.domElement.toBlob((thumb) => {
+          logg(thumb, 'thumb')
+          const form = new FormData();
+          form.append('video', blob, 'lips.webm')
+          form.append('name', '<ccapturejs>')
+          form.append('thumb', thumb)
+          form.append('newspartial_id', newspartial_id)
+
+          fetch(wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret, {
+            method: 'POST',
+            headers: {
+              // 'Content-Type': 'video/webm',
+            },
+            body: form,
+          })
+        })
+      });
+    }
+
+
+  }
+}
+
+
+// Speak when clicked
+const nodeSpeak = document.getElementById('speak');
+  nodeSpeak.addEventListener('click', function () {
+    try {
+
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+
+console.log('+++ loaded wco_models :: newsproducer :: studio_1.js')

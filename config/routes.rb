@@ -67,6 +67,10 @@ Wco::Engine.routes.draw do
   match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video',  as: :newspartial_generate_video,  via: [ :get, :post ]
   resources :newspartials
 
+
+  get 'newsproducer/canvas', to: 'newsproducer#canvas'
+  get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
+
   match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
   post  'newsvideos/:id/generate', to: 'newsvideos#generate', as: :generate_newsvideo
   post  'newsvideos/:id/split',    to: 'newsvideos#split',    as: :split_newsvideo

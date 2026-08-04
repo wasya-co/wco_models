@@ -167,7 +167,7 @@ async function init() {
     antialias: true,
   } );
   renderer.setClearColor(0xd3d3d3, 1);
-  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio( 1 ); // window.devicePixelRatio );
   renderer.setSize( width, height );
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;

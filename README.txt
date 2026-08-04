@@ -16,6 +16,18 @@ Some infrastructure is driven by ansible - therefore, local python3 and ansible 
   . zenv/bin/activate
   pip install -r requirements.txt
 
+= Develop =
+
+  == Image to video ==
+
+    ffmpeg -loop 1 -i $inn -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
+
+    ## unnecessary:
+    ffmpeg -loop 1 -i "$inn" -vf "scale=iw:ih" -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
+    ## odd pixel:
+    ffmpeg -loop 1 -i "$inn" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
+
+
 = Test =
 
 See doc/localstack.txt

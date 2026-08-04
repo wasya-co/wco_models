@@ -55,7 +55,7 @@ class Wco::Newsvideo
     @newsvideo = self
 
     ## put together config, first thing
-    cmd = "cd #{Rails.root.join('tmp')} ; rm -rf #{@newsvideo.id} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} "
+    cmd = "cd #{Rails.root.join('tmp')} ; rm -rf #{@newsvideo.id} ; mkdir -p #{@newsvideo.id} ; cd #{@newsvideo.id} ; "
     @newsvideo.newspartials.each_with_index do |part, idx|
       cmd = "#{cmd} echo \"file 'newspartial_#{idx}.mp4' \" >> videolist.txt ; "
       cmd = "#{cmd} echo \"file 'newspartial_#{idx}.wav' \" >> audiolist.txt ; "

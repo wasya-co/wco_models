@@ -88,7 +88,8 @@ class WcoEmail::Message
 
   def apply_filter_action action
     message = self
-    aject = action.aject
+    aject   = action.aject
+
     case action.kind
     when WcoEmail::EmailFilterAction::KIND_ADD_TAG
       conv.tags.push aject

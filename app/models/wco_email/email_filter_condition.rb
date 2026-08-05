@@ -11,17 +11,17 @@ class WcoEmail::EmailFilterCondition
   FIELD_BODY_PLAIN  = 'body-plain'
   FIELD_FROM        = 'from'
   FIELD_LEADSET     = 'from-leadset'
-  FIELD_NOT_TAGGED  = 'leadset-not-tagged'
   FIELD_SUBJECT     = 'subject'
-  FIELD_TAGGED      = 'leadset-tagged'
+  FIELD_TAGGED      = 'leadset-tagged'     ## either lead or leadset, actually
+  FIELD_NOT_TAGGED  = 'leadset-not-tagged' ## either lead or leadset, actually
   FIELD_TO_OR_CC    = 'to-or-cc'
   FIELD_OPTS = [
     FIELD_BODY, FIELD_BODY_PLAIN,
     FIELD_FROM,
     FIELD_LEADSET,
-    FIELD_NOT_TAGGED,
     FIELD_SUBJECT,
     FIELD_TAGGED,
+    FIELD_NOT_TAGGED,
     FIELD_TO_OR_CC,
   ];
   field :field
@@ -49,10 +49,11 @@ class WcoEmail::EmailFilterCondition
 
   index({ email_filter_id: 1, field: 1, operator: 1, value: 1 }, unique: true )
 
-  def apply leadset:, message:
+  def apply lead:, leadset:, message:
     cond = self
     reason = nil
     case cond.field
+
     ## from match-i <value>
     when WcoEmail::EmailFilterCondition::FIELD_FROM
       if cond.operator == WcoEmail::EmailFilterCondition::OPERATOR_MATCH
@@ -60,7 +61,35 @@ class WcoEmail::EmailFilterCondition
           reason = "#{email_skip_filter ? 'skip_' : ''}condition from match-i `#{value}`"
         end
       end
-    end
+
+    when WcoEmail::EmailFilterCondition::FIELD_TAGGED
+      ## cond.operator should eql OPERATOR__ID but I don't check b/c if its slug, it should work also.
+      tag   = Wco::Tag.find( cond.value ) rescue nil
+      tag ||= Wco::Tag.where( slug: cond.value ).first
+      if tag
+        if leadset.tags.include?( tag ) ||
+           lead.tags.include?( tag )
+
+          reason = "#{email_skip_filter ? 'skip_' : ''}condition TAGGED `#{tag.slug}`"
+
+        end
+      end
+
+    when WcoEmail::EmailFilterCondition::FIELD_NOT_TAGGED
+      ## cond.operator should eql OPERATOR__ID but I don't check b/c if its slug, it should work also.
+      tag   = Wco::Tag.find( cond.value ) rescue nil
+      tag ||= Wco::Tag.where( slug: cond.value ).first
+      if tag
+        if !leadset.tags.include?( tag ) &&
+           !lead.tags.include?( tag )
+
+          reason = "#{email_skip_filter ? 'skip_' : ''}condition NOT_TAGGED `#{tag.slug}`"
+
+        end
+      end
+
+    end ## end case
+
     # when WcoEmail::FIELD_LEADSET
     #   if cond.operator == WcoEmail::OPERATOR_NOT_HAS_TAG
     #     this_tag = Wco::Tag.find cond.value

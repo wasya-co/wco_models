@@ -111,11 +111,6 @@ class WcoEmail::MessageStub
       @message.save_attachment_postal( att )
     end
 
-    ## _TODO
-    # the_mail.cc&.each do |cc|
-    #   Wco::Lead.find_or_create_by_email( cc )
-    # end
-
     @conv.update_attributes({
       status:      WcoEmail::Conversation::STATUS_UNREAD,
       latest_at:   json['date'].to_time.to_s || Time.now.to_datetime,
@@ -135,7 +130,7 @@ class WcoEmail::MessageStub
       reason = nil
 
       filter.conditions.each do |cond|
-        reason ||= cond.apply(leadset: @leadset, message: @message )
+        reason ||= cond.apply(lead: @lead, leadset: @leadset, message: @message )
       end
 
       if reason
@@ -145,13 +140,14 @@ class WcoEmail::MessageStub
         skip_reason = nil
 
         filter.skip_conditions.each do |scond|
-          skip_reason ||= scond.apply(leadset: @leadset, message: @message )
+          skip_reason ||= scond.apply(lead: @lead, leadset: @leadset, message: @message )
         end
 
         if skip_reason
           puts! "NOT Applying2 filter #{filter} to conv #{@message.conversation} for matching #{skip_reason}" if DEBUG
         else
-          @conv.filters << filter; @conv.save
+          @conv.filters << filter
+          @conv.save
           filter.actions.each do |action|
             @message.apply_filter_action( action )
           end

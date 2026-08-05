@@ -51,6 +51,19 @@ class Wco::Newsvideo
     Wco::Newsoverlay.where( newsvideo_id: self.id )
   end
 
+  def do_split
+    @newsvideo = self
+
+    sentences = PragmaticSegmenter::Segmenter.new(text: @newsvideo.body).segment
+    phrases = sentences_to_phrases(sentences)
+
+    phrases.each do |phrase|
+      newspartial = Wco::Newspartial.new body: phrase, newsvideo: @newsvideo
+      newspartial.save!
+    end
+  end
+
+
   def generate
     @newsvideo = self
 
@@ -88,11 +101,11 @@ class Wco::Newsvideo
     puts! out, 'out'
 
     ## video concat
-    cmd = <<AOL
+    cmd = <<~AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f video_concat.mp4 ;
       ffmpeg -y -f concat -safe 0 -i videolist.txt -c copy video_concat.mp4 ;
-AOL
+    AOL
     puts "+++ video concat cmd:"
     puts cmd
     out = `#{cmd}`
@@ -100,22 +113,22 @@ AOL
 
     ## audio concat
     audio_filenames = (0...@newsvideo.newspartials.length).map { |i| "newspartial_#{i}.wav" }.join("|")
-    cmd = <<AOL
+    cmd = <<~AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f audio_concat.wav ;
       ffmpeg -y -f concat -safe 0 -i audiolist.txt -c copy audio_concat.wav ;
-AOL
+    AOL
     puts "+++ audio concat cmd:"
     puts cmd
     out = `#{cmd}`
     puts! out, 'out'
 
     ## combine base
-    cmd = <<AOL
+    cmd = <<~AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f output.mp4 ;
       ffmpeg -y -i video_concat.mp4 -i audio_concat.wav -c:v copy -c:a aac combined_base.mp4 ;
-AOL
+    AOL
     puts "+++ combine base cmd:"
     puts cmd
     out = `#{cmd}`
@@ -147,11 +160,11 @@ AOL
     puts ffmpeg_cmd
 
     # combine overlays 2
-    cmd = <<AOL
+    cmd = <<~AOL
       cd #{Rails.root.join('tmp', @newsvideo.id)} ;
       rm -f combined_fin.mp4 ;
       #{ffmpeg_cmd} ;
-AOL
+    AOL
     puts "+++ ffmpeg cmd 2:"
     puts cmd
     out = `#{cmd}`
@@ -166,6 +179,30 @@ AOL
       puts "Could not create video:"
       puts @video.errors.full_messages.join(", ")
     end
+  end
+
+  def sentences_to_phrases sentences
+    phrases = []
+    current_phrase = []
+
+    current_word_count = 0
+
+    sentences.each do |sentence|
+      words_in_sentence = sentence.split.size
+
+      # If adding this sentence exceeds the limit, start a new phrase
+      if current_word_count + words_in_sentence > Wco::Newspartial::MAX_WORDS
+        phrases << current_phrase.join(" ")
+        current_phrase = []
+        current_word_count = 0
+      end
+
+      current_phrase << sentence
+      current_word_count += words_in_sentence
+    end
+
+    # Add the last phrase if any
+    phrases << current_phrase.join(" ") unless current_phrase.empty?
   end
 
 end

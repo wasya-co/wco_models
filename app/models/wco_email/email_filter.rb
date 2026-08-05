@@ -9,7 +9,7 @@ class WcoEmail::EmailFilter
   PAGE_PARAM_NAME = :filters_page
 
   STATUS_ACTIVE   = 'active'
-  STATUS_INACTIVE = 'inactive'
+  STATUS_DISABLED = 'disabled'
   field :status, type: :string, default: STATUS_ACTIVE
   def self.active; where( :status.in => [ nil, STATUS_ACTIVE ] ); end
 

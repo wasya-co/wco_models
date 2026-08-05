@@ -81,14 +81,7 @@ class Wco::NewsvideosController < Wco::ApplicationController
       return
     end
 
-    sentences = PragmaticSegmenter::Segmenter.new(text: @newsvideo.body).segment
-    phrases = sentences_to_phrases(sentences)
-    puts! phrases, 'phrases'
-
-    phrases.each do |phrase|
-      newspartial = Wco::Newspartial.new body: phrase, newsvideo: @newsvideo
-      newspartial.save!
-    end
+    @newsvideo.do_split
 
     flash_notice 'Done spliting the video.'
     redirect_to request.referrer
@@ -112,31 +105,6 @@ class Wco::NewsvideosController < Wco::ApplicationController
   ## private
   ##
   private
-
-  def sentences_to_phrases sentences
-    max_words = 50
-    phrases = []
-    current_phrase = []
-
-    current_word_count = 0
-
-    sentences.each do |sentence|
-      words_in_sentence = sentence.split.size
-
-      # If adding this sentence exceeds the limit, start a new phrase
-      if current_word_count + words_in_sentence > max_words
-        phrases << current_phrase.join(" ")
-        current_phrase = []
-        current_word_count = 0
-      end
-
-      current_phrase << sentence
-      current_word_count += words_in_sentence
-    end
-
-    # Add the last phrase if any
-    phrases << current_phrase.join(" ") unless current_phrase.empty?
-  end
 
   def set_lists
     @tags_list = Wco::Tag.list

@@ -16,7 +16,7 @@ Some infrastructure is driven by ansible - therefore, local python3 and ansible 
   . zenv/bin/activate
   pip install -r requirements.txt
 
-= Develop =
+= Develop / Use =
 
   == Image to video ==
 

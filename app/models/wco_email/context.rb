@@ -51,7 +51,7 @@ class WcoEmail::Context
     elsif tmpl&.from_email
       return tmpl.from_email
     else
-      return DEFAULT_FROM_EMAIL
+      return 'no-reply@wasya.co' ## DEFAULT_FROM_EMAIL
     end
   end
   index({ from_email: -1 })

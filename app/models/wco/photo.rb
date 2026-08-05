@@ -6,6 +6,7 @@ class Wco::Photo
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Mongoid::Paranoia
   include Wco::Utils
   store_in collection: 'photos'
 

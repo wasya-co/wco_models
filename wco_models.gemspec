@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.303"
+  spec.version     = "3.1.0.304"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -27,6 +27,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "cancancan", "~> 3.5.0"
   spec.add_dependency 'capybara'
+  spec.add_dependency 'commonmarker'
+
 
   spec.add_dependency 'devise',    "~> 4.9.3"
   spec.add_dependency 'droplet_kit', "~> 3.20.0"

@@ -16,9 +16,7 @@
             <b>unsubscribed_at:</b>
             = @lead.unsubscribed_at
         %li
-          Leadset:
-          = link_to @lead.leadset.company_url, leadset_path(@lead.leadset)
-          = link_to '[~]', edit_leadset_path(@lead.leadset)
+          = render 'wco/leadsets/show_inline', leadset: @lead.leadset
         -# %li Rating: #{@lead.rating}
         - if @lead.phone
           %li Phone: #{@lead.phone}

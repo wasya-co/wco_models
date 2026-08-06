@@ -1,0 +1,6 @@
+
+.leadsets--show-inline
+  Leadset:
+  = link_to leadset.company_url, leadset_path(leadset)
+  = link_to '[~]', edit_leadset_path(leadset)
+  = render 'wco/tags/list_chips', tags: leadset.tags

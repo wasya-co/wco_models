@@ -6,6 +6,7 @@ class WcoEmail::EmailFilterCondition
 
   belongs_to :email_filter,      class_name: '::WcoEmail::EmailFilter', inverse_of: :conditions,      optional: true
   belongs_to :email_skip_filter, class_name: '::WcoEmail::EmailFilter', inverse_of: :skip_conditions, optional: true
+  index({ email_filter_id: 1, email_skip_filter_id: 1, field: 1, operator: 1, value: 1 }, unique: true )
 
   FIELD_BODY        = 'body'
   FIELD_BODY_PLAIN  = 'body-plain'
@@ -47,7 +48,6 @@ class WcoEmail::EmailFilterCondition
   field :value
   validates :value, presence: true
 
-  index({ email_filter_id: 1, field: 1, operator: 1, value: 1 }, unique: true )
 
   def apply lead:, message:
     cond = self

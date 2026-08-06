@@ -57,5 +57,14 @@ class Wco::UnsubscribesController < Wco::ApplicationController
     render layout: false
   end
 
+  ##
+  ## private
+  ##
+  private
+
+  def set_lists
+    ; ## no super
+  end
+
 end
 

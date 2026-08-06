@@ -6,6 +6,7 @@ class Wco::Api::LeadsController < Wco::ApiController
 
   def by_email
     @lead = Wco::Lead.find_or_create_by_email( params[:email] )
+    render formats: [:json]
   end
 
   ## select2-leads-ajax

@@ -447,6 +447,7 @@ DEPENDENCIES
   factory_bot_rails
   ffi (~> 1.16.3)
   irb (>= 1.2.8)
+  jbuilder
   omniauth (~> 2.1.1)
   omniauth-keycloak (~> 1.5.1)
   omniauth-rails_csrf_protection (~> 1.0.1)

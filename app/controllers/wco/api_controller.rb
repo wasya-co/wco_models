@@ -10,7 +10,9 @@ class Wco::ApiController < ActionController::Base
   private
 
   def check_credentials
-    if params[:secret] != AWS_SES_LAMBDA_SECRET
+    if params[:secret].blank? ||
+       params[:secret] != AWS_SES_LAMBDA_SECRET
+
       render status: 400, json: { status: 400, message: "#check_credentials in wco says unauthorized." }
       return
     end

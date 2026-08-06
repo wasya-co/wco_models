@@ -450,6 +450,7 @@ DEPENDENCIES
   omniauth-keycloak (~> 1.5.1)
   omniauth-rails_csrf_protection (~> 1.0.1)
   pragmatic_segmenter (= 0.3.24)
+  public_suffix
   rails-controller-testing
   rspec-rails
   stringio (= 3.1.2)

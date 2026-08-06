@@ -72,14 +72,12 @@ class WcoEmail::MessageStub
       })
     end
 
-    ## Leadset, Lead
-    # from       = json['mail_from'] || "nobody@unknown-doma.in"
+    ## Lead, Leadset
     from       = json['from'][/<([^>]+)>/, 1].downcase rescue json['mail_from']
     mail_from  = json['mail_from']
     @lead      = Wco::Lead.find_or_create_by_email( from )
     @conv.leads.push @lead
-    @leadset   = Wco::Leadset.from_email from
-    @conv.leadsets.push @leadset
+    @conv.leadsets.push @lead.leadset
 
     ## message
     old_message   = WcoEmail::Message.unscoped.where( message_id: message_id ).first
@@ -130,7 +128,7 @@ class WcoEmail::MessageStub
       reason = nil
 
       filter.conditions.each do |cond|
-        reason ||= cond.apply(lead: @lead, leadset: @leadset, message: @message )
+        reason ||= cond.apply(lead: @lead, message: @message )
       end
 
       if reason
@@ -140,7 +138,7 @@ class WcoEmail::MessageStub
         skip_reason = nil
 
         filter.skip_conditions.each do |scond|
-          skip_reason ||= scond.apply(lead: @lead, leadset: @leadset, message: @message )
+          skip_reason ||= scond.apply(lead: @lead, message: @message )
         end
 
         if skip_reason

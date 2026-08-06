@@ -13,6 +13,7 @@ gem "omniauth-rails_csrf_protection", "~> 1.0.1"
 # gem 'gsl'
 gem 'stringio', '3.1.2'
 gem 'pragmatic_segmenter', '0.3.24'
+gem 'public_suffix'
 
 group :development, :test do
 

@@ -49,7 +49,7 @@ class WcoEmail::EmailFilterCondition
 
   index({ email_filter_id: 1, field: 1, operator: 1, value: 1 }, unique: true )
 
-  def apply lead:, leadset:, message:
+  def apply lead:, message:
     cond = self
     reason = nil
     case cond.field
@@ -67,7 +67,7 @@ class WcoEmail::EmailFilterCondition
       tag   = Wco::Tag.find( cond.value ) rescue nil
       tag ||= Wco::Tag.where( slug: cond.value ).first
       if tag
-        if leadset.tags.include?( tag ) ||
+        if lead.leadset.tags.include?( tag ) ||
            lead.tags.include?( tag )
 
           reason = "#{email_skip_filter ? 'skip_' : ''}condition TAGGED `#{tag.slug}`"
@@ -80,7 +80,7 @@ class WcoEmail::EmailFilterCondition
       tag   = Wco::Tag.find( cond.value ) rescue nil
       tag ||= Wco::Tag.where( slug: cond.value ).first
       if tag
-        if !leadset.tags.include?( tag ) &&
+        if !lead.leadset.tags.include?( tag ) &&
            !lead.tags.include?( tag )
 
           reason = "#{email_skip_filter ? 'skip_' : ''}condition NOT_TAGGED `#{tag.slug}`"
@@ -90,20 +90,6 @@ class WcoEmail::EmailFilterCondition
 
     end ## end case
 
-    # when WcoEmail::FIELD_LEADSET
-    #   if cond.operator == WcoEmail::OPERATOR_NOT_HAS_TAG
-    #     this_tag = Wco::Tag.find cond.value
-    #     if leadset.tags.include?( this_tag )
-    #       ;
-    #     else
-    #       reason = "#{email_skip_filter ? 'skip_' : ''}condition leadset not-has-tag #{this_tag} NOT met"
-    #     end
-    #   end
-    # when WcoEmail::FIELD_TO
-    #   if message.to == cond.value
-    #     reason = "{email_skip_filter ? 'skip_' : ''}condition to = #{cond.value}"
-    #   end
-    # end
     return reason
   end
 

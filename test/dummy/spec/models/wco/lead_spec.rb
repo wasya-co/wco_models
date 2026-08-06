@@ -25,6 +25,14 @@ RSpec.describe Wco::Lead do
     Wco::Lead.all.length.should eql 1
   end
 
+  it 'uses existing leadset, WITH a non-standard domain' do
+    email = 'abba+zz@one.two.three.four.co.uk'
+    one = Wco::Lead.find_or_create_by_email( email )
+    n_leadsets = Wco::Leadset.all.length
+    email = 'abba3+zz@two.three.four.co.uk'
+    two = Wco::Lead.find_or_create_by_email( email )
+    Wco::Leadset.all.length.should eql( n_leadsets )
+  end
 
 end
 

@@ -18,8 +18,8 @@ RSpec.describe WcoEmail::Message do
 
     it 'message_id is unique and not nil' do
       message_id = 'test'
-      WcoEmail::Message.unscoped.map &:delete!
-      WcoEmail::MessageStub.unscoped.map &:delete!
+      WcoEmail::Message.unscoped.map &:delete
+      WcoEmail::MessageStub.unscoped.map &:delete
       m = WcoEmail::Message.create({
         conversation: @conv,
         object_key: 'abba',

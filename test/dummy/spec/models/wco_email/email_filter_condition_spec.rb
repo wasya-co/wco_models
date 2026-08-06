@@ -24,7 +24,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @message = WcoEmail::Message.new from: 'sOmE@one.com'
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: @message )
+      outs = cond.apply( lead: @lead, message: @message )
       # puts! outs, 'outs'
       outs.class.should eql String
     end
@@ -37,7 +37,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
         value: @tag.id.to_s,
       })
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'not outs'
       outs.class.should eql NilClass
     end
@@ -49,7 +49,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @leadset.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'outs'
       outs.class.should eql String
     end
@@ -61,7 +61,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @leadset.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'outs'
       outs.class.should eql String
     end
@@ -73,7 +73,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @lead.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'outs'
       outs.class.should eql String
     end
@@ -90,7 +90,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @leadset.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'not outs'
       outs.class.should eql NilClass
     end
@@ -102,7 +102,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @lead.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'not outs'
       outs.class.should eql NilClass
     end
@@ -114,7 +114,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @leadset.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'not outs'
       outs.class.should eql NilClass
     end
@@ -126,7 +126,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
 
       @lead.tags << @tag
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'not outs'
       outs.class.should eql NilClass
     end
@@ -137,7 +137,7 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
         value: @tag.id.to_s,
       })
 
-      outs = cond.apply( lead: @lead, leadset: @leadset, message: {} )
+      outs = cond.apply( lead: @lead, message: {} )
       # puts! outs, 'outs'
       outs.class.should eql String
     end

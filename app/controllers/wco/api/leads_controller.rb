@@ -5,7 +5,7 @@ class Wco::Api::LeadsController < Wco::ApiController
   before_action      :check_credentials, only: [ :by_email ]
 
   def by_email
-    @lead = Wco::Lead.where( email: params[:email] ).first
+    @lead = Wco::Lead.find_or_create_by_email( params[:email] )
   end
 
   ## select2-leads-ajax

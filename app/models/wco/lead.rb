@@ -32,12 +32,7 @@ class Wco::Lead
   belongs_to :leadset, class_name: 'Wco::Leadset'
   before_validation :normalize_email, on: :create
   def normalize_email
-    self[:email] = email.downcase
-    if email.index('+')
-      a = email
-      a.slice!( a[a.index('+')...a.index('@')] )
-      self[:email] = a
-    end
+    self[:email] = Wco::Lead.normalize_email email
   end
   def self.normalize_email a
     a = a.downcase
@@ -49,19 +44,14 @@ class Wco::Lead
   before_validation :set_leadset, on: :create
   def set_leadset
     domain         = email.split('@')[1]
-    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: domain })
+    root_domain    = PublicSuffix.domain(domain)
+    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: root_domain })
   end
 
   def self.find_or_create_by_email email
     email = self.normalize_email email
-    out = where( email: email ).first
-    if !out
-      domain    = email.split('@')[1]
-      leadset   = Wco::Leadset.where(  company_url: domain ).first
-      leadset ||= Wco::Leadset.create( company_url: domain, email: email )
-      out = create!( email: email, leadset: leadset )
-    end
-    return out
+    out   = where( email: email ).first
+    out ||= create!( email: email )
   end
 
 

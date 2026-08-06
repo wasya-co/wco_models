@@ -4,7 +4,7 @@
 ##
 Gem::Specification.new do |spec|
   spec.name        = "wco_models"
-  spec.version     = "3.1.0.305"
+  spec.version     = "3.1.0.306"
   spec.authors     = [ "Victor Pudeyev"  ]
   spec.email       = [ "victor@wasya.co" ]
   spec.homepage    = "https://wasya.co"
@@ -51,6 +51,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'prawn'
   spec.add_dependency 'prawn-table'
+  spec.add_dependency 'public_suffix'
 
   spec.add_dependency "rails",      "~> 6.1.0"
 

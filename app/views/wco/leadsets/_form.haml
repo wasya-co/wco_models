@@ -26,11 +26,7 @@
 
   .field
     %label tags
-    .d-flex.flex-wrap
-      - @tags.each do |tag|
-        .descr
-          = check_box_tag 'leadset[tag_ids][]', tag.id, leadset.tags.include?(tag)
-          %label= tag
+    = f.select :tag_ids, options_for_select(@tags_list, selected: leadset.tag_ids ), {}, { class: :select2, multiple: true }
 
   .header
     %h5.title Hosting

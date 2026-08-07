@@ -44,5 +44,15 @@ RSpec::describe Wco::LeadsetsController do
     leadset.company_url.should eql 'one'
   end
 
+  it '#update: empty tags' do
+    leadset = create(:leadset, tags: [ Wco::Tag.inbox ] )
+    leadset.tags.length.should eql 1
+
+    patch :update, params: { id: leadset.id, leadset: { tag_ids: [ '' ] } }
+
+    leadset.reload
+    leadset.tags.length.should eql 0
+  end
+
 end
 

@@ -44,8 +44,12 @@ class Wco::Lead
   before_validation :set_leadset, on: :create
   def set_leadset
     domain         = email.split('@')[1]
-    root_domain    = PublicSuffix.domain(domain)
-    self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: root_domain })
+    if existing = Wco::Leadset.where({ company_url: domain }).first
+      self.leadset = existing
+    else
+      root_domain    = PublicSuffix.domain(domain)
+      self.leadset ||= Wco::Leadset.find_or_create_by({ company_url: root_domain })
+    end
   end
 
   def self.find_or_create_by_email email

@@ -76,7 +76,7 @@ class WcoEmail::MessageStub
     from       = json['from'][/<([^>]+)>/, 1].downcase rescue json['mail_from']
     mail_from  = json['mail_from']
     @lead      = Wco::Lead.find_or_create_by_email( from )
-    @conv.leads.push @lead
+    @conv.leads.push    @lead
     @conv.leadsets.push @lead.leadset
 
     ## message

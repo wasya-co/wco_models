@@ -34,6 +34,14 @@ RSpec.describe Wco::Lead do
     Wco::Leadset.all.length.should eql( n_leadsets )
   end
 
+  it 'uses a pre-existing non-root domain' do
+    email   = 'abba+zz@one.two.three.four.co.uk'
+    leadset = Wco::Leadset.create( company_url: 'one.two.three.four.co.uk' )
+
+    lead = Wco::Lead.find_or_create_by_email( email )
+    lead.leadset.should eql leadset
+  end
+
 end
 
 

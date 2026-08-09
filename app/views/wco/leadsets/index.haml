@@ -9,7 +9,7 @@
     .a.mr-2= button_tag 'Delete', method: :delete, class: 'delete-btn'
     = render 'wco/tags/actions', resource: 'Wco::Leadset'
 
-  .float-right= render '/wco/search', path: leadsets_path
+  = render '/wco/search', path: leadsets_path
   = paginate @leadsets, :param_name => :leadsets_page, :views_prefix => 'wco'
   %table.bordered
     %thead
@@ -30,6 +30,7 @@
           %td
             = link_to '[~]', edit_leadset_path( leadset )
             = link_to leadset.company_url, leadset_path(leadset)
+            .d-inline-block= button_to 'x', leadset_path(leadset), method: :delete, data: { confirm: 'Are you sure?' }
 
           %td.tags
             = render '/wco/tags/index_chips', tags: leadset.tags

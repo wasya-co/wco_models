@@ -11,6 +11,13 @@ RSpec::describe Wco::LeadsetsController do
     setup_users
   end
 
+  it '#destroy' do
+    leadset = create(:leadset)
+    Wco::Leadset.where( id: leadset.id ).length.should eql 1
+    delete :destroy, params: { id: leadset.id.to_s }
+    Wco::Leadset.where( id: leadset.id ).length.should eql 0
+  end
+
   it '#edit' do
     leadset = create(:leadset)
     get :edit, params: { id: leadset.id }

@@ -20,13 +20,17 @@ class Wco::LeadsetsController < Wco::ApplicationController
   end
 
   def destroy
-    leadsets = Leadset.find( params[:leadset_ids] )
+    authorize! :create, Wco::Leadset
+    leadsets = Wco::Leadset.find( params[:leadset_ids] ) rescue []
     @results = []
     leadsets.each do |leadset|
-      @results.push leadset.discard
+      @results.push leadset.destroy
     end
-    flash[:notice] = "Discard outcome: #{@results.inspect}."
-    redirect_to action: 'index'
+    if params[:id]
+      @results.push Wco::Leadset.find(params[:id]).destroy
+    end
+    flash[:notice] = "destroy outcome: #{@results.inspect}."
+    redirect_to request.referrer || { action: 'index' }
   end
 
   def edit

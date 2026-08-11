@@ -18,14 +18,20 @@ Some infrastructure is driven by ansible - therefore, local python3 and ansible 
 
 = Develop / Use =
 
+
+  cmd = "#{cmd} [ -f newspartial_#{idx}.mp4 ] || ffmpeg -y -i newspartial_#{idx}.webm -r 24 -pix_fmt yuv420p newspartial_#{idx}.mp4 ; "
+
+
   == Image to video ==
 
     ffmpeg -loop 1 -i $inn -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
 
-    ## unnecessary:
-    ffmpeg -loop 1 -i "$inn" -vf "scale=iw:ih" -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
-    ## odd pixel:
-    ffmpeg -loop 1 -i "$inn" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
+
+    export width=848
+    export height=480
+    export duration_sec=3
+    magick "$inn" -resize "${width}x${height}^" -gravity center -extent "${width}x${height}" "$inn"
+    ffmpeg -loop 1 -i $inn -c:v libx264 -t $duration_sec -pix_fmt yuv420p $inn-out.mp4
 
 
 = Test =

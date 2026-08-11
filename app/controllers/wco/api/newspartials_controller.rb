@@ -46,7 +46,11 @@ class Wco::Api::NewspartialsController < Wco::ApiController
 
   def show_config
     @newspartial = Wco::Newspartial.find params[:id]
-    render json: @newspartial.speech_json
+    config = JSON.parse @newspartial.speech_json
+    config[:w_px] = @newspartial.newsvideo.w_px
+    config[:h_px] = @newspartial.newsvideo.h_px
+    config[:slug] = "#{@newspartial.newsvideo.slug}::#{@newspartial.slug}"
+    render json: config
   end
 
 end

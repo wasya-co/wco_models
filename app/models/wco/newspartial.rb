@@ -23,6 +23,8 @@ class Wco::Newspartial
   belongs_to :newsvideo
   has_one :video
 
+  field :slug, type: :string
+
   has_mongoid_attached_file :audio,
     :storage => :s3,
     :s3_credentials => ::S3_CREDENTIALS,

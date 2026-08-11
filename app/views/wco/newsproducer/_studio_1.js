@@ -3,7 +3,7 @@
 **/
 const logg = (a, b="", c=null) => {
   if ('undefined' === typeof window) { return }
-  c = "string" === typeof c ? c : b.replace(/\W/g, "");
+  c = "string" === typeof c ? c : b.replace(/\W/g, '');
   if (c.length > 0) {
     window[c] = a;
   }
@@ -30,8 +30,9 @@ let config = {
     waitForAudioChunks: false,
     enableMetrics: false,
   };
-let width = 640;
-let height = 480;
+let width = 50;
+let height = 50;
+let slug = '<ccapture>'
 const FPS = 24;
 
 let frame = 0;
@@ -55,11 +56,14 @@ async function init() {
       if (typeof chunkedInput === 'string') {
         chunkedInput = JSON.parse(chunkedInput)
       }
-      logg(chunkedInput, 'chunkedInput')
+      // logg(chunkedInput, 'chunkedInput')
       const last = chunkedInput.wtimes.length-1
       const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
       logg(duration_ms, 'duration_ms')
       totalFrames = duration_ms/1000*FPS;
+      width = chunkedInput.w_px
+      height = chunkedInput.h_px
+      slug = chunkedInput.slug
     } catch (error) {
       console.log(error);
       chunkedInput = null;
@@ -244,7 +248,7 @@ function animate() {
             logg(thumb, 'thumb')
             const form = new FormData();
             form.append('video', blob, 'lips.webm')
-            form.append('name', '<ccapturejs>')
+            form.append('name', slug)
             form.append('thumb', thumb)
             form.append('newspartial_id', newspartial_id)
 
@@ -254,6 +258,8 @@ function animate() {
                 // 'Content-Type': 'video/webm',
               },
               body: form,
+            }).then(() => {
+              document.body.style.backgroundColor = 'gray'
             })
           })
         });

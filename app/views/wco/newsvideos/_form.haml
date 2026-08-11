@@ -12,12 +12,21 @@
       = f.text_field :slug, class: 'w-100'
 
     .row
-      .field
-        %label w_px
-        = f.text_field :w_px
-      .field
-        %label h_px
-        = f.text_field :h_px
+      .a
+        .field
+          %label w_px
+          = f.text_field :w_px
+      .a
+        .field
+          %label h_px
+          = f.text_field :h_px
+      .descr
+        %ul
+          %li 1280x720 16:9
+          %li 1024x768 4:3
+          %li 854x480 16:9
+          %li 640x360 16:9
+          %li 640x480 4:3
 
     .field
       %label Body

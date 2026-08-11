@@ -47,8 +47,11 @@
   width: 400px;
 
   .full-text {
-    position: absolute;
-    left: 300px;
+    // position: absolute;
+    // left: 300px;
+
+    float: left;
+    margin-left: 300px;
 
     .header {
       background: #efefef;

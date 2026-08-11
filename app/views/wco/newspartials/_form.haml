@@ -5,8 +5,10 @@
       = f.submit
 
     .field.flex-row
-      %label Title
-      = f.text_field :title, class: 'w-100'
+      -# %label Title
+      -# = f.text_field :title, class: 'w-100'
+      %label slug
+      = f.text_field :slug, class: 'w-100'
 
     .field
       %label Body

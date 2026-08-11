@@ -1,5 +1,5 @@
 ##
-## this looks like trash. I'm using straight-up html for now.
+## studio_1 is used
 ##
 class Wco::NewsproducerController < Wco::ApplicationController
 
@@ -14,7 +14,7 @@ class Wco::NewsproducerController < Wco::ApplicationController
     render 'canvas_minimal', layout: false
   end
 
-
+  ## current
   def studio_1
     authorize! :home, Wco
     render layout: false

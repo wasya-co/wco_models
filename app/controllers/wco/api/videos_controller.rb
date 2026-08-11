@@ -7,13 +7,15 @@ class Wco::Api::VideosController < Wco::ApiController
 
   def create
     # puts! params, 'api videos#create params'
+    authorize! :create, Wco::Video
+    old_videos = Wco::Video.where({ newspartial_id: params[:newspartial_id] }).map { |v| v.delete }
+    puts! old_videos, 'deleted old videos'
 
     @video = Wco::Video.new({ name: params[:name],
       thumb: params[:thumb],
       video: params[:video],
       newspartial_id: params[:newspartial_id],
     })
-    authorize! :create, @video
 
     if @video.save
       puts! @video, 'Created @video.'

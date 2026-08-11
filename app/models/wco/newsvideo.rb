@@ -57,8 +57,8 @@ class Wco::Newsvideo
     sentences = PragmaticSegmenter::Segmenter.new(text: @newsvideo.body).segment
     phrases = sentences_to_phrases(sentences)
 
-    phrases.each do |phrase|
-      newspartial = Wco::Newspartial.new body: phrase, newsvideo: @newsvideo
+    phrases.each_with_index do |phrase, idx|
+      newspartial = Wco::Newspartial.new body: phrase, newsvideo: @newsvideo, slug: "#{sprintf("%02d", idx)}0"
       newspartial.save!
     end
   end

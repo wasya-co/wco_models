@@ -14,6 +14,23 @@ RSpec.describe WcoEmail::EmailFilterCondition, type: :model do
     @not_tag = create( :tag )
   end
 
+  context '#apply' do
+    it 'FIELD_LEADSET OPERATOR__ID' do
+      leadset = create( :leadset, company_url: 'one.com' )
+      lead    = Wco::Lead.find_or_create_by_email 'sOmE@one.com'
+      cond = WcoEmail::EmailFilterCondition.new({
+        field:    WcoEmail::EmailFilterCondition::FIELD_LEADSET,
+        operator: WcoEmail::EmailFilterCondition::OPERATOR__ID,
+        value:    leadset.id.to_s,
+      })
+      message = WcoEmail::Message.new from: 'sOmE@one.com'
+
+      outs = cond.apply( lead: lead, message: message )
+      outs.class.should eql String
+    end
+  end
+
+
   context '#apply - FIELD_FROM' do
     it 'works' do
       cond = WcoEmail::EmailFilterCondition.new({

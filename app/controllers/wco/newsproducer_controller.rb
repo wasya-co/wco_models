@@ -1,4 +1,6 @@
-
+##
+## this looks like trash. I'm using straight-up html for now.
+##
 class Wco::NewsproducerController < Wco::ApplicationController
 
   def canvas

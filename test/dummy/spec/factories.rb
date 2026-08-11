@@ -92,7 +92,7 @@ FactoryBot.define do
   factory :email_filter_condition, class: 'WcoEmail::EmailFilterCondition' do
     field { WcoEmail::EmailFilterCondition::FIELD_LEADSET }
     operator { WcoEmail::EmailFilterCondition::OPERATOR_EQUALS }
-    value { Wco::Leadset.all.first.id }
+    value { Wco::Leadset.all.first.id.to_s }
   end
 
   factory :email_message, class: 'WcoEmail::Message' do
@@ -203,7 +203,7 @@ FactoryBot.define do
     email { generate(:email) }
 
     after :build do |doc|
-      doc.company_url = doc.email.split('@')[1]
+      doc.company_url ||= doc.email.split('@')[1]
       serverhost   = WcoHosting::Serverhost.all.first
       serverhost ||= create( :serverhost, leadsets: [ doc ] )
       doc.serverhosts = [ serverhost ]

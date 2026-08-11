@@ -47,6 +47,12 @@ class WcoEmail::EmailFilterCondition
 
   field :value
   validates :value, presence: true
+  before_validation :strip_value
+  def strip_value
+    self.value = value.strip
+  end
+
+  field :comment
 
 
   def apply lead:, message:
@@ -59,6 +65,16 @@ class WcoEmail::EmailFilterCondition
       if cond.operator == WcoEmail::EmailFilterCondition::OPERATOR_MATCH
         if message.from.downcase.include?( value.downcase )
           reason = "#{email_skip_filter ? 'skip_' : ''}condition from match-i `#{value}`"
+        end
+      end
+
+    when WcoEmail::EmailFilterCondition::FIELD_LEADSET
+      if cond.operator == WcoEmail::EmailFilterCondition::OPERATOR__ID
+        test_leadset = Wco::Leadset.find( value ) rescue nil
+        if test_leadset
+          if lead.leadset == test_leadset
+            reason = "#{email_skip_filter ? 'skip_' : ''}condition leadset _id `#{value}`"
+          end
         end
       end
 
@@ -98,7 +114,7 @@ class WcoEmail::EmailFilterCondition
     "<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` />"
   end
   def to_s_full indent: 0
-    "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` />\n"
+    "#{" " * indent }<EF#{email_skip_filter ? 'Skip' : ''}Condition #{field} #{operator} `#{value}` #{comment} />\n"
   end
 
 

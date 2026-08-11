@@ -66,13 +66,15 @@ class Wco::Newspartial
         'Accept' => 'application/json',
       }, body: {
         input: body,
-        voice: "af_bella",
+        # voice: "am_fenrir", # good?
+        # "af_bella" # bad
+        voice: "af_jessica", # good
         language: "en-us",
         audioEncoding: "wav",
       }.to_json
     );
     out = out.body
-    # puts! out, 'out'
+    puts! out, 'out'
 
     self[:config_json] = out
     tmp = JSON.parse( out )

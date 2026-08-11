@@ -26,6 +26,7 @@ Some infrastructure is driven by ansible - therefore, local python3 and ansible 
 
     ffmpeg -loop 1 -i $inn -c:v libx264 -t 3 -pix_fmt yuv420p output.mp4
 
+    ## illustrative image to video, sized
 
     export width=848
     export height=480
@@ -33,6 +34,14 @@ Some infrastructure is driven by ansible - therefore, local python3 and ansible 
     magick "$inn" -resize "${width}x${height}^" -gravity center -extent "${width}x${height}" "$inn"
     ffmpeg -loop 1 -i $inn -c:v libx264 -t $duration_sec -pix_fmt yuv420p $inn-out.mp4
 
+    ## image in a news studio
+
+    export image=image.jpg ; \
+    export video_base=base_4_5sec.mp4 ; \
+    rm output.mp4 ; \
+    ffmpeg -i $video_base -i $image \
+      -filter_complex "[1:v]scale='min(iw,420)':-1,pad=iw+20:ih+20:10:10:black[img];[0:v][img]overlay=(W-w)/2:(H-h)/2-50" \
+      -c:v libx264 -pix_fmt yuv420p -c:a copy output.mp4
 
 = Test =
 

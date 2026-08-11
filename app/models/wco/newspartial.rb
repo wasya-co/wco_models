@@ -10,7 +10,7 @@ class Wco::Newspartial
 
   PAGE_PARAM_NAME = 'newspartials_page'
 
-  MAX_WORDS = 20
+  MAX_WORDS = 30
 
   field :title
   # validates :title, presence: true, uniqueness: true

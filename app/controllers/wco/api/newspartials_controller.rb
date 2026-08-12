@@ -44,6 +44,13 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     end
   end
 
+  ## syncronous, everyone waits.
+  def generate_speech
+    @newspartial = Wco::Newspartial.unscoped.find params[:id]
+    @newspartial.generate_speech
+    render json: { status: :ok }
+  end
+
   def show_config
     @newspartial = Wco::Newspartial.find params[:id]
     config = JSON.parse @newspartial.speech_json

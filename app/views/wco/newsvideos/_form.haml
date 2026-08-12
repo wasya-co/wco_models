@@ -37,5 +37,9 @@
       -# = render '/wco/tags/index', tags: newsvideo.tags
       = f.select :tag_ids, options_for_select(@tags_list, selected: newsvideo.tag_ids), {}, { multiple: true, class: 'select2' }
 
+    .field
+      %label next_overlay_ms
+      = f.text_field :next_overlay_ms
+
     .actions
       = f.submit

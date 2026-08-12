@@ -45,6 +45,10 @@ class Wco::Tag
     find_or_create_by({ slug: DONOTSEND })
   end
 
+  def self.illustration
+    find_or_create_by({ slug: 'Illustration.' })
+  end
+
   INBOX = 'inbox'
   def self.inbox
     find_or_create_by({ slug: INBOX })

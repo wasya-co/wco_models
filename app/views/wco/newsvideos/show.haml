@@ -4,9 +4,9 @@
     Newsvideo `#{@newsvideo.title}`
     #{link_to '[~]', edit_newsvideo_path(@newsvideo)}
 
-    = link_to '[config.json]', api_newsvideo_path(@newsvideo.id, { api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank
+    = link_to '_[config.json]', api_newsvideo_path(@newsvideo.id, { api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank
     = link_to '[+ newspartial]', new_newspartial_path(newsvideo_id: @newsvideo.id)
-    = link_to '[search illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
+    = link_to '_[search illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
 
 
   %ul.actions
@@ -16,7 +16,11 @@
       .small.gray
         Uses sentences_to_phrases to reasonably create Wco::Newspartial's
     %li
-      .d-inline-block= button_to 'generate', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+      .d-inline-block= button_to 'generate all audio', newsvideo_generate_all_audio_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+    %li
+      .d-inline-block= button_to 'generate (obsolete)', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+    %li
+      .d-inline-block= button_to 'generate video & output', newsvideo_generate_all_video_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
 
 
   %i.fa.fa-compress.collapse-expand{ id: @newsvideo.id.to_s } Descr

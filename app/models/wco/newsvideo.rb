@@ -31,10 +31,10 @@ class Wco::Newsvideo
   field :y, :type => Float
   field :z, :type => Float
 
-  # has_one :image_thumb
-  # has_one :image_hero
+  field :next_overlay_ms, type: :integer, default: 1000
+  field :fps, type: :integer, default: 30
 
-  belongs_to :generated_video, class_name: 'Wco::Video'
+  belongs_to :generated_video, class_name: 'Wco::Video', optional: true
 
   belongs_to :author, class_name: 'Wco::Profile'
 

@@ -30,8 +30,13 @@
 
 .NewsoverlayTimeline {
   border: 5px solid green;
+  background: white;
   position: absolute;
   left: 230px;
+
+  &:hover {
+    z-index: 5;
+  }
 }
 
 .NewspartialTimelineW {

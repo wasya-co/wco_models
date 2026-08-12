@@ -15,7 +15,8 @@ Wco::Engine.routes.draw do
 
     post  'reports',                to: 'reports#create'
     patch 'reports/:id/add-config', to: 'reports#add_config'
-    get   'newspartials/:id/config',     to: 'newspartials#show_config', as: :newspartial_config
+    get   'newspartials/:id/config',          to: 'newspartials#show_config',     as: :newspartial_config
+    match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
 
     get 'newsproducer/canvas',         to: 'newsproducer#canvas'
     get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
@@ -78,8 +79,11 @@ Wco::Engine.routes.draw do
 
 
   match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
+  match 'newsvideos/:id/generate-all-audio',    to: 'newsvideos#generate_all_audio',    as: :newsvideo_generate_all_audio, via: [ :get, :post ]
+  match 'newsvideos/:id/generate-all-video',    to: 'newsvideos#generate_all_video',    as: :newsvideo_generate_all_video, via: [ :get, :post ]
   post  'newsvideos/:id/generate', to: 'newsvideos#generate', as: :generate_newsvideo
   post  'newsvideos/:id/split',    to: 'newsvideos#split',    as: :split_newsvideo
+  post  'newsvideos/:id/add-image-as-overlay', to: 'newsvideos#add_image_as_overlay'
   resources :newsvideos
 
   resources :obfuscated_redirects

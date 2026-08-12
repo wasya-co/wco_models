@@ -2,27 +2,27 @@
 class Wco::ApiController < ActionController::Base
   layout false
 
-  before_action :decode_jwt
+  skip_before_action :verify_authenticity_token
 
   ##
   ## private
   ##
   private
 
-  def check_credentials
+  def decode_jwt
+    out = JWT.decode params[:jwt_token], nil, false
+    email = out[0]['email']
+    user = User.find_by({ email: email })
+    sign_in user
+  end
+
+  def decode_secret
     if params[:secret].blank? ||
        params[:secret] != AWS_SES_LAMBDA_SECRET
 
       render status: 400, json: { status: 400, message: "#check_credentials in wco says unauthorized." }
       return
     end
-  end
-
-  def decode_jwt
-    out = JWT.decode params[:jwt_token], nil, false
-    email = out[0]['email']
-    user = User.find_by({ email: email })
-    sign_in user
   end
 
   def decode_simple_api_key

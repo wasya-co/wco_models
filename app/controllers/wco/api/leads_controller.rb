@@ -1,8 +1,8 @@
 
 class Wco::Api::LeadsController < Wco::ApiController
 
-  skip_before_action :decode_jwt
-  before_action      :check_credentials, only: [ :by_email ]
+  before_action :decode_secret, only: [ :by_email ]
+  before_action :decode_jwt,    only: [ :index, :index_hash ]
 
   def by_email
     @lead = Wco::Lead.find_or_create_by_email( params[:email] )

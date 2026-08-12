@@ -34,6 +34,8 @@ class Wco::Newsvideo
   # has_one :image_thumb
   # has_one :image_hero
 
+  belongs_to :generated_video, class_name: 'Wco::Video'
+
   belongs_to :author, class_name: 'Wco::Profile'
 
   has_many :newspartials
@@ -44,6 +46,7 @@ class Wco::Newsvideo
   has_many :newsoverlay_configs
   has_and_belongs_to_many :tags
   has_many :videos
+
 
 
   has_many :newsoverlays
@@ -189,6 +192,8 @@ class Wco::Newsvideo
       puts "Could not create video:"
       puts @video.errors.full_messages.join(", ")
     end
+
+    @newsvideo.update( generated_video: @video )
   end
 
   def sentences_to_phrases sentences

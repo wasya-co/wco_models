@@ -29,7 +29,7 @@
             -# = button_to 'Generate video', newspartial_generate_video_path(newspartial), :data => { :confirm => 'Are you sure?' }
             -# .small.gray ISHLIB3JS_ROOT
 
-            = link_to 'Generate video 2', newsproducer_studio_1_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
+            = link_to 'Generate video 2', api_newsproducer_studio_1_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
 
             Video:
             - if newspartial.video

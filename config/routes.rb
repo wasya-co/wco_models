@@ -17,7 +17,14 @@ Wco::Engine.routes.draw do
     patch 'reports/:id/add-config', to: 'reports#add_config'
     get   'newspartials/:id/config',     to: 'newspartials#show_config', as: :newspartial_config
 
+    get 'newsproducer/canvas',         to: 'newsproducer#canvas'
+    get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
+    get 'newsproducer/studio_1',       to: 'newsproducer#studio_1'
+
+
     match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
+    match 'newsvideos/:id/generate-video', to: 'newsvideos#generate', as: :newsvideo_generate, via: [ :get, :post ]
+    get   'newsvideos/:id', to: 'newsvideos#show', as: :newsvideo, defaults: { format: :json }
 
     get 'tags', to: 'tags#index'
 
@@ -69,9 +76,6 @@ Wco::Engine.routes.draw do
   resources :newspartials
 
 
-  get 'newsproducer/canvas', to: 'newsproducer#canvas'
-  get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
-  get 'newsproducer/studio_1', to: 'newsproducer#studio_1'
 
   match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
   post  'newsvideos/:id/generate', to: 'newsvideos#generate', as: :generate_newsvideo

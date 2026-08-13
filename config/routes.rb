@@ -21,6 +21,8 @@ Wco::Engine.routes.draw do
     get 'newsproducer/canvas',         to: 'newsproducer#canvas'
     get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
     get 'newsproducer/studio_1',       to: 'newsproducer#studio_1'
+    get 'newsproducer/studio_green',       to: 'newsproducer#studio_green'
+    get 'newsproducer/studio_blue',       to: 'newsproducer#studio_blue'
 
 
     match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]

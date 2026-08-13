@@ -21,6 +21,12 @@ class Wco::Api::NewsproducerController < Wco::ApiController
   def studio_1
     authorize! :home, Wco
   end
+  def studio_blue
+    authorize! :home, Wco
+  end
+  def studio_green
+    authorize! :home, Wco
+  end
 
 end
 

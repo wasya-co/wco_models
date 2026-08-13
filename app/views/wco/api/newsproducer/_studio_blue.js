@@ -11,7 +11,7 @@ const logg = (a, b="", c=null) => {
 }
 
 let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.0.3/public/vendor/models/avatars/brunette.glb'
-let scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/newsroom_green/scene.glb'
+let scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/newsroom_blue/scene.glb'
 
 import * as THREE from 'three'
 
@@ -93,7 +93,6 @@ async function init() {
 
   const gltfLoader = new GLTFLoader()
   const sceneGltf = await gltfLoader.loadAsync(scene_url)
-  sceneGltf.scene.scale.setScalar(0.01)
   scene.add(sceneGltf.scene)
   logg(sceneGltf.scene, 'sceneGltf')
 

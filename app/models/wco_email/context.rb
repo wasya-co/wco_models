@@ -150,6 +150,17 @@ class WcoEmail::Context
     })
   end
 
+  def self.new_for message
+    self.new({
+      from_email: message.to&.downcase,
+      lead_id: message.lead_id,
+      subject: message.subject,
+      reply_to_message: message,
+      email_template_id: ET.find_by( slug: 'blank').id,
+    })
+  end
+
+
 end
 Ctx = WcoEmail::Context
 

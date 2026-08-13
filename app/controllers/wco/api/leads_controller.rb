@@ -2,7 +2,6 @@
 class Wco::Api::LeadsController < Wco::ApiController
 
   before_action :decode_secret, only: [ :by_email ]
-  before_action :decode_jwt,    only: [ :index, :index_hash ]
 
   def by_email
     @lead = Wco::Lead.find_or_create_by_email( params[:email] )
@@ -10,6 +9,7 @@ class Wco::Api::LeadsController < Wco::ApiController
   end
 
   ## select2-leads-ajax
+  ## session is present
   def index
     authorize! :index, Wco::Lead
     @leads = Wco::Lead.all
@@ -21,8 +21,11 @@ class Wco::Api::LeadsController < Wco::ApiController
         { name:  /#{q}/i },
       );
     end
+
+    @leads = @leads.limit(100)
   end
 
+  ## session is present
   def index_hash
     authorize! :index, Wco::Lead
     @leads = Wco::Lead.find( params[:lead_ids].split(',') )

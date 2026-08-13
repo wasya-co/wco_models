@@ -18,7 +18,7 @@
     %li
       .d-inline-block= button_to 'generate all audio', newsvideo_generate_all_audio_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
     %li
-      .d-inline-block= button_to 'generate (obsolete)', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
+      .d-inline-block= button_to 'generate - only combine', generate_newsvideo_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
     %li
       .d-inline-block= button_to 'generate video & output', newsvideo_generate_all_video_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
 

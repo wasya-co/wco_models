@@ -31,8 +31,8 @@ let config = {
     waitForAudioChunks: false,
     enableMetrics: false,
   }
-let width = 50
-let height = 50
+let width = 854
+let height = 480
 let slug = '<ccapture>'
 const FPS = 24
 
@@ -93,7 +93,14 @@ async function init() {
 
   const gltfLoader = new GLTFLoader()
   const sceneGltf = await gltfLoader.loadAsync(scene_url)
-  sceneGltf.scene.scale.setScalar(0.01)
+
+  const box = new THREE.Box3().setFromObject(sceneGltf.scene)
+  const size = box.getSize(new THREE.Vector3())
+  const currentHeight = size.y
+  logg(currentHeight, 'currentHeight')
+  const desiredHeight = 3 // meters
+  const scale = desiredHeight / currentHeight
+  sceneGltf.scene.scale.setScalar(scale)
   scene.add(sceneGltf.scene)
   logg(sceneGltf.scene, 'sceneGltf')
 
@@ -248,7 +255,7 @@ function animate() {
       capturer.stop()
       logg('capturer.stop')
 
-      if (false && newspartial_id) {
+      if (newspartial_id) {
         capturer.save((blob) => {
           logg(blob, 'blob')
           renderer.domElement.toBlob((thumb) => {

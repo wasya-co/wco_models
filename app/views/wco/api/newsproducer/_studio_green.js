@@ -84,8 +84,29 @@ async function init() {
   camera.position.set( 0, 2, 8 )
   camera.lookAt( 0, 0, 0 )
 
-  const ambientLight = new THREE.AmbientLight( 0xffffff )
+  // const ambientLight = new THREE.AmbientLight( 0xffffff )
+  // scene.add( ambientLight )
+
+  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 )
   scene.add( ambientLight )
+
+  const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 1.2 )
+  hemiLight.position.set( 0, 20, 0 )
+  scene.add( hemiLight )
+
+  // const keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
+  // keyLight.position.set( 5, 10, 7 )
+  // scene.add( keyLight )
+
+  const fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
+  fillLight.position.set( -5, 4, -2 )
+  scene.add( fillLight )
+
+  // const rimLight = new THREE.DirectionalLight( 0xffffff, 0.8 )
+  // rimLight.position.set( 0, 6, -8 )
+  // scene.add( rimLight )
+
+  // end lights
 
   const grid = new THREE.GridHelper(10, 10, 0x888888, 0xbbbbbb)
   grid.position.y = 0

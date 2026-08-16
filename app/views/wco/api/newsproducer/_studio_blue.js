@@ -174,6 +174,7 @@ async function init() {
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera,
     lipsyncModules: ["en"],
+    dracoEnabled: true,
   })
   // logg(head, 'head')
 

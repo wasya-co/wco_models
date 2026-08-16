@@ -10,8 +10,10 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.0.3/public/vendor/models/avatars/brunette.glb'
-let scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
+// let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette.glb'
+let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/female_1.glb'
+let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
+const wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/wave.fbx'
 
 import * as THREE from 'three'
 
@@ -34,7 +36,7 @@ let config = {
 let width = 854
 let height = 480
 let slug = '<ccapture>'
-const FPS = 24
+const fps = 24
 
 let frame = 0
 const api_key    = params.get('api_key')
@@ -46,7 +48,7 @@ let totalFrames
 let camera, controls, head, renderer, scene
 let faceTarget = new THREE.Vector3()
 let chunkedInput = null
-var capturer = new CCapture( { format: 'webm', framerate: FPS } )
+var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
 const loading = document.getElementById('loading')
 
@@ -132,7 +134,7 @@ async function init() {
       const last = chunkedInput.wtimes.length-1
       const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
       logg(duration_ms, 'duration_ms')
-      totalFrames = duration_ms/1000*FPS
+      totalFrames = duration_ms/1000*fps
       width = chunkedInput.w_px
       height = chunkedInput.h_px
       slug = chunkedInput.slug
@@ -278,8 +280,8 @@ function render() {
 }
 
 function animate() {
-  const t = frame / FPS
-  if (head) head.animate(1000/FPS)
+  const t = frame / fps
+  if (head) head.animate(1000/fps)
   controls.update()
   renderer.render( scene, camera )
 
@@ -333,5 +335,12 @@ document.getElementById('speak').addEventListener('click', function () {
   }
 })
 
+document.getElementById('wave').addEventListener('click', function () {
+  try {
+    head.playAnimation(wave_url)
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 console.log('+++ loaded wco_models :: newsproducer :: studio_blue.js')

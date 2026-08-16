@@ -11,7 +11,7 @@ const logg = (a, b="", c=null) => {
 }
 
 let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.0.3/public/vendor/models/avatars/brunette.glb'
-let scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/newsroom_blue/scene.glb'
+let scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
 
 import * as THREE from 'three'
 
@@ -31,8 +31,8 @@ let config = {
     waitForAudioChunks: false,
     enableMetrics: false,
   }
-let width = 50
-let height = 50
+let width = 854
+let height = 480
 let slug = '<ccapture>'
 const FPS = 24
 
@@ -47,17 +47,88 @@ let camera, controls, head, renderer, scene
 let faceTarget = new THREE.Vector3()
 let chunkedInput = null
 var capturer = new CCapture( { format: 'webm', framerate: FPS } )
+const gltfLoader = new GLTFLoader()
+const loading = document.getElementById('loading')
 
+/*
+**/
+function point_camera_at_face(head) {
+  // Camera at head level, pointed at the face
+  const leftEye = new THREE.Vector3()
+  const rightEye = new THREE.Vector3()
+  head.objectLeftEye.getWorldPosition(leftEye)
+  head.objectRightEye.getWorldPosition(rightEye)
+  faceTarget.copy(leftEye).add(rightEye).multiplyScalar(0.5)
+
+  const camPos = new THREE.Vector3(0, 0, 2)
+  camPos.applyQuaternion(head.armature.quaternion)
+  camPos.add(faceTarget)
+  camera.position.copy(camPos)
+  camera.lookAt(faceTarget)
+}
+
+/*
+**/
+function put_feet_at_origin(head) {
+  // Put feet at the origin
+  head.armature.updateMatrixWorld(true)
+  const leftToe = new THREE.Vector3()
+  const rightToe = new THREE.Vector3()
+  head.objectLeftToeBase.getWorldPosition(leftToe)
+  head.objectRightToeBase.getWorldPosition(rightToe)
+  head.armature.position.set(
+    -(leftToe.x + rightToe.x) / 2,
+    -Math.min(leftToe.y, rightToe.y),
+    -(leftToe.z + rightToe.z) / 2
+  )
+  head.armature.updateMatrixWorld(true)
+}
+
+/*
+**/
+function rescale(model, config) {
+  const box = new THREE.Box3().setFromObject(model)
+  const size = box.getSize(new THREE.Vector3())
+  const currentHeight = size.y
+  const scale = config.height / currentHeight
+  model.scale.setScalar(scale)
+}
+
+/*
+**/
+function setup_light(scene) {
+  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 )
+  scene.add( ambientLight )
+
+  const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 1.2 )
+  hemiLight.position.set( 0, 20, 0 )
+  scene.add( hemiLight )
+
+  const keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
+  keyLight.position.set( 5, 10, 7 )
+  scene.add( keyLight )
+
+  const fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
+  fillLight.position.set( -5, 4, -2 )
+  scene.add( fillLight )
+
+  const rimLight = new THREE.DirectionalLight( 0xffffff, 0.8 )
+  rimLight.position.set( 0, 6, -8 )
+  scene.add( rimLight )
+}
+
+/*
+**/
 async function init() {
   if (newspartial_id) {
     try {
       const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
       chunkedInput = await fetch(url).then(r => r.json())
       // API may return a JSON string payload
-      if (typeof chunkedInput === 'string') {
-        chunkedInput = JSON.parse(chunkedInput)
-      }
-      // logg(chunkedInput, 'chunkedInput')
+      // if (typeof chunkedInput === 'string') {
+      //   chunkedInput = JSON.parse(chunkedInput)
+      // }
+      logg(chunkedInput, 'chunkedInput')
       const last = chunkedInput.wtimes.length-1
       const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
       logg(duration_ms, 'duration_ms')
@@ -84,50 +155,29 @@ async function init() {
   camera.position.set( 0, 2, 8 )
   camera.lookAt( 0, 0, 0 )
 
-  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 )
-  scene.add( ambientLight )
-
-  const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 1.2 )
-  hemiLight.position.set( 0, 20, 0 )
-  scene.add( hemiLight )
-
-  const keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
-  keyLight.position.set( 5, 10, 7 )
-  scene.add( keyLight )
-
-  const fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
-  fillLight.position.set( -5, 4, -2 )
-  scene.add( fillLight )
-
-  const rimLight = new THREE.DirectionalLight( 0xffffff, 0.8 )
-  rimLight.position.set( 0, 6, -8 )
-  scene.add( rimLight )
+  setup_light(scene)
 
   const grid = new THREE.GridHelper(10, 10, 0x888888, 0xbbbbbb)
   grid.position.y = 0
   scene.add(grid)
 
-  const gltfLoader = new GLTFLoader()
-  const sceneGltf = await gltfLoader.loadAsync(scene_url)
-  sceneGltf.scene.scale.setScalar(0.05)
-  scene.add(sceneGltf.scene)
-  logg(sceneGltf.scene, 'sceneGltf')
 
-  const nodeAvatar = document.getElementById('avatar')
-  head = new TalkingHead( nodeAvatar, {
+  const studio = (await gltfLoader.loadAsync(scene_url)).scene
+  rescale(studio, { height: 3.3 })
+  scene.add(studio)
+
+
+  head = new TalkingHead( document.getElementById('avatar'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera,
-
     lipsyncModules: ["en"],
   })
   // logg(head, 'head')
 
 
-
-  const nodeLoading = document.getElementById('loading')
   try {
-    nodeLoading.textContent = "Loading..."
+    loading.textContent = "Loading..."
     await head.showAvatar( {
       url: avatar_url,
       body: 'F',
@@ -136,40 +186,18 @@ async function init() {
     }, (ev) => {
       if ( ev.lengthComputable ) {
         let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
-        nodeLoading.textContent = "Loading " + val + "%"
+        loading.textContent = "Loading " + val + "%"
       }
     })
-    nodeLoading.style.display = 'none'
+    loading.style.display = 'none'
 
     head.armature.position.set(0, 0, 0)
     head.armature.rotation.set(0, 0, 0)
     scene.add(head.armature)
 
-    // Put feet at the origin
-    head.armature.updateMatrixWorld(true)
-    const leftToe = new THREE.Vector3()
-    const rightToe = new THREE.Vector3()
-    head.objectLeftToeBase.getWorldPosition(leftToe)
-    head.objectRightToeBase.getWorldPosition(rightToe)
-    head.armature.position.set(
-      -(leftToe.x + rightToe.x) / 2,
-      -Math.min(leftToe.y, rightToe.y),
-      -(leftToe.z + rightToe.z) / 2
-    )
-    head.armature.updateMatrixWorld(true)
+    put_feet_at_origin(head)
 
-    // Camera at head level, pointed at the face
-    const leftEye = new THREE.Vector3()
-    const rightEye = new THREE.Vector3()
-    head.objectLeftEye.getWorldPosition(leftEye)
-    head.objectRightEye.getWorldPosition(rightEye)
-    faceTarget.copy(leftEye).add(rightEye).multiplyScalar(0.5)
-
-    const camPos = new THREE.Vector3(0, 0, 2)
-    camPos.applyQuaternion(head.armature.quaternion)
-    camPos.add(faceTarget)
-    camera.position.copy(camPos)
-    camera.lookAt(faceTarget)
+    point_camera_at_face(head)
 
     await head.streamStart({
       sampleRate: config.sampleRate,
@@ -183,7 +211,7 @@ async function init() {
 
   } catch (error) {
     console.log(error)
-    nodeLoading.textContent = error.toString()
+    loading.textContent = error.toString()
   }
 
 
@@ -297,14 +325,13 @@ function animate() {
 
 
 // Speak when clicked
-const nodeSpeak = document.getElementById('speak')
-  nodeSpeak.addEventListener('click', function () {
-    try {
+document.getElementById('speak').addEventListener('click', function () {
+  try {
 
-    } catch (error) {
-      console.log(error)
-    }
-  })
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 
-console.log('+++ loaded wco_models :: newsproducer :: studio_green.js')
+console.log('+++ loaded wco_models :: newsproducer :: studio_blue.js')

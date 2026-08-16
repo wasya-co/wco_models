@@ -10,14 +10,18 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-// let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette.glb'
-let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/female_1.glb'
+let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette.glb'
+// let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/female_1.glb'
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
-const wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/wave.fbx'
+
+const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/animations/walking.fbx"
+// const wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/F_Crouch_Strafe_Left.fbx'
+
 
 import * as THREE from 'three'
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import { TalkingHead } from "talkinghead"
@@ -50,6 +54,7 @@ let faceTarget = new THREE.Vector3()
 let chunkedInput = null
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
+const fbxLoader = new FBXLoader()
 const loading = document.getElementById('loading')
 
 /*
@@ -336,8 +341,9 @@ document.getElementById('speak').addEventListener('click', function () {
   }
 })
 
-document.getElementById('wave').addEventListener('click', function () {
+document.getElementById('wave').addEventListener('click', async function () {
   try {
+    // await ensureMixamoClip(head, wave_url)
     head.playAnimation(wave_url)
   } catch (error) {
     console.log(error)

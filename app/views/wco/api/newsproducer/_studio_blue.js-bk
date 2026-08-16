@@ -1,0 +1,48 @@
+
+/** Mixamo often exports mixamorig1Hips; TalkingHead only strips "mixamorig". */
+function normalizeMixamoTrackName(name) {
+  return name.replaceAll('mixamorig', '').replace(/^(\d+)(?=[A-Za-z])/, '')
+}
+
+/**
+ * Cache a Mixamo FBX into head.animClips with bone names matching the RPM avatar
+ * so playAnimation does not look for "1Hips" etc.
+ */
+async function ensureMixamoClip(head, url, ndx = 0, scale = 0.01) {
+  const key = url + '-' + ndx
+  const existing = head.animClips.find(x => x.url === key)
+  const needsFix = existing && existing.clip.tracks.some(t =>
+    t.name.includes('mixamorig') || /^\d+[A-Za-z]/.test(t.name)
+  )
+  if (existing && !needsFix) return
+
+  head.animClips = head.animClips.filter(x => x.url !== key)
+
+  const fbx = await fbxLoader.loadAsync(url)
+  const anim = fbx.animations[ndx]
+  if (!anim) throw new Error(`Animation not found: ${url} (ndx=${ndx})`)
+
+  const props = {}
+  anim.tracks.forEach(t => {
+    t.name = normalizeMixamoTrackName(t.name)
+    const ids = t.name.split('.')
+    if (ids[1] === 'position') {
+      for (let i = 0; i < t.values.length; i++) t.values[i] *= scale
+      props[t.name] = new THREE.Vector3(t.values[0], t.values[1], t.values[2])
+    } else if (ids[1] === 'quaternion') {
+      props[t.name] = new THREE.Quaternion(t.values[0], t.values[1], t.values[2], t.values[3])
+    } else if (ids[1] === 'rotation') {
+      props[ids[0] + '.quaternion'] = new THREE.Quaternion()
+        .setFromEuler(new THREE.Euler(t.values[0], t.values[1], t.values[2], 'XYZ'))
+        .normalize()
+    }
+  })
+
+  const pose = { props }
+  if (props['Hips.position']) {
+    if (props['Hips.position'].y < 0.5) pose.lying = true
+    else pose.standing = true
+  }
+
+  head.animClips.push({ url: key, clip: anim, pose })
+}

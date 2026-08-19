@@ -69,6 +69,7 @@ const cameraTargets = {
   '3': new THREE.Vector3(0.5, 1.2, 0),
 }
 let chunkedInput = null
+const lights = {}
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
@@ -121,24 +122,33 @@ function rescale(model, config) {
 /*
 **/
 function setup_light(scene) {
-  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 )
-  scene.add( ambientLight )
+  lights.ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 )
+  scene.add( lights.ambientLight )
 
-  const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 1.2 )
-  hemiLight.position.set( 0, 20, 0 )
-  scene.add( hemiLight )
+  lights.hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 1.2 )
+  lights.hemiLight.position.set( 0, 20, 0 )
+  scene.add( lights.hemiLight )
 
-  const keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
-  keyLight.position.set( 5, 10, 7 )
-  scene.add( keyLight )
+  lights.keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
+  lights.keyLight.position.set( 5, 10, 7 )
+  scene.add( lights.keyLight )
 
-  const fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
-  fillLight.position.set( -5, 4, -2 )
-  scene.add( fillLight )
+  lights.fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
+  lights.fillLight.position.set( -5, 4, -2 )
+  scene.add( lights.fillLight )
 
-  const rimLight = new THREE.DirectionalLight( 0xffffff, 0.8 )
-  rimLight.position.set( 0, 6, -8 )
-  scene.add( rimLight )
+  lights.rimLight = new THREE.DirectionalLight( 0xffffff, 0.8 )
+  lights.rimLight.position.set( 0, 6, -8 )
+  scene.add( lights.rimLight )
+
+  syncLightsFromControls()
+}
+
+function syncLightsFromControls() {
+  document.querySelectorAll('input.light-ctrl').forEach((input) => {
+    const light = lights[input.name]
+    if (light) light.visible = input.checked
+  })
 }
 
 /*
@@ -322,6 +332,11 @@ async function init() {
   })
   const selected = document.querySelector('input[name=camera]:checked')
   setActiveCamera(selected ? selected.value : '1')
+
+  document.querySelectorAll('input.light-ctrl').forEach((input) => {
+    input.addEventListener('change', syncLightsFromControls)
+  })
+  syncLightsFromControls()
 
   //
 

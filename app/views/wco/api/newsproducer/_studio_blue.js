@@ -68,6 +68,8 @@ const cameraTargets = {
   '2': new THREE.Vector3(1, 1.5, 0),
   '3': new THREE.Vector3(0.5, 1.2, 0),
 }
+let cameraTransition = null
+const CAMERA_BLEND_MS = 900
 let chunkedInput = null
 const lights = {}
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
@@ -197,7 +199,11 @@ async function init() {
   camera_3.position.set( -2, 2.2, 8 )
   camera_3.lookAt( 0.5, 1.2, 0 )
 
-  camera = camera_1
+  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  camera.position.copy( camera_1.position )
+  camera.quaternion.copy( camera_1.quaternion )
+  camera.fov = camera_1.fov
+  camera.updateProjectionMatrix()
 
   setup_light(scene)
 
@@ -331,7 +337,7 @@ async function init() {
     })
   })
   const selected = document.querySelector('input[name=camera]:checked')
-  setActiveCamera(selected ? selected.value : '1')
+  setActiveCamera(selected ? selected.value : '1', true)
 
   document.querySelectorAll('input.light-ctrl').forEach((input) => {
     input.addEventListener('change', syncLightsFromControls)
@@ -366,21 +372,71 @@ function cameras() {
   return { '1': camera_1, '2': camera_2, '3': camera_3 }
 }
 
-function setActiveCamera(id) {
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+function setActiveCamera(id, instant = false) {
   const key = String(id)
-  const nxt = cameras()[key] || camera_1
-  camera = nxt;
-  [camera_1, camera_2, camera_3].forEach((cam) => {
+  const dest = cameras()[key] || camera_1
+  const destTarget = (cameraTargets[key] || cameraTargets['1']).clone()
+  ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()
     }
   })
-  if (controls) {
-    controls.object = camera
-    const target = cameraTargets[key] || cameraTargets['1']
-    faceTarget.copy(target)
-    controls.target.copy(target)
+
+  dest.updateMatrixWorld()
+
+  const endPos = dest.position.clone()
+  const endQuat = dest.quaternion.clone()
+
+  if (instant || !controls) {
+    camera.position.copy(endPos)
+    camera.quaternion.copy(endQuat)
+    camera.fov = dest.fov
+    camera.near = dest.near
+    camera.far = dest.far
+    camera.updateProjectionMatrix()
+    faceTarget.copy(destTarget)
+    if (controls) {
+      controls.target.copy(destTarget)
+      controls.update()
+    }
+    cameraTransition = null
+    return
+  }
+
+  cameraTransition = {
+    startPos: camera.position.clone(),
+    startQuat: camera.quaternion.clone(),
+    startFov: camera.fov,
+    startTarget: controls.target.clone(),
+    endPos: endPos,
+    endQuat: endQuat,
+    endFov: dest.fov,
+    endTarget: destTarget,
+    t0: performance.now(),
+    duration: CAMERA_BLEND_MS,
+  }
+  controls.enabled = false
+}
+
+function updateCameraTransition() {
+  if (!cameraTransition) return
+  const u = Math.min(1, (performance.now() - cameraTransition.t0) / cameraTransition.duration)
+  const e = easeInOutCubic(u)
+  const tr = cameraTransition
+  camera.position.lerpVectors(tr.startPos, tr.endPos, e)
+  camera.quaternion.slerpQuaternions(tr.startQuat, tr.endQuat, e)
+  camera.fov = tr.startFov + (tr.endFov - tr.startFov) * e
+  camera.updateProjectionMatrix()
+  controls.target.lerpVectors(tr.startTarget, tr.endTarget, e)
+  faceTarget.copy(controls.target)
+  if (u >= 1) {
+    cameraTransition = null
+    controls.enabled = true
     controls.update()
   }
 }
@@ -406,7 +462,8 @@ function animate() {
   if (head_1) head_1.animate(1000/fps)
   if (head_2) head_2.animate(1000/fps)
   if (head_3) head_3.animate(1000/fps)
-  controls.update()
+  updateCameraTransition()
+  if (!cameraTransition) controls.update()
   renderer.render( scene, camera )
 
   if (totalFrames) {

@@ -72,6 +72,7 @@ let cameraTransition = null
 const CAMERA_BLEND_MS = 900
 let chunkedInput = null
 const lights = {}
+const LIGHT_CTRL_KEY = 'wco.studio_blue.light-ctrl'
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
@@ -143,7 +144,30 @@ function setup_light(scene) {
   lights.rimLight.position.set( 0, 6, -8 )
   scene.add( lights.rimLight )
 
+  restoreLightControls()
   syncLightsFromControls()
+}
+
+function restoreLightControls() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LIGHT_CTRL_KEY) || 'null')
+    if (!saved || typeof saved !== 'object') return
+    document.querySelectorAll('input.light-ctrl').forEach((input) => {
+      if (Object.prototype.hasOwnProperty.call(saved, input.name)) {
+        input.checked = !!saved[input.name]
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function persistLightControls() {
+  const saved = {}
+  document.querySelectorAll('input.light-ctrl').forEach((input) => {
+    saved[input.name] = input.checked
+  })
+  localStorage.setItem(LIGHT_CTRL_KEY, JSON.stringify(saved))
 }
 
 function syncLightsFromControls() {
@@ -151,6 +175,7 @@ function syncLightsFromControls() {
     const light = lights[input.name]
     if (light) light.visible = input.checked
   })
+  persistLightControls()
 }
 
 /*
@@ -160,14 +185,10 @@ async function init() {
     try {
       const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
       chunkedInput = await fetch(url).then(r => r.json())
-      // API may return a JSON string payload
-      // if (typeof chunkedInput === 'string') {
-      //   chunkedInput = JSON.parse(chunkedInput)
-      // }
       logg(chunkedInput, 'chunkedInput')
+
       const last = chunkedInput.wtimes.length-1
       const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
-      logg(duration_ms, 'duration_ms')
       totalFrames = duration_ms/1000*fps
       width = chunkedInput.w_px
       height = chunkedInput.h_px

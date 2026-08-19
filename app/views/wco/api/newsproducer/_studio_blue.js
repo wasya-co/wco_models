@@ -13,7 +13,7 @@ const logg = (a, b="", c=null) => {
 let avatar_brunette_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette/model.glb'
 let avatar_avaturn_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
 let avatar_45_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
-
+let avatar_mula_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb'
 
 
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
@@ -24,7 +24,7 @@ const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/anima
 
 let avatar_1_url = avatar_brunette_url
 let avatar_2_url = avatar_avaturn_url
-let avatar_3_url = avatar_45_url
+let avatar_3_url = avatar_mula_url
 
 
 
@@ -59,7 +59,8 @@ const wco_origin = params.get('wco_origin')
 const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
-let camera, controls, renderer, scene
+let camera, camera_1, camera_2, camera_3
+let controls, renderer, scene
 let head, head_1, head_2, head_3
 let faceTarget = new THREE.Vector3()
 let chunkedInput = null
@@ -70,36 +71,35 @@ const loading = document.getElementById('loading')
 
 /*
 **/
-function point_camera_at_face(head) {
-  // Camera at head level, pointed at the face
+function point_camera_at_face(_camera, _head) {
   const leftEye = new THREE.Vector3()
   const rightEye = new THREE.Vector3()
-  head.objectLeftEye.getWorldPosition(leftEye)
-  head.objectRightEye.getWorldPosition(rightEye)
+  _head.objectLeftEye.getWorldPosition(leftEye)
+  _head.objectRightEye.getWorldPosition(rightEye)
   faceTarget.copy(leftEye).add(rightEye).multiplyScalar(0.5)
 
   const camPos = new THREE.Vector3(0, 0, 2)
-  camPos.applyQuaternion(head.armature.quaternion)
+  camPos.applyQuaternion(_head.armature.quaternion)
   camPos.add(faceTarget)
-  camera.position.copy(camPos)
-  camera.lookAt(faceTarget)
+  _camera.position.copy(camPos)
+  _camera.lookAt(faceTarget)
 }
 
 /*
 **/
-function put_feet_at_origin(head) {
+function put_feet_at_origin(_head) {
   // Put feet at the origin
-  head.armature.updateMatrixWorld(true)
+  _head.armature.updateMatrixWorld(true)
   const leftToe = new THREE.Vector3()
   const rightToe = new THREE.Vector3()
-  head.objectLeftToeBase.getWorldPosition(leftToe)
-  head.objectRightToeBase.getWorldPosition(rightToe)
-  head.armature.position.set(
+  _head.objectLeftToeBase.getWorldPosition(leftToe)
+  _head.objectRightToeBase.getWorldPosition(rightToe)
+  _head.armature.position.set(
     -(leftToe.x + rightToe.x) / 2,
     -Math.min(leftToe.y, rightToe.y),
     -(leftToe.z + rightToe.z) / 2
   )
-  head.armature.updateMatrixWorld(true)
+  _head.armature.updateMatrixWorld(true)
 }
 
 /*
@@ -169,9 +169,9 @@ async function init() {
    * near — Camera frustum near plane.
    * far — Camera frustum far plane.
   **/
-  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
-  camera.position.set( 0, 2, 8 )
-  camera.lookAt( 0, 0, 0 )
+  camera_1 = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  camera_1.position.set( 0, 2, 8 )
+  camera_1.lookAt( 0, 0, 0 )
 
   setup_light(scene)
 
@@ -195,31 +195,41 @@ async function init() {
   head_1 = new TalkingHead( document.getElementById('avatar_1'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
-    avatarOnlyCamera: camera,
+    avatarOnlyCamera: camera_1,
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
   head_2 = new TalkingHead( document.getElementById('avatar_2'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
-    avatarOnlyCamera: camera,
+    avatarOnlyCamera: camera_1,
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
-  head_3 = new TalkingHead( document.getElementById('avatar_3'), {
-    avatarOnly: true,
-    avatarOnlyScene: scene,
-    avatarOnlyCamera: camera,
-    lipsyncModules: ["en"],
-    dracoEnabled: true,
-  })
-  // logg(head, 'head')
+  // head_3 = new TalkingHead( document.getElementById('avatar_3'), {
+  //   avatarOnly: true,
+  //   avatarOnlyScene: scene,
+  //   avatarOnlyCamera: camera,
+  //   lipsyncModules: ["en"],
+  //   dracoEnabled: true,
+  // })
 
 
   try {
     loading.textContent = "Loading..."
-    await head.showAvatar( {
-      url: avatar_url,
+    await head_1.showAvatar( {
+      url: avatar_1_url,
+      body: 'F',
+      avatarMood: 'neutral',
+      lipsyncLang: 'en'
+    }, (ev) => {
+      if ( ev.lengthComputable ) {
+        let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
+        loading.textContent = "Loading " + val + "%"
+      }
+    })
+    await head_2.showAvatar( {
+      url: avatar_2_url,
       body: 'F',
       avatarMood: 'neutral',
       lipsyncLang: 'en'
@@ -231,23 +241,29 @@ async function init() {
     })
     loading.style.display = 'none'
 
-    head.armature.position.set(0, 0, 0)
-    head.armature.rotation.set(0, 0, 0)
-    scene.add(head.armature)
+    head_1.armature.position.set(0, 0, 0)
+    head_1.armature.rotation.set(0, 0, 0)
+    scene.add(head_1.armature)
+    put_feet_at_origin(head_1)
+    point_camera_at_face(camera_1, head_1)
 
-    put_feet_at_origin(head)
+    head_2.armature.position.set(1, 0, 0)
+    head_2.armature.rotation.set(0, 0, 0)
+    scene.add(head_2.armature)
+    put_feet_at_origin(head_2)
+    point_camera_at_face(camera_1, head_2)
 
-    point_camera_at_face(head)
-
-    await head.streamStart({
-      sampleRate: config.sampleRate,
-      mood: config.mood,
-      gain: config.gain,
-      lipsyncType: config.lipsyncType,
-      lipsyncLang: config.lipsyncLang,
-      waitForAudioChunks: config.waitForAudioChunks,
-      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
-    })
+    if (false) {
+      await head_1.streamStart({
+        sampleRate: config.sampleRate,
+        mood: config.mood,
+        gain: config.gain,
+        lipsyncType: config.lipsyncType,
+        lipsyncLang: config.lipsyncLang,
+        waitForAudioChunks: config.waitForAudioChunks,
+        metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
+      })
+    }
 
   } catch (error) {
     console.log(error)
@@ -271,7 +287,7 @@ async function init() {
 
   //
 
-  controls = new OrbitControls( camera, renderer.domElement )
+  controls = new OrbitControls( camera_1, renderer.domElement )
   controls.enableDamping = true
   controls.enableRotate = true
   controls.enablePan = true
@@ -294,7 +310,7 @@ async function init() {
   if (newspartial_id && chunkedInput) {
     capturer.start()
     logg('capturer.start')
-    head.streamAudio(chunkedInput)
+    head_1.streamAudio(chunkedInput)
   }
 }
 
@@ -314,14 +330,17 @@ function onWindowResize() {
 }
 
 function render() {
-  renderer.render( scene, camera )
+  renderer.render( scene, camera_1 )
 }
 
 function animate() {
   const t = frame / fps
   if (head) head.animate(1000/fps)
+  if (head_1) head_1.animate(1000/fps)
+  if (head_2) head_2.animate(1000/fps)
+  if (head_3) head_3.animate(1000/fps)
   controls.update()
-  renderer.render( scene, camera )
+  renderer.render( scene, camera_1 )
 
   if (totalFrames) {
     capturer.capture( renderer.domElement )
@@ -375,7 +394,6 @@ document.getElementById('speak').addEventListener('click', function () {
 
 document.getElementById('wave').addEventListener('click', async function () {
   try {
-    // await ensureMixamoClip(head, wave_url)
     head.playAnimation(wave_url)
   } catch (error) {
     console.log(error)

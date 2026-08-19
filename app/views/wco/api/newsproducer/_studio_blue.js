@@ -330,6 +330,15 @@ async function init() {
   controls.autoRotate = false
   controls.update()
 
+  document.querySelectorAll('input[name=head]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return
+      setActiveHead(input.value)
+    })
+  })
+  const selectedHead = document.querySelector('input[name=head]:checked')
+  setActiveHead(selectedHead ? selectedHead.value : '1')
+
   document.querySelectorAll('input[name=camera]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
@@ -370,6 +379,14 @@ document.addEventListener('DOMContentLoaded', async function(e) {
 
 function cameras() {
   return { '1': camera_1, '2': camera_2, '3': camera_3 }
+}
+
+function heads() {
+  return { '1': head_1, '2': head_2, '3': head_3 }
+}
+
+function setActiveHead(id) {
+  head = heads()[String(id)] || head_1
 }
 
 function easeInOutCubic(t) {
@@ -458,7 +475,6 @@ function render() {
 
 function animate() {
   const t = frame / fps
-  if (head) head.animate(1000/fps)
   if (head_1) head_1.animate(1000/fps)
   if (head_2) head_2.animate(1000/fps)
   if (head_3) head_3.animate(1000/fps)
@@ -518,6 +534,7 @@ document.getElementById('speak').addEventListener('click', function () {
 
 document.getElementById('wave').addEventListener('click', async function () {
   try {
+    if (!head) return
     head.playAnimation(wave_url)
   } catch (error) {
     console.log(error)

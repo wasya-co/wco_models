@@ -53,6 +53,10 @@ let slug = '<ccapture>'
 const fps = 24
 
 let frame = 0
+let lastAnimTime = 0
+let capturing = false
+let captureFrame = 0
+let captureTotal = 0
 const api_key    = params.get('api_key')
 const api_secret = params.get('api_secret')
 const wco_origin = params.get('wco_origin')
@@ -306,17 +310,17 @@ async function init() {
     put_feet_at_origin(head_2)
     point_camera_at_face(camera_2, head_2, '2')
 
-    if (false) {
-      await head_1.streamStart({
-        sampleRate: config.sampleRate,
-        mood: config.mood,
-        gain: config.gain,
-        lipsyncType: config.lipsyncType,
-        lipsyncLang: config.lipsyncLang,
-        waitForAudioChunks: config.waitForAudioChunks,
-        metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
-      })
+    const streamOpts = {
+      sampleRate: config.sampleRate,
+      mood: config.mood,
+      gain: config.gain,
+      lipsyncType: config.lipsyncType,
+      lipsyncLang: config.lipsyncLang,
+      waitForAudioChunks: config.waitForAudioChunks,
+      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
     }
+    await head_1.streamStart(streamOpts)
+    await head_2.streamStart(streamOpts)
 
   } catch (error) {
     console.log(error)
@@ -380,14 +384,8 @@ async function init() {
 
 
   // Keep rendering so OrbitControls drag/damping stay live
+  lastAnimTime = performance.now()
   renderer.setAnimationLoop(animate)
-
-  // Start capture/audio only after the renderer exists
-  if (newspartial_id && chunkedInput) {
-    capturer.start()
-    logg('capturer.start')
-    head_1.streamAudio(chunkedInput)
-  }
 }
 
 let semafore = false
@@ -495,61 +493,98 @@ function render() {
 }
 
 function animate() {
-  const t = frame / fps
-  if (head_1) head_1.animate(1000/fps)
-  if (head_2) head_2.animate(1000/fps)
-  if (head_3) head_3.animate(1000/fps)
-  updateCameraTransition()
-  if (!cameraTransition) controls.update()
+  let dt
+  if (capturing) {
+    dt = 1000 / fps
+  } else {
+    const now = performance.now()
+    dt = lastAnimTime ? (now - lastAnimTime) : (1000 / fps)
+    lastAnimTime = now
+    if (dt > 100) dt = 100
+  }
+
+  if (head_1) head_1.animate(dt)
+  if (head_2) head_2.animate(dt)
+  if (head_3) head_3.animate(dt)
+  if (!capturing) updateCameraTransition()
+  if (!cameraTransition && !capturing) controls.update()
   renderer.render( scene, camera )
 
-  if (totalFrames) {
+  if (capturing) {
     capturer.capture( renderer.domElement )
-    frame++
-    if (frame >= totalFrames) {
-      totalFrames = false
-      renderer.setAnimationLoop(null)
-      capturer.stop()
-      logg('capturer.stop')
-
-      if (false && newspartial_id) {
-        capturer.save((blob) => {
-          logg(blob, 'blob')
-          renderer.domElement.toBlob((thumb) => {
-            logg(thumb, 'thumb')
-            const form = new FormData()
-            form.append('video', blob, 'lips.webm')
-            form.append('name', slug)
-            form.append('thumb', thumb)
-            form.append('newspartial_id', newspartial_id)
-
-            fetch(wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret, {
-              method: 'POST',
-              headers: {
-                // 'Content-Type': 'video/webm',
-              },
-              body: form,
-            }).then(() => {
-              document.getElementById('status').textContent = 'finished'
-              document.body.style.backgroundColor = 'gray'
-            })
-          })
-        })
-      }
-
-      // Resume interactive orbit after capture
-      renderer.setAnimationLoop(animate)
+    captureFrame++
+    if (captureFrame >= captureTotal) {
+      finishCapture()
     }
   }
 }
 
+async function startSpeakCapture() {
+  if (capturing) return
+  if (!head) return
+  if (!chunkedInput) {
+    console.log('no chunkedInput')
+    return
+  }
+
+  const last = chunkedInput.wtimes.length - 1
+  const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
+  captureTotal = Math.max(1, Math.ceil(duration_ms / 1000 * fps))
+  captureFrame = 0
+  capturing = true
+  cameraTransition = null
+  if (controls) controls.enabled = false
+
+  capturer = new CCapture( { format: 'webm', framerate: fps } )
+  capturer.start()
+  logg('capturer.start')
+  document.getElementById('status').textContent = 'capturing'
+  head.streamAudio(chunkedInput)
+}
+
+function finishCapture() {
+  capturing = false
+  capturer.stop()
+  logg('capturer.stop')
+  lastAnimTime = performance.now()
+  if (controls) controls.enabled = true
+
+  capturer.save((blob) => {
+    logg(blob, 'blob')
+    renderer.domElement.toBlob((thumb) => {
+      logg(thumb, 'thumb')
+      const form = new FormData()
+      form.append('video', blob, 'lips.webm')
+      form.append('name', slug)
+      form.append('thumb', thumb)
+      if (newspartial_id) form.append('newspartial_id', newspartial_id)
+
+      const url = wco_origin
+        ? (wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret)
+        : '/wco/api/videos/'
+      fetch(url, {
+        method: 'POST',
+        body: form,
+      }).then(() => {
+        document.getElementById('status').textContent = 'finished'
+      }).catch((error) => {
+        console.log(error)
+        document.getElementById('status').textContent = 'save failed'
+      })
+    })
+  })
+}
+
 
 // Speak when clicked
-document.getElementById('speak').addEventListener('click', function () {
+document.getElementById('speak').addEventListener('click', async function () {
   try {
-
+    await startSpeakCapture()
   } catch (error) {
     console.log(error)
+    capturing = false
+    lastAnimTime = performance.now()
+    if (controls) controls.enabled = true
   }
 })
 

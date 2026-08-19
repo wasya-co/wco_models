@@ -23,8 +23,8 @@ const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/anima
 
 
 let avatar_1_url = avatar_brunette_url
-let avatar_2_url = avatar_avaturn_url
-let avatar_3_url = avatar_mula_url
+let avatar_2_url = avatar_mula_url
+// let avatar_3_url = avatar_mula_url
 
 
 
@@ -63,6 +63,11 @@ let camera, camera_1, camera_2, camera_3
 let controls, renderer, scene
 let head, head_1, head_2, head_3
 let faceTarget = new THREE.Vector3()
+const cameraTargets = {
+  '1': new THREE.Vector3(0, 1.5, 0),
+  '2': new THREE.Vector3(1, 1.5, 0),
+  '3': new THREE.Vector3(0.5, 1.2, 0),
+}
 let chunkedInput = null
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
@@ -71,7 +76,7 @@ const loading = document.getElementById('loading')
 
 /*
 **/
-function point_camera_at_face(_camera, _head) {
+function point_camera_at_face(_camera, _head, targetKey) {
   const leftEye = new THREE.Vector3()
   const rightEye = new THREE.Vector3()
   _head.objectLeftEye.getWorldPosition(leftEye)
@@ -83,6 +88,7 @@ function point_camera_at_face(_camera, _head) {
   camPos.add(faceTarget)
   _camera.position.copy(camPos)
   _camera.lookAt(faceTarget)
+  if (targetKey) cameraTargets[targetKey].copy(faceTarget)
 }
 
 /*
@@ -170,8 +176,18 @@ async function init() {
    * far — Camera frustum far plane.
   **/
   camera_1 = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
-  camera_1.position.set( 0, 2, 8 )
-  camera_1.lookAt( 0, 0, 0 )
+  camera_1.position.set( 0, 1.6, 4 )
+  camera_1.lookAt( 0, 1.5, 0 )
+
+  camera_2 = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  camera_2.position.set( 2, 1.6, 4 )
+  camera_2.lookAt( 1, 1.5, 0 )
+
+  camera_3 = new THREE.PerspectiveCamera( 25, width/height, 0.1, 1000 )
+  camera_3.position.set( -2, 2.2, 8 )
+  camera_3.lookAt( 0.5, 1.2, 0 )
+
+  camera = camera_1
 
   setup_light(scene)
 
@@ -245,13 +261,13 @@ async function init() {
     head_1.armature.rotation.set(0, 0, 0)
     scene.add(head_1.armature)
     put_feet_at_origin(head_1)
-    point_camera_at_face(camera_1, head_1)
+    point_camera_at_face(camera_1, head_1, '1')
 
     head_2.armature.position.set(1, 0, 0)
     head_2.armature.rotation.set(0, 0, 0)
     scene.add(head_2.armature)
     put_feet_at_origin(head_2)
-    point_camera_at_face(camera_1, head_2)
+    point_camera_at_face(camera_2, head_2, '2')
 
     if (false) {
       await head_1.streamStart({
@@ -287,7 +303,7 @@ async function init() {
 
   //
 
-  controls = new OrbitControls( camera_1, renderer.domElement )
+  controls = new OrbitControls( camera, renderer.domElement )
   controls.enableDamping = true
   controls.enableRotate = true
   controls.enablePan = true
@@ -297,6 +313,15 @@ async function init() {
   controls.target.copy(faceTarget)
   controls.autoRotate = false
   controls.update()
+
+  document.querySelectorAll('input[name=camera]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return
+      setActiveCamera(input.value)
+    })
+  })
+  const selected = document.querySelector('input[name=camera]:checked')
+  setActiveCamera(selected ? selected.value : '1')
 
   //
 
@@ -322,15 +347,42 @@ document.addEventListener('DOMContentLoaded', async function(e) {
   }
 })
 
+function cameras() {
+  return { '1': camera_1, '2': camera_2, '3': camera_3 }
+}
+
+function setActiveCamera(id) {
+  const key = String(id)
+  const nxt = cameras()[key] || camera_1
+  camera = nxt;
+  [camera_1, camera_2, camera_3].forEach((cam) => {
+    if (cam) {
+      cam.aspect = width / height
+      cam.updateProjectionMatrix()
+    }
+  })
+  if (controls) {
+    controls.object = camera
+    const target = cameraTargets[key] || cameraTargets['1']
+    faceTarget.copy(target)
+    controls.target.copy(target)
+    controls.update()
+  }
+}
+
 function onWindowResize() {
-  camera.aspect = width / height
-  camera.updateProjectionMatrix()
+  ;[camera_1, camera_2, camera_3].forEach((cam) => {
+    if (cam) {
+      cam.aspect = width / height
+      cam.updateProjectionMatrix()
+    }
+  })
   renderer.setSize( width, height )
   render()
 }
 
 function render() {
-  renderer.render( scene, camera_1 )
+  renderer.render( scene, camera )
 }
 
 function animate() {
@@ -340,7 +392,7 @@ function animate() {
   if (head_2) head_2.animate(1000/fps)
   if (head_3) head_3.animate(1000/fps)
   controls.update()
-  renderer.render( scene, camera_1 )
+  renderer.render( scene, camera )
 
   if (totalFrames) {
     capturer.capture( renderer.domElement )

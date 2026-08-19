@@ -10,12 +10,22 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette.glb'
-// let avatar_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/female_1.glb'
+let avatar_brunette_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette/model.glb'
+let avatar_avaturn_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
+let avatar_45_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
+
+
+
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
 
 const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/animations/walking.fbx"
 // const wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/F_Crouch_Strafe_Left.fbx'
+
+
+let avatar_1_url = avatar_brunette_url
+let avatar_2_url = avatar_avaturn_url
+let avatar_3_url = avatar_45_url
+
 
 
 import * as THREE from 'three'
@@ -49,7 +59,8 @@ const wco_origin = params.get('wco_origin')
 const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
-let camera, controls, head, renderer, scene
+let camera, controls, renderer, scene
+let head, head_1, head_2, head_3
 let faceTarget = new THREE.Vector3()
 let chunkedInput = null
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
@@ -174,7 +185,28 @@ async function init() {
   scene.add(studio)
 
 
-  head = new TalkingHead( document.getElementById('avatar'), {
+  // head = new TalkingHead( document.getElementById('avatar'), {
+  //   avatarOnly: true,
+  //   avatarOnlyScene: scene,
+  //   avatarOnlyCamera: camera,
+  //   lipsyncModules: ["en"],
+  //   dracoEnabled: true,
+  // })
+  head_1 = new TalkingHead( document.getElementById('avatar_1'), {
+    avatarOnly: true,
+    avatarOnlyScene: scene,
+    avatarOnlyCamera: camera,
+    lipsyncModules: ["en"],
+    dracoEnabled: true,
+  })
+  head_2 = new TalkingHead( document.getElementById('avatar_2'), {
+    avatarOnly: true,
+    avatarOnlyScene: scene,
+    avatarOnlyCamera: camera,
+    lipsyncModules: ["en"],
+    dracoEnabled: true,
+  })
+  head_3 = new TalkingHead( document.getElementById('avatar_3'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera,

@@ -8,6 +8,10 @@
     = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newsvideo_event.newsvideo_id || params[:newsvideo_id]), {}, class: :select2
 
   .field
+    %label Newspartial
+    = f.select :newspartial_id, options_for_select(@newspartials_list, selected: newsvideo_event.newspartial_id || params[:newspartial_id]), {}, class: :select2
+
+  .field
     %label Start at ms
     = f.text_field :start_at_ms, value: newsvideo_event.start_at_ms
 

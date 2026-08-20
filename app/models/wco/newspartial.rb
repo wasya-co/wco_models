@@ -12,16 +12,18 @@ class Wco::Newspartial
 
   MAX_WORDS = 30
 
-  field :title
-  # validates :title, presence: true, uniqueness: true
-  # index({ title: 1 }, { unique: true })
-
   field :body
   field :config_json, type: :string, default: '{}'
   field :speech_json, type: :string, default: '{}' # the smaller config, excludes audio wav
 
   belongs_to :newsvideo
+
   has_one :video
+
+  has_many :newsvideo_events, class_name: 'Wco::NewsvideoEvent'
+  def newsvideo_events
+    Wco::NewsvideoEvent.where(newspartial_id: self.id)
+  end
 
   field :slug, type: :string
 
@@ -125,6 +127,10 @@ class Wco::Newspartial
 
   def video
     Wco::Video.where( newspartial_id: self[:id] ).first
+  end
+
+  def to_s
+    "#{newsvideo.slug}::#{slug}"
   end
 
 end

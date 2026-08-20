@@ -55,7 +55,8 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     @newspartial = Wco::Newspartial.find params[:id]
     config = JSON.parse @newspartial.speech_json
 
-    @newsvideo_events = Wco::NewsvideoEvent.where( newsvideo: @newspartial.newsvideo )
+    # @newsvideo_events = Wco::NewsvideoEvent.where( newsvideo: @newspartial.newsvideo )
+    @newsvideo_events = @newspartial.newsvideo_events
     config[:fns] = @newsvideo_events.map { |ev| ev.exec_js }
     config[:ftimes] = @newsvideo_events.map { |ev| ev.start_at_ms }
     config[:fdurations] = @newsvideo_events.map { |ev| ev.duration_ms }

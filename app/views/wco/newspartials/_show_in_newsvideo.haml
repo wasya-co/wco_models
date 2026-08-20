@@ -11,11 +11,14 @@
           .wtime= wtime
           .word= newspartial.config['words'][idx]
 
+    - newspartial.newsvideo_events.each do |ev|
+      = render 'wco/newsvideo_events/show_in_newsvideo', event: ev
 
     .full-text
       .header.collapse-expand{ id: newspartial.id.to_s }
         newspartial::#{newspartial.slug}
         = link_to '[~]', edit_newspartial_path(newspartial)
+        = link_to '[+newsvideo_event]', new_newsvideo_event_path(newspartial_id: newspartial.id)
         %span{ class: 'gray' } #{newspartial.id}
         = link_to '[config.json]', api_newspartial_config_path(newspartial, format: :json, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret:  Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') ), target: :_blank
 

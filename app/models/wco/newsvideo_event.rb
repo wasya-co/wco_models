@@ -7,7 +7,8 @@ class Wco::NewsvideoEvent
 
   PAGE_PARAM_NAME = 'newsvideo_events_page'
 
-  belongs_to :newsvideo
+  belongs_to :newsvideo, class_name: 'Wco::Newsvideo', optional: true
+  belongs_to :newspartial, class_name: 'Wco::Newspartial', optional: true
 
   field :start_at_ms, type: :integer, default: 0
   field :duration_ms, type: :integer, default: 0

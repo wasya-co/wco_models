@@ -11,7 +11,7 @@ class Wco::NewsvideoEventsController < Wco::ApplicationController
     else
       flash_alert "No luck: #{@newsvideo_event.errors.full_messages.join(',')}."
     end
-    redirect_to controller: 'newsvideos', action: 'show', id: params[:newsvideo_event][:newsvideo_id]
+    redirect_to controller: :newsvideos, method: :index
   end
 
   def destroy
@@ -53,7 +53,14 @@ class Wco::NewsvideoEventsController < Wco::ApplicationController
   private
 
   def set_lists
-    @newsvideos_list = Wco::Newsvideo.list
+    if params[:newspartial_id]
+      partial = Wco::Newspartial.find params[:newspartial_id]
+      @newspartials_list = partial.newsvideo.newspartials.list
+      @newsvideos_list = []
+    else
+      @newspartials_list = []
+      @newsvideos_list = Wco::Newsvideo.list
+    end
   end
 
 end

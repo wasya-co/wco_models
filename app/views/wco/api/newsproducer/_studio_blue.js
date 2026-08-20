@@ -277,26 +277,15 @@ function move_camera(config) {
   }
 }
 
-// herehere
-const events = {
-  ftimes: [
-    1,
-    1000,
-    // 4000,
-  ],
-  fns: [
-    play_animation({ avatar_id: '1', animation_name: 'talking_variation_4' }),
-    move_camera({ from: '3', to: '1', duration: 3000 }),
-    // move_camera({ from: '2', to: '3', duration: 3000 }),
-  ],
-}
-let eventsIndex = 0
 
+let eventsIndex = 0
 function tickEvents(elapsedMs) {
-  while (eventsIndex < events.ftimes.length && elapsedMs >= events.ftimes[eventsIndex]) {
-    const fn = events.fns[eventsIndex]
+  while (eventsIndex < chunkedInput.ftimes.length && elapsedMs >= chunkedInput.ftimes[eventsIndex]) {
+    let fn = chunkedInput.fns[eventsIndex]
+    fn = "move_camera({ from: '3', to: '1', duration: 3000 })"
+    logg(fn, 'fn')
     eventsIndex++
-    if (typeof fn === 'function') fn()
+    eval(fn)
   }
 }
 

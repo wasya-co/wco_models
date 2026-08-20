@@ -11,9 +11,10 @@ const logg = (a, b="", c=null) => {
 }
 
 let avatar_brunette_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette/model.glb'
-let avatar_avaturn_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
-let avatar_45_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
-let avatar_mula_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb'
+let avatar_avaturn_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
+let avatar_45_url       = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
+let avatar_mula_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb'
+let avatar_buddy_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/buddy-a.glb'
 
 
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
@@ -23,7 +24,7 @@ const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/anima
 
 
 let avatar_1_url = avatar_brunette_url
-let avatar_2_url = avatar_mula_url
+let avatar_2_url = avatar_buddy_url
 // let avatar_3_url = avatar_mula_url
 
 
@@ -77,6 +78,8 @@ const CAMERA_BLEND_MS = 900
 let chunkedInput = null
 const lights = {}
 const LIGHT_CTRL_KEY = 'wco.studio_blue.light-ctrl'
+const HEAD_CTRL_KEY = 'wco.studio_blue.head-ctrl'
+const CAMERA_CTRL_KEY = 'wco.studio_blue.camera-ctrl'
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
@@ -172,6 +175,36 @@ function persistLightControls() {
     saved[input.name] = input.checked
   })
   localStorage.setItem(LIGHT_CTRL_KEY, JSON.stringify(saved))
+}
+
+function restoreHeadControl() {
+  try {
+    const saved = localStorage.getItem(HEAD_CTRL_KEY)
+    if (!saved) return
+    const input = document.querySelector(`input[name=head][value="${saved}"]`)
+    if (input) input.checked = true
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function persistHeadControl(id) {
+  localStorage.setItem(HEAD_CTRL_KEY, String(id))
+}
+
+function restoreCameraControl() {
+  try {
+    const saved = localStorage.getItem(CAMERA_CTRL_KEY)
+    if (!saved) return
+    const input = document.querySelector(`input[name=camera][value="${saved}"]`)
+    if (input) input.checked = true
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function persistCameraControl(id) {
+  localStorage.setItem(CAMERA_CTRL_KEY, String(id))
 }
 
 function syncLightsFromControls() {
@@ -355,6 +388,7 @@ async function init() {
   controls.autoRotate = false
   controls.update()
 
+  restoreHeadControl()
   document.querySelectorAll('input[name=head]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
@@ -364,6 +398,7 @@ async function init() {
   const selectedHead = document.querySelector('input[name=head]:checked')
   setActiveHead(selectedHead ? selectedHead.value : '1')
 
+  restoreCameraControl()
   document.querySelectorAll('input[name=camera]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
@@ -405,7 +440,9 @@ function heads() {
 }
 
 function setActiveHead(id) {
-  head = heads()[String(id)] || head_1
+  const key = String(id)
+  head = heads()[key] || head_1
+  persistHeadControl(key)
 }
 
 function easeInOutCubic(t) {
@@ -414,6 +451,7 @@ function easeInOutCubic(t) {
 
 function setActiveCamera(id, instant = false) {
   const key = String(id)
+  persistCameraControl(key)
   const dest = cameras()[key] || camera_1
   const destTarget = (cameraTargets[key] || cameraTargets['1']).clone()
   ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {

@@ -23,7 +23,13 @@
       .d-inline-block= button_to 'generate video & output', newsvideo_generate_all_video_path(@newsvideo), :data => { :confirm => 'Are you sure?' }
 
 
-  %i.fa.fa-compress.collapse-expand{ id: @newsvideo.id.to_s } Descr
+  - if @newsvideo.generated_video.present?
+    %i.fa.fa-compress.collapse-expand{ id: "generated-#{@newsvideo.id.to_s}" } generated video
+    .generated-video
+      = video_tag @newsvideo.generated_video.video.url, controls: true, autoplay: false, preload: 'metadata', width: @newsvideo.w_px, height: @newsvideo.h_px
+    .c
+
+  %i.fa.fa-compress.collapse-expand{ id: "descr-#{@newsvideo.id.to_s}" } Descr
   .descr= raw @newsvideo.body.gsub(/(\r?\n){2}/, "<br /><br />")
   %br
   %br

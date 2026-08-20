@@ -47,7 +47,7 @@ class Wco::Newsvideo
   has_and_belongs_to_many :tags
   has_many :videos
 
-
+  has_many :newsvideo_events
 
   has_many :newsoverlays
   def newsoverlays

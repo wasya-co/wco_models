@@ -41,7 +41,7 @@ class Wco::Newsoverlay
   STATUS_DISABLED = 'disabled'
   field :status, type: :string, default: STATUS_ACTIVE
   def self.active
-    where( status: STATUS_ACTIVE )
+    where( status: STATUS_ACTIVE)
   end
 
   delegate :duration_ms, to: :video

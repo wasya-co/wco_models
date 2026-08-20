@@ -91,6 +91,7 @@ class Wco::Lead
     self[:unsubscribe_token]
   end
   field :unsubscribed_at
+  field :allow_unsubscribe, type: :boolean, default: true
 
   def to_s
     # "`#{name}` <#{email}>"

@@ -7,6 +7,9 @@ namespace :wco do
 
   desc 'run office actions'
   task run_office_actions: :environment do
+    STDOUT.sync = true
+    STDERR.sync = true
+
     puts! "Starting wco_email:run_office_actions in #{Rails.env}..."
     while true do
 

@@ -56,12 +56,13 @@ class WcoEmail::EmailAction
       next_sch.save!
     end
   end
-
+  def do_run; send_and_roll; end
 
   def self.list
     [[nil,nil]] + all.map { |p| [ "#{p.lead&.email} :: #{p.tmpl&.slug}", p.id ] }
   end
 end
+
 
 Sch = WcoEmail::EmailAction
 

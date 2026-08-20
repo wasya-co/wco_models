@@ -14,23 +14,23 @@ namespace :wco do
     while true do
 
       schs = Wco::OfficeAction.active.where({ :perform_at.lte => Time.now })
-      puts! "[#{schs.length} oats]" if schs.length != 0
+      print! "[#{schs.length} oats]" if schs.length != 0
       schs.each do |sch|
         sch.do_run
-        puts! "[#{sch.id}]^"
+        print! "[#{sch.id}]^"
         sleep 15
       end
 
       ## copy-pasted from wco_email tasks run_email_actions
       schs = WcoEmail::EmailAction.active.where({ :perform_at.lte => Time.now })
-      puts! "[#{schs.length} eats]" if schs.length != 0
+      print! "[#{schs.length} eats]" if schs.length != 0
       schs.each do |sch|
         sch.do_run
-        puts! "[#{sch.id}]^"
+        print! "[#{sch.id}]^"
         sleep 15
       end
 
-      puts! '.'
+      print! '.'
       sleep 15
     end
   end

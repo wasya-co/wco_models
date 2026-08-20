@@ -216,6 +216,32 @@ function syncLightsFromControls() {
   persistLightControls()
 }
 
+const animations_h = {
+  talking_variation_4: 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx',
+}
+function play_animation(config) {
+  let this_head = heads()[config.avatar_id]
+  this_head.playAnimation(animations_h[config.animation_name])
+}
+
+// herehere
+const events = {
+  fdurations: [
+    10,
+    10,
+  ],
+  ftimes: [
+    1000,
+    3500,
+  ],
+  fns: [
+    move_camera({ from: '3', to: '2', duration: 1000 }),
+    play_animation({ avatar_id: '1', animation_name: 'talking_variation_4' }),
+  ],
+}
+
+
+
 /*
 **/
 async function init() {
@@ -344,8 +370,12 @@ async function init() {
     put_feet_at_origin(head_2)
     point_camera_at_face(camera_2, head_2, '2')
 
+    const onMetrics = (which) => {
+      logg(which, 'onMetrics')
+    }
+
     const onSubtitles = (which) => {
-      logg(which)
+      // logg(which)
     }
 
     const streamOpts = {
@@ -357,8 +387,8 @@ async function init() {
       sampleRate: config.sampleRate,
       waitForAudioChunks: config.waitForAudioChunks,
     }
-    await head_1.streamStart(streamOpts, () => {}, () => {}, onSubtitles)
-    await head_2.streamStart(streamOpts, () => {}, () => {}, onSubtitles)
+    await head_1.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
+    await head_2.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
 
   } catch (error) {
     console.log(error)

@@ -21,10 +21,13 @@ body {
 
   .StudioW0 {
     border: 1px solid blue;
+    background: #bbb;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    z-index: 5;
   }
 }
 

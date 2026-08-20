@@ -14,17 +14,18 @@ let avatar_brunette_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/
 let avatar_avaturn_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
 let avatar_45_url       = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
 let avatar_mula_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb'
-let avatar_buddy_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/buddy-a.glb'
 
 
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
 
-const wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/animations/walking.fbx"
-// const wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/F_Crouch_Strafe_Left.fbx'
+// let wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/animations/walking.fbx"
+// let wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/F_Crouch_Strafe_Left.fbx'
+let wave_url = 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx'
+// let wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/catwalk.fbx'
 
 
 let avatar_1_url = avatar_brunette_url
-let avatar_2_url = avatar_buddy_url
+let avatar_2_url = avatar_45_url
 // let avatar_3_url = avatar_mula_url
 
 
@@ -343,17 +344,21 @@ async function init() {
     put_feet_at_origin(head_2)
     point_camera_at_face(camera_2, head_2, '2')
 
-    const streamOpts = {
-      sampleRate: config.sampleRate,
-      mood: config.mood,
-      gain: config.gain,
-      lipsyncType: config.lipsyncType,
-      lipsyncLang: config.lipsyncLang,
-      waitForAudioChunks: config.waitForAudioChunks,
-      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false }
+    const onSubtitles = (which) => {
+      logg(which)
     }
-    await head_1.streamStart(streamOpts)
-    await head_2.streamStart(streamOpts)
+
+    const streamOpts = {
+      gain: config.gain,
+      lipsyncLang: config.lipsyncLang,
+      lipsyncType: config.lipsyncType,
+      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false },
+      mood: config.mood,
+      sampleRate: config.sampleRate,
+      waitForAudioChunks: config.waitForAudioChunks,
+    }
+    await head_1.streamStart(streamOpts, () => {}, () => {}, onSubtitles)
+    await head_2.streamStart(streamOpts, () => {}, () => {}, onSubtitles)
 
   } catch (error) {
     console.log(error)

@@ -220,24 +220,84 @@ const animations_h = {
   talking_variation_4: 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx',
 }
 function play_animation(config) {
-  let this_head = heads()[config.avatar_id]
-  this_head.playAnimation(animations_h[config.animation_name])
+  return () => {
+    let this_head = heads()[config.avatar_id]
+    this_head.playAnimation(animations_h[config.animation_name])
+  }
+}
+
+function move_camera(config) {
+  return () => {
+    const fromKey = String(config.from)
+    const toKey = String(config.to)
+    const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
+    const src = cameras()[fromKey] || camera_1
+    const dest = cameras()[toKey] || camera_1
+    const startTarget = (cameraTargets[fromKey] || cameraTargets['1']).clone()
+    const destTarget = (cameraTargets[toKey] || cameraTargets['1']).clone()
+
+    persistCameraControl(toKey)
+    const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
+    if (radio) radio.checked = true
+
+    ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
+      if (cam) {
+        cam.aspect = width / height
+        cam.updateProjectionMatrix()
+      }
+    })
+
+    src.updateMatrixWorld()
+    dest.updateMatrixWorld()
+
+    camera.position.copy(src.position)
+    camera.quaternion.copy(src.quaternion)
+    camera.fov = src.fov
+    camera.near = dest.near
+    camera.far = dest.far
+    camera.updateProjectionMatrix()
+    faceTarget.copy(startTarget)
+    if (controls) {
+      controls.target.copy(startTarget)
+      controls.enabled = false
+    }
+
+    cameraTransition = {
+      startPos: src.position.clone(),
+      startQuat: src.quaternion.clone(),
+      startFov: src.fov,
+      startTarget: startTarget,
+      endPos: dest.position.clone(),
+      endQuat: dest.quaternion.clone(),
+      endFov: dest.fov,
+      endTarget: destTarget,
+      elapsed: 0,
+      duration: duration,
+    }
+  }
 }
 
 // herehere
 const events = {
-  fdurations: [
-    10,
-    10,
-  ],
   ftimes: [
+    1,
     1000,
-    3500,
+    // 4000,
   ],
   fns: [
-    move_camera({ from: '3', to: '2', duration: 1000 }),
     play_animation({ avatar_id: '1', animation_name: 'talking_variation_4' }),
+    move_camera({ from: '3', to: '1', duration: 3000 }),
+    // move_camera({ from: '2', to: '3', duration: 3000 }),
   ],
+}
+let eventsIndex = 0
+
+function tickEvents(elapsedMs) {
+  while (eventsIndex < events.ftimes.length && elapsedMs >= events.ftimes[eventsIndex]) {
+    const fn = events.fns[eventsIndex]
+    eventsIndex++
+    if (typeof fn === 'function') fn()
+  }
 }
 
 
@@ -526,27 +586,34 @@ function setActiveCamera(id, instant = false) {
     endQuat: endQuat,
     endFov: dest.fov,
     endTarget: destTarget,
-    t0: performance.now(),
+    elapsed: 0,
     duration: CAMERA_BLEND_MS,
   }
   controls.enabled = false
 }
 
-function updateCameraTransition() {
+function updateCameraTransition(dt) {
   if (!cameraTransition) return
-  const u = Math.min(1, (performance.now() - cameraTransition.t0) / cameraTransition.duration)
+  cameraTransition.elapsed += dt
+  const u = Math.min(1, cameraTransition.elapsed / cameraTransition.duration)
   const e = easeInOutCubic(u)
   const tr = cameraTransition
   camera.position.lerpVectors(tr.startPos, tr.endPos, e)
   camera.quaternion.slerpQuaternions(tr.startQuat, tr.endQuat, e)
   camera.fov = tr.startFov + (tr.endFov - tr.startFov) * e
   camera.updateProjectionMatrix()
-  controls.target.lerpVectors(tr.startTarget, tr.endTarget, e)
-  faceTarget.copy(controls.target)
+  if (controls) {
+    controls.target.lerpVectors(tr.startTarget, tr.endTarget, e)
+    faceTarget.copy(controls.target)
+  } else {
+    faceTarget.lerpVectors(tr.startTarget, tr.endTarget, e)
+  }
   if (u >= 1) {
     cameraTransition = null
-    controls.enabled = true
-    controls.update()
+    if (!capturing && controls) {
+      controls.enabled = true
+      controls.update()
+    }
   }
 }
 
@@ -576,10 +643,12 @@ function animate() {
     if (dt > 100) dt = 100
   }
 
+  if (capturing) tickEvents(captureFrame * dt)
+
   if (head_1) head_1.animate(dt)
   if (head_2) head_2.animate(dt)
   if (head_3) head_3.animate(dt)
-  if (!capturing) updateCameraTransition()
+  updateCameraTransition(dt)
   if (!cameraTransition && !capturing) controls.update()
   renderer.render( scene, camera )
 
@@ -604,6 +673,7 @@ async function startSpeakCapture() {
   const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
   captureTotal = Math.max(1, Math.ceil(duration_ms / 1000 * fps))
   captureFrame = 0
+  eventsIndex = 0
   capturing = true
   cameraTransition = null
   if (controls) controls.enabled = false

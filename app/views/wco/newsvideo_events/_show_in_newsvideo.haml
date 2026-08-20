@@ -1,0 +1,12 @@
+
+-## no id here, it won't stay closed.
+-# .absolute.collapse-expand{ style: "top: #{event.start_at_ms*HEIGHT_MS}px; left: 300px;" }
+-#   <>
+.NewsvideoEventTimeline{ class: event.status, style: "top: #{event.start_at_ms*HEIGHT_MS}px; height: #{event.duration_ms*HEIGHT_MS}px; min-height: 50px;"}
+  .d-flex
+    .a #{event.start_at_ms}
+    = link_to '[~]', edit_newsvideo_event_path(event)
+    = button_to 'x', newsvideo_event_path(event), method: :delete, data: { confirm: 'Are you sure?' }
+  .moreC
+    %pre
+      = raw event.exec_js

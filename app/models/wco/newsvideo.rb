@@ -48,6 +48,9 @@ class Wco::Newsvideo
   has_many :videos
 
   has_many :newsvideo_events
+  def newsvideo_events
+    Wco::NewsvideoEvent.where( newsvideo_id: self.id )
+  end
 
   has_many :newsoverlays
   def newsoverlays

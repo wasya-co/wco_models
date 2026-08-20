@@ -14,3 +14,7 @@ class Wco::NewsvideoEvent
 
   field :exec_js, type: :string, default: ''
 
+  field :status, default: 'active'
+  field :name, default: '<event>'
+
+end

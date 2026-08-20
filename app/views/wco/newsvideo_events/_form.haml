@@ -1,0 +1,23 @@
+
+= form_for newsvideo_event do |f|
+  .actions
+    = f.submit 'Submit'
+
+  .field
+    %label Newsvideo
+    = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newsvideo_event.newsvideo_id || params[:newsvideo_id]), {}, class: :select2
+
+  .field
+    %label Start at ms
+    = f.text_field :start_at_ms, value: newsvideo_event.start_at_ms
+
+  .field
+    %label Duration ms
+    = f.text_field :duration_ms, value: newsvideo_event.duration_ms
+
+  .field
+    %label exec_js
+    = f.text_area :exec_js, value: newsvideo_event.exec_js, class: 'w-100'
+
+  .actions
+    = f.submit 'Submit'

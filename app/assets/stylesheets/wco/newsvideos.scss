@@ -33,6 +33,21 @@
 
 
 
+.NewsvideoEventTimeline {
+  border: 1px solid orange;
+  background: white;
+  position: absolute;
+  left: 230px;
+
+  &:hover {
+    z-index: 5;
+  }
+
+  &.disabled {
+    background: gray;
+  }
+}
+
 
 
 .NewsoverlayTimeline {
@@ -81,13 +96,19 @@
       min-width: 300px;
     }
 
-    .full-textC {
+    .header.collapse-expand {
+      position: relative;
       z-index: 4;
+    }
+
+    .full-textC {
       position: relative;
       background: white;
       padding: 10px;
       border: 1px solid black;
       border-radius: 10px;
+
+      z-index: 4;
     }
 
   }

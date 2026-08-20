@@ -6,6 +6,7 @@
 
     = link_to '_[config.json]', api_newsvideo_path(@newsvideo.id, { api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank
     = link_to '[+ newspartial]', new_newspartial_path(newsvideo_id: @newsvideo.id)
+    = link_to '[+newsvideo_event]', new_newsvideo_event_path(newsvideo_id: @newsvideo.id)
     = link_to '_[search illustration]', pexels_search_path(newsvideo_id: @newsvideo.id), target: :_blank
 
 
@@ -48,5 +49,8 @@
 
   - @newsoverlays.each do |newsoverlay|
     = render 'wco/newsoverlays/show_in_newsvideo', newsoverlay: newsoverlay
+
+  - @newsvideo_events.each do |ev|
+    = render 'wco/newsvideo_events/show_in_newsvideo', event: ev
 
 .c

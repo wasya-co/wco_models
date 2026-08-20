@@ -80,6 +80,8 @@ Wco::Engine.routes.draw do
 
 
 
+  resources :newsvideo_events
+
   match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
   match 'newsvideos/:id/generate-all-audio',    to: 'newsvideos#generate_all_audio',    as: :newsvideo_generate_all_audio, via: [ :get, :post ]
   match 'newsvideos/:id/generate-all-video',    to: 'newsvideos#generate_all_video',    as: :newsvideo_generate_all_video, via: [ :get, :post ]

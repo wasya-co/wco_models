@@ -168,7 +168,10 @@ class Wco::NewsvideosController < Wco::ApplicationController
     authorize! :show, @newsvideo
     @newspartials = Wco::Newspartial.where( newsvideo_id: @newsvideo.id.to_s).includes(:video)
     @newsoverlays = @newsvideo.newsoverlays
+    @newsvideo_events = @newsvideo.newsvideo_events
     @skip_footer = true
+
+    puts!  @newsvideo_events.to_a, 'zz'
   end
 
   def split

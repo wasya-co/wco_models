@@ -15,7 +15,7 @@ namespace :wco do
       schs.each do |sch|
         sch.do_run
         print "[#{sch.id}]^"
-        sleep 3
+        sleep 15
       end
 
       ## copy-pasted from wco_email tasks run_email_actions
@@ -24,7 +24,7 @@ namespace :wco do
       schs.each do |sch|
         sch.do_run
         print "[#{sch.id}]^"
-        sleep 3
+        sleep 15
       end
 
       print '.'

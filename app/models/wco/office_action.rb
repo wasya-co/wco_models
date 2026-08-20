@@ -10,7 +10,7 @@ class Wco::OfficeAction
   # field :descr, type: :string ## optional
 
   belongs_to :office_action_template, inverse_of: :office_action
-  belongs_to :lead, class_name: '::Wco::Lead'
+  belongs_to :lead, class_name: '::Wco::Lead', optional: true
 
   def tmpl
     office_action_template

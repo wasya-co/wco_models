@@ -220,69 +220,67 @@ const animations_h = {
   talking_variation_4: 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx',
 }
 function play_animation(config) {
-  return () => {
-    let this_head = heads()[config.avatar_id]
-    this_head.playAnimation(animations_h[config.animation_name])
-  }
+  let this_head = heads()[config.avatar_id]
+  if (this_head) this_head.playAnimation(animations_h[config.animation_name])
 }
 
 function move_camera(config) {
-  return () => {
-    const fromKey = String(config.from)
-    const toKey = String(config.to)
-    const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
-    const src = cameras()[fromKey] || camera_1
-    const dest = cameras()[toKey] || camera_1
-    const startTarget = (cameraTargets[fromKey] || cameraTargets['1']).clone()
-    const destTarget = (cameraTargets[toKey] || cameraTargets['1']).clone()
+  const fromKey = String(config.from)
+  const toKey = String(config.to)
+  const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
+  const src = cameras()[fromKey] || camera_1
+  const dest = cameras()[toKey] || camera_1
+  const startTarget = (cameraTargets[fromKey] || cameraTargets['1']).clone()
+  const destTarget = (cameraTargets[toKey] || cameraTargets['1']).clone()
 
-    persistCameraControl(toKey)
-    const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
-    if (radio) radio.checked = true
+  persistCameraControl(toKey)
+  const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
+  if (radio) radio.checked = true
 
-    ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
-      if (cam) {
-        cam.aspect = width / height
-        cam.updateProjectionMatrix()
-      }
-    })
-
-    src.updateMatrixWorld()
-    dest.updateMatrixWorld()
-
-    camera.position.copy(src.position)
-    camera.quaternion.copy(src.quaternion)
-    camera.fov = src.fov
-    camera.near = dest.near
-    camera.far = dest.far
-    camera.updateProjectionMatrix()
-    faceTarget.copy(startTarget)
-    if (controls) {
-      controls.target.copy(startTarget)
-      controls.enabled = false
+  ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
+    if (cam) {
+      cam.aspect = width / height
+      cam.updateProjectionMatrix()
     }
+  })
 
-    cameraTransition = {
-      startPos: src.position.clone(),
-      startQuat: src.quaternion.clone(),
-      startFov: src.fov,
-      startTarget: startTarget,
-      endPos: dest.position.clone(),
-      endQuat: dest.quaternion.clone(),
-      endFov: dest.fov,
-      endTarget: destTarget,
-      elapsed: 0,
-      duration: duration,
-    }
+  src.updateMatrixWorld()
+  dest.updateMatrixWorld()
+
+  camera.position.copy(src.position)
+  camera.quaternion.copy(src.quaternion)
+  camera.fov = src.fov
+  camera.near = dest.near
+  camera.far = dest.far
+  camera.updateProjectionMatrix()
+  faceTarget.copy(startTarget)
+  if (controls) {
+    controls.target.copy(startTarget)
+    controls.enabled = false
+  }
+
+  cameraTransition = {
+    startPos: src.position.clone(),
+    startQuat: src.quaternion.clone(),
+    startFov: src.fov,
+    startTarget: startTarget,
+    endPos: dest.position.clone(),
+    endQuat: dest.quaternion.clone(),
+    endFov: dest.fov,
+    endTarget: destTarget,
+    elapsed: 0,
+    duration: duration,
   }
 }
 
+window.play_animation = play_animation
+window.move_camera = move_camera
 
 let eventsIndex = 0
 function tickEvents(elapsedMs) {
+  if (!chunkedInput || !chunkedInput.ftimes || !chunkedInput.fns) return
   while (eventsIndex < chunkedInput.ftimes.length && elapsedMs >= chunkedInput.ftimes[eventsIndex]) {
-    let fn = chunkedInput.fns[eventsIndex]
-    fn = "move_camera({ from: '3', to: '1', duration: 3000 })"
+    const fn = chunkedInput.fns[eventsIndex]
     logg(fn, 'fn')
     eventsIndex++
     eval(fn)

@@ -26,7 +26,7 @@ require 'stripe'
 require "wco/engine"
 
 ACTIVE   = 'active'
-INACTIVE = 'inactive'
+INACTIVE = 'disabled'
 STATUSES = [ nil, ACTIVE, INACTIVE ]
 
 module Iro; end

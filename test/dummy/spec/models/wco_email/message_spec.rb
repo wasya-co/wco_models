@@ -91,7 +91,7 @@ RSpec.describe WcoEmail::Message do
       Wco::OfficeAction.all.last.status.should eql 'active'
       @message.apply_filter_action( build( :email_filter_action, kind: EFA::KIND_RM_OAT, aject: oat ))
       Wco::OfficeAction.all.count.should eql( n + 1 )
-      Wco::OfficeAction.all.last.status.should eql 'inactive'
+      Wco::OfficeAction.all.last.status.should eql 'disabled'
     end
 
   end

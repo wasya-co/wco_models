@@ -127,7 +127,7 @@ class WcoEmail::Message
       oa = Wco::OfficeAction.where({
         office_action_template: aject,
         lead: message.lead }).first
-      oa.update_attributes!({ status: 'inactive' })
+      oa.update_attributes!({ status: 'disabled' })
 
     end
   end

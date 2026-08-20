@@ -12,7 +12,7 @@ class WcoEmail::EmailAction
 
 
   STATUS_ACTIVE       = 'active'
-  STATUS_INACTIVE     = 'inactive'
+  STATUS_INACTIVE     = 'disabled'
   STATUS_TRASH        = 'trash'
   STATUS_UNSUBSCRIBED = 'unsubscribed'
   STATUSES            = [ nil, STATUS_ACTIVE, STATUS_INACTIVE, STATUS_UNSUBSCRIBED, STATUS_TRASH ]

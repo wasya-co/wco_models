@@ -37,6 +37,13 @@ class Wco::Newsoverlay
   field :start_at_ms, type: :integer, default: 0
   field :duration_ms, type: :integer, default: 0
 
+  STATUS_ACTIVE   = 'active'
+  STATUS_DISABLED = 'disabled'
+  field :status, type: :string, default: STATUS_ACTIVE
+  def self.active
+    where( status: STATUS_ACTIVE )
+  end
+
   delegate :duration_ms, to: :video
   delegate :name,        to: :video
 

@@ -18,5 +18,9 @@
     %label Start at ms
     = f.text_field :start_at_ms, value: newsoverlay.start_at_ms
 
+  .field
+    %label Active
+    = f.check_box :status, {}, Wco::Newsoverlay::STATUS_ACTIVE, Wco::Newsoverlay::STATUS_DISABLED
+
   .actions
     = f.submit 'Submit'

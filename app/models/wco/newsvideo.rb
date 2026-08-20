@@ -133,10 +133,10 @@ class Wco::Newsvideo
 
 
     ## overlays
-    if @newsvideo.newsoverlays.length > 0
+    if @newsvideo.newsoverlays.active.length > 0
       ## get overlays
       cmd = "cd #{Rails.root.join('tmp', @newsvideo.id)} ; "
-      @newsvideo.newsoverlays.each_with_index do |overlay, idx|
+      @newsvideo.newsoverlays.active.each_with_index do |overlay, idx|
         cmd = "#{cmd} wget -nc -O overlay_#{idx}.mp4 #{overlay.video.video.url} ; "
       end
       puts "+++ overlays cmd:"

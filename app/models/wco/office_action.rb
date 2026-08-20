@@ -17,7 +17,7 @@ class Wco::OfficeAction
   end
 
   STATUS_ACTIVE   = 'active'
-  STATUS_INACTIVE = 'inactive'
+  STATUS_INACTIVE = 'disabled'
   STATUSES        = [ STATUS_ACTIVE, STATUS_INACTIVE ]
   field :status, type: :string
   scope :active, ->{ where( status: STATUS_ACTIVE ) }

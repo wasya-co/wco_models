@@ -12,8 +12,11 @@ const logg = (a, b="", c=null) => {
 
 let avatar_brunette_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette/model.glb'
 let avatar_avaturn_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/avaturn/model.glb'
+// cute short-haired girl
 let avatar_45_url       = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb'
 let avatar_mula_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb'
+// works! male-x, buddy-y. Yes, it took me like 3 days to find a single good male avatar.
+let avatar_male_url     = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/buddy-y/model.glb'
 
 
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
@@ -25,7 +28,7 @@ let wave_url = 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talkin
 
 
 let avatar_1_url = avatar_brunette_url
-let avatar_2_url = avatar_45_url
+let avatar_2_url = avatar_male_url
 // let avatar_3_url = avatar_mula_url
 
 

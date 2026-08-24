@@ -10,13 +10,18 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
+// const AVATARS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars';
+const AVATARS_ROOT = 'https://localhost/vendor/models/avatars';
 const avatars = {
-  brunette: 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/brunette/model.glb',
-  mula: 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/mula/model.glb',
-  elena: 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/extra/45.glb', // short hair
-  buddy_y: 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/avatars/buddy-y/model.glb',
-  male_x: 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars/male_x/model.glb',
+  brunette: `${AVATARS_ROOT}/brunette/model.glb`,
+  cara: `${AVATARS_ROOT}/cara/model.glb`, // short hair
+  eve: `${AVATARS_ROOT}/eve/model.glb`, // poison green
+
+  denis: `${AVATARS_ROOT}/denis/model.glb`, // beard
+  gregor: `${AVATARS_ROOT}/gregor/model.glb`, // gray shirt
 }
+
+const AVATAR_STOR = 'avatar'
 $('select.avatar').each((idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {

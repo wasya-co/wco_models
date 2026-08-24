@@ -130,7 +130,7 @@ var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
 const loading = document.getElementById('loading')
-
+const status = document.getElementById('status')
 /*
 **/
 function point_camera_at_face(_camera, _head, targetKey) {
@@ -420,17 +420,16 @@ async function init() {
 
 
   $('select.avatar').on('change', async function() {
-    const uid = $(this).data('uid')
+    const uid = String($(this).data('uid'))
     const thisHead = heads_fn(uid)
-    const url = avatars[$(this).val()]
-    if (!thisHead || !url) return
-    loading.style.display = 'block'
+    const avatar = avatars[$(this).val()]
+    if (!thisHead || !avatar || !avatar.url) return
     loading.textContent = 'Loading...'
     try {
       if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
       await thisHead.showAvatar({
-        url,
-        body: 'F',
+        url: avatar.url,
+        body: avatar.type,
         avatarMood: 'neutral',
         lipsyncLang: 'en'
       }, (ev) => {
@@ -439,13 +438,13 @@ async function init() {
           loading.textContent = "Loading " + val + "%"
         }
       })
-      thisHead.armature.position.set(id === '1' ? 0 : 1, 0, 0)
+      thisHead.armature.position.set(uid === '1' ? 0 : 1, 0, 0)
       thisHead.armature.rotation.set(0, 0, 0)
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
-      point_camera_at_face(id === '1' ? camera_1 : camera_2, thisHead, id)
+      point_camera_at_face(uid === '1' ? camera_1 : camera_2, thisHead, uid)
       await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
-      loading.style.display = 'none'
+      loading.textContent = 'loaded'
     } catch (error) {
       console.log(error)
       loading.textContent = error.toString()
@@ -698,7 +697,7 @@ async function startSpeakCapture() {
   capturer = new CCapture( { format: 'webm', framerate: fps } )
   capturer.start()
   logg('capturer.start')
-  document.getElementById('status').textContent = 'capturing'
+  status.textContent = 'capturing'
   head.streamAudio(chunkedInput)
 }
 
@@ -726,10 +725,10 @@ function finishCapture() {
         method: 'POST',
         body: form,
       }).then(() => {
-        document.getElementById('status').textContent = 'finished'
+        status.textContent = 'finished'
       }).catch((error) => {
         console.log(error)
-        document.getElementById('status').textContent = 'save failed'
+        status.textContent = 'save failed'
       })
     })
   })

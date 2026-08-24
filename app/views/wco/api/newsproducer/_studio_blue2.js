@@ -13,12 +13,23 @@ const logg = (a, b="", c=null) => {
 // const AVATARS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars';
 const AVATARS_ROOT = 'https://localhost/vendor/models/avatars';
 const avatars = {
-  brunette: `${AVATARS_ROOT}/brunette/model.glb`,
-  cara: `${AVATARS_ROOT}/cara/model.glb`, // short hair
-  eve: `${AVATARS_ROOT}/eve/model.glb`, // poison green
+  brunette: {
+    url: `${AVATARS_ROOT}/brunette/model.glb`,
+    type: 'F',
+  },
+  cara: {
+    url: `${AVATARS_ROOT}/cara/model.glb`, // short hair
+    type: 'F',
+  },
+  eve: {
+    url: `${AVATARS_ROOT}/eve/model.glb`, // poison green
+    type: 'F',
+  },
 
-  denis: `${AVATARS_ROOT}/denis/model.glb`, // beard
-  gregor: `${AVATARS_ROOT}/gregor/model.glb`, // gray shirt
+  denis:  { type: 'M', url: `${AVATARS_ROOT}/denis/model.glb`  }, // beard
+  gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
+
+
 }
 
 const AVATAR_STOR = 'avatar'
@@ -56,14 +67,33 @@ import { TalkingHead } from "talkinghead"
 const params = new URLSearchParams(window.location.search)
 
 let config = {
-    sampleRate: 8000,
-    mood: 'neutral',
-    gain: 0.5,
-    lipsyncType: "visemes",
-    lipsyncLang: "en",
-    waitForAudioChunks: false,
-    enableMetrics: false,
-  }
+  sampleRate: 8000,
+  mood: 'neutral',
+  gain: 0.5,
+  lipsyncType: "visemes",
+  lipsyncLang: "en",
+  waitForAudioChunks: false,
+  enableMetrics: false,
+};
+
+const onMetrics = (which) => {
+  logg(which, 'onMetrics')
+}
+
+const onSubtitles = (which) => {
+  logg(which, 'onSubtitles')
+}
+const streamOpts = {
+  gain: config.gain,
+  lipsyncLang: config.lipsyncLang,
+  lipsyncType: config.lipsyncType,
+  metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false },
+  mood: config.mood,
+  sampleRate: config.sampleRate,
+  waitForAudioChunks: config.waitForAudioChunks,
+}
+
+
 let width = 854
 let height = 480
 let slug = '<ccapture>'
@@ -235,7 +265,7 @@ const animations_h = {
   talking_variation_4: 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx',
 }
 function play_animation(config) {
-  let this_head = heads()[config.avatar_id]
+  let this_head = heads_fn()[config.avatar_id]
   if (this_head) this_head.playAnimation(animations_h[config.animation_name])
 }
 
@@ -243,8 +273,8 @@ function move_camera(config) {
   const fromKey = String(config.from)
   const toKey = String(config.to)
   const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
-  const src = cameras()[fromKey] || camera_1
-  const dest = cameras()[toKey] || camera_1
+  const src = cameras_fn(fromKey)
+  const dest = cameras_fn(toKey)
   const startTarget = (cameraTargets[fromKey] || cameraTargets['1']).clone()
   const destTarget = (cameraTargets[toKey] || cameraTargets['1']).clone()
 
@@ -385,77 +415,43 @@ async function init() {
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
-  // head_3 = new TalkingHead( document.getElementById('avatar_3'), {
-  //   avatarOnly: true,
-  //   avatarOnlyScene: scene,
-  //   avatarOnlyCamera: camera,
-  //   lipsyncModules: ["en"],
-  //   dracoEnabled: true,
-  // })
 
 
-  try {
-    loading.textContent = "Loading..."
-    await head_1.showAvatar( {
-      url: avatars[ $('select.avatar-1').val() ],
-      body: 'F',
-      avatarMood: 'neutral',
-      lipsyncLang: 'en'
-    }, (ev) => {
-      if ( ev.lengthComputable ) {
-        let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
-        loading.textContent = "Loading " + val + "%"
-      }
-    })
-    await head_2.showAvatar( {
-      url: avatars[ $('select.avatar-2').val() ],
-      body: 'F',
-      avatarMood: 'neutral',
-      lipsyncLang: 'en'
-    }, (ev) => {
-      if ( ev.lengthComputable ) {
-        let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
-        loading.textContent = "Loading " + val + "%"
-      }
-    })
-    loading.style.display = 'none'
 
-    head_1.armature.position.set(0, 0, 0)
-    head_1.armature.rotation.set(0, 0, 0)
-    scene.add(head_1.armature)
-    put_feet_at_origin(head_1)
-    point_camera_at_face(camera_1, head_1, '1')
 
-    head_2.armature.position.set(1, 0, 0)
-    head_2.armature.rotation.set(0, 0, 0)
-    scene.add(head_2.armature)
-    put_feet_at_origin(head_2)
-    point_camera_at_face(camera_2, head_2, '2')
-
-    const onMetrics = (which) => {
-      logg(which, 'onMetrics')
+  $('select.avatar').on('change', async function() {
+    const uid = $(this).data('uid')
+    const thisHead = heads_fn(uid)
+    const url = avatars[$(this).val()]
+    if (!thisHead || !url) return
+    loading.style.display = 'block'
+    loading.textContent = 'Loading...'
+    try {
+      if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
+      await thisHead.showAvatar({
+        url,
+        body: 'F',
+        avatarMood: 'neutral',
+        lipsyncLang: 'en'
+      }, (ev) => {
+        if ( ev.lengthComputable ) {
+          let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
+          loading.textContent = "Loading " + val + "%"
+        }
+      })
+      thisHead.armature.position.set(id === '1' ? 0 : 1, 0, 0)
+      thisHead.armature.rotation.set(0, 0, 0)
+      scene.add(thisHead.armature)
+      put_feet_at_origin(thisHead)
+      point_camera_at_face(id === '1' ? camera_1 : camera_2, thisHead, id)
+      await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
+      loading.style.display = 'none'
+    } catch (error) {
+      console.log(error)
+      loading.textContent = error.toString()
     }
+  })
 
-    const onSubtitles = (which) => {
-      // logg(which)
-    }
-
-    const streamOpts = {
-      gain: config.gain,
-      lipsyncLang: config.lipsyncLang,
-      lipsyncType: config.lipsyncType,
-      metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false },
-      mood: config.mood,
-      sampleRate: config.sampleRate,
-      waitForAudioChunks: config.waitForAudioChunks,
-    }
-    await head_1.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
-    await head_2.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
-
-  } catch (error) {
-    console.log(error)
-    loading.textContent = error.toString()
-  }
 
 
   //
@@ -528,18 +524,37 @@ document.addEventListener('DOMContentLoaded', async function(e) {
   }
 })
 
-function cameras() {
-  return { '1': camera_1, '2': camera_2, '3': camera_3 }
+function cameras_fn(which) {
+  switch (which) {
+    case '1':
+      return camera_1
+    case '2':
+      return camera_2
+    case '3':
+      return camera_3
+    default:
+      logg('fpq - cameras_fn default - this should never happen')
+      return camera_1
+  }
 }
 
-function heads() {
-  return { '1': head_1, '2': head_2, '3': head_3 }
+function heads_fn(which) {
+  switch (which) {
+    case '1':
+      return head_1
+      break;
+    case '2':
+      return head_2
+      break;
+    default:
+      logg('fpp - heads_fn default - this should never happen')
+      return head_1
+  }
 }
 
 function setActiveHead(id) {
-  const key = String(id)
-  head = heads()[key] || head_1
-  persistHeadControl(key)
+  head = heads_fn(id)
+  persistHeadControl(id)
 }
 
 function easeInOutCubic(t) {
@@ -549,7 +564,7 @@ function easeInOutCubic(t) {
 function setActiveCamera(id, instant = false) {
   const key = String(id)
   persistCameraControl(key)
-  const dest = cameras()[key] || camera_1
+  const dest = cameras_fn(key)
   const destTarget = (cameraTargets[key] || cameraTargets['1']).clone()
   ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
     if (cam) {

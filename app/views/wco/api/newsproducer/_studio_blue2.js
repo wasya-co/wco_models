@@ -50,6 +50,16 @@ let gestures = {
   },
 }
 
+$('select.gestures').each((_idx, el) => {
+  const $select = $(el)
+  $.each(gestures, function(name) {
+    $('<option>', {
+      value: name,
+      text: name,
+    }).appendTo($select)
+  })
+})
+
 
 import * as THREE from 'three'
 
@@ -731,7 +741,7 @@ function finishCapture() {
 
 
 // Speak when clicked
-document.getElementById('speak').addEventListener('click', async function () {
+$('#speak').on('click', async () => {
   try {
     await startSpeakCapture()
   } catch (error) {
@@ -742,7 +752,7 @@ document.getElementById('speak').addEventListener('click', async function () {
   }
 })
 
-document.getElementById('jest').addEventListener('click', async function () {
+$('#jesture').on('click', async () => {
   try {
     if (!head) return
     head.playAnimation(wave_url)

@@ -32,7 +32,7 @@ const avatars = {
 
 }
 
-const AVATAR_STOR = 'avatar'
+const AVATAR_STOR = 'wco.studio_blue.avatar'
 $('select.avatar').each((idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {
@@ -41,7 +41,12 @@ $('select.avatar').each((idx, el) => {
       text: name,
     }).appendTo($select)
   })
-  $('body .heads').append($select)
+  try {
+    const saved = localStorage.getItem(`${AVATAR_STOR}-${$select.data('uid')}`)
+    if (saved && avatars[saved]) $select.val(saved)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 
@@ -357,7 +362,7 @@ async function init() {
   }
 
   scene = new THREE.Scene()
-  scene.background = new THREE.Color(0xd3d3d3)
+  scene.background = new THREE.Color(0x333333) // new THREE.Color(0xd3d3d3)
 
   /* fov — Camera frustum vertical field of view.
    * aspect — Camera frustum aspect ratio.
@@ -424,6 +429,7 @@ async function init() {
     const thisHead = heads_fn(uid)
     const avatar = avatars[$(this).val()]
     if (!thisHead || !avatar || !avatar.url) return
+    localStorage.setItem(`${AVATAR_STOR}-${uid}`, $(this).val())
     loading.textContent = 'Loading...'
     try {
       if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
@@ -450,6 +456,7 @@ async function init() {
       loading.textContent = error.toString()
     }
   })
+  $('select.avatar').trigger('change')
 
 
 

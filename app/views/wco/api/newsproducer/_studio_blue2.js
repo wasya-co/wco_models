@@ -10,30 +10,20 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
+const MODELS_ROOT = 'https://localhost/vendor/models';
 // const AVATARS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars';
 const AVATARS_ROOT = 'https://localhost/vendor/models/avatars';
 const avatars = {
-  brunette: {
-    url: `${AVATARS_ROOT}/brunette/model.glb`,
-    type: 'F',
-  },
-  cara: {
-    url: `${AVATARS_ROOT}/cara/model.glb`, // short hair
-    type: 'F',
-  },
-  eve: {
-    url: `${AVATARS_ROOT}/eve/model.glb`, // poison green
-    type: 'F',
-  },
+  brunette: { type: 'F', url: `${AVATARS_ROOT}/brunette/model.glb` },
+  cara:     { type: 'F', url: `${AVATARS_ROOT}/cara/model.glb` }, // short hair
+  eve:      { type: 'F', url: `${AVATARS_ROOT}/eve/model.glb` }, // poison green
 
   denis:  { type: 'M', url: `${AVATARS_ROOT}/denis/model.glb`  }, // beard
   gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
-
-
 }
 
 const AVATAR_STOR = 'wco.studio_blue.avatar'
-$('select.avatar').each((idx, el) => {
+$('select.avatar').each((_idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {
     $('<option>', {
@@ -49,16 +39,16 @@ $('select.avatar').each((idx, el) => {
   }
 })
 
-
-
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
 
-// let wave_url = "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@main/animations/walking.fbx"
-// let wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/F_Crouch_Strafe_Left.fbx'
-let wave_url = 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx'
-// let wave_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/animations/catwalk.fbx'
-
-
+let gestures = {
+  talking_1: (head) => {
+    return `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${head.type}_Talking_Variations_001.fbx`
+  },
+  talking_4: (head) => {
+    return 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx'
+  },
+}
 
 
 import * as THREE from 'three'
@@ -266,12 +256,10 @@ function syncLightsFromControls() {
   persistLightControls()
 }
 
-const animations_h = {
-  talking_variation_4: 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx',
-}
 function play_animation(config) {
+  logg(config, 'my play_animation()')
   let this_head = heads_fn()[config.avatar_id]
-  if (this_head) this_head.playAnimation(animations_h[config.animation_name])
+  if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
 }
 
 function move_camera(config) {
@@ -754,7 +742,7 @@ document.getElementById('speak').addEventListener('click', async function () {
   }
 })
 
-document.getElementById('wave').addEventListener('click', async function () {
+document.getElementById('jest').addEventListener('click', async function () {
   try {
     if (!head) return
     head.playAnimation(wave_url)

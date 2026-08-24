@@ -25,6 +25,7 @@ class Wco::Api::NewsproducerController < Wco::ApiController
   def studio_blue
     authorize! :home, Wco
     @newspartial = Wco::Newspartial.find params[:newspartial_id] rescue nil
+    render 'studio_blue2'
   end
 
   def studio_green

@@ -10,162 +10,124 @@ function find_touch(touch_list, id) {
 
 function RotationPad(container) {
 
-	var mouseDown = false;
-	var mouseStopped = false;
-	var mouseStopTimeout, eventRepeatTimeout;
-	var newLeft, newTop, distance, angle;
-	var self = this;
+	var mouseDown = false
+	var last_x = 0
+	var last_y = 0
+	var self = this
 
-	self.container = container;
-	self.regionData = {};
-	self.handleData = {};
-	self.rotationPad = $('<div class="rotation-pad"></div>');
-	self.region = $('<div class="region"></div>');
-	self.handle = $('<div class="handle"></div>');
+	self.container = container
+	self.rotationPad = $('<div class="rotation-pad"></div>')
+	self.region = $('<div class="region"></div>')
+	self.handle = $('<div class="handle"></div>')
 
-	self.rotationPad.append(self.region).append(self.handle);
-	self.container.append(self.rotationPad);
-
-	self.regionData.width = self.region.outerWidth();
-	self.regionData.height = self.region.outerHeight();
-	self.regionData.position = self.region.position();
-	self.regionData.offset = self.region.offset();
-	self.regionData.radius = self.regionData.width / 2;
-	self.regionData.centerX = self.regionData.position.left + self.regionData.radius;
-	self.regionData.centerY = self.regionData.position.top + self.regionData.radius;
-
-	self.handleData.width = self.handle.outerWidth();
-	self.handleData.height = self.handle.outerHeight();
-	self.handleData.radius = self.handleData.width / 2;
-
-	self.regionData.radius = self.regionData.width / 2 - self.handleData.radius;
+	self.rotationPad.append(self.region).append(self.handle)
+	self.container.append(self.rotationPad)
 
 	var touch_id = null
 	var ignore_mouse_until = 0
 
-	function begin_input(pageX, pageY) {
-		self.regionData.offset = self.region.offset();
-		mouseDown = true;
-		self.handle.css("opacity", "1.0");
-		update(pageX, pageY);
+	function container_rect() {
+		return self.container[0].getBoundingClientRect()
+	}
+
+	function in_look_zone(clientX, clientY) {
+		var rect = container_rect()
+		var x = clientX - rect.left
+		var y = clientY - rect.top
+		return x >= rect.width / 2 && x <= rect.width && y >= rect.height / 2 && y <= rect.height
+	}
+
+	function place_pad(clientX, clientY) {
+		var rect = container_rect()
+		var w = self.rotationPad.outerWidth()
+		var h = self.rotationPad.outerHeight()
+		self.rotationPad.css({
+			left: clientX - rect.left - w / 2,
+			top: clientY - rect.top - h / 2
+		})
+	}
+
+	function begin_input(clientX, clientY) {
+		mouseDown = true
+		last_x = clientX
+		last_y = clientY
+		self.rotationPad.addClass('is-active')
+		place_pad(clientX, clientY)
 	}
 
 	function end_input() {
 		if (!mouseDown && touch_id === null) return
 		mouseDown = false
 		touch_id = null
-		self.resetHandlePosition()
+		self.rotationPad.removeClass('is-active')
 	}
 
-	// Mouse events:
-	self.region.on("mousedown", function (event) {
-		if (touch_id !== null || Date.now() < ignore_mouse_until) return
-		event.preventDefault();
-		begin_input(event.pageX, event.pageY);
-	});
-
-	$(document).on("mouseup", function () {
-		if (touch_id !== null) return
-		end_input()
-	});
-
-	$(document).on("mousemove", function(event) {
-		if (touch_id !== null || !mouseDown) return;
-		update(event.pageX, event.pageY);
-	});
-
-	//Touch events:
-	self.region.on("touchstart", function (event) {
-		event.preventDefault();
-		if (touch_id !== null) return
-		var touch = event.originalEvent.changedTouches[0]
-		if (!touch) return
-		touch_id = touch.identifier
-		ignore_mouse_until = Date.now() + 700
-		begin_input(touch.pageX, touch.pageY);
-	});
-
-	$(document).on("touchmove", function(event) {
-		if (touch_id === null) return
-		var touch = find_touch(event.originalEvent.touches, touch_id)
-		if (!touch) return
-		update(touch.pageX, touch.pageY)
-	});
-
-	$(document).on("touchend touchcancel", function (event) {
-		if (touch_id === null) return
-		if (!find_touch(event.originalEvent.changedTouches, touch_id)) return
-		ignore_mouse_until = Date.now() + 700
-		end_input()
-	});
-
-
-	function update(pageX, pageY) {
-		newLeft = (pageX - self.regionData.offset.left);
-		newTop = (pageY - self.regionData.offset.top);
-
-		// If handle reaches the pad boundaries.
-		distance = Math.pow(self.regionData.centerX - newLeft, 2) + Math.pow(self.regionData.centerY - newTop, 2);
-		if (distance > Math.pow(self.regionData.radius, 2)) {
-			angle = Math.atan2((newTop - self.regionData.centerY), (newLeft - self.regionData.centerX));
-			newLeft = (Math.cos(angle) * self.regionData.radius) + self.regionData.centerX;
-			newTop = (Math.sin(angle) * self.regionData.radius) + self.regionData.centerY;
-		}
-		newTop = Math.round(newTop * 10) / 10;
-		newLeft = Math.round(newLeft * 10) / 10;
-
-		self.handle.css({
-			top: newTop - self.handleData.radius,
-			left: newLeft - self.handleData.radius
-		});
-		// console.log(newTop , newLeft);
-
-		// Providing event and data for handling camera movement.
-		var deltaX = self.regionData.centerX - parseInt(newLeft);
-		var deltaY = self.regionData.centerY - parseInt(newTop);
-		// Normalize x,y between -2 to 2 range.
-		deltaX = -2 + (2+2) * (deltaX - (-self.regionData.radius)) / (self.regionData.radius - (-self.regionData.radius));
-		deltaY = -2 + (2+2) * (deltaY - (-self.regionData.radius)) / (self.regionData.radius - (-self.regionData.radius));
-		deltaX = -1 * Math.round(deltaX * 10) / 10;
-		deltaY = -1 * Math.round(deltaY * 10) / 10;
-		// console.log(deltaX, deltaY);
-
-		sendEvent(deltaX, deltaY);
-	}
-
-	function sendEvent(dx, dy) {
-		if (!mouseDown) {
-			clearTimeout(eventRepeatTimeout);
-			return;
-		}
-
-		clearTimeout(eventRepeatTimeout);
-		eventRepeatTimeout = setTimeout(function() {
-			sendEvent(dx, dy);
-		}, 5);
-
+	function move_input(clientX, clientY) {
+		var dx = clientX - last_x
+		var dy = clientY - last_y
+		last_x = clientX
+		last_y = clientY
+		place_pad(clientX, clientY)
+		if (dx === 0 && dy === 0) return
 		var moveEvent = $.Event("YawPitch", {
 			detail: {
 				"deltaX": dx,
 				"deltaY": dy
 			},
 			bubbles: false
-		});
-		$(self).trigger(moveEvent);
+		})
+		$(self).trigger(moveEvent)
 	}
 
-	self.resetHandlePosition();
-};
+	self.container.on("mousedown", function (event) {
+		if (touch_id !== null || Date.now() < ignore_mouse_until) return
+		if ($(event.target).closest('.movement-pad').length) return
+		if (!in_look_zone(event.clientX, event.clientY)) return
+		event.preventDefault()
+		begin_input(event.clientX, event.clientY)
+	})
+
+	$(document).on("mouseup", function () {
+		if (touch_id !== null) return
+		end_input()
+	})
+
+	$(document).on("mousemove", function(event) {
+		if (touch_id !== null || !mouseDown) return
+		move_input(event.clientX, event.clientY)
+	})
+
+	self.container.on("touchstart", function (event) {
+		if (touch_id !== null) return
+		if ($(event.target).closest('.movement-pad').length) return
+		var touch = event.originalEvent.changedTouches[0]
+		if (!touch) return
+		if (!in_look_zone(touch.clientX, touch.clientY)) return
+		event.preventDefault()
+		touch_id = touch.identifier
+		ignore_mouse_until = Date.now() + 700
+		begin_input(touch.clientX, touch.clientY)
+	})
+
+	$(document).on("touchmove", function(event) {
+		if (touch_id === null) return
+		var touch = find_touch(event.originalEvent.touches, touch_id)
+		if (!touch) return
+		move_input(touch.clientX, touch.clientY)
+	})
+
+	$(document).on("touchend touchcancel", function (event) {
+		if (touch_id === null) return
+		if (!find_touch(event.originalEvent.changedTouches, touch_id)) return
+		ignore_mouse_until = Date.now() + 700
+		end_input()
+	})
+
+}
 
 RotationPad.prototype = {
-	resetHandlePosition: function () {
-		this.handle.animate({
-			top: this.regionData.centerY - this.handleData.radius,
-			left: this.regionData.centerX - this.handleData.radius,
-			opacity: 0.1
-		}, "fast");
-	}
-};
+	resetHandlePosition: function () {}
+}
 
 function MovementPad(container) {
 

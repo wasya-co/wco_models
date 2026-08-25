@@ -1,9 +1,13 @@
 .rotation-pad {
 	position: absolute;
-	bottom: 10px;
-	right: 20px;
+	display: none;
 	z-index: 10;
+	pointer-events: none;
 	touch-action: none;
+}
+
+.rotation-pad.is-active {
+	display: block;
 }
 
 .rotation-pad .region {
@@ -23,12 +27,13 @@
 .rotation-pad .handle {
 	z-index: 1;
 	pointer-events: none;
-	opacity: 0.1;
+	opacity: 0.7;
 	position: absolute;
 	height: 30px;
 	width: 30px;
-	top: 0px;
-	left: 0px;
+	top: 50%;
+	left: 50%;
+	margin: -15px 0 0 -15px;
 	background: radial-gradient(rgba(215, 225, 255, 0.70) 0%, rgba(215, 225, 255, 0.50) 100%);
 	/*border: 1px solid rgba(145, 105, 245, 0.90);*/
 	border-radius: 50%;

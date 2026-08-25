@@ -4,6 +4,6 @@
 3.3.0 :: 2025-12-31 :: newsvideos generation. many changes
 3.3.1 :: 2026-03-24 :: groking email_filters but importantly,
                        removing keycloak b/c of annesque_email.
+3.4.0 :: 2026-08-25 :: lets rewrite the touchcontrols, to not move if fingers are not moving
 
-4.0.0 will be ruby 3.4.2 version.
 

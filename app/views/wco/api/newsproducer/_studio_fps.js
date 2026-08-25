@@ -577,13 +577,15 @@ function enable_touch_controls() {
   playerCollider.end.copy( pos )
   playerCollider.start.set( pos.x, pos.y - 0.65, pos.z )
   apply_touch_pose()
-  $( '.movement-pad, .rotation-pad' ).show()
+  $( '.movement-pad' ).show()
+  $( '.rotation-pad' ).removeClass('is-active').css('display', '')
 }
 
 function disable_touch_controls() {
   if ( !touch_controls ) return
   touch_controls.enabled = false
-  $( '.movement-pad, .rotation-pad' ).hide()
+  $( '.movement-pad' ).hide()
+  $( '.rotation-pad' ).removeClass('is-active').css('display', '')
   playerCollider.end.copy( camera.position )
   playerCollider.start.set( camera.position.x, camera.position.y - 0.65, camera.position.z )
 }

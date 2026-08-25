@@ -10,7 +10,7 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-const MODELS_ROOT = 'https://localhost/vendor/models'
+const MODELS_ROOT = '/vendor/models'
 let scenes = {
   collision_world: {
     url: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,

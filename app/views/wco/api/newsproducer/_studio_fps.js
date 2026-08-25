@@ -10,6 +10,11 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
+let width = 854
+let height = 480
+let slug = '<ccapture>'
+const fps = 30
+
 
 import * as THREE from 'three';
 
@@ -31,7 +36,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x88ccee );
 scene.fog = new THREE.Fog( 0x88ccee, 0, 50 );
 
-const camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera( 70, width / height, 0.1, 1000 );
 camera.rotation.order = 'YXZ';
 
 const fillLight1 = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
@@ -57,7 +62,7 @@ const container = document.getElementById( 'rotatingC' );
 
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( width, height );
 renderer.setAnimationLoop( animate );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
@@ -155,10 +160,10 @@ window.addEventListener( 'resize', onWindowResize );
 
 function onWindowResize() {
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( width, height );
 
 }
 

@@ -147,7 +147,7 @@ const streamOpts = {
 let width = 854
 let height = 480
 let slug = '<ccapture>'
-const fps = 24
+const fps = 30
 
 let frame = 0
 let lastAnimTime = 0

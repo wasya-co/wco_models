@@ -44,8 +44,11 @@ let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/ve
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
   talking_4: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_004.fbx`,
-  walk: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx`,
+  walk_1: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_001.fbx`,
+  walk_2: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx`,
 }
+
+const WALK_SPEED = 2.05
 
 let u_positions = {
   '1': [0, 0, 0],
@@ -266,6 +269,16 @@ function syncLightsFromControls() {
     if (light) light.visible = input.checked
   })
   persistLightControls()
+}
+
+function update_walk(this_head, dt) {
+  if (!this_head || !this_head.walking || !this_head.mixer || !this_head.armature) return
+  const dir = new THREE.Vector3()
+  this_head.armature.getWorldDirection(dir)
+  dir.y = 0
+  if (dir.lengthSq() === 0) return
+  dir.normalize()
+  this_head.armature.position.addScaledVector(dir, WALK_SPEED * dt / 1000)
 }
 
 function play_animation(config) {
@@ -671,6 +684,9 @@ function animate() {
   if (head_1) head_1.animate(dt)
   if (head_2) head_2.animate(dt)
   if (head_3) head_3.animate(dt)
+  update_walk(head_1, dt)
+  update_walk(head_2, dt)
+  update_walk(head_3, dt)
   updateCameraTransition(dt)
   if (!cameraTransition && !capturing) controls.update()
   renderer.render( scene, camera )
@@ -687,10 +703,7 @@ function animate() {
 async function startSpeakCapture() {
   if (capturing) return
   if (!head) return
-  if (!chunkedInput) {
-    console.log('no chunkedInput')
-    return
-  }
+  if (!chunkedInput) return
 
   const last = chunkedInput.wtimes.length - 1
   const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
@@ -757,7 +770,9 @@ $('#speak').on('click', async () => {
 $('#jesture').on('click', async () => {
   try {
     if (!head) return
-    const _anim = gestures[ $('select.gestures').val() ](head.avatar)
+    const name = $('select.gestures').val()
+    const _anim = gestures[name](head.avatar)
+    head.walking = name === 'walk'
     head.playAnimation( _anim )
   } catch (error) {
     console.log(error)

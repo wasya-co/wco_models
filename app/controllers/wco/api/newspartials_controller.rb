@@ -47,7 +47,7 @@ class Wco::Api::NewspartialsController < Wco::ApiController
   ## syncronous, everyone waits.
   def generate_speech
     @newspartial = Wco::Newspartial.unscoped.find params[:id]
-    @newspartial.generate_speech
+    @newspartial.generate_speech( voice: params[:voice] )
     render json: { status: :ok }
   end
 

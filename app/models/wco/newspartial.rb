@@ -63,22 +63,25 @@ class Wco::Newspartial
     duration = config['vtimes'].last.to_i + config['vdurations'].last.to_i rescue 0
   end
 
-  def generate_speech
+  ## "am_fenrir", ## good
+  ## "af_bella" ## bad
+  ## "af_jessica", ## good
+  def generate_speech( voice: 'af_bella' )
     out = HTTParty.post( "#{Wco::Setting.get('HEAD_TTS_ORIGIN')}/v1/synthesize",
       headers: {
         'Content-Type' => 'application/json',
         'Accept' => 'application/json',
       }, body: {
         input: body,
-        # voice: "am_fenrir", # good?
-        # "af_bella" # bad
-        voice: "af_jessica", # good
+
+        voice: voice,
+
         language: "en-us",
         audioEncoding: "wav",
       }.to_json
     );
     out = out.body
-    puts! out, 'out'
+    # puts! out, 'out'
 
     self[:config_json] = out
     tmp = JSON.parse( out )

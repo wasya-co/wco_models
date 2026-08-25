@@ -10,15 +10,26 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-let width = 854
-let height = 480
+let width = 50 // 854
+let height = 50 // 480
+function is_mobile() {
+  return window.matchMedia('(max-width: 768px)').matches || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
+function size_canvas() {
+  if (is_mobile()) {
+    width = Math.round(window.innerWidth * 0.8)
+    height = Math.round(window.innerHeight * 0.8)
+  } else {
+    width = 854
+    height = 480
+  }
+}
+size_canvas()
 let slug = '<ccapture>'
 const fps = 30
 
 
 import * as THREE from 'three';
-
-import Stats from 'three/addons/libs/stats.module.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -26,8 +37,6 @@ import { Octree } from 'three/addons/math/Octree.js';
 import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
 
 import { Capsule } from 'three/addons/math/Capsule.js';
-
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 const timer = new THREE.Timer();
 timer.connect( document );
@@ -59,6 +68,8 @@ directionalLight.shadow.bias = - 0.00006;
 scene.add( directionalLight );
 
 const container = document.getElementById( 'rotatingC' );
+container.style.width = width + 'px'
+container.style.height = height + 'px'
 
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setPixelRatio( window.devicePixelRatio );
@@ -68,11 +79,6 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 container.appendChild( renderer.domElement );
-
-const stats = new Stats();
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.top = '0px';
-container.appendChild( stats.domElement );
 
 const GRAVITY = 30;
 
@@ -160,10 +166,12 @@ window.addEventListener( 'resize', onWindowResize );
 
 function onWindowResize() {
 
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize( width, height );
+  size_canvas()
+  container.style.width = width + 'px'
+  container.style.height = height + 'px'
+  camera.aspect = width / height
+  camera.updateProjectionMatrix()
+  renderer.setSize( width, height )
 
 }
 
@@ -434,14 +442,6 @@ loader.load( '000mb collision-world/collision-world.glb', ( gltf ) => {
   helper.visible = false;
   scene.add( helper );
 
-  const gui = new GUI( { width: 200 } );
-  gui.add( { debug: false }, 'debug' )
-    .onChange( function ( value ) {
-
-      helper.visible = value;
-
-    } );
-
 } );
 
 function teleportPlayerIfOob() {
@@ -481,8 +481,6 @@ function animate() {
   }
 
   renderer.render( scene, camera );
-
-  stats.update();
 
 }
 

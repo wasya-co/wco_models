@@ -12,35 +12,15 @@ const logg = (a, b="", c=null) => {
 
 const MODELS_ROOT = '/vendor/models'
 let scenes = {
-  collision_world: {
-    url: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,
-  },
-  skybox_1: {
-    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
-    height: 30,
-  },
-  studio_tron: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
-  },
-  room_1: {
-    height: 6,
-    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
-  },
-  studio_blue: {
-    height: 4.3,
-    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
-  },
-  purple_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
-  },
-  red_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
-  },
-  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
+  collision_world: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,
+  skybox_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb` },
+  room_1: { height: 6, url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb` },
+  mountain_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb lowpoly-mountain/scene.glb` },
+  meshy_3: { height: 30, url: `${MODELS_ROOT}/scenes/004mb meshy-scene-3/scene.glb` },
+  newsroom_green: { height: 3.3, url: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb` },
   rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
+
+  white_park: { height: 10, name: '003mb white_park' },
 }
 const SCENE_STOR = 'studio'
 $.each(scenes, (name) => {
@@ -504,8 +484,13 @@ function rescale(model, config) {
 }
 
 function scene_cfg(s) {
-  if (typeof s === 'string') return { url: s, height: 3.3 }
-  return { url: s.url, height: s.height }
+  if (typeof s === 'string') {
+    return { url: s } // , height: 3.3 }
+  }
+  if (typeof s.name === 'string') {
+    return { url: `${MODELS_ROOT}/scenes/${s.name}/scene.glb` }
+  }
+  return s
 }
 
 function apply_studio_mesh(root) {

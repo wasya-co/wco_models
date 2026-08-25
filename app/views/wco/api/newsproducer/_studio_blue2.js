@@ -42,12 +42,14 @@ $('select.avatar').each((_idx, el) => {
 let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
 
 let gestures = {
-  talking_1: (head) => {
-    return `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${head.type}_Talking_Variations_001.fbx`
-  },
-  talking_4: (head) => {
-    return 'https://wco-drupal-prod.s3.amazonaws.com/public/2026-08/F_Talking_Variations_004.fbx'
-  },
+  talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
+  talking_4: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_004.fbx`,
+  walk: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx`,
+}
+
+let u_positions = {
+  '1': [0, 0, 0],
+  '2': [1, 0, 0],
 }
 
 $('select.gestures').each((_idx, el) => {
@@ -442,10 +444,10 @@ async function init() {
           loading.textContent = "Loading " + val + "%"
         }
       })
-      thisHead.armature.position.set(uid === '1' ? 0 : 1, 0, 0)
       thisHead.armature.rotation.set(0, 0, 0)
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
+      thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
       point_camera_at_face(uid === '1' ? camera_1 : camera_2, thisHead, uid)
       await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
       loading.textContent = 'loaded'
@@ -755,7 +757,8 @@ $('#speak').on('click', async () => {
 $('#jesture').on('click', async () => {
   try {
     if (!head) return
-    head.playAnimation(wave_url)
+    const _anim = gestures[ $('select.gestures').val() ](head.avatar)
+    head.playAnimation( _anim )
   } catch (error) {
     console.log(error)
   }

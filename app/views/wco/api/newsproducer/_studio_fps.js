@@ -181,6 +181,37 @@ door.castShadow = true
 door.receiveShadow = true
 scene.add( door )
 
+function door_label_texture( text ) {
+  const canvas = document.createElement( 'canvas' )
+  canvas.width = 512
+  canvas.height = 256
+  const ctx = canvas.getContext( '2d' )
+  ctx.fillStyle = '#ffffff'
+  ctx.font = 'bold 96px sans-serif'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText( text, 256, 128 )
+  const tex = new THREE.CanvasTexture( canvas )
+  tex.needsUpdate = true
+  return tex
+}
+
+const door_label_mat = new THREE.MeshBasicMaterial( {
+  map: door_label_texture( 'room-1' ),
+  transparent: true,
+  side: THREE.DoubleSide,
+  depthWrite: false
+} )
+const door_label_geo = new THREE.PlaneGeometry( DOOR_W * 0.85, 0.45 )
+function add_door_label( z ) {
+  const plane = new THREE.Mesh( door_label_geo, door_label_mat )
+  plane.position.set( 0, 0.25, z )
+  door.add( plane )
+  return plane
+}
+add_door_label( DOOR_D / 2 + 0.006 )
+add_door_label( -( DOOR_D / 2 + 0.006 ) ).rotation.y = Math.PI
+
 const aim_ray = new THREE.Raycaster()
 const aim_dir = new THREE.Vector3()
 const door_box = new THREE.Box3()

@@ -333,7 +333,9 @@ function TouchControls(container, camera, options) {
 	self.scene = null;
 	self.fpsBody = new THREE.Object3D();
 	self.fpsBody.add(cameraHolder);
-	self.enabled = true;
+	self.enabled = true
+	self.stick_x = 0
+	self.stick_y = 0;
 
 	self.mouse = new THREE.Vector2();
 
@@ -347,6 +349,8 @@ function TouchControls(container, camera, options) {
 	// Creating movement pad:
 	self.movementPad = new MovementPad(container);
 	$(self.movementPad).on("move", function(event) {
+		self.stick_x = -event.detail.deltaX / 2
+		self.stick_y = event.detail.deltaY / 2
 		ztouch = Math.abs(event.detail.deltaY);
 		xtouch = Math.abs(event.detail.deltaX);
 
@@ -380,6 +384,8 @@ function TouchControls(container, camera, options) {
 	});
 	$(self.movementPad).on("stopMove", function(event) {
 		ztouch = xtouch = 1;
+		self.stick_x = 0
+		self.stick_y = 0
 		moveForward = moveBackward = moveLeft = moveRight = false;
 	});
 

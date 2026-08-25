@@ -92,6 +92,8 @@ let touch_controls = null
 const GRAVITY = 30
 let walk_speed = 12
 const AIR_SPEED_FACTOR = 0.32
+let strafe_factor = 0.22
+let strafe_deadzone = 0.35
 
 const NUM_SPHERES = 100;
 const SPHERE_RADIUS = 0.2;
@@ -479,21 +481,17 @@ function teleportPlayerIfOob() {
 function touch_pad_controls( deltaTime ) {
 
   const speedDelta = deltaTime * ( playerOnFloor ? walk_speed : walk_speed * AIR_SPEED_FACTOR )
+  const fwd = touch_controls.stick_y
+  let side = touch_controls.stick_x
+  if ( Math.abs( side ) < strafe_deadzone ) side = 0
+  side *= strafe_factor
 
-  if ( touch_controls.moveForward() ) {
-    playerVelocity.add( getForwardVector().multiplyScalar( speedDelta ) )
+  if ( fwd ) {
+    playerVelocity.add( getForwardVector().multiplyScalar( speedDelta * fwd ) )
   }
 
-  if ( touch_controls.moveBackward() ) {
-    playerVelocity.add( getForwardVector().multiplyScalar( - speedDelta ) )
-  }
-
-  if ( touch_controls.moveLeft() ) {
-    playerVelocity.add( getSideVector().multiplyScalar( - speedDelta ) )
-  }
-
-  if ( touch_controls.moveRight() ) {
-    playerVelocity.add( getSideVector().multiplyScalar( speedDelta ) )
+  if ( side ) {
+    playerVelocity.add( getSideVector().multiplyScalar( speedDelta * side ) )
   }
 
 }

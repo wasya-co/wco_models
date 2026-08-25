@@ -32,5 +32,9 @@ class Wco::Api::NewsproducerController < Wco::ApiController
     authorize! :home, Wco
   end
 
+  def studio_fps
+    authorize! :home, Wco
+  end
+
 end
 

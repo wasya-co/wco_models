@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Studio Blue</title>
+    <title>Studio Any</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" >
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -21,7 +21,7 @@
   {
     "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
-    "talkinghead": "https://cdn.jsdelivr.net/gh/met4citizen/TalkingHead@1.7/modules/talkinghead.mjs"
+    "talkinghead": "https://cdn.jsdelivr.net/gh/wasya-co/TalkingHead@1.7.1/modules/talkinghead.mjs"
   }
 }
 </script>
@@ -35,7 +35,7 @@
 
     <div class='d-flex ctrl-row header-row'>
       <div class='item'>
-        <b>Studio Blue</b>
+        <select class='studio'>
         <em>Status:</em><span id='status'>pending</span>
 
       </div>
@@ -61,7 +61,7 @@
         <button id='speak'>Speak</button>
       </div>
       <div class='item'>
-        <select class='gestures' ></select>
+        <select class='gestures' ><option></option></select>
         <button id='jesture'>Jesture</button>
       </div>
     </div>

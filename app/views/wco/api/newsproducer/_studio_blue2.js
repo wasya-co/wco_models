@@ -39,14 +39,33 @@ $('select.avatar').each((_idx, el) => {
   }
 })
 
-let scene_url  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.2.0/public/vendor/models/scenes/001mb newsroom_green/scene.glb'
+let scenes = {
+  skybox_1:    `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
+  studio_tron: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
+  room_1:      `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
+  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+
+  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
+  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
+}
+let scene_url  =  scenes.rick_and_morty_garage
 
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
   talking_4: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_004.fbx`,
   walk_1: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_001.fbx`,
   walk_2: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx`,
-}
+
+  sitting: (a) => `${MODELS_ROOT}/animations/Sitting.fbx`,
+  sit_to_stand: (a) => `${MODELS_ROOT}/animations/Sit To Stand.fbx`,
+  stand_to_sit: (a) => `${MODELS_ROOT}/animations/Stand To Sit.fbx`,
+
+  entering_car: (a) => `${MODELS_ROOT}/animations/Entering Car.fbx`,
+  slow_run: (a) => `${MODELS_ROOT}/animations/Slow Run.fbx`,
+};
 
 const WALK_SPEED = 2.05
 
@@ -283,11 +302,11 @@ function update_walk(this_head, dt) {
   this_head.armature.position.addScaledVector(dir, WALK_SPEED * dt / 1000)
 }
 
-function play_animation(config) {
-  logg(config, 'my play_animation()')
-  let this_head = heads_fn()[config.avatar_id]
-  if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
-}
+// function play_animation(config) {
+//   logg(config, 'my play_animation()')
+//   let this_head = heads_fn()[config.avatar_id]
+//   if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
+// }
 
 function cut_to(key) {
   const radio = document.querySelector(`input[name=camera][value="${key}"]`)
@@ -344,7 +363,7 @@ function move_camera(config) {
   }
 }
 
-window.play_animation = play_animation
+// window.play_animation = play_animation
 window.move_camera = move_camera
 window.cut_to = cut_to
 

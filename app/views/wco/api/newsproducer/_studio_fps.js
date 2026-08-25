@@ -236,7 +236,7 @@ function door_label_texture( text ) {
 }
 
 function make_door( marker ) {
-  const name = marker.name || marker.label || ''
+  const name = marker.label || marker.name
   const pos = marker.position || {}
   const rot = marker.rotation || {}
   const mat = new THREE.MeshLambertMaterial( { color: door_color } )
@@ -415,11 +415,19 @@ function check_door_portal() {
   door_inside = hit || null
 }
 
+function door_from_hit( obj ) {
+  while ( obj ) {
+    if ( doors.indexOf( obj ) !== -1 ) return obj
+    obj = obj.parent
+  }
+  return null
+}
+
 function update_door_aim() {
   camera.getWorldDirection( aim_dir )
   aim_ray.set( camera.position, aim_dir )
-  const hits = aim_ray.intersectObjects( doors )
-  const aimed = hits.length ? hits[0].object : null
+  const hits = aim_ray.intersectObjects( doors, true )
+  const aimed = hits.length ? door_from_hit( hits[0].object ) : null
   doors.forEach( d => {
     const mat = d.userData.door_mat
     if ( d === aimed ) {
@@ -800,6 +808,8 @@ async function load_studio(s) {
   studio = gltf.scene
   if (cfg.height) rescale(studio, { height: cfg.height })
   apply_studio_mesh(studio)
+  const pos = specsheet && specsheet.position
+  if (pos) studio.position.set(pos.x || 0, pos.y || 0, pos.z || 0)
   scene.add(studio)
   worldOctree = new Octree()
   worldOctree.fromGraphNode(studio)

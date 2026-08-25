@@ -1,5 +1,13 @@
 "use strict";
 
+function find_touch(touch_list, id) {
+	if (!touch_list) return null
+	for (var i = 0; i < touch_list.length; i++) {
+		if (touch_list[i].identifier === id) return touch_list[i]
+	}
+	return null
+}
+
 function RotationPad(container) {
 
 	var mouseDown = false;
@@ -32,6 +40,9 @@ function RotationPad(container) {
 
 	self.regionData.radius = self.regionData.width / 2 - self.handleData.radius;
 
+	var touch_id = null
+	var ignore_mouse_until = 0
+
 	function begin_input(pageX, pageY) {
 		self.regionData.offset = self.region.offset();
 		mouseDown = true;
@@ -39,42 +50,53 @@ function RotationPad(container) {
 		update(pageX, pageY);
 	}
 
+	function end_input() {
+		if (!mouseDown && touch_id === null) return
+		mouseDown = false
+		touch_id = null
+		self.resetHandlePosition()
+	}
+
 	// Mouse events:
 	self.region.on("mousedown", function (event) {
+		if (touch_id !== null || Date.now() < ignore_mouse_until) return
 		event.preventDefault();
 		begin_input(event.pageX, event.pageY);
 	});
 
 	$(document).on("mouseup", function () {
-		mouseDown = false;
-		self.resetHandlePosition();
+		if (touch_id !== null) return
+		end_input()
 	});
 
 	$(document).on("mousemove", function(event) {
-		if (!mouseDown) return;
+		if (touch_id !== null || !mouseDown) return;
 		update(event.pageX, event.pageY);
 	});
 
 	//Touch events:
 	self.region.on("touchstart", function (event) {
 		event.preventDefault();
-		begin_input(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
-	});
-
-	self.region.on("touchmove", function (event) {
-		event.preventDefault();
-		if (!mouseDown) return;
-		update(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
-	});
-
-	$(document).on("touchend touchcancel", function () {
-		mouseDown = false;
-		self.resetHandlePosition();
+		if (touch_id !== null) return
+		var touch = event.originalEvent.changedTouches[0]
+		if (!touch) return
+		touch_id = touch.identifier
+		ignore_mouse_until = Date.now() + 700
+		begin_input(touch.pageX, touch.pageY);
 	});
 
 	$(document).on("touchmove", function(event) {
-		if (!mouseDown) return;
-		update(event.originalEvent.touches[0].pageX, event.originalEvent.touches[0].pageY);
+		if (touch_id === null) return
+		var touch = find_touch(event.originalEvent.touches, touch_id)
+		if (!touch) return
+		update(touch.pageX, touch.pageY)
+	});
+
+	$(document).on("touchend touchcancel", function (event) {
+		if (touch_id === null) return
+		if (!find_touch(event.originalEvent.changedTouches, touch_id)) return
+		ignore_mouse_until = Date.now() + 700
+		end_input()
 	});
 
 
@@ -177,6 +199,9 @@ function MovementPad(container) {
 
 	self.regionData.radius = self.regionData.width / 2 - self.handleData.radius;
 
+	var touch_id = null
+	var ignore_mouse_until = 0
+
 	function begin_input(pageX, pageY) {
 		self.regionData.offset = self.region.offset();
 		mouseDown = true;
@@ -184,42 +209,53 @@ function MovementPad(container) {
 		update(pageX, pageY);
 	}
 
+	function end_input() {
+		if (!mouseDown && touch_id === null) return
+		mouseDown = false
+		touch_id = null
+		self.resetHandlePosition()
+	}
+
 	// Mouse events:
 	self.region.on("mousedown", function (event) {
+		if (touch_id !== null || Date.now() < ignore_mouse_until) return
 		event.preventDefault();
 		begin_input(event.pageX, event.pageY);
 	});
 
 	$(document).on("mouseup", function () {
-		mouseDown = false;
-		self.resetHandlePosition();
+		if (touch_id !== null) return
+		end_input()
 	});
 
 	$(document).on("mousemove", function(event) {
-		if (!mouseDown) return;
+		if (touch_id !== null || !mouseDown) return;
 		update(event.pageX, event.pageY);
 	});
 
 	//Touch events:
 	self.region.on("touchstart", function (event) {
 		event.preventDefault();
-		begin_input(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
-	});
-
-	self.region.on("touchmove", function (event) {
-		event.preventDefault();
-		if (!mouseDown) return;
-		update(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
-	});
-
-	$(document).on("touchend touchcancel", function () {
-		mouseDown = false;
-		self.resetHandlePosition();
+		if (touch_id !== null) return
+		var touch = event.originalEvent.changedTouches[0]
+		if (!touch) return
+		touch_id = touch.identifier
+		ignore_mouse_until = Date.now() + 700
+		begin_input(touch.pageX, touch.pageY);
 	});
 
 	$(document).on("touchmove", function(event) {
-		if (!mouseDown) return;
-		update(event.originalEvent.touches[0].pageX, event.originalEvent.touches[0].pageY);
+		if (touch_id === null) return
+		var touch = find_touch(event.originalEvent.touches, touch_id)
+		if (!touch) return
+		update(touch.pageX, touch.pageY)
+	});
+
+	$(document).on("touchend touchcancel", function (event) {
+		if (touch_id === null) return
+		if (!find_touch(event.originalEvent.changedTouches, touch_id)) return
+		ignore_mouse_until = Date.now() + 700
+		end_input()
 	});
 
 

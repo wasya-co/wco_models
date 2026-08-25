@@ -21,7 +21,6 @@ const avatars = {
   denis:  { type: 'M', url: `${AVATARS_ROOT}/denis/model.glb`  }, // beard
   gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
 }
-
 const AVATAR_STOR = 'avatar'
 $('select.avatar').each((_idx, el) => {
   const $select = $(el)
@@ -51,38 +50,35 @@ let scenes = {
   newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
   rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
 }
-const STUDIO_STOR = 'studio'
+const SCENE_STOR = 'studio'
 $.each(scenes, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
 })
+try {
+  const saved = localStorage.getItem( SCENE_STOR )
+  if (saved && scenes[saved]) $('select.studio').val(saved)
+} catch (error) {
+  console.log(error)
+}
 
-  try {
-    const saved = localStorage.getItem(STUDIO_STOR)
-    if (saved && scenes[saved]) $select.val(saved)
-  } catch (error) {
-    console.log(error)
-  }
-})
 let scene_url = scenes[$('select.studio').val()] || scenes.rick_and_morty_garage
 
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
   talking_4: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_004.fbx`,
-  walk_1: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_001.fbx`,
-  walk_2: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx`,
+  walk_1: { speed: 2.0, url: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_001.fbx` },
+  walk_2: { speed: 2.0, url: (a) => `${MODELS_ROOT}/animation-library/feminine/fbx/locomotion/${a.body}_Walk_002.fbx` },
 
   sitting: (a) => `${MODELS_ROOT}/animations/Sitting.fbx`,
   sit_to_stand: (a) => `${MODELS_ROOT}/animations/Sit To Stand.fbx`,
   stand_to_sit: (a) => `${MODELS_ROOT}/animations/Stand To Sit.fbx`,
 
   entering_car: (a) => `${MODELS_ROOT}/animations/Entering Car.fbx`,
-  slow_run: (a) => `${MODELS_ROOT}/animations/Slow Run.fbx`,
+  slow_run: { speed: 1.1, url: (a) => `${MODELS_ROOT}/animations/Slow Run.fbx`, }
 };
 $.each(gestures, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.gestures'))
 })
-
-const WALK_SPEED = 2.05
 
 let u_positions = {
   '1': [0, 0, 0],
@@ -298,14 +294,20 @@ function syncLightsFromControls() {
   persistLightControls()
 }
 
+function gesture_url(g, avatar) {
+  if (typeof g === 'function') return g(avatar)
+  const u = g && g.url
+  return typeof u === 'function' ? u(avatar) : u
+}
+
 function update_walk(this_head, dt) {
-  if (!this_head || !this_head.walking || !this_head.mixer || !this_head.armature) return
+  if (!this_head || !this_head.speed || !this_head.mixer || !this_head.armature) return
   const dir = new THREE.Vector3()
   this_head.armature.getWorldDirection(dir)
   dir.y = 0
   if (dir.lengthSq() === 0) return
   dir.normalize()
-  this_head.armature.position.addScaledVector(dir, WALK_SPEED * dt / 1000)
+  this_head.armature.position.addScaledVector(dir, this_head.speed * dt / 1000)
 }
 
 // function play_animation(config) {
@@ -840,8 +842,9 @@ $('#jesture').on('click', async () => {
   try {
     if (!head) return
     const name = $('select.gestures').val()
-    const _anim = gestures[name](head.avatar)
-    head.walking = name === 'walk'
+    const g = gestures[name]
+    const _anim = gesture_url(g, head.avatar)
+    head.speed = (g && typeof g === 'object' && g.speed) ? g.speed : 0
     head.playAnimation( _anim )
   } catch (error) {
     console.log(error)

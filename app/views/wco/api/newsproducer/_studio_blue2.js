@@ -22,7 +22,7 @@ const avatars = {
   gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
 }
 
-const AVATAR_STOR = 'wco.studio_blue.avatar'
+const AVATAR_STOR = 'avatar'
 $('select.avatar').each((_idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {
@@ -51,7 +51,19 @@ let scenes = {
   newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
   rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
 }
-let scene_url  =  scenes.rick_and_morty_garage
+const STUDIO_STOR = 'studio'
+$.each(scenes, (name) => {
+  $('<option>', { value: name, text: name }).appendTo($('select.studio'))
+})
+
+  try {
+    const saved = localStorage.getItem(STUDIO_STOR)
+    if (saved && scenes[saved]) $select.val(saved)
+  } catch (error) {
+    console.log(error)
+  }
+})
+let scene_url = scenes[$('select.studio').val()] || scenes.rick_and_morty_garage
 
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
@@ -66,6 +78,9 @@ let gestures = {
   entering_car: (a) => `${MODELS_ROOT}/animations/Entering Car.fbx`,
   slow_run: (a) => `${MODELS_ROOT}/animations/Slow Run.fbx`,
 };
+$.each(gestures, (name) => {
+  $('<option>', { value: name, text: name }).appendTo($('select.gestures'))
+})
 
 const WALK_SPEED = 2.05
 
@@ -75,15 +90,6 @@ let u_positions = {
   '3': [-1, 0, 0],
 }
 
-$('select.gestures').each((_idx, el) => {
-  const $select = $(el)
-  $.each(gestures, function(name) {
-    $('<option>', {
-      value: name,
-      text: name,
-    }).appendTo($select)
-  })
-})
 
 
 import * as THREE from 'three'
@@ -439,9 +445,28 @@ async function init() {
   scene.add(grid)
 
 
-  const studio = (await gltfLoader.loadAsync(scene_url)).scene
-  rescale(studio, { height: 3.3 })
-  scene.add(studio)
+  let studio
+  async function load_studio(url) {
+    if (studio && studio.parent) studio.parent.remove(studio)
+    studio = (await gltfLoader.loadAsync(url)).scene
+    rescale(studio, { height: 3.3 })
+    scene.add(studio)
+  }
+  await load_studio(scene_url)
+  $('select.studio').on('change', async function() {
+    const name = $(this).val()
+    if (!scenes[name]) return
+    localStorage.setItem(STUDIO_STOR, name)
+    scene_url = scenes[name]
+    loading.textContent = 'Loading...'
+    try {
+      await load_studio(scene_url)
+      loading.textContent = 'loaded'
+    } catch (error) {
+      console.log(error)
+      loading.textContent = error.toString()
+    }
+  })
 
 
   // head = new TalkingHead( document.getElementById('avatar'), {

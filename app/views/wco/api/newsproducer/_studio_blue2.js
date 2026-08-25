@@ -160,15 +160,15 @@ const wco_origin = params.get('wco_origin')
 const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
-let camera, camera_1, camera_2, camera_3, camera_4
+let camera, camera_wide, camera_1, camera_2, camera_3
 let controls, renderer, scene
 let head, head_1, head_2, head_3
 let faceTarget = new THREE.Vector3()
 const cameraTargets = {
-  '1': new THREE.Vector3(0, 1.5, 0),
-  '2': new THREE.Vector3(1, 1.5, 0),
-  '3': new THREE.Vector3(-1, 1.5, 0),
-  '4': new THREE.Vector3(0.5, 1.2, 0),
+  wide: new THREE.Vector3(0.5, 1.2, 0),
+  av_1: new THREE.Vector3(0, 1.5, 0),
+  av_2: new THREE.Vector3(1, 1.5, 0),
+  av_3: new THREE.Vector3(-1, 1.5, 0),
 }
 let cameraTransition = null
 const CAMERA_BLEND_MS = 900
@@ -182,9 +182,10 @@ const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
 const loading = document.getElementById('loading')
 const status = document.getElementById('status')
+
 /*
 **/
-function point_camera_at_face(_camera, _head, targetKey) {
+function point_camera_at_face(cam_id, _head) {
   const leftEye = new THREE.Vector3()
   const rightEye = new THREE.Vector3()
   _head.objectLeftEye.getWorldPosition(leftEye)
@@ -194,9 +195,10 @@ function point_camera_at_face(_camera, _head, targetKey) {
   const camPos = new THREE.Vector3(0, 0, 2)
   camPos.applyQuaternion(_head.armature.quaternion)
   camPos.add(faceTarget)
+  const _camera = cameras_fn(cam_id)
   _camera.position.copy(camPos)
   _camera.lookAt(faceTarget)
-  if (targetKey) cameraTargets[targetKey].copy(faceTarget)
+  cameraTargets[cam_id].copy(faceTarget)
 }
 
 /*
@@ -374,14 +376,14 @@ function move_camera(config) {
   const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
   const src = cameras_fn(fromKey)
   const dest = cameras_fn(toKey)
-  const startTarget = (cameraTargets[fromKey] || cameraTargets['1']).clone()
-  const destTarget = (cameraTargets[toKey] || cameraTargets['1']).clone()
+  const startTarget = (cameraTargets[fromKey] || cameraTargets.wide).clone()
+  const destTarget = (cameraTargets[toKey] || cameraTargets.wide).clone()
 
   persistCameraControl(toKey)
   const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
   if (radio) radio.checked = true
 
-  ;[camera_1, camera_2, camera_3, camera_4, camera].forEach((cam) => {
+  ;[camera_wide, camera_1, camera_2, camera_3, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()
@@ -476,14 +478,14 @@ async function init() {
   camera_3.position.set( -2, 1.6, 4 )
   camera_3.lookAt( -1, 1.5, 0 )
 
-  camera_4 = new THREE.PerspectiveCamera( 25, width/height, 0.1, 1000 )
-  camera_4.position.set( -2, 2.2, 8 )
-  camera_4.lookAt( 0.5, 1.2, 0 )
+  camera_wide = new THREE.PerspectiveCamera( 25, width/height, 0.1, 1000 )
+  camera_wide.position.set( -2, 2.2, 8 )
+  camera_wide.lookAt( 0.5, 1.2, 0 )
 
   camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
-  camera.position.copy( camera_1.position )
-  camera.quaternion.copy( camera_1.quaternion )
-  camera.fov = camera_1.fov
+  camera.position.copy( camera_wide.position )
+  camera.quaternion.copy( camera_wide.quaternion )
+  camera.fov = camera_wide.fov
   camera.updateProjectionMatrix()
 
   setup_light(scene)
@@ -579,7 +581,7 @@ async function init() {
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
       thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
-      point_camera_at_face(cameras_fn(uid), thisHead, uid)
+      point_camera_at_face(`av_${uid}`, thisHead)
       await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
       loading.textContent = 'loaded'
     } catch (error) {
@@ -638,7 +640,7 @@ async function init() {
     })
   })
   const selected = document.querySelector('input[name=camera]:checked')
-  setActiveCamera(selected ? selected.value : '1', true)
+  setActiveCamera(selected ? selected.value : 'wide', true)
 
   document.querySelectorAll('input.light-ctrl').forEach((input) => {
     input.addEventListener('change', syncLightsFromControls)
@@ -667,17 +669,17 @@ document.addEventListener('DOMContentLoaded', async function(e) {
 
 function cameras_fn(which) {
   switch (which) {
-    case '1':
+    case 'wide':
+      return camera_wide
+    case 'av_1':
       return camera_1
-    case '2':
+    case 'av_2':
       return camera_2
-    case '3':
+    case 'av_3':
       return camera_3
-    case '4':
-      return camera_4
     default:
       logg('fpq - cameras_fn default - this should never happen')
-      return camera_1
+      return camera_wide
   }
 }
 
@@ -711,8 +713,8 @@ function setActiveCamera(id, instant = false) {
   const key = String(id)
   persistCameraControl(key)
   const dest = cameras_fn(key)
-  const destTarget = (cameraTargets[key] || cameraTargets['1']).clone()
-  ;[camera_1, camera_2, camera_3, camera_4, camera].forEach((cam) => {
+  const destTarget = (cameraTargets[key] || cameraTargets.wide).clone()
+  ;[camera_wide, camera_1, camera_2, camera_3, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()
@@ -781,7 +783,7 @@ function updateCameraTransition(dt) {
 }
 
 function onWindowResize() {
-  ;[camera_1, camera_2, camera_3, camera_4].forEach((cam) => {
+  ;[camera_wide, camera_1, camera_2, camera_3].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()

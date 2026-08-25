@@ -1,0 +1,15 @@
+
+const MODELS_ROOT = '/vendor/models'
+let scenes = {
+
+  <% Dir.glob(Rails.root.join('public/vendor/models/scenes/00*')).each do |file| %>
+    <%- basename = File.basename(file) -%>
+    "<%= basename.split.last -%>": {
+      <%= "height: #{$1.to_i / 10.0}," if basename =~ / h(\d+)cm / -%>
+      <%= "height: #{$1}," if basename =~ / h(\d+) / -%>
+      name: "<%= basename -%>",
+    },
+  <% end %>
+
+}
+window.scenes = scenes

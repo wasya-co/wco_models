@@ -1,0 +1,20 @@
+
+const MODELS_ROOT = '/vendor/models'
+let scenes = {
+  collision_world: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,
+  skybox_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb` },
+  room_1: { height: 6, url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb` },
+  mountain_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb lowpoly-mountain/scene.glb` },
+  meshy_3: { height: 30, url: `${MODELS_ROOT}/scenes/004mb meshy-scene-3/scene.glb` },
+  newsroom_green: { height: 3.3, url: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb` },
+  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
+  white_park: { height: 10, name: '003mb h100cm white_park' },
+}
+
+<% Dir.glob(Rails.root.join('public/vendor/models/scenes/00*')).each do |file| %>
+  <%- basename = File.basename(file) -%>
+  <%= basename.split.last -%>: {
+    <%= "height: #{$1.to_i / 10.0}," if basename =~ /h(\d{3})cm/ -%>
+    name: "<%= File.basename(file) -%>",
+  },
+<% end %>

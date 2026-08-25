@@ -11,17 +11,6 @@ const logg = (a, b="", c=null) => {
 }
 
 const MODELS_ROOT = '/vendor/models'
-let scenes = {
-  collision_world: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,
-  skybox_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb` },
-  room_1: { height: 6, url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb` },
-  mountain_1: { height: 30, url: `${MODELS_ROOT}/scenes/000mb lowpoly-mountain/scene.glb` },
-  meshy_3: { height: 30, url: `${MODELS_ROOT}/scenes/004mb meshy-scene-3/scene.glb` },
-  newsroom_green: { height: 3.3, url: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb` },
-  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
-
-  white_park: { height: 10, name: '003mb white_park' },
-}
 const SCENE_STOR = 'studio'
 $.each(scenes, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
@@ -484,11 +473,13 @@ function rescale(model, config) {
 }
 
 function scene_cfg(s) {
+  logg(s, 'scene_cfg')
+
   if (typeof s === 'string') {
     return { url: s } // , height: 3.3 }
   }
   if (typeof s.name === 'string') {
-    return { url: `${MODELS_ROOT}/scenes/${s.name}/scene.glb` }
+    return { ...s, url: `${MODELS_ROOT}/scenes/${s.name}/scene.glb` }
   }
   return s
 }
@@ -522,6 +513,8 @@ const loader = new GLTFLoader()
 
 async function load_studio(s) {
   const cfg = scene_cfg(s)
+  logg(cfg, 'cfg')
+
   if (studio && studio.parent) studio.parent.remove(studio)
   if (octree_helper && octree_helper.parent) octree_helper.parent.remove(octree_helper)
   studio = (await loader.loadAsync(cfg.url)).scene

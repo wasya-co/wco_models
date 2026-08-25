@@ -39,7 +39,10 @@ $('select.avatar').each((_idx, el) => {
 })
 
 let scenes = {
-  skybox_1:    `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
+  skybox_1: {
+    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
+    height: 20,
+  },
   studio_tron: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
   room_1:      `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
   // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
@@ -458,7 +461,7 @@ async function init() {
   $('select.studio').on('change', async function() {
     const name = $(this).val()
     if (!scenes[name]) return
-    localStorage.setItem(STUDIO_STOR, name)
+    localStorage.setItem(SCENE_STOR, name)
     scene_url = scenes[name]
     loading.textContent = 'Loading...'
     try {
@@ -506,9 +509,12 @@ async function init() {
   $('select.avatar').on('change', async function() {
     const uid = String($(this).data('uid'))
     const thisHead = heads_fn(uid)
-    const avatar = avatars[$(this).val()]
-    if (!thisHead || !avatar || !avatar.url) return
-    localStorage.setItem(`${AVATAR_STOR}-${uid}`, $(this).val())
+    const val = $(this).val()
+    localStorage.setItem(`${AVATAR_STOR}-${uid}`, val || '')
+    if (!thisHead) return
+    if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
+    const avatar = avatars[val]
+    if (!avatar || !avatar.url) return
     loading.textContent = 'Loading...'
     try {
       if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)

@@ -485,3 +485,7 @@ function animate() {
   stats.update();
 
 }
+
+$('#fullScreen').on('click', () => {
+  document.body.requestFullscreen()
+})

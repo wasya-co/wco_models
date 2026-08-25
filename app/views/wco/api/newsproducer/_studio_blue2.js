@@ -289,7 +289,10 @@ function play_animation(config) {
   if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
 }
 
-function cut_to(camera_pos) {
+function cut_to(key) {
+  const radio = document.querySelector(`input[name=camera][value="${key}"]`)
+  if (radio) radio.checked = true
+  setActiveCamera(key, true)
 }
 
 function move_camera(config) {
@@ -343,6 +346,7 @@ function move_camera(config) {
 
 window.play_animation = play_animation
 window.move_camera = move_camera
+window.cut_to = cut_to
 
 let eventsIndex = 0
 function tickEvents(elapsedMs) {

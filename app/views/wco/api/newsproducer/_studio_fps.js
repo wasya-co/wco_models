@@ -10,6 +10,51 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
+const MODELS_ROOT = 'https://localhost/vendor/models'
+let scenes = {
+  collision_world: {
+    url: `${MODELS_ROOT}/scenes/000mb collision-world/collision-world.glb`,
+  },
+  skybox_1: {
+    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
+    height: 30,
+  },
+  studio_tron: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
+  },
+  room_1: {
+    height: 6,
+    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
+  },
+  studio_blue: {
+    height: 4.3,
+    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
+  },
+  purple_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
+  },
+  red_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
+  },
+  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
+  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
+}
+const SCENE_STOR = 'studio'
+$.each(scenes, (name) => {
+  $('<option>', { value: name, text: name }).appendTo($('select.studio'))
+})
+try {
+  const saved = localStorage.getItem( SCENE_STOR )
+  if (saved && scenes[saved]) $('select.studio').val(saved)
+} catch (error) {
+  console.log(error)
+}
+
+let scene_url = scenes[$('select.studio').val()] || scenes.collision_world
+
 let width = 50 // 854
 let height = 50 // 480
 function is_mobile() {
@@ -122,7 +167,24 @@ for ( let i = 0; i < NUM_SPHERES; i ++ ) {
 
 }
 
-const worldOctree = new Octree();
+function weapons_on() {
+  return $('input[name=weaponCtrl]').is(':checked')
+}
+
+function set_weapons( on ) {
+  spheres.forEach( sphere => {
+    sphere.mesh.visible = on
+    if ( !on ) {
+      sphere.collider.center.set( 0, -100, 0 )
+      sphere.velocity.set( 0, 0, 0 )
+      sphere.mesh.position.copy( sphere.collider.center )
+    }
+  } )
+}
+
+let worldOctree = new Octree()
+let octree_helper = null
+let studio = null
 
 const playerCollider = new Capsule( new THREE.Vector3( 0, 0.35, 0 ), new THREE.Vector3( 0, 1, 0 ), 0.35 );
 
@@ -192,6 +254,8 @@ function onWindowResize() {
 }
 
 function throwBall() {
+
+  if ( !weapons_on() ) return
 
   const sphere = spheres[ sphereIdx ];
 
@@ -333,6 +397,8 @@ function spheresCollisions() {
 
 function updateSpheres( deltaTime ) {
 
+  if ( !weapons_on() ) return
+
   spheres.forEach( sphere => {
 
     sphere.collider.center.addScaledVector( sphere.velocity, deltaTime );
@@ -429,36 +495,85 @@ function controls( deltaTime ) {
 
 }
 
-const loader = new GLTFLoader().setPath( '/vendor/models/scenes/' );
+function rescale(model, config) {
+  const box = new THREE.Box3().setFromObject(model)
+  const size = box.getSize(new THREE.Vector3())
+  const currentHeight = size.y
+  const scale = config.height / currentHeight
+  model.scale.setScalar(scale)
+}
 
-loader.load( '000mb collision-world/collision-world.glb', ( gltf ) => {
+function scene_cfg(s) {
+  if (typeof s === 'string') return { url: s, height: 3.3 }
+  return { url: s.url, height: s.height }
+}
 
-  scene.add( gltf.scene );
-
-  worldOctree.fromGraphNode( gltf.scene );
-
-  gltf.scene.traverse( child => {
-
-    if ( child.isMesh ) {
-
-      child.castShadow = true;
-      child.receiveShadow = true;
-
-      if ( child.material.map ) {
-
-        child.material.map.anisotropy = 4;
-
+function apply_studio_mesh(root) {
+  root.traverse(child => {
+    if (child.isMesh) {
+      child.castShadow = true
+      child.receiveShadow = true
+      if (child.material && child.material.map) {
+        child.material.map.anisotropy = 4
       }
-
     }
+  })
+}
 
-  } );
+function reset_player() {
+  playerCollider.start.set(0, 0.35, 0)
+  playerCollider.end.set(0, 1, 0)
+  playerCollider.radius = 0.35
+  playerVelocity.set(0, 0, 0)
+  camera.position.copy(playerCollider.end)
+  camera.rotation.set(0, 0, 0)
+  if (touch_controls) {
+    touch_controls.setPosition(0, 1, 0)
+    touch_controls.setRotation(0, 0)
+  }
+}
 
-  const helper = new OctreeHelper( worldOctree );
-  helper.visible = false;
-  scene.add( helper );
+const loader = new GLTFLoader()
 
-} );
+async function load_studio(s) {
+  const cfg = scene_cfg(s)
+  if (studio && studio.parent) studio.parent.remove(studio)
+  if (octree_helper && octree_helper.parent) octree_helper.parent.remove(octree_helper)
+  studio = (await loader.loadAsync(cfg.url)).scene
+  if (cfg.height) rescale(studio, { height: cfg.height })
+  apply_studio_mesh(studio)
+  scene.add(studio)
+  worldOctree = new Octree()
+  worldOctree.fromGraphNode(studio)
+  octree_helper = new OctreeHelper(worldOctree)
+  octree_helper.visible = false
+  scene.add(octree_helper)
+}
+
+async function select_studio(name) {
+  if (!scenes[name]) return
+  localStorage.setItem(SCENE_STOR, name)
+  scene_url = scenes[name]
+  $('#status').text('Loading...')
+  $('#loading').text('Loading...')
+  try {
+    await load_studio(scene_url)
+    reset_player()
+    $('#status').text('loaded')
+    $('#loading').text('loaded')
+  } catch (error) {
+    console.log(error)
+    $('#status').text(error.toString())
+    $('#loading').text(error.toString())
+  }
+}
+
+$('select.studio').on('change', function() {
+  select_studio($(this).val())
+})
+const initial_studio = $('select.studio').val() || 'collision_world'
+if (!$('select.studio').val()) $('select.studio').val(initial_studio)
+select_studio(initial_studio)
 
 function teleportPlayerIfOob() {
 
@@ -605,3 +720,16 @@ $('input[name=ctrl-type]').on('change', function() {
   set_ctrl_type(this.value)
 })
 set_ctrl_type(current_ctrl_type())
+
+const WEAPON_CTRL_STOR = 'weaponCtrl'
+try {
+  const saved = localStorage.getItem(WEAPON_CTRL_STOR)
+  if (saved !== null) $('input[name=weaponCtrl]').prop('checked', saved === 'on')
+} catch (error) {
+  console.log(error)
+}
+$('input[name=weaponCtrl]').on('change', function() {
+  localStorage.setItem(WEAPON_CTRL_STOR, this.checked ? 'on' : 'off')
+  set_weapons(this.checked)
+})
+set_weapons(weapons_on())

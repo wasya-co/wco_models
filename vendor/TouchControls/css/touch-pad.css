@@ -1,9 +1,12 @@
 .rotation-pad {
 	position: absolute;
+	bottom: 10px;
+	right: 20px;
+	z-index: 10;
 }
 
 .rotation-pad .region {
-	position: absolute;
+	position: relative;
 	width: 100px;
 	height: 100px;
 	background: radial-gradient(rgba(218, 225, 230, 0.25) 5%, rgba(218, 225, 230, 0.50) 95%),
@@ -15,7 +18,8 @@
 }
 
 .rotation-pad .handle {
-	z-index: -1;
+	z-index: 1;
+	pointer-events: none;
 	opacity: 0.1;
 	position: absolute;
 	height: 30px;
@@ -33,10 +37,13 @@
 
 .movement-pad {
 	position: absolute;
+	bottom: 10px;
+	left: 20px;
+	z-index: 10;
 }
 
 .movement-pad .region {
-	position: absolute;
+	position: relative;
 	width: 100px;
 	height: 100px;
 	background: radial-gradient(rgba(218, 225, 230, 0.25) 5%, rgba(218, 225, 230, 0.50) 95%),
@@ -48,7 +55,8 @@
 }
 
 .movement-pad .handle {
-	z-index: -1;
+	z-index: 1;
+	pointer-events: none;
 	opacity: 0.1;
 	position: absolute;
 	height: 30px;

@@ -17,12 +17,6 @@ function MovementPad(container) {
 
 	self.movementPad.append(self.region).append(self.handle);
 	self.container.append(self.movementPad);
-	
-	// Aligning pad:
-	self.movementPad.css({
-		top: self.container.find("canvas").height() + self.container.position().top - self.region.outerHeight() - 10,
-		left: 20
-	});
 
 	self.regionData.width = self.region.outerWidth();
 	self.regionData.height = self.region.outerHeight();

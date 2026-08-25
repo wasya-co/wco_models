@@ -17,12 +17,6 @@ function RotationPad(container) {
 
 	self.rotationPad.append(self.region).append(self.handle);
 	self.container.append(self.rotationPad);
-	
-	// Aligning pad:
-	self.rotationPad.css({
-		top: self.container.find("canvas").height() + self.container.position().top - self.region.outerHeight() - 10,
-		left: self.container.find("canvas").width() - self.region.outerWidth() - 20
-	});
 
 	self.regionData.width = self.region.outerWidth();
 	self.regionData.height = self.region.outerHeight();

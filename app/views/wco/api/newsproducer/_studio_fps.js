@@ -73,6 +73,7 @@ directionalLight.shadow.bias = - 0.00006;
 scene.add( directionalLight );
 
 const container = document.getElementById( 'rotatingC' );
+container.style.touchAction = 'none'
 container.style.width = width + 'px'
 container.style.height = height + 'px'
 
@@ -83,6 +84,7 @@ renderer.setAnimationLoop( animate );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.domElement.style.touchAction = 'none'
 container.appendChild( renderer.domElement );
 
 let touch_controls = null
@@ -490,7 +492,15 @@ function animate() {
 
   }
 
-  if ( current_ctrl_type() === 'touch' && touch_controls ) touch_controls.update()
+  if ( current_ctrl_type() === 'touch' && touch_controls ) {
+    touch_controls.update()
+    const p = touch_controls.fpsBody.position
+    playerCollider.end.copy( p )
+    playerCollider.start.set( p.x, p.y - 0.65, p.z )
+    playerCollisions()
+    p.copy( playerCollider.end )
+    apply_touch_pose()
+  }
 
   renderer.render( scene, camera );
 
@@ -506,31 +516,40 @@ function current_ctrl_type() {
   return $('input[name=ctrl-type]:checked').val() || 'fps'
 }
 
+function apply_touch_pose() {
+  const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
+  camera.position.copy( touch_controls.fpsBody.position )
+  camera.rotation.set( holder.rotation.x, touch_controls.fpsBody.rotation.y, 0 )
+}
+
 function enable_touch_controls() {
   if ( document.pointerLockElement ) document.exitPointerLock()
+
+  const pos = new THREE.Vector3()
+  camera.getWorldPosition( pos )
+  if ( pos.y < 0.2 ) pos.copy( playerCollider.end )
+  const rx = camera.rotation.x
+  const ry = camera.rotation.y
+
   if ( !touch_controls ) {
-    const pos = camera.position.clone()
-    const rx = camera.rotation.x
-    const ry = camera.rotation.y
     camera.position.set( 0, 0, 0 )
     camera.rotation.set( 0, 0, 0 )
     touch_controls = new TouchControls( $( container ), camera, {
-      speedFactor: 0.5,
+      speedFactor: 0.08,
       delta: 1,
       rotationFactor: 0.002,
       maxPitch: 55,
-      hitTest: true,
+      hitTest: false,
       hitTestDistance: 1
     } )
-    touch_controls.setPosition( pos.x, pos.y, pos.z )
-    touch_controls.setRotation( rx, ry )
+    if ( camera.parent ) camera.parent.remove( camera )
     touch_controls.addToScene( scene )
-    return
   }
+
   touch_controls.enabled = true
-  const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
-  if ( !camera.parent && holder ) holder.add( camera )
-  if ( !touch_controls.fpsBody.parent ) scene.add( touch_controls.fpsBody )
+  touch_controls.setPosition( pos.x, pos.y, pos.z )
+  touch_controls.setRotation( rx, ry )
+  apply_touch_pose()
   $( '.movement-pad, .rotation-pad' ).show()
 }
 
@@ -538,17 +557,8 @@ function disable_touch_controls() {
   if ( !touch_controls ) return
   touch_controls.enabled = false
   $( '.movement-pad, .rotation-pad' ).hide()
-  const worldPos = new THREE.Vector3()
-  camera.getWorldPosition( worldPos )
-  const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
-  const rx = holder ? holder.rotation.x : camera.rotation.x
-  const ry = touch_controls.fpsBody.rotation.y
-  if ( camera.parent ) camera.parent.remove( camera )
-  if ( touch_controls.fpsBody.parent ) scene.remove( touch_controls.fpsBody )
-  camera.position.copy( worldPos )
-  camera.rotation.set( rx, ry, 0 )
-  playerCollider.end.copy( worldPos )
-  playerCollider.start.set( worldPos.x, worldPos.y - 0.65, worldPos.z )
+  playerCollider.end.copy( camera.position )
+  playerCollider.start.set( camera.position.x, camera.position.y - 0.65, camera.position.z )
 }
 
 function set_ctrl_type( type ) {

@@ -18,12 +18,6 @@ function RotationPad(container) {
 	self.rotationPad.append(self.region).append(self.handle);
 	self.container.append(self.rotationPad);
 
-	// Aligning pad:
-	self.rotationPad.css({
-		top: self.container.find("canvas").height() + self.container.position().top - self.region.outerHeight() - 10,
-		left: self.container.find("canvas").width() - self.region.outerWidth() - 20
-	});
-
 	self.regionData.width = self.region.outerWidth();
 	self.regionData.height = self.region.outerHeight();
 	self.regionData.position = self.region.position();
@@ -38,11 +32,17 @@ function RotationPad(container) {
 
 	self.regionData.radius = self.regionData.width / 2 - self.handleData.radius;
 
-	// Mouse events:
-	self.region.on("mousedown", function (event) {
+	function begin_input(pageX, pageY) {
+		self.regionData.offset = self.region.offset();
 		mouseDown = true;
 		self.handle.css("opacity", "1.0");
-		update(event.pageX, event.pageY);
+		update(pageX, pageY);
+	}
+
+	// Mouse events:
+	self.region.on("mousedown", function (event) {
+		event.preventDefault();
+		begin_input(event.pageX, event.pageY);
 	});
 
 	$(document).on("mouseup", function () {
@@ -57,8 +57,13 @@ function RotationPad(container) {
 
 	//Touch events:
 	self.region.on("touchstart", function (event) {
-		mouseDown = true;
-		self.handle.css("opacity", "1.0");
+		event.preventDefault();
+		begin_input(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
+	});
+
+	self.region.on("touchmove", function (event) {
+		event.preventDefault();
+		if (!mouseDown) return;
 		update(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
 	});
 
@@ -158,12 +163,6 @@ function MovementPad(container) {
 	self.movementPad.append(self.region).append(self.handle);
 	self.container.append(self.movementPad);
 
-	// Aligning pad:
-	self.movementPad.css({
-		top: self.container.find("canvas").height() + self.container.position().top - self.region.outerHeight() - 10,
-		left: 20
-	});
-
 	self.regionData.width = self.region.outerWidth();
 	self.regionData.height = self.region.outerHeight();
 	self.regionData.position = self.region.position();
@@ -178,11 +177,17 @@ function MovementPad(container) {
 
 	self.regionData.radius = self.regionData.width / 2 - self.handleData.radius;
 
-	// Mouse events:
-	self.region.on("mousedown", function (event) {
+	function begin_input(pageX, pageY) {
+		self.regionData.offset = self.region.offset();
 		mouseDown = true;
 		self.handle.css("opacity", "1.0");
-		update(event.pageX, event.pageY);
+		update(pageX, pageY);
+	}
+
+	// Mouse events:
+	self.region.on("mousedown", function (event) {
+		event.preventDefault();
+		begin_input(event.pageX, event.pageY);
 	});
 
 	$(document).on("mouseup", function () {
@@ -197,8 +202,13 @@ function MovementPad(container) {
 
 	//Touch events:
 	self.region.on("touchstart", function (event) {
-		mouseDown = true;
-		self.handle.css("opacity", "1.0");
+		event.preventDefault();
+		begin_input(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
+	});
+
+	self.region.on("touchmove", function (event) {
+		event.preventDefault();
+		if (!mouseDown) return;
 		update(event.originalEvent.targetTouches[0].pageX, event.originalEvent.targetTouches[0].pageY);
 	});
 
@@ -536,6 +546,7 @@ function TouchControls(container, camera, options) {
 	// Public functions:
 	//
 	self.update = function() {
+		if (!self.enabled) return;
 		if (self.config.hitTest)
 			self.hitTest();
 

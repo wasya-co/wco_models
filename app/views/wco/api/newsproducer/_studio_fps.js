@@ -106,7 +106,7 @@ let touch_controls = null
 const GRAVITY = 30
 let walk_speed = 12
 const AIR_SPEED_FACTOR = 0.32
-let strafe_factor = 0.22
+let strafe_factor = 0.5
 let strafe_deadzone = 0.35
 
 const NUM_SPHERES = 100;
@@ -168,6 +168,61 @@ const keyStates = {};
 const vector1 = new THREE.Vector3();
 const vector2 = new THREE.Vector3();
 const vector3 = new THREE.Vector3();
+
+const DOOR_W = 0.9
+const DOOR_H = 2.1
+const DOOR_D = 0.1
+const door_color = new THREE.Color( 0x8a6a4a )
+const door_aim_color = new THREE.Color( 0xffff00 )
+const door_mat = new THREE.MeshLambertMaterial( { color: door_color } )
+const door = new THREE.Mesh( new THREE.BoxGeometry( DOOR_W, DOOR_H, DOOR_D ), door_mat )
+door.position.set( 0, DOOR_H / 2, 0 )
+door.castShadow = true
+door.receiveShadow = true
+scene.add( door )
+
+const aim_ray = new THREE.Raycaster()
+const aim_dir = new THREE.Vector3()
+const door_box = new THREE.Box3()
+const player_box = new THREE.Box3()
+let was_in_door = true
+let studio_loading = false
+
+function player_in_door() {
+  door.updateMatrixWorld(true)
+  door_box.setFromObject(door)
+  door_box.expandByScalar(0.3)
+  player_box.makeEmpty()
+  player_box.expandByPoint(playerCollider.start)
+  player_box.expandByPoint(playerCollider.end)
+  player_box.expandByScalar(playerCollider.radius)
+  return player_box.intersectsBox(door_box)
+}
+
+function check_door_portal() {
+  const inside = player_in_door()
+  if (inside && !was_in_door && !studio_loading) {
+    const dest = 'room-1'
+    if (scenes[dest] && $('select.studio').val() !== dest) {
+      $('select.studio').val(dest)
+      select_studio(dest)
+    }
+  }
+  was_in_door = inside
+}
+
+function update_door_aim() {
+  camera.getWorldDirection( aim_dir )
+  aim_ray.set( camera.position, aim_dir )
+  const hits = aim_ray.intersectObject( door )
+  if ( hits.length ) {
+    door_mat.color.copy( door_aim_color )
+    door_mat.emissive.setHex( 0x333300 )
+  } else {
+    door_mat.color.copy( door_color )
+    door_mat.emissive.setHex( 0x000000 )
+  }
+}
 
 document.addEventListener( 'keydown', ( event ) => {
 
@@ -473,8 +528,6 @@ function rescale(model, config) {
 }
 
 function scene_cfg(s) {
-  logg(s, 'scene_cfg')
-
   if (typeof s === 'string') {
     return { url: s } // , height: 3.3 }
   }
@@ -496,25 +549,36 @@ function apply_studio_mesh(root) {
   })
 }
 
+function ground_y_at_origin() {
+  if (!studio) return 0
+  studio.updateMatrixWorld(true)
+  const down_ray = new THREE.Raycaster(new THREE.Vector3(0, 200, 0), new THREE.Vector3(0, -1, 0))
+  const hits = down_ray.intersectObject(studio, true)
+  if (hits.length) return hits[0].point.y
+  const box = new THREE.Box3().setFromObject(studio)
+  if (Number.isFinite(box.min.y)) return box.min.y
+  return 0
+}
+
 function reset_player() {
-  playerCollider.start.set(0, 0.35, 0)
-  playerCollider.end.set(0, 1, 0)
+  const y = ground_y_at_origin() + 1
+  playerCollider.start.set(0, y + 0.35, 0)
+  playerCollider.end.set(0, y + 1, 0)
   playerCollider.radius = 0.35
   playerVelocity.set(0, 0, 0)
   camera.position.copy(playerCollider.end)
   camera.rotation.set(0, 0, 0)
   if (touch_controls) {
-    touch_controls.setPosition(0, 1, 0)
+    touch_controls.setPosition(0, y + 1, 0)
     touch_controls.setRotation(0, 0)
   }
+  was_in_door = true
 }
 
 const loader = new GLTFLoader()
 
 async function load_studio(s) {
   const cfg = scene_cfg(s)
-  logg(cfg, 'cfg')
-
   if (studio && studio.parent) studio.parent.remove(studio)
   if (octree_helper && octree_helper.parent) octree_helper.parent.remove(octree_helper)
   studio = (await loader.loadAsync(cfg.url)).scene
@@ -529,7 +593,8 @@ async function load_studio(s) {
 }
 
 async function select_studio(name) {
-  if (!scenes[name]) return
+  if (!scenes[name] || studio_loading) return
+  studio_loading = true
   localStorage.setItem(SCENE_STOR, name)
   scene_url = scenes[name]
   $('#status').text('Loading...')
@@ -544,6 +609,7 @@ async function select_studio(name) {
     $('#status').text(error.toString())
     $('#loading').text(error.toString())
   }
+  studio_loading = false
 }
 
 $('select.studio').on('change', function() {
@@ -608,6 +674,7 @@ function animate() {
     }
 
     updatePlayer( deltaTime )
+    check_door_portal()
     teleportPlayerIfOob()
     updateSpheres( deltaTime )
 
@@ -618,6 +685,7 @@ function animate() {
     apply_touch_pose()
   }
 
+  update_door_aim()
   renderer.render( scene, camera );
 
 }

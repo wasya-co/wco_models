@@ -41,13 +41,28 @@ $('select.avatar').each((_idx, el) => {
 let scenes = {
   skybox_1: {
     url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
-    height: 20,
+    height: 30,
   },
-  studio_tron: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
-  room_1:      `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
-  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
-  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
-  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+  studio_tron: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
+  },
+  room_1: {
+    height: 6,
+    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
+  },
+  studio_blue: {
+    height: 4.3,
+    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
+  },
+  purple_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
+  },
+  red_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
+  },
   // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
 
   newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
@@ -209,6 +224,11 @@ function rescale(model, config) {
   const currentHeight = size.y
   const scale = config.height / currentHeight
   model.scale.setScalar(scale)
+}
+
+function scene_cfg(s) {
+  if (typeof s === 'string') return { url: s, height: 3.3 }
+  return { url: s.url, height: s.height || 3.3 }
 }
 
 /*
@@ -451,10 +471,11 @@ async function init() {
 
 
   let studio
-  async function load_studio(url) {
+  async function load_studio(s) {
+    const cfg = scene_cfg(s)
     if (studio && studio.parent) studio.parent.remove(studio)
-    studio = (await gltfLoader.loadAsync(url)).scene
-    rescale(studio, { height: 3.3 })
+    studio = (await gltfLoader.loadAsync(cfg.url)).scene
+    rescale(studio, { height: cfg.height })
     scene.add(studio)
   }
   await load_studio(scene_url)

@@ -23,6 +23,7 @@ try {
 }
 
 let scene_url = scenes[$('select.studio').val()] || scenes.collision_world
+let specsheet = null
 
 let width = 50 // 854
 let height = 50 // 480
@@ -51,6 +52,7 @@ import { Octree } from 'three/addons/math/Octree.js';
 import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
 
 import { Capsule } from 'three/addons/math/Capsule.js';
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
 window.THREE = THREE
 const TouchControls = window.TouchControls
@@ -176,7 +178,7 @@ const door_color = new THREE.Color( 0x8a6a4a )
 const door_aim_color = new THREE.Color( 0xffff00 )
 const door_mat = new THREE.MeshLambertMaterial( { color: door_color } )
 const door = new THREE.Mesh( new THREE.BoxGeometry( DOOR_W, DOOR_H, DOOR_D ), door_mat )
-door.position.set( 0, DOOR_H / 2, 0 )
+door.position.set( -2.201031899952849, 2.2645012618828417, -3.739788300092452 )
 door.castShadow = true
 door.receiveShadow = true
 scene.add( door )
@@ -211,6 +213,49 @@ function add_door_label( z ) {
 }
 add_door_label( DOOR_D / 2 + 0.006 )
 add_door_label( -( DOOR_D / 2 + 0.006 ) ).rotation.y = Math.PI
+
+let door_helper = null
+let door_helper_root = null
+
+function door_helper_on() {
+  return $('input[name=doorHelper]').is(':checked')
+}
+
+function log_door_position() {
+  logg({
+    x: door.position.x,
+    y: door.position.y,
+    z: door.position.z
+  }, 'door position')
+}
+
+function ensure_door_helper() {
+  if (door_helper) return
+  door_helper = new TransformControls(camera, renderer.domElement)
+  door_helper.setMode('translate')
+  door_helper.addEventListener('objectChange', log_door_position)
+  door_helper_root = door_helper.getHelper ? door_helper.getHelper() : door_helper
+  scene.add(door_helper_root)
+}
+
+function set_door_helper(on) {
+  if (on) {
+    if (document.pointerLockElement) document.exitPointerLock()
+    ensure_door_helper()
+    door_helper.enabled = true
+    door_helper.attach(door)
+    if (door_helper_root) door_helper_root.visible = true
+    log_door_position()
+  } else if (door_helper) {
+    door_helper.detach()
+    door_helper.enabled = false
+    if (door_helper_root) door_helper_root.visible = false
+  }
+}
+
+$('input[name=doorHelper]').on('change', function() {
+  set_door_helper(this.checked)
+})
 
 const aim_ray = new THREE.Raycaster()
 const aim_dir = new THREE.Vector3()
@@ -270,6 +315,7 @@ document.addEventListener( 'keyup', ( event ) => {
 container.addEventListener( 'mousedown', () => {
 
   if ( current_ctrl_type() !== 'fps' ) return
+  if ( door_helper_on() ) return
   document.body.requestPointerLock();
 
   mouseTime = performance.now();
@@ -279,6 +325,7 @@ container.addEventListener( 'mousedown', () => {
 document.addEventListener( 'mouseup', () => {
 
   if ( current_ctrl_type() !== 'fps' ) return
+  if ( door_helper_on() ) return
   if ( document.pointerLockElement !== null ) throwBall();
 
 } );
@@ -608,11 +655,28 @@ function reset_player() {
 
 const loader = new GLTFLoader()
 
+function specsheet_url(glb_url) {
+  return glb_url.replace(/[^/]+$/, 'specsheet.json')
+}
+
+async function load_specsheet(glb_url) {
+  specsheet = null
+  try {
+    const res = await fetch(specsheet_url(glb_url))
+    if (!res.ok) return
+    specsheet = await res.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function load_studio(s) {
   const cfg = scene_cfg(s)
   if (studio && studio.parent) studio.parent.remove(studio)
   if (octree_helper && octree_helper.parent) octree_helper.parent.remove(octree_helper)
-  studio = (await loader.loadAsync(cfg.url)).scene
+  const gltf = await loader.loadAsync(cfg.url)
+  await load_specsheet(cfg.url)
+  studio = gltf.scene
   if (cfg.height) rescale(studio, { height: cfg.height })
   apply_studio_mesh(studio)
   scene.add(studio)

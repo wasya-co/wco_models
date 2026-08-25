@@ -176,12 +176,11 @@ const DOOR_H = 2.1
 const DOOR_D = 0.1
 const door_color = new THREE.Color( 0x8a6a4a )
 const door_aim_color = new THREE.Color( 0xffff00 )
-const door_mat = new THREE.MeshLambertMaterial( { color: door_color } )
-const door = new THREE.Mesh( new THREE.BoxGeometry( DOOR_W, DOOR_H, DOOR_D ), door_mat )
-door.position.set( -2.201031899952849, 2.2645012618828417, -3.739788300092452 )
-door.castShadow = true
-door.receiveShadow = true
-scene.add( door )
+const door_geo = new THREE.BoxGeometry( DOOR_W, DOOR_H, DOOR_D )
+const door_label_geo = new THREE.PlaneGeometry( DOOR_W * 0.85, 0.45 )
+const doors = []
+let door_inside = null
+let last_created_door = null
 
 function door_label_texture( text ) {
   const canvas = document.createElement( 'canvas' )
@@ -189,7 +188,7 @@ function door_label_texture( text ) {
   canvas.height = 256
   const ctx = canvas.getContext( '2d' )
   ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 96px sans-serif'
+  ctx.font = 'bold 72px sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillText( text, 256, 128 )
@@ -198,21 +197,55 @@ function door_label_texture( text ) {
   return tex
 }
 
-const door_label_mat = new THREE.MeshBasicMaterial( {
-  map: door_label_texture( 'room-1' ),
-  transparent: true,
-  side: THREE.DoubleSide,
-  depthWrite: false
-} )
-const door_label_geo = new THREE.PlaneGeometry( DOOR_W * 0.85, 0.45 )
-function add_door_label( z ) {
-  const plane = new THREE.Mesh( door_label_geo, door_label_mat )
-  plane.position.set( 0, 0.25, z )
-  door.add( plane )
-  return plane
+function make_door( marker ) {
+  const name = marker.name || marker.label || ''
+  const pos = marker.position || {}
+  const mat = new THREE.MeshLambertMaterial( { color: door_color } )
+  const mesh = new THREE.Mesh( door_geo, mat )
+  mesh.position.set( pos.x || 0, pos.y || 0, pos.z || 0 )
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+  mesh.userData.scene_name = name
+  mesh.userData.door_mat = mat
+
+  const label_mat = new THREE.MeshBasicMaterial( {
+    map: door_label_texture( name ),
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  } )
+  const front = new THREE.Mesh( door_label_geo, label_mat )
+  front.position.set( 0, 0.25, DOOR_D / 2 + 0.006 )
+  mesh.add( front )
+  const back = new THREE.Mesh( door_label_geo, label_mat )
+  back.position.set( 0, 0.25, -( DOOR_D / 2 + 0.006 ) )
+  back.rotation.y = Math.PI
+  mesh.add( back )
+
+  scene.add( mesh )
+  doors.push( mesh )
+  return mesh
 }
-add_door_label( DOOR_D / 2 + 0.006 )
-add_door_label( -( DOOR_D / 2 + 0.006 ) ).rotation.y = Math.PI
+
+function clear_doors() {
+  if ( door_helper ) {
+    door_helper.detach()
+    if ( door_helper_root ) door_helper_root.visible = false
+  }
+  doors.forEach( d => {
+    if ( d.parent ) d.parent.remove( d )
+  } )
+  doors.length = 0
+  door_inside = null
+}
+
+function place_doors_from_specsheet() {
+  clear_doors()
+  const markers = specsheet && specsheet.markers
+  if ( !markers || !markers.length ) return
+  markers.forEach( make_door )
+  if ( door_helper_on() ) set_door_helper( true )
+}
 
 let door_helper = null
 let door_helper_root = null
@@ -222,11 +255,14 @@ function door_helper_on() {
 }
 
 function log_door_position() {
-  logg({
-    x: door.position.x,
-    y: door.position.y,
-    z: door.position.z
-  }, 'door position')
+  const obj = door_helper && door_helper.object
+  if ( !obj ) return
+  logg( {
+    x: obj.position.x,
+    y: obj.position.y,
+    z: obj.position.z,
+    name: obj.userData.scene_name
+  }, 'door position' )
 }
 
 function ensure_door_helper() {
@@ -242,8 +278,15 @@ function set_door_helper(on) {
   if (on) {
     if (document.pointerLockElement) document.exitPointerLock()
     ensure_door_helper()
+    const target = doors[0]
+    if (!target) {
+      door_helper.detach()
+      door_helper.enabled = false
+      if (door_helper_root) door_helper_root.visible = false
+      return
+    }
     door_helper.enabled = true
-    door_helper.attach(door)
+    door_helper.attach(target)
     if (door_helper_root) door_helper_root.visible = true
     log_door_position()
   } else if (door_helper) {
@@ -257,16 +300,27 @@ $('input[name=doorHelper]').on('change', function() {
   set_door_helper(this.checked)
 })
 
+$('#createDoor').on('click', function() {
+  const mesh = make_door({ name: '', position: { x: 0, y: 0, z: 0 } })
+  if (door_helper_on()) {
+    if (document.pointerLockElement) document.exitPointerLock()
+    ensure_door_helper()
+    door_helper.enabled = true
+    door_helper.attach(mesh)
+    if (door_helper_root) door_helper_root.visible = true
+    log_door_position()
+  }
+})
+
 const aim_ray = new THREE.Raycaster()
 const aim_dir = new THREE.Vector3()
 const door_box = new THREE.Box3()
 const player_box = new THREE.Box3()
-let was_in_door = true
 let studio_loading = false
 
-function player_in_door() {
-  door.updateMatrixWorld(true)
-  door_box.setFromObject(door)
+function player_in_door( mesh ) {
+  mesh.updateMatrixWorld(true)
+  door_box.setFromObject(mesh)
   door_box.expandByScalar(0.3)
   player_box.makeEmpty()
   player_box.expandByPoint(playerCollider.start)
@@ -276,28 +330,32 @@ function player_in_door() {
 }
 
 function check_door_portal() {
-  const inside = player_in_door()
-  if (inside && !was_in_door && !studio_loading) {
-    const dest = 'room-1'
-    if (scenes[dest] && $('select.studio').val() !== dest) {
-      $('select.studio').val(dest)
-      select_studio(dest)
+  const hit = doors.find( d => player_in_door( d ) )
+  if ( hit && hit !== door_inside && !studio_loading ) {
+    const dest = hit.userData.scene_name
+    if ( dest && scenes[dest] && $('select.studio').val() !== dest ) {
+      $('select.studio').val( dest )
+      select_studio( dest )
     }
   }
-  was_in_door = inside
+  door_inside = hit || null
 }
 
 function update_door_aim() {
   camera.getWorldDirection( aim_dir )
   aim_ray.set( camera.position, aim_dir )
-  const hits = aim_ray.intersectObject( door )
-  if ( hits.length ) {
-    door_mat.color.copy( door_aim_color )
-    door_mat.emissive.setHex( 0x333300 )
-  } else {
-    door_mat.color.copy( door_color )
-    door_mat.emissive.setHex( 0x000000 )
-  }
+  const hits = aim_ray.intersectObjects( doors )
+  const aimed = hits.length ? hits[0].object : null
+  doors.forEach( d => {
+    const mat = d.userData.door_mat
+    if ( d === aimed ) {
+      mat.color.copy( door_aim_color )
+      mat.emissive.setHex( 0x333300 )
+    } else {
+      mat.color.copy( door_color )
+      mat.emissive.setHex( 0x000000 )
+    }
+  } )
 }
 
 document.addEventListener( 'keydown', ( event ) => {
@@ -650,7 +708,7 @@ function reset_player() {
     touch_controls.setPosition(0, y + 1, 0)
     touch_controls.setRotation(0, 0)
   }
-  was_in_door = true
+  door_inside = doors.find( d => player_in_door( d ) ) || null
 }
 
 const loader = new GLTFLoader()
@@ -665,6 +723,7 @@ async function load_specsheet(glb_url) {
     const res = await fetch(specsheet_url(glb_url))
     if (!res.ok) return
     specsheet = await res.json()
+    logg(specsheet, 'specsheet')
   } catch (error) {
     console.log(error)
   }
@@ -685,6 +744,7 @@ async function load_studio(s) {
   octree_helper = new OctreeHelper(worldOctree)
   octree_helper.visible = false
   scene.add(octree_helper)
+  place_doors_from_specsheet()
 }
 
 async function select_studio(name) {

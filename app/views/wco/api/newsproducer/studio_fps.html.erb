@@ -35,7 +35,7 @@
         <select class='studio'></select>
         <em>Status:</em><span id='status'>pending</span>
       </div>
-      <button id='fullScreen' />
+      <button id='fullScreen' />fullScrn</button>
     </div>
 
     <div class='d-flex ctrl-row header-row'>
@@ -68,10 +68,14 @@
 
     <div id='avatar_1'></div><div id='avatar_2'></div><div id='avatar_3'></div>
     <div id='loading'>&nbsp;</div>
-    <div id="rotatingC" class="r2" style="width: 854px;
+    <div id="rotatingC" class="r2" style="position: relative; width: 854px;
       height: 480px;
       border: 1px solid red;
       text-align: center; " >
+      <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;pointer-events:none;z-index:2;">
+        <div style="position:absolute;left:50%;top:0;width:2px;height:100%;margin-left:-1px;background:#fff;"></div>
+        <div style="position:absolute;top:50%;left:0;height:2px;width:100%;margin-top:-1px;background:#fff;"></div>
+      </div>
     </div>
 
     <div class='d-flex heads ctrl-row'>

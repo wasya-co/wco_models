@@ -89,7 +89,9 @@ container.appendChild( renderer.domElement );
 
 let touch_controls = null
 
-const GRAVITY = 30;
+const GRAVITY = 30
+let walk_speed = 12
+const AIR_SPEED_FACTOR = 0.32
 
 const NUM_SPHERES = 100;
 const SPHERE_RADIUS = 0.2;
@@ -387,7 +389,7 @@ function getSideVector() {
 function controls( deltaTime ) {
 
   // gives a bit of air control
-  const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 );
+  const speedDelta = deltaTime * ( playerOnFloor ? walk_speed : walk_speed * AIR_SPEED_FACTOR )
 
   if ( keyStates[ 'KeyW' ] ) {
 
@@ -476,7 +478,7 @@ function teleportPlayerIfOob() {
 
 function touch_pad_controls( deltaTime ) {
 
-  const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 )
+  const speedDelta = deltaTime * ( playerOnFloor ? walk_speed : walk_speed * AIR_SPEED_FACTOR )
 
   if ( touch_controls.moveForward() ) {
     playerVelocity.add( getForwardVector().multiplyScalar( speedDelta ) )

@@ -31,7 +31,7 @@
 
             -# = link_to 'Generate video 1', api_newsproducer_studio_1_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
             -# = link_to 'Generate video green', api_newsproducer_studio_green_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
-            = link_to 'Blue 2', api_newsproducer_studio_blue_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
+            = link_to '_blue 2', api_newsproducer_studio_blue_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary' # , data: { confirm: 'Are you sure?' }
 
             Video:
             - if newspartial.video
@@ -39,7 +39,7 @@
               = link_to 'view', video_path(newspartial.video)
           .d-flex.flex-column
             = form_tag newspartial_generate_speech_path(newspartial), data: { confirm: 'Are you sure?' } do
-              = select_tag :voice, options_for_select([ 'am_fernir', 'af_jessica' ])
+              = select_tag :voice, options_for_select([ nil, 'am_fenrir', 'am_michael', 'am_puck', 'af_bella', 'af_heart', 'af_jessica', 'af_nicole', 'bf_emma' ], selected: newspartial.voice)
               = submit_tag 'Generate speech'
             .small.gray Requires HeadTTS.git on :8882
             Audio:

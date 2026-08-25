@@ -16,6 +16,8 @@ class Wco::Newspartial
   field :config_json, type: :string, default: '{}'
   field :speech_json, type: :string, default: '{}' # the smaller config, excludes audio wav
 
+  field :voice, type: :string ## 'af_jessica', 'am_fenrir'
+
   belongs_to :newsvideo
 
   has_one :video
@@ -63,10 +65,13 @@ class Wco::Newspartial
     duration = config['vtimes'].last.to_i + config['vdurations'].last.to_i rescue 0
   end
 
-  ## "am_fenrir", ## good
+  ##
+  ## "am_fenrir", ## bad
+  ## am_michael good
   ## "af_bella" ## bad
   ## "af_jessica", ## good
-  def generate_speech( voice: 'af_bella' )
+  ##
+  def generate_speech
     out = HTTParty.post( "#{Wco::Setting.get('HEAD_TTS_ORIGIN')}/v1/synthesize",
       headers: {
         'Content-Type' => 'application/json',

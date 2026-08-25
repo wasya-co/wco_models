@@ -36,6 +36,7 @@ class Wco::NewspartialsController < Wco::ApplicationController
   def generate_speech
     @newspartial = Wco::Newspartial.unscoped.find params[:id]
     authorize! :show, @newspartial
+    @newspartial.update_attributes( voice: params[:voice] )
     @newspartial.generate_speech
     redirect_to controller: 'newsvideos', id: @newspartial.newsvideo_id, action: 'show'
   end

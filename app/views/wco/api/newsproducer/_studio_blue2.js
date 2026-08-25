@@ -53,6 +53,7 @@ const WALK_SPEED = 2.05
 let u_positions = {
   '1': [0, 0, 0],
   '2': [1, 0, 0],
+  '3': [-1, 0, 0],
 }
 
 $('select.gestures').each((_idx, el) => {
@@ -120,14 +121,15 @@ const wco_origin = params.get('wco_origin')
 const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
-let camera, camera_1, camera_2, camera_3
+let camera, camera_1, camera_2, camera_3, camera_4
 let controls, renderer, scene
 let head, head_1, head_2, head_3
 let faceTarget = new THREE.Vector3()
 const cameraTargets = {
   '1': new THREE.Vector3(0, 1.5, 0),
   '2': new THREE.Vector3(1, 1.5, 0),
-  '3': new THREE.Vector3(0.5, 1.2, 0),
+  '3': new THREE.Vector3(-1, 1.5, 0),
+  '4': new THREE.Vector3(0.5, 1.2, 0),
 }
 let cameraTransition = null
 const CAMERA_BLEND_MS = 900
@@ -287,6 +289,9 @@ function play_animation(config) {
   if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
 }
 
+function cut_to(camera_pos) {
+}
+
 function move_camera(config) {
   const fromKey = String(config.from)
   const toKey = String(config.to)
@@ -300,7 +305,7 @@ function move_camera(config) {
   const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
   if (radio) radio.checked = true
 
-  ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
+  ;[camera_1, camera_2, camera_3, camera_4, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()
@@ -390,9 +395,13 @@ async function init() {
   camera_2.position.set( 2, 1.6, 4 )
   camera_2.lookAt( 1, 1.5, 0 )
 
-  camera_3 = new THREE.PerspectiveCamera( 25, width/height, 0.1, 1000 )
-  camera_3.position.set( -2, 2.2, 8 )
-  camera_3.lookAt( 0.5, 1.2, 0 )
+  camera_3 = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  camera_3.position.set( -2, 1.6, 4 )
+  camera_3.lookAt( -1, 1.5, 0 )
+
+  camera_4 = new THREE.PerspectiveCamera( 25, width/height, 0.1, 1000 )
+  camera_4.position.set( -2, 2.2, 8 )
+  camera_4.lookAt( 0.5, 1.2, 0 )
 
   camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
   camera.position.copy( camera_1.position )
@@ -433,6 +442,13 @@ async function init() {
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
+  head_3 = new TalkingHead( document.getElementById('avatar_3'), {
+    avatarOnly: true,
+    avatarOnlyScene: scene,
+    avatarOnlyCamera: camera_1,
+    lipsyncModules: ["en"],
+    dracoEnabled: true,
+  })
 
 
 
@@ -461,7 +477,7 @@ async function init() {
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
       thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
-      point_camera_at_face(uid === '1' ? camera_1 : camera_2, thisHead, uid)
+      point_camera_at_face(cameras_fn(uid), thisHead, uid)
       await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
       loading.textContent = 'loaded'
     } catch (error) {
@@ -551,6 +567,8 @@ function cameras_fn(which) {
       return camera_2
     case '3':
       return camera_3
+    case '4':
+      return camera_4
     default:
       logg('fpq - cameras_fn default - this should never happen')
       return camera_1
@@ -564,6 +582,9 @@ function heads_fn(which) {
       break;
     case '2':
       return head_2
+      break;
+    case '3':
+      return head_3
       break;
     default:
       logg('fpp - heads_fn default - this should never happen')
@@ -585,7 +606,7 @@ function setActiveCamera(id, instant = false) {
   persistCameraControl(key)
   const dest = cameras_fn(key)
   const destTarget = (cameraTargets[key] || cameraTargets['1']).clone()
-  ;[camera_1, camera_2, camera_3, camera].forEach((cam) => {
+  ;[camera_1, camera_2, camera_3, camera_4, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()
@@ -654,7 +675,7 @@ function updateCameraTransition(dt) {
 }
 
 function onWindowResize() {
-  ;[camera_1, camera_2, camera_3].forEach((cam) => {
+  ;[camera_1, camera_2, camera_3, camera_4].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
       cam.updateProjectionMatrix()

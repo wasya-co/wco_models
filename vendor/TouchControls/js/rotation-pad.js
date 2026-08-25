@@ -139,3 +139,5 @@ RotationPad.prototype = {
 		}, "fast");
 	}
 };
+
+export default RotationPad

@@ -145,3 +145,5 @@ MovementPad.prototype = {
 		}, "fast");
 	}
 };
+
+export default MovementPad

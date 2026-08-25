@@ -38,6 +38,11 @@ import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
 
 import { Capsule } from 'three/addons/math/Capsule.js';
 
+window.THREE = THREE
+const TouchControls = window.TouchControls
+const MovementPad = window.MovementPad
+const RotationPad = window.RotationPad
+
 const timer = new THREE.Timer();
 timer.connect( document );
 
@@ -79,6 +84,8 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 container.appendChild( renderer.domElement );
+
+let touch_controls = null
 
 const GRAVITY = 30;
 
@@ -139,6 +146,7 @@ document.addEventListener( 'keyup', ( event ) => {
 
 container.addEventListener( 'mousedown', () => {
 
+  if ( current_ctrl_type() !== 'fps' ) return
   document.body.requestPointerLock();
 
   mouseTime = performance.now();
@@ -147,12 +155,14 @@ container.addEventListener( 'mousedown', () => {
 
 document.addEventListener( 'mouseup', () => {
 
+  if ( current_ctrl_type() !== 'fps' ) return
   if ( document.pointerLockElement !== null ) throwBall();
 
 } );
 
 document.body.addEventListener( 'mousemove', ( event ) => {
 
+  if ( current_ctrl_type() !== 'fps' ) return
   if ( document.pointerLockElement === document.body ) {
 
     camera.rotation.y -= event.movementX / 500;
@@ -470,15 +480,17 @@ function animate() {
 
   for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
-    controls( deltaTime );
-
-    updatePlayer( deltaTime );
+    if ( current_ctrl_type() !== 'touch' ) {
+      controls( deltaTime );
+      updatePlayer( deltaTime );
+      teleportPlayerIfOob();
+    }
 
     updateSpheres( deltaTime );
 
-    teleportPlayerIfOob();
-
   }
+
+  if ( current_ctrl_type() === 'touch' && touch_controls ) touch_controls.update()
 
   renderer.render( scene, camera );
 
@@ -489,6 +501,61 @@ $('#fullScreen').on('click', () => {
 })
 
 const CTRL_TYPE_STOR = 'ctrl-type'
+
+function current_ctrl_type() {
+  return $('input[name=ctrl-type]:checked').val() || 'fps'
+}
+
+function enable_touch_controls() {
+  if ( document.pointerLockElement ) document.exitPointerLock()
+  if ( !touch_controls ) {
+    const pos = camera.position.clone()
+    const rx = camera.rotation.x
+    const ry = camera.rotation.y
+    camera.position.set( 0, 0, 0 )
+    camera.rotation.set( 0, 0, 0 )
+    touch_controls = new TouchControls( $( container ), camera, {
+      speedFactor: 0.5,
+      delta: 1,
+      rotationFactor: 0.002,
+      maxPitch: 55,
+      hitTest: true,
+      hitTestDistance: 1
+    } )
+    touch_controls.setPosition( pos.x, pos.y, pos.z )
+    touch_controls.setRotation( rx, ry )
+    touch_controls.addToScene( scene )
+    return
+  }
+  touch_controls.enabled = true
+  const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
+  if ( !camera.parent && holder ) holder.add( camera )
+  if ( !touch_controls.fpsBody.parent ) scene.add( touch_controls.fpsBody )
+  $( '.movement-pad, .rotation-pad' ).show()
+}
+
+function disable_touch_controls() {
+  if ( !touch_controls ) return
+  touch_controls.enabled = false
+  $( '.movement-pad, .rotation-pad' ).hide()
+  const worldPos = new THREE.Vector3()
+  camera.getWorldPosition( worldPos )
+  const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
+  const rx = holder ? holder.rotation.x : camera.rotation.x
+  const ry = touch_controls.fpsBody.rotation.y
+  if ( camera.parent ) camera.parent.remove( camera )
+  if ( touch_controls.fpsBody.parent ) scene.remove( touch_controls.fpsBody )
+  camera.position.copy( worldPos )
+  camera.rotation.set( rx, ry, 0 )
+  playerCollider.end.copy( worldPos )
+  playerCollider.start.set( worldPos.x, worldPos.y - 0.65, worldPos.z )
+}
+
+function set_ctrl_type( type ) {
+  if ( type === 'touch' ) enable_touch_controls()
+  else disable_touch_controls()
+}
+
 try {
   const saved = localStorage.getItem(CTRL_TYPE_STOR)
   if (saved) $(`input[name=ctrl-type][value="${saved}"]`).prop('checked', true)
@@ -498,4 +565,6 @@ try {
 $('input[name=ctrl-type]').on('change', function() {
   if (!this.checked) return
   localStorage.setItem(CTRL_TYPE_STOR, this.value)
+  set_ctrl_type(this.value)
 })
+set_ctrl_type(current_ctrl_type())

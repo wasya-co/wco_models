@@ -487,3 +487,15 @@ function animate() {
 $('#fullScreen').on('click', () => {
   document.body.requestFullscreen()
 })
+
+const CTRL_TYPE_STOR = 'ctrl-type'
+try {
+  const saved = localStorage.getItem(CTRL_TYPE_STOR)
+  if (saved) $(`input[name=ctrl-type][value="${saved}"]`).prop('checked', true)
+} catch (error) {
+  console.log(error)
+}
+$('input[name=ctrl-type]').on('change', function() {
+  if (!this.checked) return
+  localStorage.setItem(CTRL_TYPE_STOR, this.value)
+})

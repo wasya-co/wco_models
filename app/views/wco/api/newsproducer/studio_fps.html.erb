@@ -38,7 +38,17 @@
         <em>Status:</em><span id='status'>pending</span>
       </div>
       <button id='fullScreen' />fullScrn</button>
+
+      <div class='item'>
+        <label>
+          <input type="radio" name="ctrl-type" value="touch"> Touch
+        </label>
+        <label>
+          <input type="radio" name="ctrl-type" value="fps"> FPS
+        </label>
+      </div>
     </div>
+
 
     <div class='d-flex ctrl-row header-row'>
       <div class='item'>
@@ -116,7 +126,7 @@
 
     </div>
 
-    <div class='d-flex lights ctrl-row'>
+    <div class='ctrl-row lights'>
       <label>
         <input type="checkbox" class='light-ctrl' name="ambientLight" value="on" checked>
         ambientLight

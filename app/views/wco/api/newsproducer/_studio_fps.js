@@ -465,7 +465,33 @@ function teleportPlayerIfOob() {
     playerCollider.radius = 0.35;
     camera.position.copy( playerCollider.end );
     camera.rotation.set( 0, 0, 0 );
+    if ( touch_controls ) {
+      touch_controls.setPosition( 0, 1, 0 )
+      touch_controls.setRotation( 0, 0 )
+    }
 
+  }
+
+}
+
+function touch_pad_controls( deltaTime ) {
+
+  const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 )
+
+  if ( touch_controls.moveForward() ) {
+    playerVelocity.add( getForwardVector().multiplyScalar( speedDelta ) )
+  }
+
+  if ( touch_controls.moveBackward() ) {
+    playerVelocity.add( getForwardVector().multiplyScalar( - speedDelta ) )
+  }
+
+  if ( touch_controls.moveLeft() ) {
+    playerVelocity.add( getSideVector().multiplyScalar( - speedDelta ) )
+  }
+
+  if ( touch_controls.moveRight() ) {
+    playerVelocity.add( getSideVector().multiplyScalar( speedDelta ) )
   }
 
 }
@@ -482,23 +508,20 @@ function animate() {
 
   for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
-    if ( current_ctrl_type() !== 'touch' ) {
-      controls( deltaTime );
-      updatePlayer( deltaTime );
-      teleportPlayerIfOob();
+    if ( current_ctrl_type() === 'touch' && touch_controls ) {
+      touch_pad_controls( deltaTime )
+    } else {
+      controls( deltaTime )
     }
 
-    updateSpheres( deltaTime );
+    updatePlayer( deltaTime )
+    teleportPlayerIfOob()
+    updateSpheres( deltaTime )
 
   }
 
   if ( current_ctrl_type() === 'touch' && touch_controls ) {
-    touch_controls.update()
-    const p = touch_controls.fpsBody.position
-    playerCollider.end.copy( p )
-    playerCollider.start.set( p.x, p.y - 0.65, p.z )
-    playerCollisions()
-    p.copy( playerCollider.end )
+    touch_controls.setPosition( camera.position.x, camera.position.y, camera.position.z )
     apply_touch_pose()
   }
 
@@ -518,7 +541,6 @@ function current_ctrl_type() {
 
 function apply_touch_pose() {
   const holder = touch_controls.fpsBody.getObjectByName( 'cameraHolder' )
-  camera.position.copy( touch_controls.fpsBody.position )
   camera.rotation.set( holder.rotation.x, touch_controls.fpsBody.rotation.y, 0 )
 }
 
@@ -549,6 +571,9 @@ function enable_touch_controls() {
   touch_controls.enabled = true
   touch_controls.setPosition( pos.x, pos.y, pos.z )
   touch_controls.setRotation( rx, ry )
+  camera.position.copy( pos )
+  playerCollider.end.copy( pos )
+  playerCollider.start.set( pos.x, pos.y - 0.65, pos.z )
   apply_touch_pose()
   $( '.movement-pad, .rotation-pad' ).show()
 }

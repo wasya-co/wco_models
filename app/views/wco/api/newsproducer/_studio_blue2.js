@@ -231,6 +231,15 @@ function scene_cfg(s) {
   return { url: s.url, height: s.height || 3.3 }
 }
 
+function set_shadows(root, cast, receive) {
+  root.traverse((obj) => {
+    if (obj.isMesh) {
+      obj.castShadow = cast
+      obj.receiveShadow = receive
+    }
+  })
+}
+
 /*
 **/
 function setup_light(scene) {
@@ -243,6 +252,15 @@ function setup_light(scene) {
 
   lights.keyLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
   lights.keyLight.position.set( 5, 10, 7 )
+  lights.keyLight.castShadow = true
+  lights.keyLight.shadow.mapSize.set( 2048, 2048 )
+  lights.keyLight.shadow.camera.near = 0.5
+  lights.keyLight.shadow.camera.far = 40
+  lights.keyLight.shadow.camera.left = -10
+  lights.keyLight.shadow.camera.right = 10
+  lights.keyLight.shadow.camera.top = 10
+  lights.keyLight.shadow.camera.bottom = -10
+  lights.keyLight.shadow.bias = -0.0001
   scene.add( lights.keyLight )
 
   lights.fillLight = new THREE.DirectionalLight( 0xffffff, 1.2 )
@@ -315,6 +333,11 @@ function syncLightsFromControls() {
     if (light) light.visible = input.checked
   })
   persistLightControls()
+}
+
+function sync_shadows() {
+  const on = $('#is_shadows').prop('checked')
+  if (lights.keyLight) lights.keyLight.castShadow = on
 }
 
 function gesture_url(g, avatar) {
@@ -476,6 +499,7 @@ async function init() {
     if (studio && studio.parent) studio.parent.remove(studio)
     studio = (await gltfLoader.loadAsync(cfg.url)).scene
     rescale(studio, { height: cfg.height })
+    set_shadows(studio, false, true)
     scene.add(studio)
   }
   await load_studio(scene_url)
@@ -551,6 +575,7 @@ async function init() {
         }
       })
       thisHead.armature.rotation.set(0, 0, 0)
+      set_shadows(thisHead.armature, true, false)
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
       thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
@@ -578,6 +603,8 @@ async function init() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.toneMappingExposure = 1
   renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
   document.getElementById('rotatingC').appendChild( renderer.domElement )
 
   //
@@ -617,6 +644,8 @@ async function init() {
     input.addEventListener('change', syncLightsFromControls)
   })
   syncLightsFromControls()
+  $('#is_shadows').on('change', sync_shadows)
+  sync_shadows()
 
   //
 

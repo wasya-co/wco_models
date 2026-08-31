@@ -55,8 +55,8 @@ wheelMaterial.friction = 0.25
 wheelMaterial.restitution = 0.25
 
 //ground
-const groundGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(100, 100)
-const groundMesh: THREE.Mesh = new THREE.Mesh(groundGeometry, phongMaterial)
+const groundGeometry = new THREE.PlaneGeometry(100, 100)
+const groundMesh = new THREE.Mesh(groundGeometry, phongMaterial)
 groundMesh.rotateX(-Math.PI / 2)
 groundMesh.receiveShadow = true
 scene.add(groundMesh)
@@ -86,8 +86,8 @@ for (let i = 0; i < 100; i++) {
     world.addBody(cylinderBody)
 }
 
-const carBodyGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(1, 1, 2)
-const carBodyMesh: THREE.Mesh = new THREE.Mesh(carBodyGeometry, phongMaterial)
+const carBodyGeometry = new THREE.BoxGeometry(1, 1, 2)
+const carBodyMesh = new THREE.Mesh(carBodyGeometry, phongMaterial)
 carBodyMesh.position.y = 3
 carBodyMesh.castShadow = true
 scene.add(carBodyMesh)
@@ -102,13 +102,13 @@ carBody.position.z = carBodyMesh.position.z
 world.addBody(carBody)
 
 //front left wheel
-const wheelLFGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(
+const wheelLFGeometry = new THREE.CylinderGeometry(
     0.33,
     0.33,
     0.2
 )
 wheelLFGeometry.rotateZ(Math.PI / 2)
-const wheelLFMesh: THREE.Mesh = new THREE.Mesh(wheelLFGeometry, phongMaterial)
+const wheelLFMesh = new THREE.Mesh(wheelLFGeometry, phongMaterial)
 wheelLFMesh.position.x = -1
 wheelLFMesh.position.y = 3
 wheelLFMesh.position.z = -1
@@ -123,13 +123,13 @@ wheelLFBody.position.z = wheelLFMesh.position.z
 world.addBody(wheelLFBody)
 
 //front right wheel
-const wheelRFGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(
+const wheelRFGeometry = new THREE.CylinderGeometry(
     0.33,
     0.33,
     0.2
 )
 wheelRFGeometry.rotateZ(Math.PI / 2)
-const wheelRFMesh: THREE.Mesh = new THREE.Mesh(wheelRFGeometry, phongMaterial)
+const wheelRFMesh = new THREE.Mesh(wheelRFGeometry, phongMaterial)
 wheelRFMesh.position.y = 3
 wheelRFMesh.position.x = 1
 wheelRFMesh.position.z = -1
@@ -144,13 +144,13 @@ wheelRFBody.position.z = wheelRFMesh.position.z
 world.addBody(wheelRFBody)
 
 //back left wheel
-const wheelLBGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(
+const wheelLBGeometry = new THREE.CylinderGeometry(
     0.4,
     0.4,
     0.33
 )
 wheelLBGeometry.rotateZ(Math.PI / 2)
-const wheelLBMesh: THREE.Mesh = new THREE.Mesh(wheelLBGeometry, phongMaterial)
+const wheelLBMesh = new THREE.Mesh(wheelLBGeometry, phongMaterial)
 wheelLBMesh.position.y = 3
 wheelLBMesh.position.x = -1
 wheelLBMesh.position.z = 1
@@ -165,13 +165,13 @@ wheelLBBody.position.z = wheelLBMesh.position.z
 world.addBody(wheelLBBody)
 
 //back right wheel
-const wheelRBGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(
+const wheelRBGeometry = new THREE.CylinderGeometry(
     0.4,
     0.4,
     0.33
 )
 wheelRBGeometry.rotateZ(Math.PI / 2)
-const wheelRBMesh: THREE.Mesh = new THREE.Mesh(wheelRBGeometry, phongMaterial)
+const wheelRBMesh = new THREE.Mesh(wheelRBGeometry, phongMaterial)
 wheelRBMesh.position.y = 3
 wheelRBMesh.position.x = 1
 wheelRBMesh.position.z = 1
@@ -219,8 +219,8 @@ world.addConstraint(constraintRB)
 constraintLB.enableMotor()
 constraintRB.enableMotor()
 
-const keyMap: { [id: string]: boolean } = {}
-const onDocumentKey = (e: KeyboardEvent) => {
+const keyMap = {}
+const onDocumentKey = (e) => {
     keyMap[e.code] = e.type === 'keydown'
 }
 

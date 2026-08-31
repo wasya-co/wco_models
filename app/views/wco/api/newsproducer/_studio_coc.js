@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import Stats from 'three/examples/jsm/libs/stats.module'
-import { GUI } from 'dat.gui'
+import Stats from 'three/addons/libs/stats.module.js'
+
 import * as CANNON from 'cannon-es'
-import CannonDebugRenderer from './utils/cannonDebugRenderer'
+import CannonDebugger from 'cannon-es-debugger'
 
 const scene = new THREE.Scene()
 
@@ -22,9 +22,13 @@ scene.add(light)
 const helper = new THREE.CameraHelper(light.shadow.camera)
 scene.add(helper)
 
+let width = 854
+let height = 480
+const fps = 30
+
 const camera = new THREE.PerspectiveCamera(
     75,
-    window.innerWidth / window.innerHeight,
+    width / height,
     0.1,
     1000
 )
@@ -35,11 +39,17 @@ chaseCamPivot.position.set(0, 2, 4)
 chaseCam.add(chaseCamPivot)
 scene.add(chaseCam)
 
+const container = document.getElementById('rotatingC')
+container.style.touchAction = 'none'
+container.style.width = width + 'px'
+container.style.height = height + 'px'
+
 const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setPixelRatio(window.devicePixelRatio)
+renderer.setSize(width, height)
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
-document.body.appendChild(renderer.domElement)
+container.appendChild(renderer.domElement)
 
 const phongMaterial = new THREE.MeshPhongMaterial()
 
@@ -232,26 +242,19 @@ document.addEventListener('keyup', onDocumentKey, false)
 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
+    camera.aspect = width / height
     camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(width, height)
     render()
 }
 
 const stats = new Stats()
 document.body.appendChild(stats.dom)
 
-const gui = new GUI()
-const physicsFolder = gui.addFolder('Physics')
-physicsFolder.add(world.gravity, 'x', -10.0, 10.0, 0.1)
-physicsFolder.add(world.gravity, 'y', -10.0, 10.0, 0.1)
-physicsFolder.add(world.gravity, 'z', -10.0, 10.0, 0.1)
-physicsFolder.open()
-
 const timer = new THREE.Timer()
 let delta
 
-const cannonDebugRenderer = new CannonDebugRenderer(scene, world)
+const cannonDebugRenderer = new CannonDebugger(scene, world)
 
 const v = new THREE.Vector3()
 let thrusting = false

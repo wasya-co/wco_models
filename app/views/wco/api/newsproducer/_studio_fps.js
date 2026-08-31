@@ -1006,3 +1006,4 @@ $('input[name=weaponCtrl]').on('change', function() {
   set_weapons(this.checked)
 })
 set_weapons(weapons_on())
+set_weapons(weapons_on())

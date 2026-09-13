@@ -67,8 +67,10 @@ container.appendChild( stats.domElement );
 
 const GRAVITY = 30;
 
-const VEHICLE_ACCELERATION = 8
-const VEHICLE_MAX_SPEED = 10
+const VEHICLE_SPEED = 4
+const VEHICLE_REVERSE_SPEED = 3
+const VEHICLE_ACCELERATION = 2.5
+const VEHICLE_BRAKE = 5
 const VEHICLE_TURN_SPEED = 2.2
 
 const NUM_SPHERES = 100;
@@ -108,6 +110,16 @@ const vehicleForward = new THREE.Vector3()
 const vehicleSize = new THREE.Vector3()
 const worldUp = new THREE.Vector3( 0, 1, 0 )
 const vehicleRay = new THREE.Ray()
+const vehicleDownRay = new THREE.Ray()
+const vehicleBaseQuaternion = new THREE.Quaternion()
+const vehicleTargetQuat = new THREE.Quaternion()
+const vehicleAlignQuat = new THREE.Quaternion()
+const vehicleYawQuat = new THREE.Quaternion()
+const vehicleGroundNormal = new THREE.Vector3( 0, 1, 0 )
+const vehicleSlopeForward = new THREE.Vector3()
+const vehicleProbeRight = new THREE.Vector3()
+const vehicleNormalAvg = new THREE.Vector3()
+const vehicleSampleNormal = new THREE.Vector3()
 let vehicleHeading = 0
 let vehicleOnFloor = false
 let vehicleAgainstWall = false
@@ -448,6 +460,7 @@ loader.load( vehicle_url, ( gltf ) => {
 
   const box = new THREE.Box3().setFromObject( vehicle )
   box.getSize( vehicleSize )
+  vehicleBaseQuaternion.copy( vehicle.quaternion )
   vehicle.position.y += 5 - box.min.y
   scene.add( vehicle )
 
@@ -498,33 +511,123 @@ function getVehicleForward() {
 
 }
 
+function probeGround( x, z, from_y ) {
+
+  vehicleDownRay.origin.set( x, from_y, z )
+  vehicleDownRay.direction.set( 0, -1, 0 )
+  return worldOctree.rayIntersect( vehicleDownRay )
+
+}
+
+function groundNormalFromHit( hit, target ) {
+
+  hit.triangle.getNormal( target )
+  if ( target.y < 0 ) target.negate()
+  return target
+
+}
+
+function sampleVehicleGround( from_y ) {
+
+  const forward = getVehicleForward()
+  vehicleProbeRight.set( - forward.z, 0, forward.x )
+  const half_l = Math.max( vehicleSize.x, vehicleSize.z ) * 0.35
+  const half_w = Math.min( vehicleSize.x, vehicleSize.z ) * 0.3
+  const px = vehicle.position.x
+  const pz = vehicle.position.z
+
+  const probes = [
+    [ px, pz ],
+    [ px + forward.x * half_l, pz + forward.z * half_l ],
+    [ px - forward.x * half_l, pz - forward.z * half_l ],
+    [ px + vehicleProbeRight.x * half_w, pz + vehicleProbeRight.z * half_w ],
+    [ px - vehicleProbeRight.x * half_w, pz - vehicleProbeRight.z * half_w ]
+  ]
+
+  vehicleNormalAvg.set( 0, 0, 0 )
+  let ground_y = 0
+  let count = 0
+
+  for ( let i = 0; i < probes.length; i ++ ) {
+
+    const hit = probeGround( probes[ i ][ 0 ], probes[ i ][ 1 ], from_y )
+    if ( ! hit || hit.distance > 4 ) continue
+
+    groundNormalFromHit( hit, vehicleSampleNormal )
+    if ( vehicleSampleNormal.y < 0.25 ) continue
+
+    vehicleNormalAvg.add( vehicleSampleNormal )
+    ground_y += hit.position.y
+    count ++
+
+  }
+
+  if ( count === 0 ) return null
+
+  vehicleNormalAvg.normalize()
+  return { normal: vehicleNormalAvg, y: ground_y / count }
+
+}
+
+function updateVehicleOrientation( deltaTime ) {
+
+  vehicleYawQuat.setFromAxisAngle( worldUp, vehicleHeading )
+  vehicleAlignQuat.setFromUnitVectors( worldUp, vehicleGroundNormal )
+  vehicleTargetQuat.copy( vehicleBaseQuaternion )
+  vehicleTargetQuat.premultiply( vehicleYawQuat )
+  vehicleTargetQuat.premultiply( vehicleAlignQuat )
+  vehicle.quaternion.slerp( vehicleTargetQuat, 1 - Math.exp( - 12 * deltaTime ) )
+
+}
+
+function sitVehicleOnGround( ground_y ) {
+
+  vehicle.updateMatrixWorld( true )
+  const box = new THREE.Box3().setFromObject( vehicle )
+  vehicle.position.y += ground_y - box.min.y
+
+}
+
 function updateVehicle( deltaTime ) {
 
   if ( ! vehicle || ! worldReady ) return
 
-  if ( keyStates[ 'KeyA' ] ) {
+  const holding_a = !! keyStates[ 'KeyA' ]
+  const holding_d = !! keyStates[ 'KeyD' ]
+  const braking = holding_a && holding_d
+
+  if ( holding_a && ! holding_d ) {
 
     vehicleHeading += VEHICLE_TURN_SPEED * deltaTime
-    vehicle.rotateOnWorldAxis( worldUp, VEHICLE_TURN_SPEED * deltaTime )
     vehicleAgainstWall = false
 
   }
 
-  if ( keyStates[ 'KeyD' ] ) {
+  if ( holding_d && ! holding_a ) {
 
     vehicleHeading -= VEHICLE_TURN_SPEED * deltaTime
-    vehicle.rotateOnWorldAxis( worldUp, - VEHICLE_TURN_SPEED * deltaTime )
     vehicleAgainstWall = false
 
   }
 
-  if ( ! vehicleAgainstWall ) {
+  if ( braking ) {
+
+    vehicleAgainstWall = false
+    vehicleSpeed -= VEHICLE_BRAKE * deltaTime
+
+    if ( vehicleSpeed < - VEHICLE_REVERSE_SPEED ) {
+
+      vehicleSpeed = - VEHICLE_REVERSE_SPEED
+
+    }
+
+  } else if ( ! vehicleAgainstWall ) {
 
     vehicleSpeed += VEHICLE_ACCELERATION * deltaTime
 
-    if ( vehicleSpeed > VEHICLE_MAX_SPEED ) {
+    if ( vehicleSpeed > VEHICLE_SPEED ) {
 
-      vehicleSpeed = VEHICLE_MAX_SPEED
+      vehicleSpeed = VEHICLE_SPEED
 
     }
 
@@ -534,51 +637,74 @@ function updateVehicle( deltaTime ) {
 
   }
 
-  const forward = getVehicleForward()
-  vehicle.position.x += forward.x * vehicleSpeed * deltaTime
-  vehicle.position.z += forward.z * vehicleSpeed * deltaTime
-  vehicleVelocity.y -= GRAVITY * deltaTime
-  vehicle.position.y += vehicleVelocity.y * deltaTime
-  vehicle.updateMatrixWorld( true )
+  const ground = sampleVehicleGround( vehicle.position.y + 2 )
+  vehicleOnFloor = !! ground
 
-  const box = new THREE.Box3().setFromObject( vehicle )
-  const center = box.getCenter( vector1 )
-  const ground_radius = Math.max( ( box.max.y - box.min.y ) * 0.35, 0.12 )
-  const ground = new THREE.Sphere(
-    new THREE.Vector3( center.x, box.min.y + ground_radius, center.z ),
-    ground_radius
-  )
-  const ground_result = worldOctree.sphereIntersect( ground )
+  if ( ground ) {
 
-  vehicleOnFloor = false
+    vehicleGroundNormal.lerp( ground.normal, 1 - Math.exp( - 8 * deltaTime ) ).normalize()
 
-  if ( ground_result ) {
+  } else {
 
-    vehicle.position.addScaledVector( ground_result.normal, ground_result.depth )
-
-    if ( ground_result.normal.y > 0.5 && vehicleVelocity.y < 0 ) {
-
-      vehicleOnFloor = true
-      vehicleVelocity.y = 0
-
-    }
+    vehicleGroundNormal.lerp( worldUp, 1 - Math.exp( - 2 * deltaTime ) ).normalize()
 
   }
 
-  vehicle.updateMatrixWorld( true )
-  box.setFromObject( vehicle )
-  box.getCenter( center )
+  updateVehicleOrientation( deltaTime )
 
-  const hit_distance = Math.max( vehicleSize.x, vehicleSize.z ) * 0.55
-  vehicleRay.origin.set( center.x, box.min.y + 0.25, center.z )
-  vehicleRay.direction.copy( forward )
-  const wall_hit = worldOctree.rayIntersect( vehicleRay )
+  const forward = getVehicleForward()
+  vehicleSlopeForward.copy( forward ).addScaledVector( vehicleGroundNormal, - forward.dot( vehicleGroundNormal ) )
 
-  if ( wall_hit && wall_hit.distance < hit_distance ) {
+  if ( vehicleSlopeForward.lengthSq() > 1e-8 ) {
 
-    vehicle.position.addScaledVector( forward, wall_hit.distance - hit_distance )
-    vehicleAgainstWall = true
-    vehicleSpeed = 0
+    vehicleSlopeForward.normalize()
+
+  } else {
+
+    vehicleSlopeForward.copy( forward )
+
+  }
+
+  if ( vehicleOnFloor ) {
+
+    vehicle.position.addScaledVector( vehicleSlopeForward, vehicleSpeed * deltaTime )
+    sitVehicleOnGround( ground.y )
+    vehicleVelocity.y = 0
+
+  } else {
+
+    vehicle.position.x += forward.x * vehicleSpeed * deltaTime
+    vehicle.position.z += forward.z * vehicleSpeed * deltaTime
+    vehicleVelocity.y -= GRAVITY * deltaTime
+    vehicle.position.y += vehicleVelocity.y * deltaTime
+
+  }
+
+  if ( vehicleSpeed !== 0 ) {
+
+    vehicle.updateMatrixWorld( true )
+    const box = new THREE.Box3().setFromObject( vehicle )
+    const center = box.getCenter( vector1 )
+    const hit_distance = Math.max( vehicleSize.x, vehicleSize.z ) * 0.55
+    vehicleRay.origin.copy( center )
+    vehicleRay.direction.copy( vehicleSlopeForward )
+    if ( vehicleSpeed < 0 ) vehicleRay.direction.negate()
+    const wall_hit = worldOctree.rayIntersect( vehicleRay )
+
+    if ( wall_hit && wall_hit.distance < hit_distance ) {
+
+      groundNormalFromHit( wall_hit, vehicleSampleNormal )
+
+      if ( vehicleSampleNormal.y < 0.4 ) {
+
+        const push = vehicleSpeed < 0 ? -1 : 1
+        vehicle.position.addScaledVector( vehicleSlopeForward, ( wall_hit.distance - hit_distance ) * push )
+        vehicleAgainstWall = true
+        vehicleSpeed = 0
+
+      }
+
+    }
 
   }
 

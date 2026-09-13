@@ -25,7 +25,7 @@ const camera = new THREE.OrthographicCamera(
   frustumSize * window.innerWidth / window.innerHeight / 2,
   frustumSize / 2,
   frustumSize / - 2,
-  0.1,
+  -100,
   1000
 );
 camera.rotation.order = 'YXZ';
@@ -67,6 +67,10 @@ container.appendChild( stats.domElement );
 
 const GRAVITY = 30;
 
+const VEHICLE_ACCELERATION = 8
+const VEHICLE_MAX_SPEED = 10
+const VEHICLE_TURN_SPEED = 2.2
+
 const NUM_SPHERES = 100;
 const SPHERE_RADIUS = 0.2;
 
@@ -95,6 +99,19 @@ for ( let i = 0; i < NUM_SPHERES; i ++ ) {
 }
 
 const worldOctree = new Octree();
+let worldReady = false
+let octreeHelper = null
+
+let vehicle = null
+const vehicleVelocity = new THREE.Vector3()
+const vehicleForward = new THREE.Vector3()
+const vehicleSize = new THREE.Vector3()
+const worldUp = new THREE.Vector3( 0, 1, 0 )
+const vehicleRay = new THREE.Ray()
+let vehicleHeading = 0
+let vehicleOnFloor = false
+let vehicleAgainstWall = false
+let vehicleSpeed = 0
 
 const playerCollider = new Capsule( new THREE.Vector3( 0, 0.35, 0 ), new THREE.Vector3( 0, 1, 0 ), 0.35 );
 
@@ -114,9 +131,10 @@ const vector3 = new THREE.Vector3();
 
 const vehicle_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/vehicles/000mb car-mazda-miata/model.glb'
 const vehicle_config = {
-  height: 1.235,
-  length: 3.970,
-  width: 1.675,
+  height: 0.5,
+  // height: 1.235,
+  // length: 3.970,
+  // width: 1.675,
 }
 
 
@@ -239,7 +257,11 @@ function updatePlayer( deltaTime ) {
 
   playerCollisions();
 
-  camera.position.copy( playerCollider.end );
+  if ( ! vehicle ) {
+
+    camera.position.copy( playerCollider.end );
+
+  }
 
 }
 
@@ -386,18 +408,6 @@ function controls( deltaTime ) {
 
   }
 
-  if ( keyStates[ 'KeyA' ] ) {
-
-    playerVelocity.add( getSideVector().multiplyScalar( - speedDelta ) );
-
-  }
-
-  if ( keyStates[ 'KeyD' ] ) {
-
-    playerVelocity.add( getSideVector().multiplyScalar( speedDelta ) );
-
-  }
-
   if ( playerOnFloor ) {
 
     if ( keyStates[ 'Space' ] ) {
@@ -410,14 +420,45 @@ function controls( deltaTime ) {
 
 }
 
+function rescale(model, config) {
+  const box = new THREE.Box3().setFromObject(model)
+  const size = box.getSize(new THREE.Vector3())
+  const scale = config.height / size.y
+  model.scale.setScalar(scale)
+}
+
 const loader = new GLTFLoader(); // .setPath( './models/gltf/' );
 const scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/scenes/000mb%20collision-world/collision-world.glb'
+
+loader.load( vehicle_url, ( gltf ) => {
+
+  vehicle = gltf.scene
+  rescale( vehicle, vehicle_config )
+
+  vehicle.traverse( child => {
+
+    if ( child.isMesh ) {
+
+      child.castShadow = true
+      child.receiveShadow = true
+
+    }
+
+  } )
+
+  const box = new THREE.Box3().setFromObject( vehicle )
+  box.getSize( vehicleSize )
+  vehicle.position.y += 5 - box.min.y
+  scene.add( vehicle )
+
+} )
 
 loader.load( scene_url, ( gltf ) => {
 
   scene.add( gltf.scene );
 
   worldOctree.fromGraphNode( gltf.scene );
+  worldReady = true
 
   gltf.scene.traverse( child => {
 
@@ -436,19 +477,120 @@ loader.load( scene_url, ( gltf ) => {
 
   } );
 
-  const helper = new OctreeHelper( worldOctree );
-  helper.visible = false;
-  scene.add( helper );
+  octreeHelper = new OctreeHelper( worldOctree );
+  octreeHelper.visible = false;
+  scene.add( octreeHelper );
 
   const gui = new GUI( { width: 200 } );
   gui.add( { debug: false }, 'debug' )
     .onChange( function ( value ) {
 
-      helper.visible = value;
+      octreeHelper.visible = value;
 
     } );
 
 } );
+
+function getVehicleForward() {
+
+  vehicleForward.set( - Math.sin( vehicleHeading ), 0, - Math.cos( vehicleHeading ) )
+  return vehicleForward
+
+}
+
+function updateVehicle( deltaTime ) {
+
+  if ( ! vehicle || ! worldReady ) return
+
+  if ( keyStates[ 'KeyA' ] ) {
+
+    vehicleHeading += VEHICLE_TURN_SPEED * deltaTime
+    vehicle.rotateOnWorldAxis( worldUp, VEHICLE_TURN_SPEED * deltaTime )
+    vehicleAgainstWall = false
+
+  }
+
+  if ( keyStates[ 'KeyD' ] ) {
+
+    vehicleHeading -= VEHICLE_TURN_SPEED * deltaTime
+    vehicle.rotateOnWorldAxis( worldUp, - VEHICLE_TURN_SPEED * deltaTime )
+    vehicleAgainstWall = false
+
+  }
+
+  if ( ! vehicleAgainstWall ) {
+
+    vehicleSpeed += VEHICLE_ACCELERATION * deltaTime
+
+    if ( vehicleSpeed > VEHICLE_MAX_SPEED ) {
+
+      vehicleSpeed = VEHICLE_MAX_SPEED
+
+    }
+
+  } else {
+
+    vehicleSpeed = 0
+
+  }
+
+  const forward = getVehicleForward()
+  vehicle.position.x += forward.x * vehicleSpeed * deltaTime
+  vehicle.position.z += forward.z * vehicleSpeed * deltaTime
+  vehicleVelocity.y -= GRAVITY * deltaTime
+  vehicle.position.y += vehicleVelocity.y * deltaTime
+  vehicle.updateMatrixWorld( true )
+
+  const box = new THREE.Box3().setFromObject( vehicle )
+  const center = box.getCenter( vector1 )
+  const ground_radius = Math.max( ( box.max.y - box.min.y ) * 0.35, 0.12 )
+  const ground = new THREE.Sphere(
+    new THREE.Vector3( center.x, box.min.y + ground_radius, center.z ),
+    ground_radius
+  )
+  const ground_result = worldOctree.sphereIntersect( ground )
+
+  vehicleOnFloor = false
+
+  if ( ground_result ) {
+
+    vehicle.position.addScaledVector( ground_result.normal, ground_result.depth )
+
+    if ( ground_result.normal.y > 0.5 && vehicleVelocity.y < 0 ) {
+
+      vehicleOnFloor = true
+      vehicleVelocity.y = 0
+
+    }
+
+  }
+
+  vehicle.updateMatrixWorld( true )
+  box.setFromObject( vehicle )
+  box.getCenter( center )
+
+  const hit_distance = Math.max( vehicleSize.x, vehicleSize.z ) * 0.55
+  vehicleRay.origin.set( center.x, box.min.y + 0.25, center.z )
+  vehicleRay.direction.copy( forward )
+  const wall_hit = worldOctree.rayIntersect( vehicleRay )
+
+  if ( wall_hit && wall_hit.distance < hit_distance ) {
+
+    vehicle.position.addScaledVector( forward, wall_hit.distance - hit_distance )
+    vehicleAgainstWall = true
+    vehicleSpeed = 0
+
+  }
+
+}
+
+function followVehiclePosition() {
+
+  if ( ! vehicle ) return
+
+  camera.position.copy( vehicle.position )
+
+}
 
 function teleportPlayerIfOob() {
 
@@ -457,8 +599,12 @@ function teleportPlayerIfOob() {
     playerCollider.start.set( 0, 0.35, 0 );
     playerCollider.end.set( 0, 1, 0 );
     playerCollider.radius = 0.35;
-    camera.position.copy( playerCollider.end );
-    camera.rotation.set( 0, 0, 0 );
+    if ( ! vehicle ) {
+
+      camera.position.copy( playerCollider.end );
+      camera.rotation.set( 0, 0, 0 );
+
+    }
 
   }
 
@@ -481,6 +627,10 @@ function animate() {
     updatePlayer( deltaTime );
 
     updateSpheres( deltaTime );
+
+    updateVehicle( deltaTime );
+
+    followVehiclePosition();
 
     teleportPlayerIfOob();
 

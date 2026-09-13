@@ -1,3 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js - misc - octree collisions</title>
+		<meta charset=utf-8 />
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<meta property="og:title" content="three.js - misc - octree collisions">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://threejs.org/examples/games_fps.html">
+		<meta property="og:image" content="https://threejs.org/examples/screenshots/games_fps.jpg">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+	<body>
+		<div id="info">
+			Octree threejs demo - basic collisions with static triangle mesh<br />
+			MOUSE to look around and to throw balls<br/>
+			WASD to move and SPACE to jump
+		</div>
+		<div id="container"></div>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "../build/three.module.js",
+					"three/addons/": "./jsm/"
+				}
+			}
+		</script>
+
+		<script type="module">
 
 			import * as THREE from 'three';
 
@@ -41,7 +71,7 @@
 			directionalLight.shadow.bias = - 0.00006;
 			scene.add( directionalLight );
 
-			const container = document.getElementById( 'rotatingC' );
+			const container = document.getElementById( 'container' );
 
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
@@ -388,10 +418,9 @@
 
 			}
 
-			const loader = new GLTFLoader(); // .setPath( './models/gltf/' );
-      const scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/scenes/000mb%20collision-world/collision-world.glb'
+			const loader = new GLTFLoader().setPath( './models/gltf/' );
 
-			loader.load( scene_url, ( gltf ) => {
+			loader.load( 'collision-world.glb', ( gltf ) => {
 
 				scene.add( gltf.scene );
 
@@ -469,3 +498,7 @@
 				stats.update();
 
 			}
+
+		</script>
+	</body>
+</html>

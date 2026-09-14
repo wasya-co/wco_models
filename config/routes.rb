@@ -25,6 +25,7 @@ Wco::Engine.routes.draw do
     get 'newsproducer/studio_blue',       to: 'newsproducer#studio_blue'
     get 'newsproducer/studio_fps',       to: 'newsproducer#studio_fps'
     get 'newsproducer/studio_coc', to: 'newsproducer#studio_coc'
+    get 'newsproducer/studio_ra2', to: 'newsproducer#studio_ra2'
 
 
     match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]

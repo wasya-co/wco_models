@@ -28,11 +28,11 @@ class Wco::Api::NewsproducerController < Wco::ApiController
     render 'studio_blue2'
   end
 
-  def studio_green
+  def studio_fps
     authorize! :home, Wco
   end
 
-  def studio_fps
+  def studio_green
     authorize! :home, Wco
   end
 

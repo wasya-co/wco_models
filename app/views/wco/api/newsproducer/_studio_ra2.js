@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import Stats from 'three/addons/libs/stats.module.js'
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 const scene = new THREE.Scene()
 scene.background = new THREE.Color( 0x88ccee )
@@ -51,6 +52,11 @@ renderer.shadowMap.type = THREE.VSMShadowMap
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 container.appendChild( renderer.domElement )
 
+const controls = new OrbitControls( camera, renderer.domElement )
+controls.enableDamping = true
+controls.target.set( 0, 0, 0 )
+controls.update()
+
 const stats = new Stats()
 stats.domElement.style.position = 'absolute'
 stats.domElement.style.top = '0px'
@@ -73,19 +79,18 @@ function onWindowResize() {
 
 const loader = new GLTFLoader()
 const scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/scenes/000mb%20collision-world/collision-world.glb'
+const object_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/City_Pack/Big%20Building.glb'
 
-loader.load( scene_url, ( gltf ) => {
+function enableShadows( model ) {
 
-  scene.add( gltf.scene )
-
-  gltf.scene.traverse( child => {
+  model.traverse( child => {
 
     if ( child.isMesh ) {
 
       child.castShadow = true
       child.receiveShadow = true
 
-      if ( child.material.map ) {
+      if ( child.material && child.material.map ) {
 
         child.material.map.anisotropy = 4
 
@@ -95,15 +100,45 @@ loader.load( scene_url, ( gltf ) => {
 
   } )
 
+}
+
+function sitOnGround( model ) {
+
+  model.updateMatrixWorld( true )
+  const box = new THREE.Box3().setFromObject( model )
+  model.position.y -= box.min.y
+
+}
+
+loader.load( scene_url, ( gltf ) => {
+
+  scene.add( gltf.scene )
+  gltf.scene.rotation.y = Math.PI / 4
+  enableShadows( gltf.scene )
+
+  gltf.scene.updateMatrixWorld( true )
   const box = new THREE.Box3().setFromObject( gltf.scene )
   const center = box.getCenter( new THREE.Vector3() )
   camera.position.set( center.x, center.y + 6, center.z + 8 )
   camera.lookAt( center )
+  controls.target.copy( center )
+  controls.update()
+
+} )
+
+loader.load( object_url, ( gltf ) => {
+
+  const object = gltf.scene
+  enableShadows( object )
+  sitOnGround( object )
+  object.rotation.y = Math.PI / 4
+  scene.add( object )
 
 } )
 
 function animate() {
 
+  controls.update()
   renderer.render( scene, camera )
   stats.update()
 

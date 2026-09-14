@@ -102,22 +102,112 @@ function enableShadows( model ) {
 
 }
 
-function sitOnGround( model ) {
+function placeOnPoint( model, point ) {
 
+  model.position.copy( point )
   model.updateMatrixWorld( true )
   const box = new THREE.Box3().setFromObject( model )
-  model.position.y -= box.min.y
+  model.position.y += point.y - box.min.y
+
+}
+
+function makeGhost( model ) {
+
+  const ghost = model.clone( true )
+  ghost.traverse( child => {
+
+    if ( ! child.isMesh ) return
+
+    const source = Array.isArray( child.material ) ? child.material : [ child.material ]
+    const ghost_mats = source.map( mat => {
+
+      const copy = mat.clone()
+      copy.transparent = true
+      copy.opacity = 0.4
+      copy.depthWrite = false
+      copy.needsUpdate = true
+      return copy
+
+    } )
+    child.material = Array.isArray( child.material ) ? ghost_mats : ghost_mats[ 0 ]
+    child.castShadow = false
+    child.receiveShadow = false
+    child.raycast = function () {}
+
+  } )
+  ghost.rotation.y = Math.PI / 4
+  return ghost
+
+}
+
+const raycaster = new THREE.Raycaster()
+const pointer = new THREE.Vector2()
+const groundPlane = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ), 0 )
+const hitPoint = new THREE.Vector3()
+
+let worldRoot = null
+let objectTemplate = null
+let objectGhost = null
+let pointerDown = null
+
+function getPointerHit( event ) {
+
+  const rect = renderer.domElement.getBoundingClientRect()
+  pointer.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1
+  pointer.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1
+  raycaster.setFromCamera( pointer, camera )
+
+  const targets = []
+  if ( worldRoot ) targets.push( worldRoot )
+  const hits = targets.length ? raycaster.intersectObjects( targets, true ) : []
+  if ( hits.length ) return hits[ 0 ].point
+
+  if ( raycaster.ray.intersectPlane( groundPlane, hitPoint ) ) return hitPoint
+  return null
+
+}
+
+function moveGhost( event ) {
+
+  if ( ! objectGhost ) return
+
+  const point = getPointerHit( event )
+  if ( ! point ) {
+
+    objectGhost.visible = false
+    return
+
+  }
+
+  objectGhost.visible = true
+  placeOnPoint( objectGhost, point )
+
+}
+
+function placeObject( event ) {
+
+  if ( ! objectTemplate ) return
+
+  const point = getPointerHit( event )
+  if ( ! point ) return
+
+  const placed = objectTemplate.clone( true )
+  enableShadows( placed )
+  placed.rotation.y = Math.PI / 4
+  placeOnPoint( placed, point )
+  scene.add( placed )
 
 }
 
 loader.load( scene_url, ( gltf ) => {
 
-  scene.add( gltf.scene )
-  gltf.scene.rotation.y = Math.PI / 4
-  enableShadows( gltf.scene )
+  worldRoot = gltf.scene
+  scene.add( worldRoot )
+  worldRoot.rotation.y = Math.PI / 4
+  enableShadows( worldRoot )
 
-  gltf.scene.updateMatrixWorld( true )
-  const box = new THREE.Box3().setFromObject( gltf.scene )
+  worldRoot.updateMatrixWorld( true )
+  const box = new THREE.Box3().setFromObject( worldRoot )
   const center = box.getCenter( new THREE.Vector3() )
   camera.position.set( center.x, center.y + 6, center.z + 8 )
   camera.lookAt( center )
@@ -128,11 +218,31 @@ loader.load( scene_url, ( gltf ) => {
 
 loader.load( object_url, ( gltf ) => {
 
-  const object = gltf.scene
-  enableShadows( object )
-  sitOnGround( object )
-  object.rotation.y = Math.PI / 4
-  scene.add( object )
+  objectTemplate = gltf.scene
+  objectGhost = makeGhost( objectTemplate )
+  objectGhost.visible = false
+  scene.add( objectGhost )
+
+} )
+
+renderer.domElement.addEventListener( 'pointermove', moveGhost )
+
+renderer.domElement.addEventListener( 'pointerdown', event => {
+
+  pointerDown = { x: event.clientX, y: event.clientY }
+
+} )
+
+renderer.domElement.addEventListener( 'pointerup', event => {
+
+  if ( ! pointerDown ) return
+
+  const dx = event.clientX - pointerDown.x
+  const dy = event.clientY - pointerDown.y
+  pointerDown = null
+  if ( dx * dx + dy * dy > 25 ) return
+
+  placeObject( event )
 
 } )
 

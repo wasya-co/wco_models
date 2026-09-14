@@ -1,0 +1,677 @@
+
+import * as THREE from 'three'
+
+import Stats from 'three/addons/libs/stats.module.js'
+
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
+
+import * as CANNON from 'cannon-es'
+import CannonDebugger from 'cannon-es-debugger'
+
+const timer = new THREE.Timer()
+timer.connect( document )
+
+const scene = new THREE.Scene()
+scene.background = new THREE.Color( 0x88ccee )
+scene.fog = new THREE.Fog( 0x88ccee, 0, 50 )
+
+const frustumSize = 10
+const camera = new THREE.OrthographicCamera(
+  frustumSize * window.innerWidth / window.innerHeight / - 2,
+  frustumSize * window.innerWidth / window.innerHeight / 2,
+  frustumSize / 2,
+  frustumSize / - 2,
+  -100,
+  1000
+)
+camera.rotation.order = 'YXZ'
+
+const fillLight1 = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 )
+fillLight1.position.set( 2, 1, 1 )
+scene.add( fillLight1 )
+
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 2.5 )
+directionalLight.position.set( - 5, 25, - 1 )
+directionalLight.castShadow = true
+directionalLight.shadow.camera.near = 0.01
+directionalLight.shadow.camera.far = 500
+directionalLight.shadow.camera.right = 30
+directionalLight.shadow.camera.left = - 30
+directionalLight.shadow.camera.top	= 30
+directionalLight.shadow.camera.bottom = - 30
+directionalLight.shadow.mapSize.width = 1024
+directionalLight.shadow.mapSize.height = 1024
+directionalLight.shadow.radius = 4
+directionalLight.shadow.bias = - 0.00006
+scene.add( directionalLight )
+
+const container = document.getElementById( 'rotatingC' )
+
+const renderer = new THREE.WebGLRenderer( { antialias: true } )
+renderer.setPixelRatio( window.devicePixelRatio )
+renderer.setSize( window.innerWidth, window.innerHeight )
+renderer.setAnimationLoop( animate )
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.VSMShadowMap
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+container.appendChild( renderer.domElement )
+
+const stats = new Stats()
+stats.domElement.style.position = 'absolute'
+stats.domElement.style.top = '0px'
+container.appendChild( stats.domElement )
+
+const GRAVITY = 16
+
+const VEHICLE_SPEED = 4
+const VEHICLE_REVERSE_SPEED = 3
+const VEHICLE_ACCELERATION = 2.5
+const VEHICLE_BRAKE = 5
+const VEHICLE_TURN_SPEED = 2.2
+const VEHICLE_MASS = 80
+const VEHICLE_DRIVE_FORCE = VEHICLE_MASS * VEHICLE_ACCELERATION
+const VEHICLE_BRAKE_FORCE = VEHICLE_MASS * VEHICLE_BRAKE
+const VEHICLE_TURN_TORQUE = 55
+const VEHICLE_UPRIGHT_STRENGTH = 14
+
+const NUM_SPHERES = 100
+const SPHERE_RADIUS = 0.2
+
+const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 )
+const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } )
+
+const world = new CANNON.World()
+world.gravity.set( 0, - GRAVITY, 0 )
+world.broadphase = new CANNON.NaiveBroadphase()
+world.allowSleep = true
+world.solver.iterations = 15
+world.defaultContactMaterial.friction = 0.4
+world.defaultContactMaterial.restitution = 0.1
+
+const groundMaterial = new CANNON.Material( 'ground' )
+const vehicleMaterial = new CANNON.Material( 'vehicle' )
+const playerMaterial = new CANNON.Material( 'player' )
+const ballMaterial = new CANNON.Material( 'ball' )
+
+world.addContactMaterial( new CANNON.ContactMaterial( groundMaterial, vehicleMaterial, {
+  friction: 0.3,
+  restitution: 0.05
+} ) )
+world.addContactMaterial( new CANNON.ContactMaterial( groundMaterial, playerMaterial, {
+  friction: 0.1,
+  restitution: 0
+} ) )
+world.addContactMaterial( new CANNON.ContactMaterial( groundMaterial, ballMaterial, {
+  friction: 0.4,
+  restitution: 0.6
+} ) )
+world.addContactMaterial( new CANNON.ContactMaterial( vehicleMaterial, ballMaterial, {
+  friction: 0.3,
+  restitution: 0.4
+} ) )
+
+const cannonDebugger = new CannonDebugger( scene, world )
+let debugPhysics = false
+
+let worldReady = false
+
+let vehicle = null
+let vehicleBody = null
+const vehicleForward = new THREE.Vector3()
+const vehicleSize = new THREE.Vector3()
+const vehicleRoofLocal = new CANNON.Vec3( 0, 1, 0 )
+const vehicleWorldUp = new CANNON.Vec3()
+const vehicleRighting = new CANNON.Vec3()
+const vehicleWallNormal = new CANNON.Vec3()
+const vehicleRayFrom = new CANNON.Vec3()
+const vehicleRayTo = new CANNON.Vec3()
+const vehicleRayResult = new CANNON.RaycastResult()
+const worldUpVec = new CANNON.Vec3( 0, 1, 0 )
+const vehicleInvQuat = new CANNON.Quaternion()
+let vehicleHeading = 0
+let vehicleSpeed = 0
+
+const playerBody = new CANNON.Body( {
+  mass: 5,
+  material: playerMaterial,
+  linearDamping: 0.15,
+  fixedRotation: true
+} )
+playerBody.addShape( new CANNON.Sphere( 0.35 ) )
+playerBody.position.set( 0, 1, 0 )
+playerBody.updateMassProperties()
+world.addBody( playerBody )
+
+const playerVelocity = new THREE.Vector3()
+const playerDirection = new THREE.Vector3()
+
+let playerOnFloor = false
+let mouseTime = 0
+
+const keyStates = {}
+
+const vector1 = new THREE.Vector3()
+
+const spheres = []
+let sphereIdx = 0
+
+for ( let i = 0; i < NUM_SPHERES; i ++ ) {
+
+  const mesh = new THREE.Mesh( sphereGeometry, sphereMaterial )
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+  scene.add( mesh )
+
+  const body = new CANNON.Body( {
+    mass: 0.4,
+    material: ballMaterial,
+    linearDamping: 0.2,
+    angularDamping: 0.2
+  } )
+  body.addShape( new CANNON.Sphere( SPHERE_RADIUS ) )
+  body.position.set( 0, -100, 0 )
+  body.sleep()
+  world.addBody( body )
+
+  spheres.push( { mesh: mesh, body: body } )
+
+}
+
+const vehicle_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/vehicles/000mb car-mazda-miata/model.glb'
+const vehicle_config = {
+  height: 0.5,
+}
+
+document.addEventListener( 'keydown', ( event ) => {
+
+  keyStates[ event.code ] = true
+
+} )
+
+document.addEventListener( 'keyup', ( event ) => {
+
+  keyStates[ event.code ] = false
+
+} )
+
+container.addEventListener( 'mousedown', () => {
+
+  document.body.requestPointerLock()
+  mouseTime = performance.now()
+
+} )
+
+document.addEventListener( 'mouseup', () => {
+
+  if ( document.pointerLockElement !== null ) throwBall()
+
+} )
+
+document.body.addEventListener( 'mousemove', ( event ) => {
+
+  if ( document.pointerLockElement === document.body ) {
+
+    camera.rotation.y -= event.movementX / 500
+    camera.rotation.x -= event.movementY / 500
+
+  }
+
+} )
+
+window.addEventListener( 'resize', onWindowResize )
+
+function onWindowResize() {
+
+  const aspect = window.innerWidth / window.innerHeight
+  camera.left = frustumSize * aspect / - 2
+  camera.right = frustumSize * aspect / 2
+  camera.top = frustumSize / 2
+  camera.bottom = frustumSize / - 2
+  camera.updateProjectionMatrix()
+
+  renderer.setSize( window.innerWidth, window.innerHeight )
+
+}
+
+function throwBall() {
+
+  const sphere = spheres[ sphereIdx ]
+
+  camera.getWorldDirection( playerDirection )
+
+  sphere.body.wakeUp()
+  sphere.body.position.set(
+    playerBody.position.x + playerDirection.x * 0.8,
+    playerBody.position.y + 0.3 + playerDirection.y * 0.8,
+    playerBody.position.z + playerDirection.z * 0.8
+  )
+
+  const impulse = 15 + 30 * ( 1 - Math.exp( ( mouseTime - performance.now() ) * 0.001 ) )
+
+  sphere.body.velocity.set(
+    playerDirection.x * impulse + playerBody.velocity.x,
+    playerDirection.y * impulse + playerBody.velocity.y,
+    playerDirection.z * impulse + playerBody.velocity.z
+  )
+  sphere.body.angularVelocity.set( 0, 0, 0 )
+
+  sphereIdx = ( sphereIdx + 1 ) % spheres.length
+
+}
+
+function bodyHasFloorContact( body ) {
+
+  for ( let i = 0; i < world.contacts.length; i ++ ) {
+
+    const contact = world.contacts[ i ]
+    if ( contact.bi !== body && contact.bj !== body ) continue
+
+    const ny = contact.bi === body ? contact.ni.y : - contact.ni.y
+    if ( ny > 0.4 ) return true
+
+  }
+
+  return false
+
+}
+
+function updatePlayer( deltaTime ) {
+
+  playerOnFloor = bodyHasFloorContact( playerBody )
+
+  const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 )
+
+  if ( keyStates[ 'KeyW' ] ) {
+
+    playerVelocity.add( getForwardVector().multiplyScalar( speedDelta ) )
+
+  }
+
+  if ( keyStates[ 'KeyS' ] ) {
+
+    playerVelocity.add( getForwardVector().multiplyScalar( - speedDelta ) )
+
+  }
+
+  playerVelocity.x *= Math.exp( - 4 * deltaTime )
+  playerVelocity.z *= Math.exp( - 4 * deltaTime )
+
+  playerBody.velocity.x = playerVelocity.x
+  playerBody.velocity.z = playerVelocity.z
+
+  if ( playerOnFloor && keyStates[ 'Space' ] ) {
+
+    playerBody.velocity.y = 8
+    playerOnFloor = false
+
+  }
+
+  if ( ! vehicle ) {
+
+    camera.position.set( playerBody.position.x, playerBody.position.y + 0.4, playerBody.position.z )
+
+  }
+
+}
+
+function getForwardVector() {
+
+  camera.getWorldDirection( playerDirection )
+  playerDirection.y = 0
+  playerDirection.normalize()
+
+  return playerDirection
+
+}
+
+function rescale( model, config ) {
+
+  const box = new THREE.Box3().setFromObject( model )
+  const size = box.getSize( new THREE.Vector3() )
+  const scale = config.height / size.y
+  model.scale.setScalar( scale )
+
+}
+
+function addTrimeshFromObject( object ) {
+
+  object.updateWorldMatrix( true, true )
+
+  object.traverse( child => {
+
+    if ( ! child.isMesh || ! child.geometry ) return
+
+    const geometry = child.geometry.index ? child.geometry.toNonIndexed() : child.geometry
+    const position = geometry.attributes.position
+    const vertices = []
+    const indices = []
+    const point = new THREE.Vector3()
+
+    for ( let i = 0; i < position.count; i ++ ) {
+
+      point.fromBufferAttribute( position, i ).applyMatrix4( child.matrixWorld )
+      vertices.push( point.x, point.y, point.z )
+
+    }
+
+    for ( let i = 0; i < position.count; i += 3 ) {
+
+      indices.push( i, i + 1, i + 2 )
+
+    }
+
+    if ( indices.length === 0 ) return
+
+    const trimesh = new CANNON.Trimesh( vertices, indices )
+    trimesh.updateTree()
+    const body = new CANNON.Body( { mass: 0, material: groundMaterial } )
+    body.addShape( trimesh )
+    body.updateBoundingRadius()
+    world.addBody( body )
+
+  } )
+
+}
+
+function createVehicleBody() {
+
+  if ( ! vehicle || vehicleBody || ! worldReady ) return
+
+  vehicle.updateMatrixWorld( true )
+  const box = new THREE.Box3().setFromObject( vehicle )
+  box.getSize( vehicleSize )
+  const center = box.getCenter( vector1 )
+  const offset = center.clone().sub( vehicle.position )
+  const radius = Math.max( Math.min( vehicleSize.x, vehicleSize.y, vehicleSize.z ) * 0.42, 0.12 )
+  const hx = Math.max( vehicleSize.x * 0.5 - radius, 0 )
+  const hz = Math.max( vehicleSize.z * 0.5 - radius, 0 )
+
+  vehicleBody = new CANNON.Body( {
+    mass: VEHICLE_MASS,
+    material: vehicleMaterial,
+    linearDamping: 0.01,
+    angularDamping: 0.2,
+    allowSleep: false,
+    collisionFilterGroup: 2,
+    collisionFilterMask: 1
+  } )
+
+  const sphere = new CANNON.Sphere( radius )
+  const points = [
+    [ offset.x, offset.y, offset.z ],
+    [ offset.x + hx, offset.y, offset.z + hz ],
+    [ offset.x + hx, offset.y, offset.z - hz ],
+    [ offset.x - hx, offset.y, offset.z + hz ],
+    [ offset.x - hx, offset.y, offset.z - hz ]
+  ]
+
+  for ( let i = 0; i < points.length; i ++ ) {
+
+    vehicleBody.addShape( sphere, new CANNON.Vec3( points[ i ][ 0 ], points[ i ][ 1 ], points[ i ][ 2 ] ) )
+
+  }
+
+  vehicleBody.position.set( vehicle.position.x, vehicle.position.y, vehicle.position.z )
+  vehicleBody.quaternion.set(
+    vehicle.quaternion.x,
+    vehicle.quaternion.y,
+    vehicle.quaternion.z,
+    vehicle.quaternion.w
+  )
+  vehicleInvQuat.copy( vehicleBody.quaternion ).inverse()
+  vehicleInvQuat.vmult( worldUpVec, vehicleRoofLocal )
+  world.addBody( vehicleBody )
+
+}
+
+const loader = new GLTFLoader()
+const scene_url = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/scenes/000mb%20collision-world/collision-world.glb'
+
+loader.load( vehicle_url, ( gltf ) => {
+
+  vehicle = gltf.scene
+  rescale( vehicle, vehicle_config )
+
+  vehicle.traverse( child => {
+
+    if ( child.isMesh ) {
+
+      child.castShadow = true
+      child.receiveShadow = true
+
+    }
+
+  } )
+
+  const box = new THREE.Box3().setFromObject( vehicle )
+  vehicle.position.y += 5 - box.min.y
+  scene.add( vehicle )
+  createVehicleBody()
+
+} )
+
+loader.load( scene_url, ( gltf ) => {
+
+  scene.add( gltf.scene )
+  addTrimeshFromObject( gltf.scene )
+  worldReady = true
+  createVehicleBody()
+
+  gltf.scene.traverse( child => {
+
+    if ( child.isMesh ) {
+
+      child.castShadow = true
+      child.receiveShadow = true
+
+      if ( child.material.map ) {
+
+        child.material.map.anisotropy = 4
+
+      }
+
+    }
+
+  } )
+
+  const gui = new GUI( { width: 200 } )
+  gui.add( { debug: false }, 'debug' )
+    .onChange( function ( value ) {
+
+      debugPhysics = value
+
+    } )
+
+} )
+
+function keepVehicleUpright( deltaTime ) {
+
+  if ( ! vehicleBody ) return
+
+  vehicleBody.quaternion.vmult( vehicleRoofLocal, vehicleWorldUp )
+  vehicleRighting.copy( vehicleWorldUp ).cross( worldUpVec )
+  vehicleBody.angularVelocity.x += vehicleRighting.x * VEHICLE_UPRIGHT_STRENGTH * deltaTime
+  vehicleBody.angularVelocity.z += vehicleRighting.z * VEHICLE_UPRIGHT_STRENGTH * deltaTime
+  vehicleBody.angularVelocity.x *= 0.9
+  vehicleBody.angularVelocity.z *= 0.9
+
+}
+
+function wallAhead( dir_x, dir_z, distance ) {
+
+  const side_x = - dir_z
+  const side_z = dir_x
+  const y = vehicleBody.position.y + 0.22
+  const sides = [ 0, 0.18, -0.18 ]
+
+  for ( let i = 0; i < sides.length; i ++ ) {
+
+    vehicleRayFrom.set(
+      vehicleBody.position.x + side_x * sides[ i ],
+      y,
+      vehicleBody.position.z + side_z * sides[ i ]
+    )
+    vehicleRayTo.set(
+      vehicleRayFrom.x + dir_x * distance,
+      y,
+      vehicleRayFrom.z + dir_z * distance
+    )
+    vehicleRayResult.reset()
+    const hit = world.raycastClosest( vehicleRayFrom, vehicleRayTo, {
+      skipBackfaces: true,
+      collisionFilterMask: 1
+    }, vehicleRayResult )
+
+    if ( hit && vehicleRayResult.body !== vehicleBody && Math.abs( vehicleRayResult.hitNormalWorld.y ) < 0.55 ) {
+
+      return true
+
+    }
+
+  }
+
+  return false
+
+}
+
+function updateVehicleInput( deltaTime ) {
+
+  if ( ! vehicleBody ) return
+
+  const holding_a = !! keyStates[ 'KeyA' ]
+  const holding_d = !! keyStates[ 'KeyD' ]
+  const braking = holding_a && holding_d
+
+  if ( holding_a && ! holding_d ) {
+
+    vehicleHeading += VEHICLE_TURN_SPEED * deltaTime
+
+  } else if ( holding_d && ! holding_a ) {
+
+    vehicleHeading -= VEHICLE_TURN_SPEED * deltaTime
+
+  }
+
+  if ( braking ) {
+
+    vehicleSpeed -= VEHICLE_BRAKE * deltaTime
+    if ( vehicleSpeed < - VEHICLE_REVERSE_SPEED ) vehicleSpeed = - VEHICLE_REVERSE_SPEED
+
+  } else {
+
+    vehicleSpeed += VEHICLE_ACCELERATION * deltaTime
+    if ( vehicleSpeed > VEHICLE_SPEED ) vehicleSpeed = VEHICLE_SPEED
+
+  }
+
+}
+
+function applyVehicleDrive( deltaTime ) {
+
+  if ( ! vehicleBody ) return
+
+  const holding_a = !! keyStates[ 'KeyA' ]
+  const holding_d = !! keyStates[ 'KeyD' ]
+  const forward_x = - Math.sin( vehicleHeading )
+  const forward_z = - Math.cos( vehicleHeading )
+  const move_x = forward_x * vehicleSpeed * deltaTime
+  const move_z = forward_z * vehicleSpeed * deltaTime
+  const travel = Math.hypot( move_x, move_z )
+  const dir_x = travel > 1e-8 ? move_x / travel : forward_x
+  const dir_z = travel > 1e-8 ? move_z / travel : forward_z
+  const bumper = Math.max( vehicleSize.x, vehicleSize.z, 0.4 ) * 0.5
+
+  vehicleBody.wakeUp()
+
+  if ( travel > 0 && ! wallAhead( dir_x, dir_z, bumper + travel ) ) {
+
+    vehicleBody.position.x += move_x
+    vehicleBody.position.z += move_z
+
+  }
+
+  vehicleBody.velocity.x = forward_x * vehicleSpeed
+  vehicleBody.velocity.z = forward_z * vehicleSpeed
+  vehicleBody.angularVelocity.y = ( holding_a && ! holding_d ? VEHICLE_TURN_SPEED : 0 ) + ( holding_d && ! holding_a ? - VEHICLE_TURN_SPEED : 0 )
+
+}
+
+function syncPhysicsMeshes() {
+
+  if ( vehicle && vehicleBody ) {
+
+    vehicle.position.copy( vehicleBody.position )
+    vehicle.quaternion.copy( vehicleBody.quaternion )
+
+  }
+
+  for ( const sphere of spheres ) {
+
+    sphere.mesh.position.copy( sphere.body.position )
+    sphere.mesh.quaternion.copy( sphere.body.quaternion )
+
+  }
+
+}
+
+function followVehiclePosition() {
+
+  if ( ! vehicle ) return
+
+  camera.position.copy( vehicle.position )
+
+}
+
+function teleportPlayerIfOob() {
+
+  if ( camera.position.y <= - 25 ) {
+
+    playerBody.position.set( 0, 1, 0 )
+    playerBody.velocity.set( 0, 0, 0 )
+    playerVelocity.set( 0, 0, 0 )
+
+    if ( ! vehicle ) {
+
+      camera.position.set( 0, 1.4, 0 )
+      camera.rotation.set( 0, 0, 0 )
+
+    }
+
+  }
+
+}
+
+function animate() {
+
+  timer.update()
+
+  const deltaTime = Math.min( 0.05, timer.getDelta() )
+
+  updatePlayer( deltaTime )
+  keepVehicleUpright( deltaTime )
+  updateVehicleInput( deltaTime )
+
+  if ( worldReady ) {
+
+    world.step( 1 / 90, deltaTime, 8 )
+
+  }
+
+  applyVehicleDrive( deltaTime )
+  keepVehicleUpright( deltaTime )
+  syncPhysicsMeshes()
+  followVehiclePosition()
+  teleportPlayerIfOob()
+
+  if ( debugPhysics ) {
+
+    cannonDebugger.update()
+
+  }
+
+  renderer.render( scene, camera )
+  stats.update()
+
+}

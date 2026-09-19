@@ -154,7 +154,7 @@ class Tda::Option
       },
       query: query,
     })
-    # puts! out, '/chains --'
+    puts! out, '/chains --'
     timestamp = DateTime.parse out.headers['date']
     out = out.parsed_response.deep_symbolize_keys
 

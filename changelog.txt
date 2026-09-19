@@ -6,4 +6,6 @@
                        removing keycloak b/c of annesque_email.
 3.4.0 :: 2026-08-25 :: lets rewrite the touchcontrols, to not move if fingers are not moving
 
+4.0.0 - trash, attempted upgrade to ruby 3.
+
 

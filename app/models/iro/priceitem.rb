@@ -13,22 +13,24 @@ class Iro::Priceitem
   field :symbol,          type: String
   field :description,     type: String
   field :ticker,          type: String
+
   # belongs_to :stock, inverse_of: :priceitems
+  # belongs_to :option, inverse_of: :priceitems
 
   field :bid,             type: Float
   field :bidSize,         type: Integer
   field :ask,             type: Float
   field :askSize,         type: Integer
-  field :last,            type: Float
+  field :last,            type: Float ## this is important
 
   field :openPrice,       type: Float
   field :lowPrice,        type: Float
   field :highPrice,       type: Float
   field :closePrice,      type: Float
 
-  field :quote_at, type: DateTime
+  field :quote_at,        type: DateTime ## this is important, the timestamp mostly used for analysis
   field :quoteTimeInLong, type: Integer
-  field :timestamp,       type: Integer
+  field :timestamp,       type: Integer ## do not use?!
   field :totalVolume,     type: Integer
   field :mark,            type: Float
   field :exchangeName,    type: String

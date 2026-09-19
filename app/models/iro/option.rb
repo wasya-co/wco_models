@@ -54,6 +54,8 @@ class Iro::Option
   belongs_to :poss_of_inner, class_name: 'Iro::Position', inverse_of: :inners, optional: true
   belongs_to :poss_of_outer, class_name: 'Iro::Position', inverse_of: :outers, optional: true
 
+  # has_many :priceitems, inverese_of: :option
+
   field :last, type: :float
 
   ## for schwab, eg:

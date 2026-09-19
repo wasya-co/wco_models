@@ -197,7 +197,7 @@ class ::Iro::Stock
     date_from = date_from.strftime('%Y-%m-%d')
     date_to   = date_to.strftime('%Y-%m-%d')
     puts! [ticker, date_from, date_to], "ticker,date_from,date_to"
-    outs = HTTParty.get("https://api.stockdata.org/v1/data/eod?symbols=#{ticker}&date_from=#{date_from}&date_to=#{date_to}&api_token=#{STOCKDATA_ORG_KEY}")
+    outs = HTTParty.get("https://api.stockdata.org/v1/data/eod?symbols=#{ticker}&date_from=#{date_from}&date_to=#{date_to}&api_token=#{::STOCKDATA_ORG_KEY}")
     outs['data'].each do |datum|
       existing = ::Iro::Datapoint.find_by({ symbol: ticker, date: datum['date'].to_date.strftime('%Y-%m-%d') }) rescue nil
       if existing

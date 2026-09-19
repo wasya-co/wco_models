@@ -18,7 +18,7 @@ class Iro::Datapoint
   KIND_CURRENCY = 'CURRENCY'
   KIND_TREASURY = 'TREASURY'
 
-  field :symbol ## ticker, but use 'symbol' here
+  field :symbol ## ticker or option symbol, etc
   ## crypto
   SYMBOL_BTC = 'BTC'
   SYMBOL_ETH = 'ETH'

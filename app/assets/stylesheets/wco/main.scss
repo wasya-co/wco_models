@@ -217,6 +217,7 @@ input[type=file] {
 
 /* M */
 
+.fixed-container, /* _TODO: take the definition from drupal */
 .maxwidth {
   width: 1200px;
   max-width: 1200px; /* @TODO: this would be responsive by-breakpoint _vp_ 2024-04-23 */

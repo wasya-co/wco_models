@@ -58,6 +58,15 @@ class Iro::Option
 
   field :last, type: :float
 
+  def self.active
+    options = []
+    Iro::Position.active.each do |pos|
+      options.push pos.inner
+      options.push pos.outer if pos.outer
+    end
+    return options
+  end
+
   ## for schwab, eg:
   ## "COST  260306C01030000"
   def symbol

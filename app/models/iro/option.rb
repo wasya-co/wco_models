@@ -49,12 +49,12 @@ class Iro::Option
   field :end_price, type: :float
   field :end_delta, type: :float
 
-  has_one :pos_of_outer, class_name: 'Iro::Position', inverse_of: :outer
-  has_one :pos_of_inner, class_name: 'Iro::Position', inverse_of: :inner
+  has_one :pos_of_outer,     class_name: 'Iro::Position', inverse_of: :outer
+  has_one :pos_of_inner,     class_name: 'Iro::Position', inverse_of: :inner
   belongs_to :poss_of_inner, class_name: 'Iro::Position', inverse_of: :inners, optional: true
   belongs_to :poss_of_outer, class_name: 'Iro::Position', inverse_of: :outers, optional: true
 
-  # has_many :priceitems, inverese_of: :option
+  has_many :priceitems, inverse_of: :option
 
   field :last, type: :float
 
@@ -91,6 +91,9 @@ class Iro::Option
       put_call: type,
       expires_on: expires_on,
     }
+  end
+  def symbol_to_h
+    self.class.symbol_to_h symbol
   end
 
   def matches_h h

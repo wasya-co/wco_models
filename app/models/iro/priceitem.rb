@@ -14,8 +14,8 @@ class Iro::Priceitem
   field :description,     type: String
   field :ticker,          type: String
 
-  # belongs_to :stock, inverse_of: :priceitems
-  # belongs_to :option, inverse_of: :priceitems
+  belongs_to :stock,  inverse_of: :priceitems
+  belongs_to :option, inverse_of: :priceitems
 
   field :bid,             type: Float
   field :bidSize,         type: Integer
@@ -90,6 +90,15 @@ class Iro::Priceitem
     puts! 'result'
     pp outs.to_a
     # puts! outs.to_a, 'result'
+  end
+
+  def self.to_chart
+    order_by(quote_at: :asc).map do |pi|
+      {
+        last: pi.last,
+        quote_at: pi.quote_at.to_i # or .iso8601
+      }
+    end
   end
 
 end

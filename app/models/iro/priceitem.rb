@@ -14,8 +14,8 @@ class Iro::Priceitem
   field :description,     type: String
   field :ticker,          type: String
 
-  belongs_to :stock,  inverse_of: :priceitems
-  belongs_to :option, inverse_of: :priceitems
+  belongs_to :stock,  inverse_of: :priceitems, optional: true
+  belongs_to :option, inverse_of: :priceitems, optional: true
 
   field :bid,             type: Float
   field :bidSize,         type: Integer
@@ -92,11 +92,21 @@ class Iro::Priceitem
     # puts! outs.to_a, 'result'
   end
 
-  def self.to_chart
-    order_by(quote_at: :asc).map do |pi|
+  def self.to_chart interval: '15-minutes'
+    order_by(quote_at: :asc).filter_map do |pi|
+      close = pi.closePrice || pi.last
+      next unless close && pi.quote_at
+
+      open = pi.openPrice || close
+      high = pi.highPrice || [open, close].max
+      low  = pi.lowPrice  || [open, close].min
+
       {
-        last: pi.last,
-        quote_at: pi.quote_at.to_i # or .iso8601
+        time:  (pi.quote_at.to_f * 1000).to_i,
+        open:  open,
+        high:  high,
+        low:   low,
+        close: close,
       }
     end
   end

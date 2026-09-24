@@ -14,8 +14,8 @@ class Iro::Priceitem
   field :description,     type: String
   field :ticker,          type: String
 
-  belongs_to :stock,  inverse_of: :priceitems
-  belongs_to :option, inverse_of: :priceitems
+  belongs_to :stock,  inverse_of: :priceitems, optional: true
+  belongs_to :option, inverse_of: :priceitems, optional: true
 
   field :bid,             type: Float
   field :bidSize,         type: Integer

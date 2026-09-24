@@ -271,8 +271,7 @@ class Iro::Position
     expiration_dates = @positions.map { |p| p.expires_on.to_s }.sort
     # puts! expiration_dates, 'expiration_dates'
 
-    count = 1
-    @positions.each do |pos|
+    @positions.each_with_index do |pos, idx|
       # puts! pos.id.to_s, '#sync_all.pos'
 
       quotes_h = Tda::Option.get_quotes_h({
@@ -284,7 +283,7 @@ class Iro::Position
 
       pos.inner.end_price = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.inner.strike][:price]
       pos.inner.end_delta = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.inner.strike][:delta]
-      pos.inner.save ? print("#{count}^") : print("#{count}X")
+      pos.inner.save ? print("#{idx}^") : print("#{idx}Error")
 
       # if [ Iro::Strategy::KIND_LONG_CREDIT_PUT_SPREAD,
       #      Iro::Strategy::KIND_SHORT_CREDIT_CALL_SPREAD,
@@ -293,12 +292,11 @@ class Iro::Position
       if pos.outer
         pos.outer.end_price = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.outer.strike][:price]
         pos.outer.end_delta = quotes_h[pos.expires_on.to_date.to_s][pos.put_call][pos.outer.strike][:delta]
-        pos.outer.save ? print('^') : print('X')
+        pos.outer.save ? print('^') : print('Error')
       end
-      count = count+1
     end
 
-    print 'synced-all.'
+    puts 'synced-all.'
   end
 
 

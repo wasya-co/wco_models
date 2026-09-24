@@ -29,13 +29,12 @@ class Tda::Option
       return JSON.parse File.read filename
 
     else
-      profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
       query = { symbol: params[:ticker] } ## use 'GME' as symbol here even though a symbol is eg 'GME_021023P2.5'
       # puts! query, 'query'
 
       headers = {
         accept:        'application/json',
-        Authorization: "Bearer #{profile[:schwab_access_token]}",
+        Authorization: "Bearer #{Iro::Iro.schwab_data_token}",
       }
       path = "/chains"
       out = self.get path, {
@@ -110,8 +109,6 @@ class Tda::Option
   ##
   def self.get_quotes params
     # puts! params, 'core Tda::Option#get_quotes...'
-
-    profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
 
     #
@@ -150,7 +147,7 @@ class Tda::Option
     out = self.get( "/chains", {
       headers: {
         accept:        'application/json',
-        Authorization: "Bearer #{profile[:schwab_access_token]}",
+        Authorization: "Bearer #{Iro::Iro.schwab_data_token}",
       },
       query: query,
     })
@@ -179,8 +176,6 @@ class Tda::Option
   ## 2026-02-23 use this instead.
   def self.get_quotes_h params
     # puts! params, 'Tda::Option#get_quotes_h params ...'
-
-    profile = Wco::Profile.find_by email: 'piousbox@gmail.com'
     opts = {}
 
     #
@@ -219,7 +214,7 @@ class Tda::Option
     results = self.get( "/chains", {
       headers: {
         accept:        'application/json',
-        Authorization: "Bearer #{profile[:schwab_access_token]}",
+        Authorization: "Bearer #{Iro::Iro.schwab_data_token}",
       },
       query: query,
     })

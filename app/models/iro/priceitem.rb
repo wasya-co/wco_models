@@ -14,8 +14,8 @@ class Iro::Priceitem
   field :description,     type: String
   field :ticker,          type: String
 
-  belongs_to :stock,  inverse_of: :priceitems, optional: true
-  belongs_to :option, inverse_of: :priceitems, optional: true
+  belongs_to :stock,  inverse_of: :priceitems
+  belongs_to :option, inverse_of: :priceitems
 
   field :bid,             type: Float
   field :bidSize,         type: Integer
@@ -92,23 +92,40 @@ class Iro::Priceitem
     # puts! outs.to_a, 'result'
   end
 
-  def self.to_chart interval: '15-minutes'
-    order_by(quote_at: :asc).filter_map do |pi|
-      close = pi.closePrice || pi.last
-      next unless close && pi.quote_at
+  ## interval: bucket length (ActiveSupport::Duration or seconds), e.g. 1.minute
+  def self.to_chart(interval = 5.minutes)
+    bucket_ms = interval.to_i * 1000
 
-      open = pi.openPrice || close
-      high = pi.highPrice || [open, close].max
-      low  = pi.lowPrice  || [open, close].min
+    pipeline = [
+      { '$match' => all.selector },
+      { '$match' => { 'quote_at' => { '$ne' => nil }, 'last' => { '$ne' => nil } } },
+      { '$sort' => { 'quote_at' => 1 } },
+      { '$group' => {
+        '_id' => {
+          '$toDate' => {
+            '$subtract' => [
+              { '$toLong' => '$quote_at' },
+              { '$mod' => [ { '$toLong' => '$quote_at' }, bucket_ms ] },
+            ],
+          },
+        },
+        'open'  => { '$first' => '$last' },
+        'high'  => { '$max'   => '$last' },
+        'low'   => { '$min'   => '$last' },
+        'close' => { '$last'  => '$last' },
+      } },
+      { '$sort' => { '_id' => 1 } },
+      { '$project' => {
+        '_id'   => 0,
+        'time'  => { '$toLong' => '$_id' },
+        'open'  => 1,
+        'high'  => 1,
+        'low'   => 1,
+        'close' => 1,
+      } },
+    ]
 
-      {
-        time:  (pi.quote_at.to_f * 1000).to_i,
-        open:  open,
-        high:  high,
-        low:   low,
-        close: close,
-      }
-    end
+    collection.aggregate(pipeline).to_a
   end
 
 end

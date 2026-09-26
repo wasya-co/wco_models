@@ -31,6 +31,8 @@ class Iro::Purse
   field :available_amount, type: :float
   # validates :available_amount, presence: true
 
+  field :status ## active or disabled
+
   def to_s
     slug
   end

@@ -8,6 +8,12 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
+document.addEventListener("keydown", e => {
+  if (e.code === "Space" && !["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
+    e.preventDefault()
+  }
+})
+
 // const MODELS_ROOT = '/vendor/models'
 // const MODELS_ROOT = "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.0/public/vendor/models"
 const SCENE_STOR = 'studio'

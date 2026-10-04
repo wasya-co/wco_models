@@ -21,7 +21,8 @@ class Iro::Priceitem
   field :bidSize,         type: Integer
   field :ask,             type: Float
   field :askSize,         type: Integer
-  field :last,            type: Float ## this is important
+  field :last,            type: Float ## this is important?
+  field :mark,            type: Float ## no, this is important. (bid+ask)/2
 
   field :openPrice,       type: Float
   field :lowPrice,        type: Float
@@ -32,7 +33,7 @@ class Iro::Priceitem
   field :quoteTimeInLong, type: Integer
   field :timestamp,       type: Integer ## do not use?!
   field :totalVolume,     type: Integer
-  field :mark,            type: Float
+
   field :exchangeName,    type: String
   field :volatility,      type: Float
 

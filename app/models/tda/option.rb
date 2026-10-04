@@ -1,16 +1,7 @@
 
 require 'httparty'
 
-=begin
-class Schwab
-  include HTTParty
-  debug_output $stdout
-  base_uri 'https://api.schwabapi.com/marketdata/v1'
-end
-=end
-
 class Tda::Option
-
   include ::HTTParty
   # debug_output $stdout
   base_uri 'https://api.schwabapi.com/marketdata/v1'
@@ -18,7 +9,7 @@ class Tda::Option
 
   ##
   ## Get entire chains for a ticker
-  ## params: { ticker, force }
+  ## params: { ticker, force, strikeCount, fromDate (yyyy-mm-dd), toDate }
   ##
   ## 2024-08-09 :: Continue
   ## 2024-08-21 :: Continue : )
@@ -29,7 +20,10 @@ class Tda::Option
       return JSON.parse File.read filename
 
     else
-      query = { symbol: params[:ticker] } ## use 'GME' as symbol here even though a symbol is eg 'GME_021023P2.5'
+      query = { symbol: params[:ticker] } ## says query[:symbol], not ticker.
+      query[:strikeCount] = params[:strikeCount] if params[:strikeCount]
+      query[:fromDate]    = params[:fromDate]    if params[:fromDate]
+      query[:toDate]      = params[:toDate]      if params[:toDate]
       # puts! query, 'query'
 
       headers = {
@@ -37,17 +31,15 @@ class Tda::Option
         Authorization: "Bearer #{Iro::Iro.schwab_data_token}",
       }
       path = "/chains"
-      out = self.get path, {
-        headers: headers,
-        query: query }
-      timestamp = DateTime.parse out.headers['date']
-      out = out.parsed_response
-      # puts! out, 'outs'
+      response = self.get path, { headers: headers, query: query }
+      timestamp = DateTime.parse response.headers['date']
+      response = response.parsed_response
+      puts! out, 'get_chains() got this response'
 
       outs = []
       %w| put call |.each do |contractType|
         _out = out["#{contractType}ExpDateMap"]
-        _out.each do |date, vs| ## date="2023-02-10:5"
+        _out.each do |_date, vs| ## date="2023-02-10:5"
           vs.each do |strike, _v| ## strike="18.5"
             _v = _v[0] ## weird, keep
             # puts! _v, '_v'
@@ -58,6 +50,7 @@ class Tda::Option
               bid: _v['bid'],
               ask: _v['ask'],
               last: _v['last'],
+              mark: _v['mark'],
               totalVolume: _v['totalVolume'],
               openInterest: _v['openInterest'],
               strikePrice: _v['strikePrice'],
@@ -83,8 +76,8 @@ class Tda::Option
         end
       end
 
-      File.write filename, out.to_json
-      return out
+      File.write filename, JSON.pretty_generate(response)
+      return response
     end
   end
 
@@ -96,6 +89,8 @@ class Tda::Option
     OpenStruct.new ::Tda::Option.get_quotes(params)[0]
   end
 
+  ## ...for a single symbol.
+  ## but use get_quotes_h instead?!
   ##
   ## params: contractType, strike, expirationDate, ticker
   ##
@@ -250,19 +245,23 @@ class Tda::Option
   end
 
   def self.close_credit_call
+    throw 'r40 - not implemented'
   end
   def self.close_long_debit_call_spread
+    throw 'r41 - not implemented'
   end
   def self.close_short_debit_put_spread
+    throw 'r42 - not implemented'
   end
 
-  def self.get_token
-    opts = {
-      grant_type: 'authorization_code',
-      access_type: 'offline',
-      code: ::TD_AMERITRADE[:code],
-    }
-  end
+  ## trash? remove.
+  # def self.get_token
+  #   opts = {
+  #     grant_type: 'authorization_code',
+  #     access_type: 'offline',
+  #     code: ::TD_AMERITRADE[:code],
+  #   }
+  # end
 
   def self.create_credit_call outer:, inner:, q:, price:
     query = {
@@ -307,12 +306,20 @@ class Tda::Option
     # puts! out, 'created credit call?'
   end
   def self.create_long_debit_call_spread
+    throw 'r43 - not implemented'
   end
   def self.create_short_debit_put_spread
+    throw 'r44 - not implemented'
   end
 
 
 end
+
+
+
+
+
+
 
 ##
 ## From: https://developer.tdameritrade.com/content/place-order-samples

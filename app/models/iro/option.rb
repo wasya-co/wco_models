@@ -92,7 +92,7 @@ class Iro::Option
       expires_on: expires_on,
     }
   end
-  def symbol_to_h
+  def to_h
     self.class.symbol_to_h symbol
   end
 

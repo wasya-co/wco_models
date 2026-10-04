@@ -29,9 +29,9 @@ class Iro::Priceitem
   field :highPrice,       type: Float
   field :closePrice,      type: Float
 
-  field :quote_at,        type: DateTime ## this is important, the timestamp mostly used for analysis
+  field :quote_at,        type: DateTime ## this is important?
   field :quoteTimeInLong, type: Integer
-  field :timestamp,       type: Integer ## do not use?!
+  field :timestamp,       type: Integer ## do not use?
   field :totalVolume,     type: Integer
 
   field :exchangeName,    type: String

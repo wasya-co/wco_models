@@ -62,7 +62,8 @@ class Tda::Option
               end
             end
 
-            v[:timestamp] = timestamp
+            v[:timestamp] = timestamp # _v['quoteTimeInLong']/1000.0
+            v[:quote_at] = Time.at(_v['quoteTimeInLong'] / 1000.0)
             v[:ticker] = params[:ticker]
             outs.push( v )
           end

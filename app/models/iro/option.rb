@@ -8,7 +8,7 @@ class Iro::Option
   attr_accessor :recompute
 
   belongs_to :stock, class_name: 'Iro::Stock', inverse_of: :strategies
-  def ticker; stock.ticker; end
+  field :ticker, type: :string
 
   CALL = 'CALL'
   PUT  = 'PUT'
@@ -67,13 +67,42 @@ class Iro::Option
     return options
   end
 
+  field :symbol, type: :string
+  # def symbol
+  #   return self[:symbol] if self[:symbol]
+  #   self[:symbol] = generate_symbol
+  # end
+
   ## for schwab, eg:
   ## "COST  260306C01030000"
-  def symbol
+  def generate_symbol
     p_c_ = put_call == 'PUT' ? 'P' : 'C'
     strike_ = format("%08d", (strike.to_f * 1000).round)
     sym = "#{stock.ticker.ljust(6)}#{expires_on.strftime("%y%m%d")}#{p_c_}#{strike_}"
   end
+
+  def self.find_or_create_by_symbol symbol
+    option = Iro::Option.where( symbol: symbol ).first
+    return option if option
+    h = Iro::Option.symbol_to_h symbol
+    item = Iro::Option.new({
+      stock:      Iro::Stock.find_by( ticker: h[:ticker] ),
+      ticker:     h[:ticker],
+      put_call:   h[:put_call],
+      strike:     h[:strike],
+      expires_on: h[:expires_on],
+    })
+    item.save
+  end
+
+  ## trash, I can save the symbol every time. 2026-10-04
+  # def self.find_by_symbol symbol
+  #   option = self.where( symbol: symbol ).first
+  #   return option if option
+  #   h = Iro::Option.symbol_to_h symbol
+  #   Iro::Option.where( h ).first
+  # end
+
 
 =begin
   symbol = "META  260424P00500000"
@@ -83,7 +112,7 @@ class Iro::Option
     date_str = symbol[6,6]
     type = symbol[12] == 'P' ? 'PUT' : 'CALL'
     strike_str = symbol[13,8]
-    expires_on = Date.strptime(date_str, "%y%m%d")
+    expires_on = Date.strptime(date_str, "%y%m%d").to_s
     strike = strike_str.to_i / 1000.0
     return {
       ticker: ticker,
@@ -121,6 +150,6 @@ class Iro::Option
   end
 
   def to_s
-    "#{symbol} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
+    "#{symbol_saved} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
   end
 end

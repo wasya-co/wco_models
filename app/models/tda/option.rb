@@ -31,31 +31,21 @@ class Tda::Option
         Authorization: "Bearer #{Iro::Iro.schwab_data_token}",
       }
       path = "/chains"
-      response = self.get path, { headers: headers, query: query }
+      response  = self.get path, { headers: headers, query: query }
       timestamp = DateTime.parse response.headers['date']
-      response = response.parsed_response
-      puts! out, 'get_chains() got this response'
+      response  = response.parsed_response
+      puts! response, '/chains got this response'
 
       outs = []
       %w| put call |.each do |contractType|
-        _out = out["#{contractType}ExpDateMap"]
+        _out = response["#{contractType}ExpDateMap"]
         _out.each do |_date, vs| ## date="2023-02-10:5"
           vs.each do |strike, _v| ## strike="18.5"
             _v = _v[0] ## weird, keep
             # puts! _v, '_v'
 
-            v = {
-              putCall: _v['putCall'],
-              symbol:  _v['symbol'],
-              bid: _v['bid'],
-              ask: _v['ask'],
-              last: _v['last'],
-              mark: _v['mark'],
-              totalVolume: _v['totalVolume'],
-              openInterest: _v['openInterest'],
-              strikePrice: _v['strikePrice'],
-              expirationDate: _v['expirationDate'],
-            }
+            v = _v.slice( 'putCall', 'symbol', 'bid', 'ask', 'last', 'mark', 'totalVolume', 'openInterest',
+              'strikePrice', 'expirationDate' )
             v.each do |k, i|
               if i == 'NaN'
                 v[k] = nil
@@ -63,8 +53,8 @@ class Tda::Option
             end
 
             v[:timestamp] = timestamp # _v['quoteTimeInLong']/1000.0
-            v[:quote_at] = Time.at(_v['quoteTimeInLong'] / 1000.0)
-            v[:ticker] = params[:ticker]
+            v[:quote_at]  = Time.at(_v['quoteTimeInLong'] / 1000.0)
+            v[:ticker]    = params[:ticker]
             outs.push( v )
           end
         end

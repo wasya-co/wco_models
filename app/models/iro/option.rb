@@ -68,6 +68,8 @@ class Iro::Option
   end
 
   field :symbol, type: :string
+  validates :symbol, uniqueness: true
+  index({ symbol: -1 }, { unique: true, name: 'symbol' })
   # def symbol
   #   return self[:symbol] if self[:symbol]
   #   self[:symbol] = generate_symbol
@@ -91,8 +93,10 @@ class Iro::Option
       put_call:   h[:put_call],
       strike:     h[:strike],
       expires_on: h[:expires_on],
+      symbol:     symbol,
     })
     item.save
+    return item
   end
 
   ## trash, I can save the symbol every time. 2026-10-04
@@ -150,6 +154,6 @@ class Iro::Option
   end
 
   def to_s
-    "#{symbol_saved} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
+    "#{symbol} :: #{expires_on.strftime('%Y-%m-%d')} #{put_call} #{strike}"
   end
 end

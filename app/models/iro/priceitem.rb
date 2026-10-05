@@ -44,6 +44,63 @@ class Iro::Priceitem
   field :openInterest,   type: Integer
   field :strikePrice,    type: Float
 
+  def self.create_from_chains!
+    Iro::Iro.schwab_exec_sync ## should be schwab_data_sync()
+
+    stocks = Iro::Stock.active
+    fridays = 3.times.map { |i| ( Date.current.next_occurring(:friday) + i.weeks ).to_s }
+
+    stocks.each do |stock|
+      puts "+++ Getting #{stock.ticker}..."
+      response = Tda::Option.get_chains({
+        ticker: stock.ticker,
+        fromDate: fridays[0],
+        toDate: fridays.last,
+        strikeCount: 10,
+      })
+      # puts! response.keys, 'response.keys'
+      # puts! response['symbol'], 'response symbol'
+      # sleep 10
+
+      first_val = nil
+      ['callExpDateMap', 'putExpDateMap'].each do |which_map|
+
+        response[which_map].each do |_date, strikes|
+          if fridays.include?( _date.split(':')[0] )
+            strikes.each do |_strike, vals|
+              vals.each do |val|
+                if !first_val
+                  first_val = val
+                  puts! val.keys, 'val keys'
+                end
+
+                option = Iro::Option.find_or_create_by_symbol( val['symbol'] )
+
+                # opt = OpenStruct.new val
+                pi = Iro::Priceitem.new( val.slice( 'expirationDate',
+                  'putCall', 'symbol', 'exchangeName', 'bid', 'ask',
+                  'last', 'mark', 'bidSize', 'askSize', 'totalVolume', 'quoteTimeInLong', 'volatility',
+                  'delta', 'gamma', 'theta', 'openInterest', 'strikePrice' ) )
+                pi.stock    = stock
+                pi.option   = option
+                pi.quote_at = Time.at( val['quoteTimeInLong'] / 1000 )
+                pi.ticker   = stock.ticker
+                pi.save!
+
+                # puts! pi
+                print '.'
+
+
+              end
+            end
+          end ## end fridays.include?
+        end
+
+      end ## which_map
+    end
+
+  end
+
   def self.my_find props={}
     lookup = { '$lookup': {
       'from':         'iro_price_items',

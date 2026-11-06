@@ -32,7 +32,7 @@ class Wco::Report
   field :y, :type => Float
   field :z, :type => Float
 
-  belongs_to :author, class_name: 'Wco::Profile'
+  belongs_to :author, class_name: 'Wco::Profile', optional: true
 
   has_one :image_thumb, class_name: 'Wco::Photo', inverse_of: :report, dependent: :destroy
   accepts_nested_attributes_for :image_thumb

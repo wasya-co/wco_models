@@ -27,18 +27,19 @@ class Wco::Publisher
     @headers = {}
     @ctx     = OpenStruct.new
 
-    # puts! context_eval, 'context_eval'
+    puts! context_eval, 'context_eval'
     eval( context_eval )
-    # puts! @ctx, '@ctx'
+    puts! @ctx, '@ctx'
 
     tmpl = ERB.new post_body_tmpl
     body = JSON.parse tmpl.result(binding)
-    # puts! body, 'body'
+    puts! body, 'body'
 
     out = Wco::HTTParty.post( "#{@site.origin}#{post_path}", {
       body: body.to_json,
       headers: @headers,
       basic_auth: { username: @site.username, password: @site.password },
+      debug_output: $stdout,
     })
     puts! out.response, 'publisher httparty response'
     puts! out.body,     'publisher httparty body'
@@ -54,12 +55,17 @@ class Wco::Publisher
       raise out.body
     end
 
-    eval( after_eval ) if after_eval.present?
+    if after_eval.present?
+      puts! after_eval, 'after_eval'
+      eval( after_eval )
+    end
+
+    return true
   end
 
 
   def to_s
-    "#{slug}: #{kind} => #{site}"
+    "#{site} :: #{slug}"
   end
 
   def self.list

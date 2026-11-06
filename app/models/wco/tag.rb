@@ -9,15 +9,17 @@ class Wco::Tag
   index({ slug: -1 })
 
   field :weight, type: :string, default: 'jjj'
+  field :external_id, type: :string
+  def eid; external_id; end
 
   belongs_to :parent, class_name: '::Wco::Tag', inverse_of: :sons, optional: true
   has_many :sons,     class_name: '::Wco::Tag', inverse_of: :parent
 
-  belongs_to :site,          class_name: '::Wco::Site', optional: true
-  belongs_to :sidebar_profile, class_name: 'Wco::Profile', optional: true
-  has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
-  has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
-  has_many :ajects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject
+  belongs_to :site,            class_name: '::Wco::Site',   optional: true, inverse_of: :tags
+  belongs_to :sidebar_profile, class_name: 'Wco::Profile',  optional: true
+  has_many :email_filters,     class_name: '::WcoEmail::EmailFilter',       inverse_of: :tag
+  has_many :email_templates,   class_name: '::WcoEmail::EmailTemplate',     inverse_of: :tag
+  has_many :ajects,            class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject
 
   has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation', index: true
   has_and_belongs_to_many :galleries,     class_name: '::Wco::Gallery'

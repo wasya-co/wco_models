@@ -12,20 +12,6 @@ class Wco::PublishersController < Wco::ApplicationController
     redirect_to action: 'index'
   end
 
-  ## this is becoming obsolete - try using do_run_any
-  def do_run
-    @publisher = Wco::Publisher.find params[:id]
-    authorize! :do_run, @publisher
-
-    @publisher.props = OpenStruct.new( JSON.parse params[:publisher][:props] )
-    # @publisher.do_run binding
-    @publisher.do_run
-
-    flash_notice "Probably ok"
-
-    redirect_to action: 'index'
-  end
-
   def do_run_any
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
@@ -33,7 +19,7 @@ class Wco::PublishersController < Wco::ApplicationController
     @publisher.props = OpenStruct.new( JSON.parse params[:props] )
     @publisher.do_run
 
-    flash_notice "Probably ok"
+    flash_notice "#do_run_any Probably ok"
     redirect_to request.referrer || { action: 'index' }
   end
 

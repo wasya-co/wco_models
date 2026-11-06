@@ -23,6 +23,8 @@ class Wco::Publisher
   attr_accessor :props
 
   def do_run
+    publisher = self
+
     @site    = site
     @headers = {}
     @ctx     = OpenStruct.new
@@ -31,7 +33,7 @@ class Wco::Publisher
     eval( context_eval )
     puts! @ctx, '@ctx'
 
-    tmpl = ERB.new post_body_tmpl
+    tmpl = ERB.new publisher.post_body_tmpl
     body = JSON.parse tmpl.result(binding)
     puts! body, 'body'
 

@@ -11,6 +11,14 @@
       %label Slug
       = f.text_field :slug, class: 'w-100'
 
+    .field.flex-row
+      %label source_url
+      = f.text_field :source_url, class: 'w-100'
+
+    .field
+      %label Summary
+      = f.text_area :summary
+
     .field
       %label Body
       = f.text_area :body, class: 'tinymce'

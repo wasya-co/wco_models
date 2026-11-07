@@ -31,6 +31,8 @@ class Wco::Report
   field :x, :type => Float
   field :y, :type => Float
   field :z, :type => Float
+  field :source_url, type: :string
+  field :summary, type: :string
 
   belongs_to :author, class_name: 'Wco::Profile', optional: true
 

@@ -27,6 +27,10 @@ class Wco::Report
   def body_json
     body.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />').to_json
   end
+  FORMAT_PLAINTEXT = 'format-plaintext'
+  FORMAT_FULLHTML  = 'format-fullhtml'
+  FORMATS = [ FORMAT_PLAINTEXT, FORMAT_FULLHTML ]
+  field :body_format, type: :string, default: FORMAT_PLAINTEXT
 
   field :x, :type => Float
   field :y, :type => Float

@@ -31,14 +31,14 @@ class Wco::Publisher
   attr_accessor :props
 
   def do_run
-    publisher = self
+    @publisher = publisher = self
 
-    @site    = site
+    @site    = publisher.site
     @headers = {}
     @ctx     = OpenStruct.new
 
-    puts! context_eval, 'context_eval'
-    eval( context_eval )
+    puts! publisher.context_eval, 'context_eval'
+    eval( publisher.context_eval )
     puts! @ctx, '@ctx'
 
     if @abort

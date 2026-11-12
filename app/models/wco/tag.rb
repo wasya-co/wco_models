@@ -29,6 +29,7 @@ class Wco::Tag
   has_and_belongs_to_many :message_stubs, class_name: '::WcoEmail::MessageStub'
   has_and_belongs_to_many :newsvideos, class_name: '::Wco::Newsvideo'
   has_and_belongs_to_many :reports,    class_name: '::Wco::Report'
+  has_and_belongs_to_many :publishers, class_name: '::Wco::Publisher'
   has_and_belongs_to_many :videos,     class_name: '::Wco::Video'
 
 
@@ -73,9 +74,13 @@ class Wco::Tag
 
 
   def to_s
-    slug
+    if site
+      "#{slug}@#{site}"
+    else
+      slug
+    end
   end
   def self.list
-    [[nil,nil]] + all.order_by( slug: :asc ).map { |p| [ p.slug, p.id ] }
+    [[nil,nil]] + all.includes(:site).order_by( slug: :asc ).map { |t| [ t.to_s, t.id.to_s ] }
   end
 end

@@ -23,7 +23,7 @@
     .field.d-flex.flex-column
       %label.d-block context_eval
       .descr
-        @headers, @props
+        @abort, @headers, @props, @site
       = f.text_area :context_eval, class: 'monospace'
     .field.d-flex.flex-column
       %label.d-block post_body_tmpl
@@ -33,5 +33,10 @@
     .field
       %label.d-block after_eval
       = f.text_area :after_eval, class: 'monospace'
+
+    .field
+      %label Tags (#{publisher.tags.length}):
+      = f.select :tag_ids, options_for_select(@tags_list, selected: publisher.tag_ids), {}, { multiple: true, class: 'select2' }
+
     .actions
       = f.submit

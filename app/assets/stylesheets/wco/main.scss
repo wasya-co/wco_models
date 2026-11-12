@@ -117,7 +117,10 @@ textarea.monospace {
 /* D */
 
 .d-flex {
-  align-items: baseline;
+  align-items: baseline; /* 2026-11-12: I dont want this alignment */
+}
+.no-align {
+  align-items: unset;
 }
 
 .descr {

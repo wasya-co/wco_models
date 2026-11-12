@@ -25,7 +25,11 @@ class Wco::Report
 
   field :body
   def body_json
-    body.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />').to_json
+    out = body
+    if FORMAT_PLAINTEXT == body_format
+      out = out.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />')
+    end
+    out.to_json
   end
   FORMAT_PLAINTEXT = 'format-plaintext'
   FORMAT_FULLHTML  = 'format-fullhtml'

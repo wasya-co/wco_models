@@ -3,17 +3,24 @@
 
 .reports--index
   = paginate reports, :param_name => :reports_page, :views_prefix => 'wco'
-  - reports.each do |ttt|
+  - reports.each do |report|
     .Card
-      .flex-row
-        = button_to '[x]', report_path(ttt), method: :delete, data: { confirm: 'Are you sure?' }
-        = link_to '[~]', edit_report_path(ttt)
-        .a
-          = link_to ttt.title, report_path(ttt)
-          %br
-          `#{ttt.slug}`
-          .gray.mini= ttt.id
-      - if !config[:skip_tags]
+      .d-flex.no-align
+        .thumb
+          - if report.image_thumb
+            = image_tag report.image_thumb.photo.url(:thumb)
+
+
         .flex-row
-          = render '/wco/tags/list_chips', tags: ttt.tags
+          = button_to '[x]', report_path(report), method: :delete, data: { confirm: 'Are you sure?' }
+          = link_to '[~]', edit_report_path(report)
+          .a
+            = link_to report.title, report_path(report)
+            %br
+            .gray slug: `#{report.slug}`
+            .gray.mini= report.id
+            - if !config[:skip_tags]
+              .flex-row
+                = render '/wco/tags/list_chips', tags: report.tags
+
   = paginate reports, :param_name => :reports_page, :views_prefix => 'wco'

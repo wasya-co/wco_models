@@ -1,4 +1,11 @@
 
+def url_exists?(url)
+  response = HTTParty.head(url, timeout: 5, follow_redirects: true)
+  response.code == 200
+rescue StandardError
+  false
+end
+
 class Wco::Publisher
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -19,6 +26,7 @@ class Wco::Publisher
   field :post_path
 
   has_many :oats, class_name: 'Wco::OfficeActionTemplate'
+  has_and_belongs_to_many :tags
 
   attr_accessor :props
 
@@ -32,6 +40,11 @@ class Wco::Publisher
     puts! context_eval, 'context_eval'
     eval( context_eval )
     puts! @ctx, '@ctx'
+
+    if @abort
+      errors.add(:base, 'aborted')
+      return false
+    end
 
     tmpl = ERB.new publisher.post_body_tmpl
     body = JSON.parse tmpl.result(binding)

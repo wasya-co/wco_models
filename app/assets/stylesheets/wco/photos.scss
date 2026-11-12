@@ -10,10 +10,11 @@
 
 div.thumb {
   margin: 0 0.5em 0.5em 0;
+  flex-shrink: 0;
 }
 
 .photos-thumbs img,
-img.thumb {
+.thumb {
   border: 1px solid red;
   width: 100px;
   height: 100px;

@@ -21,7 +21,12 @@
   %hr
   - if @report.image_thumb
     = image_tag @report.image_thumb.photo.url(:thumb)
-  .descr= raw @report.body
+  = @report.body_format
+  .descr
+    - if @report.body_format == 'format-plaintext'
+      %pre= @report.body
+    - if @report.body_format == 'format-fullhtml'
+      = raw @report.body
   %hr
 
   .actions

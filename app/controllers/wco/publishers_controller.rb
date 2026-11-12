@@ -17,9 +17,13 @@ class Wco::PublishersController < Wco::ApplicationController
     authorize! :do_run, @publisher
 
     @publisher.props = OpenStruct.new( JSON.parse params[:props] )
-    @publisher.do_run
+    flag = @publisher.do_run
+    if !flag
+      flash_alert @publisher.errors
+    else
+      flash_notice "#do_run_any Probably ok"
+    end
 
-    flash_notice "#do_run_any Probably ok"
     redirect_to request.referrer || { action: 'index' }
   end
 

@@ -5,7 +5,7 @@ class Wco::Tag
   store_in collection: 'wco_tags'
 
   field :slug
-  validates :slug, presence: true, uniqueness: true
+  validates :slug, presence: true, uniqueness: { scope: :site_id }
   index({ slug: -1 })
 
   field :weight, type: :string, default: 'jjj'

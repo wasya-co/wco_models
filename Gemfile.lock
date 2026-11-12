@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.4.0.8)
+    wco_models (3.4.0.9)
       aws-sdk-s3
       business_time
       cancancan (~> 3.5.0)

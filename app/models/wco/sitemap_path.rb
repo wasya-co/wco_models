@@ -15,8 +15,14 @@ class Wco::SitemapPath
   field :selectors,   type: Array, default: []
   field :title,       type: String
 
-  field :results, type: Array, default: []
+
   field :status,  type: String
+
+  # field :results, type: Array, default: []
+  has_many :logs, inverse_of: :obj
+  def results
+    logs.map { |log| "#{log.message} [on #{log.created_at.to_s[0...10]}]" }
+  end
 
   def check
     self.status = 'NOT_OK'
@@ -26,26 +32,26 @@ class Wco::SitemapPath
       begin
         body = HTTParty.get( "#{site.origin}#{self[:path]}" ).body
       rescue OpenSSL::SSL::SSLError => err
-        results.push "NOT OK [ssl-exception] #{self[:path]}" # .red
+        log = Wco::Log.create obj: self, message:  "NOT OK [ssl-exception] #{self[:path]}" # .red
         return
       end
       doc = Nokogiri::HTML( body )
       out = doc.search self[:selector]
       if out.present?
-        results.push "OK #{self[:path]}"
+        log = Wco::Log.create obj: self, message:  "OK #{self[:path]}"
         self.status = 'OK'
       else
-        results.push "NOT OK [selector-missing] #{self[:path]}" # .red
+        log = Wco::Log.create obj: self, message:  "NOT OK [selector-missing] #{self[:path]}" # .red
       end
 
     elsif self[:redirect_to].present?
       out = HTTParty.get( "#{site.origin}#{self[:path]}", follow_redirects: false )
       if( out.headers[:location] == self[:redirect_to] ||
           out.headers[:location] == "#{site.origin}#{self[:redirect_to]}" )
-        results.push "OK #{self[:path]}"
+        log = Wco::Log.create obj: self, message:  "OK #{self[:path]}"
         self.status = 'OK'
       else
-        results.push "NOT OK [redirect-missing] #{self[:path]}" # .red
+        log = Wco::Log.create obj: self, message:  "NOT OK [redirect-missing] #{self[:path]}" # .red
 
         puts!( out.response, 'response' ) if DEBUG
         # puts!( out.body, 'body' ) if DEBUG
@@ -56,7 +62,7 @@ class Wco::SitemapPath
       end
       skip_rest = true
     else
-      results.push "SKIP #{self[:path]}"
+      log = Wco::Log.create obj: self, message:  "SKIP #{self[:path]}"
       self.status = 'OK'
       skip_rest = true
     end
@@ -66,10 +72,10 @@ class Wco::SitemapPath
       if self[:meta_description].present?
         out = doc.search( 'head meta[name="description"]' )[0]['content']
         if out.include?( self[:meta_description] )
-          results.push "OK #{self[:path]} meta_description"
+          log = Wco::Log.create obj: self, message:  "OK #{self[:path]} meta_description"
         else
           self.status = 'NOT_OK'
-          results.push "NOT OK [meta-description-no-contain] #{self[:path]}" # .red
+          log = Wco::Log.create obj: self, message:  "NOT OK [meta-description-no-contain] #{self[:path]}" # .red
         end
       end
 
@@ -77,10 +83,10 @@ class Wco::SitemapPath
         self[:selectors].each do |selector|
           out = doc.search selector
           if out.present?
-            results.push "OK #{self[:path]} selectors:#{selector}"
+            log = Wco::Log.create obj: self, message:  "OK #{self[:path]} selectors:#{selector}"
           else
             self.status = 'NOT_OK'
-            results.push "NOT OK [selectors-missing:#{selector}] #{self[:path]}" # .red
+            log = Wco::Log.create obj: self, message:  "NOT OK [selectors-missing:#{selector}] #{self[:path]}" # .red
           end
         end
       end
@@ -88,10 +94,10 @@ class Wco::SitemapPath
       if self[:title].present?
         out = doc.search( 'head title' )[0].text
         if out.include?( self[:title] )
-          results.push "OK #{self[:path]} title"
+          log = Wco::Log.create obj: self, message:  "OK #{self[:path]} title"
         else
           self.status = 'NOT_OK'
-          results.push "NOT OK [title-no-contain] #{self[:path]}" # .red
+          log = Wco::Log.create obj: self, message:  "NOT OK [title-no-contain] #{self[:path]}" # .red
         end
       end
 

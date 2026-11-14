@@ -128,8 +128,8 @@ Wco::Engine.routes.draw do
 
   post 'sites/:id/check_sitemap', to: 'sites#check_sitemap', as: :check_sitemap
   resources :sites
-  get  'sitemap_paths/:id/check', to: 'sitemap_paths#check', as: :check_spath
-  post 'sitemap_paths/:id/clear', to: 'sitemap_paths#clear', as: :clear_spath
+  match 'sitemap_paths/:id/check', to: 'sitemap_paths#check', as: :check_spath, via: [ :get, :post ]
+  post  'sitemap_paths/:id/clear', to: 'sitemap_paths#clear', as: :clear_spath
   resources :sitemap_paths, as: :spaths
   resources :subscriptions
 

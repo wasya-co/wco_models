@@ -11,6 +11,7 @@
         %tr
           %td
             = link_to '[~]', edit_spath_path(spath)
+            .d-inline-block= button_to 'X', spath_path(spath), method: :delete, data: { confirm: 'Are you sure?' }
             .d-inline-block= button_to 'check', check_spath_path(spath), method: :get
             = link_to "#{@site.origin}#{spath.path}","#{@site.origin}#{spath.path}", target: :_blank
             - if spath.redirect_to

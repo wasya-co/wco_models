@@ -9,7 +9,7 @@
     .Sitemaps.col-md-9
 
       %h5.d-flex
-        Sitemap Paths &nbsp;
+        Sitemap Paths (#{@site.sitemap_paths.length})&nbsp;
         = link_to '[+]', new_spath_path( site_id: @site.id )
         &nbsp;
         = button_to 'check', check_sitemap_path( site: @site ), data: { confirm: 'Are you sure?' }

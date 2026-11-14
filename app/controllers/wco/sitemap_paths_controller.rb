@@ -29,6 +29,18 @@ class Wco::SitemapPathsController < Wco::ApplicationController
     end
   end
 
+  def destroy
+    @spath = Wco::SitemapPath.find params[:id]
+    site_id = @spath.site_id
+    authorize! :destroy, @spath
+    if @spath.destroy
+      flash_notice 'ok'
+    else
+      flash_alert 'No luck.'
+    end
+    redirect_to request.referrer || sites_path(site_id)
+  end
+
   def edit
     @spath = Wco::SitemapPath.find params[:id]
     @site = @spath.site

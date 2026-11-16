@@ -474,6 +474,8 @@ async function init() {
   let studio
   async function load_studio(s) {
     const cfg = scene_cfg(s)
+    logg(cfg, 'load_studio')
+
     if (studio && studio.parent) studio.parent.remove(studio)
     studio = (await gltfLoader.loadAsync(cfg.url)).scene
     rescale(studio, { height: cfg.height })
@@ -635,6 +637,7 @@ async function init() {
   renderer.setAnimationLoop(animate)
 }
 
+/*
 let semafore = false
 document.addEventListener('DOMContentLoaded', async function(e) {
   if (!semafore) {
@@ -642,6 +645,13 @@ document.addEventListener('DOMContentLoaded', async function(e) {
     await init()
   }
 })
+*/
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init)
+} else {
+  init()
+}
+
 
 function cameras_fn(which) {
   switch (which) {

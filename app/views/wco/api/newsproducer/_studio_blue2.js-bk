@@ -1,0 +1,31 @@
+
+let scenes = {
+  skybox_1: {
+    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
+    height: 30,
+  },
+  studio_tron: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
+  },
+  room_1: {
+    height: 6,
+    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
+  },
+  studio_blue: {
+    height: 4.3,
+    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
+  },
+  purple_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
+  },
+  red_stage: {
+    height: 10,
+    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
+  },
+  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
+
+  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
+  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
+}

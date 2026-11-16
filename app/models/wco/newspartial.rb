@@ -68,8 +68,9 @@ class Wco::Newspartial
   ##
   ## "am_fenrir", ## bad
   ## am_michael good
-  ## "af_bella" ## bad
-  ## "af_jessica", ## good
+  ## am_puck    good
+  ## "af_bella"   ## bad
+  ## "af_jessica" ## good
   ##
   def generate_speech
     out = HTTParty.post( "#{Wco::Setting.get('HEAD_TTS_ORIGIN')}/v1/synthesize",

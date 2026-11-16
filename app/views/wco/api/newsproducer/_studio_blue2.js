@@ -10,18 +10,23 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-const MODELS_ROOT = 'https://localhost/vendor/models';
-// const AVATARS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars';
-const AVATARS_ROOT = 'https://localhost/vendor/models/avatars';
-const avatars = {
-  brunette: { type: 'F', url: `${AVATARS_ROOT}/brunette/model.glb` },
-  cara:     { type: 'F', url: `${AVATARS_ROOT}/cara/model.glb` }, // short hair
-  eve:      { type: 'F', url: `${AVATARS_ROOT}/eve/model.glb` }, // poison green
+document.addEventListener("keydown", e => {
+  if (e.code === "Space" && !["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
+    e.preventDefault()
+  }
+})
 
-  denis:  { type: 'M', url: `${AVATARS_ROOT}/denis/model.glb`  }, // beard
-  gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
-}
+const MODELS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.7/public/vendor/models'
+
 const AVATAR_STOR = 'avatar'
+const avatars = {
+  brunette: { type: 'F', url: `${MODELS_ROOT}/avatars/brunette/model.glb` },
+  cara:     { type: 'F', url: `${MODELS_ROOT}/avatars/cara/model.glb` }, // short hair
+  eve:      { type: 'F', url: `${MODELS_ROOT}/avatars/eve/model.glb` }, // poison green
+
+  denis:  { type: 'M', url: `${MODELS_ROOT}/avatars/denis/model.glb`  }, // beard
+  gregor: { type: 'M', url: `${MODELS_ROOT}/avatars/gregor/model.glb` }, // gray shirt
+}
 $('select.avatar').each((_idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {
@@ -38,37 +43,8 @@ $('select.avatar').each((_idx, el) => {
   }
 })
 
-let scenes = {
-  skybox_1: {
-    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
-    height: 30,
-  },
-  studio_tron: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
-  },
-  room_1: {
-    height: 6,
-    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
-  },
-  studio_blue: {
-    height: 4.3,
-    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
-  },
-  purple_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
-  },
-  red_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
-  },
-  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
-
-  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
-  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
-}
 const SCENE_STOR = 'studio'
+const scenes = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
 $.each(scenes, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
 })

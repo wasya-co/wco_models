@@ -10,9 +10,8 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-const MODELS_ROOT = 'https://localhost/vendor/models';
-// const AVATARS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.3.0/public/vendor/models/avatars';
-const AVATARS_ROOT = 'https://localhost/vendor/models/avatars';
+const MODELS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@v0.4.14/public/vendor/models'
+const AVATARS_ROOT = `${MODELS_ROOT}/avatars`
 const avatars = {
   brunette: { type: 'F', url: `${AVATARS_ROOT}/brunette/model.glb` },
   cara:     { type: 'F', url: `${AVATARS_ROOT}/cara/model.glb` }, // short hair
@@ -38,36 +37,7 @@ $('select.avatar').each((_idx, el) => {
   }
 })
 
-let scenes = {
-  skybox_1: {
-    url: `${MODELS_ROOT}/scenes/000mb skybox_1/scene.glb`,
-    height: 30,
-  },
-  studio_tron: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/003mb studio_tron/scene.glb`,
-  },
-  room_1: {
-    height: 6,
-    url: `${MODELS_ROOT}/scenes/000mb room-1/scene.glb`,
-  },
-  studio_blue: {
-    height: 4.3,
-    url: `${MODELS_ROOT}/scenes/000mb studio_blue/scene.glb`,
-  },
-  purple_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb purple_stage/scene.glb`,
-  },
-  red_stage: {
-    height: 10,
-    url: `${MODELS_ROOT}/scenes/000mb red_stage/scene.glb`,
-  },
-  // skybox_1: `${MODELS_ROOT}/scenes//scene.glb`,
-
-  newsroom_green: `${MODELS_ROOT}/scenes/001mb newsroom_green/scene.glb`,
-  rick_and_morty_garage: `${MODELS_ROOT}/scenes/003mb rick-and-morty-garage/scene.glb`,
-}
+let scenes = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
 const SCENE_STOR = 'studio'
 $.each(scenes, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
@@ -439,6 +409,8 @@ function tickEvents(elapsedMs) {
 /*
 **/
 async function init() {
+  logg(null, 'init()')
+
   if (newspartial_id) {
     try {
       const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
@@ -496,10 +468,10 @@ async function init() {
 
 
   let studio
-  async function load_studio(s) {
-    const cfg = scene_cfg(s)
+  async function load_studio(cfg) {
+    logg(cfg, 'load_studio()')
     if (studio && studio.parent) studio.parent.remove(studio)
-    studio = (await gltfLoader.loadAsync(cfg.url)).scene
+    studio = (await gltfLoader.loadAsync(`${cfg.path}/scene.glb`)).scene
     rescale(studio, { height: cfg.height })
     set_shadows(studio, false, true)
     scene.add(studio)
@@ -659,6 +631,7 @@ async function init() {
   renderer.setAnimationLoop(animate)
 }
 
+/*
 let semafore = false
 document.addEventListener('DOMContentLoaded', async function(e) {
   if (!semafore) {
@@ -666,6 +639,12 @@ document.addEventListener('DOMContentLoaded', async function(e) {
     await init()
   }
 })
+*/
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init)
+} else {
+  init()
+}
 
 function cameras_fn(which) {
   switch (which) {
@@ -909,4 +888,4 @@ $('#jesture').on('click', async () => {
   }
 })
 
-console.log('+++ loaded wco_models :: newsproducer :: studio_blue.js')
+console.log('+++ loaded wco_models :: newsproducer :: studio_blue2.js')

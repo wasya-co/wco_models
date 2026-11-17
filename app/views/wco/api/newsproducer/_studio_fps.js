@@ -14,10 +14,12 @@ document.addEventListener("keydown", e => {
   }
 })
 
-// const MODELS_ROOT = '/vendor/models'
-// const MODELS_ROOT = "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.0/public/vendor/models"
+const ISH_VERSION = 'v0.4.14'
+const MODELS_ROOT = `https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@${ISH_VERSION}/public/vendor/models`
+
 const SCENE_STOR = 'studio'
-const scenes = await fetch('https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.3/public/vendor/models/scenes/index.json').then(r => r.json())
+const scenes = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
+logg(scenes, 'scenes13')
 $.each(scenes, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
 })
@@ -760,7 +762,7 @@ function scene_cfg(s) {
   if (typeof s.url === 'string') {
     return { ...s, url: s.url }
   }
-  logg(s, 'out')
+  logg(s, 'scene_cfg() out')
   return s
 }
 
@@ -792,14 +794,10 @@ function reset_player() {
 
 const loader = new GLTFLoader()
 
-function specsheet_url(glb_url) {
-  return glb_url.replace(/[^/]+$/, 'specsheet.json')
-}
-
-async function load_specsheet(glb_url) {
+async function load_specsheet(cfg) {
   specsheet = null
   try {
-    const res = await fetch(specsheet_url(glb_url))
+    const res = await fetch(`${cfg.path}/specsheet.json`)
     if (!res.ok) return
     specsheet = await res.json()
     logg(specsheet, 'specsheet')
@@ -809,11 +807,13 @@ async function load_specsheet(glb_url) {
 }
 
 async function load_studio(s) {
+  logg(s, 'load_studio')
+
   const cfg = scene_cfg(s)
   if (studio && studio.parent) studio.parent.remove(studio)
   if (octree_helper && octree_helper.parent) octree_helper.parent.remove(octree_helper)
-  const gltf = await loader.loadAsync(cfg.url)
-  await load_specsheet(cfg.url)
+  const gltf = await loader.loadAsync(`${cfg.path}/scene.glb`)
+  await load_specsheet(cfg)
   studio = gltf.scene
   if (cfg.height) rescale(studio, { height: cfg.height })
   apply_studio_mesh(studio)

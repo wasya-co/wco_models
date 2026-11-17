@@ -830,6 +830,21 @@ function animate() {
   }
 }
 
+function resetAvatarExpression(avatar) {
+  if (!avatar) return
+  try {
+    if (avatar.isStreaming) {
+      avatar.streamStop()
+    } else {
+      avatar.stopSpeaking()
+    }
+    avatar.setMood('neutral')
+    avatar.resetLips()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function startSpeakCapture() {
   if (capturing) return
   if (!active_avatar) return
@@ -844,7 +859,13 @@ async function startSpeakCapture() {
   cameraTransition = null
   if (controls) controls.enabled = false
 
-  await active_avatar.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
+  await active_avatar.streamStart(
+    streamOpts,
+    () => {},
+    () => { resetAvatarExpression(active_avatar) },
+    onSubtitles,
+    onMetrics,
+  )
 
   capturer = new CCapture( { format: 'webm', framerate: fps } )
   capturer.start()
@@ -859,6 +880,7 @@ function finishCapture() {
   logg('capturer.stop')
   lastAnimTime = performance.now()
   if (controls) controls.enabled = true
+  resetAvatarExpression(active_avatar)
 
   capturer.save((blob) => {
     logg(blob, 'blob')

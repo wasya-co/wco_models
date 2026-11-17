@@ -33,7 +33,7 @@ $('select.spots').each((_idx, el) => {
     $('<option>', { value: name, text: name }).appendTo($select)
   })
   try {
-    const saved = localStorage.getItem(`${SPOTS_STOR}-${$select.data('uid')}`)
+    const saved = localStorage.getItem(`${SPOTS_STOR}-${$select.data('spot_id')}`)
     if (saved && avatars[saved]) $select.val(saved)
   } catch (error) {
     console.log(error)
@@ -177,13 +177,13 @@ let totalFrames
 
 let camera, camera_wide, camera_1, camera_2, camera_3
 let controls, renderer, scene
-let head, head_1, head_2, head_3
+let active_avatar, avatar_1, avatar_2, avatar_3
 let faceTarget = new THREE.Vector3()
 const cameraTargets = {
-  wide: new THREE.Vector3(0.5, 1.2, 0),
-  av_1: new THREE.Vector3(0, 1.5, 0),
-  av_2: new THREE.Vector3(1, 1.5, 0),
-  av_3: new THREE.Vector3(-1, 1.5, 0),
+  cam_wide: new THREE.Vector3(0.5, 1.2, 0),
+  cam_1: new THREE.Vector3(0, 1.5, 0),
+  cam_2: new THREE.Vector3(1, 1.5, 0),
+  cam_3: new THREE.Vector3(-1, 1.5, 0),
 }
 let cameraTransition = null
 const CAMERA_BLEND_MS = 900
@@ -314,7 +314,7 @@ function restoreHeadControl() {
   try {
     const saved = localStorage.getItem(HEAD_CTRL_KEY)
     if (!saved) return
-    const input = document.querySelector(`input[name=head][value="${saved}"]`)
+    const input = document.querySelector(`input[name=avatar][value="${saved}"]`)
     if (input) input.checked = true
   } catch (error) {
     console.log(error)
@@ -381,8 +381,8 @@ function move_camera(config) {
   const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
   const src = cameras_fn(fromKey)
   const dest = cameras_fn(toKey)
-  const startTarget = (cameraTargets[fromKey] || cameraTargets.wide).clone()
-  const destTarget = (cameraTargets[toKey] || cameraTargets.wide).clone()
+  const startTarget = (cameraTargets[fromKey] || cameraTargets.cam_wide).clone()
+  const destTarget = (cameraTargets[toKey] || cameraTargets.cam_wide).clone()
 
   persistCameraControl(toKey)
   const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
@@ -442,8 +442,8 @@ function tickEvents(elapsedMs) {
 
 function play_animation(config) {
   logg(config, 'my play_animation()')
-  let this_head = heads_fn()[config.avatar_id]
-  if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
+  let this_head = avatars_fn(config.avatar_id)
+  if (this_head) this_head.playAnimation(gestures[config.animation_name](config))
 }
 
 /*
@@ -547,10 +547,11 @@ async function init() {
 
 
   $('select.spots').on('change', async function() {
-    const uid = String($(this).data('uid'))
-    const thisHead = heads_fn(uid)
+    const spotId = String($(this).data('spot_id'))
+    const avatarId = spotId.replace('spot_', 'avatar_')
+    const thisHead = avatars_fn(avatarId)
     const val = $(this).val()
-    localStorage.setItem(`${SPOTS_STOR}-${uid}`, val || '')
+    localStorage.setItem(`${SPOTS_STOR}-${spotId}`, val || '')
     if (!thisHead) return
     if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
     const avatar = avatars[val]
@@ -573,8 +574,8 @@ async function init() {
       set_shadows(thisHead.armature, true, false)
       scene.add(thisHead.armature)
       put_feet_at_origin(thisHead)
-      thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
-      point_camera_at_face(`av_${uid}`, thisHead)
+      thisHead.armature.position.add(new THREE.Vector3(...(u_positions[spotId] || [0, 0, 0])))
+      point_camera_at_face(spotId.replace('spot_', 'cam_'), thisHead)
       await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
       loading.textContent = 'loaded'
     } catch (error) {
@@ -582,7 +583,7 @@ async function init() {
       loading.textContent = error.toString()
     }
   })
-  $('select.avatar').trigger('change')
+  $('select.spots').trigger('change')
 
 
 
@@ -622,7 +623,7 @@ async function init() {
       setActiveAvatar(input.value)
     })
   })
-  const selectedHead = document.querySelector('input[name=head]:checked')
+  const selectedHead = document.querySelector('input[name=avatar]:checked')
   setActiveAvatar(selectedHead ? selectedHead.value : 'avatar_1')
 
   restoreCameraControl()
@@ -684,7 +685,6 @@ function cameras_fn(which) {
   }
 }
 
-let active_avatar, avatar_1, avatar_2, avatar_3
 function avatars_fn(which) {
   switch (which) {
     case 'avatar_1':
@@ -715,7 +715,7 @@ function setActiveCamera(id, instant = false) {
   const key = String(id)
   persistCameraControl(key)
   const dest = cameras_fn(key)
-  const destTarget = (cameraTargets[key] || cameraTargets.wide).clone()
+  const destTarget = (cameraTargets[key] || cameraTargets.cam_wide).clone()
   ;[camera_wide, camera_1, camera_2, camera_3, camera].forEach((cam) => {
     if (cam) {
       cam.aspect = width / height
@@ -812,12 +812,12 @@ function animate() {
 
   if (capturing) tickEvents(captureFrame * dt)
 
-  if (head_1) head_1.animate(dt)
-  if (head_2) head_2.animate(dt)
-  if (head_3) head_3.animate(dt)
-  update_walk(head_1, dt)
-  update_walk(head_2, dt)
-  update_walk(head_3, dt)
+  if (avatar_1) avatar_1.animate(dt)
+  if (avatar_2) avatar_2.animate(dt)
+  if (avatar_3) avatar_3.animate(dt)
+  update_walk(avatar_1, dt)
+  update_walk(avatar_2, dt)
+  update_walk(avatar_3, dt)
   updateCameraTransition(dt)
   if (!cameraTransition && !capturing) controls.update()
   renderer.render( scene, camera )
@@ -833,7 +833,7 @@ function animate() {
 
 async function startSpeakCapture() {
   if (capturing) return
-  if (!head) return
+  if (!active_avatar) return
   if (!chunkedInput) return
 
   const last = chunkedInput.wtimes.length - 1
@@ -849,7 +849,7 @@ async function startSpeakCapture() {
   capturer.start()
   logg('capturer.start')
   status.textContent = 'capturing'
-  head.streamAudio(chunkedInput)
+  active_avatar.streamAudio(chunkedInput)
 }
 
 function finishCapture() {
@@ -900,12 +900,12 @@ $('#speak').on('click', async () => {
 
 $('#jesture').on('click', async () => {
   try {
-    if (!head) return
+    if (!active_avatar) return
     const name = $('select.gestures').val()
     const g = gestures[name]
-    const _anim = gesture_url(g, head.avatar)
-    head.speed = (g && typeof g === 'object' && g.speed) ? g.speed : 0
-    head.playAnimation( _anim )
+    const _anim = gesture_url(g, active_avatar.avatar)
+    active_avatar.speed = (g && typeof g === 'object' && g.speed) ? g.speed : 0
+    active_avatar.playAnimation( _anim )
   } catch (error) {
     console.log(error)
   }

@@ -337,7 +337,7 @@ function update_walk(this_head, dt) {
 function play_animation(config) {
   logg(config, 'my play_animation()')
   let this_head = heads_fn()[config.avatar_id]
-  if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
+  if (this_head) this_head.playAnimation(gestures[config.animation_name](config))
 }
 
 function cut_to(key) {

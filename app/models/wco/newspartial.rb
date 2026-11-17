@@ -112,7 +112,7 @@ class Wco::Newspartial
   ## uses ishlib3js v0.0.2, not 0.1.0!!!
   ## @deprecated, this is being brought into wco_models
   ##
-  def generate_video
+  def generate_video_bk
     cmd = "cd #{Wco::Setting.get('ISHLIB3JS_ROOT')} ;
       node ./src/talking_head/example_puppeteer_wired.js \
         --api_key=#{Wco::Setting.get('WASYACO_SIMPLE_API_KEY')} \
@@ -131,6 +131,16 @@ class Wco::Newspartial
     end
     puts! out, 'out'
     return out
+  end
+  def generate_video
+    out = `#{generate_video_cmd}`
+    puts! out, 'out'
+  end
+  def generate_video_cmd
+    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL=#{api_newspartial_url(@newsvideo)} yarn run run_newspartial_1"
+    puts "+++ puppeteer cmd:"
+    puts cmd
+    cmd
   end
 
   def video

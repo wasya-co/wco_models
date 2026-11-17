@@ -17,15 +17,16 @@ Wco::Engine.routes.draw do
     patch 'reports/:id/add-config', to: 'reports#add_config'
     get   'newspartials/:id/config',          to: 'newspartials#show_config',     as: :newspartial_config
     match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
+    match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video', as: :newspartial_generate_speech, via: [ :get, :post ]
 
     get 'newsproducer/canvas',         to: 'newsproducer#canvas'
     get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
-    get 'newsproducer/studio_1',       to: 'newsproducer#studio_1'
-    get 'newsproducer/studio_green',       to: 'newsproducer#studio_green'
+    # get 'newsproducer/studio_1',       to: 'newsproducer#studio_1'
+    # get 'newsproducer/studio_green',       to: 'newsproducer#studio_green'
     get 'newsproducer/studio_blue',        to: 'newsproducer#studio_blue'
     get 'newsproducer/studio_fps',         to: 'newsproducer#studio_fps'
-    get 'newsproducer/studio_coc', to: 'newsproducer#studio_coc'
-    get 'newsproducer/studio_ra2', to: 'newsproducer#studio_ra2'
+    # get 'newsproducer/studio_coc', to: 'newsproducer#studio_coc'
+    # get 'newsproducer/studio_ra2', to: 'newsproducer#studio_ra2'
 
 
     match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]

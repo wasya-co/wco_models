@@ -51,6 +51,15 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     render json: { status: :ok }
   end
 
+  ## via puppeteer
+  def generate_video
+    @newspartial = Wco::Newspartial.unscoped.find params[:id]
+    authorize! :create, @newspartial
+    @newspartial.generate_video
+
+    render json: { status: :ok }
+  end
+
   def show_config
     @newspartial = Wco::Newspartial.find params[:id]
     config = JSON.parse @newspartial.speech_json

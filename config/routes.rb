@@ -22,15 +22,15 @@ Wco::Engine.routes.draw do
     get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'
     get 'newsproducer/studio_1',       to: 'newsproducer#studio_1'
     get 'newsproducer/studio_green',       to: 'newsproducer#studio_green'
-    get 'newsproducer/studio_blue',       to: 'newsproducer#studio_blue'
-    get 'newsproducer/studio_fps',       to: 'newsproducer#studio_fps'
+    get 'newsproducer/studio_blue',        to: 'newsproducer#studio_blue'
+    get 'newsproducer/studio_fps',         to: 'newsproducer#studio_fps'
     get 'newsproducer/studio_coc', to: 'newsproducer#studio_coc'
     get 'newsproducer/studio_ra2', to: 'newsproducer#studio_ra2'
 
 
     match 'newsvideos/:id/generate-illustration', to: 'newsvideos#generate_illustration', as: :newsvideo_generate_illustration, via: [ :get, :post ]
-    match 'newsvideos/:id/generate-video', to: 'newsvideos#generate', as: :newsvideo_generate, via: [ :get, :post ]
-    get   'newsvideos/:id', to: 'newsvideos#show', as: :newsvideo, defaults: { format: :json }
+    match 'newsvideos/:id/generate-video',        to: 'newsvideos#generate', as: :newsvideo_generate, via: [ :get, :post ]
+    get   'newsvideos/:id',                       to: 'newsvideos#show',     as: :newsvideo, defaults: { format: :json }
 
     get 'tags', to: 'tags#index'
 
@@ -95,8 +95,8 @@ Wco::Engine.routes.draw do
 
   resources :obfuscated_redirects
 
-  post 'office_action_templates',         to: 'office_action_templates#update'
-  post 'office_action_templates/perform', to: 'office_action_templates#perform', as: :oat_perform_with_conversations ## from the mailbox, the oat_id is passed as a body param.
+  post 'office_action_templates',             to: 'office_action_templates#update'
+  post 'office_action_templates/perform',     to: 'office_action_templates#perform', as: :oat_perform_with_conversations ## from the mailbox, the oat_id is passed as a body param.
   post 'office_action_templates/:id/perform', to: 'office_action_templates#perform', as: :oat_perform
   get  'office_action_templates/:id/perform', to: 'office_action_templates#perform'
   resources :office_action_templates

@@ -16,7 +16,7 @@ class Wco::Newspartial
   field :config_json, type: :string, default: '{}'
   field :speech_json, type: :string, default: '{}' # the smaller config, excludes audio wav
 
-  field :voice, type: :string ## 'af_jessica', 'am_fenrir'
+  field :voice, type: :string, default: 'af_jessica' ## 'af_jessica', 'am_fenrir'
 
   belongs_to :newsvideo
 

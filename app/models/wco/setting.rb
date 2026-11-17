@@ -5,7 +5,7 @@ class Wco::Setting
   store_in collection: 'wco_settings'
 
   KEYS = [ 'HEAD_TTS_ORIGIN', 'ISHLIB3JS_ROOT',
-    'OPENAI_API_KEY', 'PEXELS_API_KEY',
+    'OPENAI_API_KEY', 'PEXELS_API_KEY', 'PUPPETEER_ROOT',
     'WASYACO_ORIGIN', 'WASYACO_SIMPLE_API_KEY', 'WASYACO_SIMPLE_API_SECRET',
   ];
 

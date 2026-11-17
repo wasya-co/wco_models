@@ -118,20 +118,26 @@ class Wco::NewsvideosController < Wco::ApplicationController
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]
     authorize! :edit, @newsvideo
 
-    cmd = "cd #{PUPPETEER_ROOT} ; yarn run newsvideo_generate_all_audio #{@newsvideo.id}"
-    puts "+++ puppeteer cmd:"
-    puts cmd
-    out = `#{cmd}`
-    puts! out, 'out'
+    # cmd = "cd #{PUPPETEER_ROOT} ; yarn run newsvideo_generate_all_audio #{@newsvideo.id}"
+    # puts "+++ puppeteer cmd:"
+    # puts cmd
+    # out = `#{cmd}`
+    # puts! out, 'out'
+
+    @newsvideo.newspartials.each do |newspartial|
+      newspartial.generate_speech
+      print '.'
+    end
 
     render json: { status: :ok }
   end
 
+  ## via puppeteer
   def generate_all_video
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]
     authorize! :edit, @newsvideo
 
-    cmd = "cd #{PUPPETEER_ROOT} ; yarn run newsvideo_generate_all_video #{@newsvideo.id}"
+    cmd = "cd #{PUPPETEER_ROOT} ; NEWSVIDEO_URL=#{} yarn run run_newsvideo_1 #{@newsvideo.config_url}"
     puts "+++ puppeteer cmd:"
     puts cmd
     out = `#{cmd}`

@@ -18,7 +18,7 @@ document.addEventListener("keydown", e => {
 
 const MODELS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.7/public/vendor/models'
 
-const AVATAR_STOR = 'avatar'
+const SPOTS_STOR = 'spots'
 const avatars = {
   brunette: { type: 'F', url: `${MODELS_ROOT}/avatars/brunette/model.glb` },
   cara:     { type: 'F', url: `${MODELS_ROOT}/avatars/cara/model.glb` }, // short hair
@@ -27,16 +27,13 @@ const avatars = {
   denis:  { type: 'M', url: `${MODELS_ROOT}/avatars/denis/model.glb`  }, // beard
   gregor: { type: 'M', url: `${MODELS_ROOT}/avatars/gregor/model.glb` }, // gray shirt
 }
-$('select.avatar').each((_idx, el) => {
+$('select.spots').each((_idx, el) => {
   const $select = $(el)
   $.each(avatars, function(name, url) {
-    $('<option>', {
-      value: name,
-      text: name,
-    }).appendTo($select)
+    $('<option>', { value: name, text: name }).appendTo($select)
   })
   try {
-    const saved = localStorage.getItem(`${AVATAR_STOR}-${$select.data('uid')}`)
+    const saved = localStorage.getItem(`${SPOTS_STOR}-${$select.data('uid')}`)
     if (saved && avatars[saved]) $select.val(saved)
   } catch (error) {
     console.log(error)
@@ -44,18 +41,58 @@ $('select.avatar').each((_idx, el) => {
 })
 
 const SCENE_STOR = 'studio'
-const scenes = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
-$.each(scenes, (name) => {
+const studios = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
+/* const studios = {
+  "skybox_1": {
+    "name": "skybox_1",
+    "height": 30,
+    "path": "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.1/public/vendor/models/scenes/000mb h30 skybox_1"
+  },
+  "collision-world": {
+    "name": "collision-world",
+    "height": null,
+    "path": "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.1/public/vendor/models/scenes/000mb collision-world"
+  },
+  "city-at-night": {
+    "name": "city-at-night",
+    "height": null,
+    "path": "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.1/public/vendor/models/scenes/003mb city-at-night"
+  },
+  "newsroom_green": {
+    "name": "newsroom_green",
+    "height": 3.3,
+    "path": "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.1/public/vendor/models/scenes/001mb h33cm newsroom_green"
+  },
+  "room-1": {
+    "name": "room-1",
+    "height": 6,
+    "path": "https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@0.4.1/public/vendor/models/scenes/000mb h6 room-1"
+  },
+} */
+$.each(studios, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.studio'))
 })
 try {
   const saved = localStorage.getItem( SCENE_STOR )
-  if (saved && scenes[saved]) $('select.studio').val(saved)
+  if (saved && studios[saved]) $('select.studio').val(saved)
 } catch (error) {
   console.log(error)
 }
+let active_studio_name = 'newsroom_green' // 'collision-world'
+let active_studio
+async function load_studio(_cfg) {
+  logg(_cfg, 'load_studio')
 
-let scene_url = scenes[$('select.studio').val()] || scenes.rick_and_morty_garage
+  if (active_studio && active_studio.parent) active_studio.parent.remove(active_studio)
+  active_studio = (await gltfLoader.loadAsync(`${_cfg.path}/scene.glb`)).scene
+  if (_cfg.height) {
+    rescale(active_studio, { height: _cfg.height })
+  }
+  set_shadows(active_studio, false, true)
+  scene.add(active_studio)
+}
+
+
 
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
@@ -75,10 +112,12 @@ $.each(gestures, (name) => {
 })
 
 let u_positions = {
-  '1': [0, 0, 0],
-  '2': [1, 0, 0],
-  '3': [-1, 0, 0],
+  'spot_1': [0, 0, 0],
+  'spot_2': [1, 0, 0],
+  'spot_3': [-1, 0, 0],
 }
+
+
 
 
 
@@ -204,10 +243,6 @@ function rescale(model, config) {
   model.scale.setScalar(scale)
 }
 
-function scene_cfg(s) {
-  if (typeof s === 'string') return { url: s, height: 3.3 }
-  return { url: s.url, height: s.height || 3.3 }
-}
 
 function set_shadows(root, cast, receive) {
   root.traverse((obj) => {
@@ -334,12 +369,6 @@ function update_walk(this_head, dt) {
   this_head.armature.position.addScaledVector(dir, this_head.speed * dt / 1000)
 }
 
-// function play_animation(config) {
-//   logg(config, 'my play_animation()')
-//   let this_head = heads_fn()[config.avatar_id]
-//   if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
-// }
-
 function cut_to(key) {
   const radio = document.querySelector(`input[name=camera][value="${key}"]`)
   if (radio) radio.checked = true
@@ -395,7 +424,8 @@ function move_camera(config) {
   }
 }
 
-// window.play_animation = play_animation
+/* these are available exec_js functions? */
+window.play_animation = play_animation
 window.move_camera = move_camera
 window.cut_to = cut_to
 
@@ -410,7 +440,11 @@ function tickEvents(elapsedMs) {
   }
 }
 
-
+function play_animation(config) {
+  logg(config, 'my play_animation()')
+  let this_head = heads_fn()[config.avatar_id]
+  if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
+}
 
 /*
 **/
@@ -471,26 +505,15 @@ async function init() {
   scene.add(grid)
 
 
-  let studio
-  async function load_studio(s) {
-    const cfg = scene_cfg(s)
-    logg(cfg, 'load_studio')
 
-    if (studio && studio.parent) studio.parent.remove(studio)
-    studio = (await gltfLoader.loadAsync(cfg.url)).scene
-    rescale(studio, { height: cfg.height })
-    set_shadows(studio, false, true)
-    scene.add(studio)
-  }
-  await load_studio(scene_url)
+  await load_studio( studios[active_studio_name] )
   $('select.studio').on('change', async function() {
     const name = $(this).val()
-    if (!scenes[name]) return
+    if (!studios[name]) return
     localStorage.setItem(SCENE_STOR, name)
-    scene_url = scenes[name]
     loading.textContent = 'Loading...'
     try {
-      await load_studio(scene_url)
+      await load_studio(studios[name])
       loading.textContent = 'loaded'
     } catch (error) {
       console.log(error)
@@ -498,29 +521,21 @@ async function init() {
     }
   })
 
-
-  // head = new TalkingHead( document.getElementById('avatar'), {
-  //   avatarOnly: true,
-  //   avatarOnlyScene: scene,
-  //   avatarOnlyCamera: camera,
-  //   lipsyncModules: ["en"],
-  //   dracoEnabled: true,
-  // })
-  head_1 = new TalkingHead( document.getElementById('avatar_1'), {
+  avatar_1 = new TalkingHead( document.getElementById('avatar_1'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera_1,
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
-  head_2 = new TalkingHead( document.getElementById('avatar_2'), {
+  avatar_2 = new TalkingHead( document.getElementById('avatar_2'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera_1,
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
-  head_3 = new TalkingHead( document.getElementById('avatar_3'), {
+  avatar_3 = new TalkingHead( document.getElementById('avatar_3'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
     avatarOnlyCamera: camera_1,
@@ -531,11 +546,11 @@ async function init() {
 
 
 
-  $('select.avatar').on('change', async function() {
+  $('select.spots').on('change', async function() {
     const uid = String($(this).data('uid'))
     const thisHead = heads_fn(uid)
     const val = $(this).val()
-    localStorage.setItem(`${AVATAR_STOR}-${uid}`, val || '')
+    localStorage.setItem(`${SPOTS_STOR}-${uid}`, val || '')
     if (!thisHead) return
     if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
     const avatar = avatars[val]
@@ -601,14 +616,14 @@ async function init() {
   controls.update()
 
   restoreHeadControl()
-  document.querySelectorAll('input[name=head]').forEach((input) => {
+  document.querySelectorAll('input[name=avatar]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
-      setActiveHead(input.value)
+      setActiveAvatar(input.value)
     })
   })
   const selectedHead = document.querySelector('input[name=head]:checked')
-  setActiveHead(selectedHead ? selectedHead.value : '1')
+  setActiveAvatar(selectedHead ? selectedHead.value : 'avatar_1')
 
   restoreCameraControl()
   document.querySelectorAll('input[name=camera]').forEach((input) => {
@@ -655,13 +670,13 @@ if (document.readyState === 'loading') {
 
 function cameras_fn(which) {
   switch (which) {
-    case 'wide':
+    case 'cam_wide':
       return camera_wide
-    case 'av_1':
+    case 'cam_1':
       return camera_1
-    case 'av_2':
+    case 'cam_2':
       return camera_2
-    case 'av_3':
+    case 'cam_3':
       return camera_3
     default:
       logg('fpq - cameras_fn default - this should never happen')
@@ -669,25 +684,26 @@ function cameras_fn(which) {
   }
 }
 
-function heads_fn(which) {
+let active_avatar, avatar_1, avatar_2, avatar_3
+function avatars_fn(which) {
   switch (which) {
-    case '1':
-      return head_1
+    case 'avatar_1':
+      return avatar_1
       break;
-    case '2':
-      return head_2
+    case 'avatar_2':
+      return avatar_2
       break;
-    case '3':
-      return head_3
+    case 'avatar_3':
+      return avatar_3
       break;
     default:
-      logg('fpp - heads_fn default - this should never happen')
-      return head_1
+      logg(`fpp - avatars_fn default - '${which}' - this should never happen`)
+      return avatar_1
   }
 }
 
-function setActiveHead(id) {
-  head = heads_fn(id)
+function setActiveAvatar(id) {
+  active_avatar = avatars_fn(id)
   persistHeadControl(id)
 }
 

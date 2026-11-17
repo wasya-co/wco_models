@@ -576,7 +576,6 @@ async function init() {
       put_feet_at_origin(thisHead)
       thisHead.armature.position.add(new THREE.Vector3(...(u_positions[spotId] || [0, 0, 0])))
       point_camera_at_face(spotId.replace('spot_', 'cam_'), thisHead)
-      await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
       loading.textContent = 'loaded'
     } catch (error) {
       console.log(error)
@@ -844,6 +843,8 @@ async function startSpeakCapture() {
   capturing = true
   cameraTransition = null
   if (controls) controls.enabled = false
+
+  await active_avatar.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
 
   capturer = new CCapture( { format: 'webm', framerate: fps } )
   capturer.start()

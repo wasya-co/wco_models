@@ -46,8 +46,8 @@ class Wco::NewspartialsController < Wco::ApplicationController
     authorize! :edit, @newspartial
 
     Rails.env.production? ?
-      Wco::NewspartialVideoJob.perform_async(params[:id]) :
-      Wco::NewspartialVideoJob.perform_sync( params[:id])
+      Wco::NewspartialVideoJob.perform_async( params[:id]) :
+      Wco::NewspartialVideoJob.perform_sync(  params[:id])
 
     flash_notice 'Scheduled.'
     redirect_to controller: 'newsvideos', id: @newspartial.newsvideo_id, action: 'show'

@@ -25,14 +25,15 @@ class Wco::Newsvideo
   field :config_json, type: :string
   field :duration_ms, type: :integer
 
-  field :w_px, type: Integer
-  field :h_px, type: Integer
+  field :w_px, type: Integer, default: 854
+  field :h_px, type: Integer, default: 480
+  field :fps, type: :integer, default: 30
   field :x, :type => Float
   field :y, :type => Float
   field :z, :type => Float
 
   field :next_overlay_ms, type: :integer, default: 1000
-  field :fps, type: :integer, default: 30
+
 
   belongs_to :generated_video, class_name: 'Wco::Video', optional: true
 

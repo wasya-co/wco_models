@@ -721,6 +721,7 @@ async function startSpeakCapture() {
   if (capturing) return
   if (!active_avatar) return
   if (!chunkedInput) return
+  logg(null, 'startSpeakCapture()')
 
   const last = chunkedInput.wtimes.length - 1
   const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]

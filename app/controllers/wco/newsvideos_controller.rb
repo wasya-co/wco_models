@@ -137,11 +137,9 @@ class Wco::NewsvideosController < Wco::ApplicationController
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]
     authorize! :edit, @newsvideo
 
-    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSVIDEO_URL=#{api_newsvideo_url(@newsvideo)} yarn run run_newsvideo_1"
-    puts "+++ puppeteer cmd:"
-    puts cmd
-    out = `#{cmd}`
-    puts! out, 'out'
+    @newsvideo.newspartials.each do |np|
+      np.generate_video
+    end
 
     render json: { status: :ok }
   end

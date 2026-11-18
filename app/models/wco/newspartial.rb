@@ -143,7 +143,7 @@ class Wco::Newspartial
     puts! out, 'out'
   end
   def generate_video_cmd
-    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL='#{generate_video_url}' yarn run run_newspartial_1"
+    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL='#{generate_video_url}' yarn run run_newspartial_1 "
     puts "+++ puppeteer cmd:"
     puts cmd
     cmd

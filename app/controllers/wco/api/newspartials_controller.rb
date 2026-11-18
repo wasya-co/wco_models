@@ -70,11 +70,10 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     config[:generate_video_url] = wco.api_newsproducer_studio_blue_url({
       api_key:        Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
       api_secret:     Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
-      host:           Rails.application.routes.default_url_options[:host],
+      host:           Wco::Setting.get('WASYACO_ORIGIN'),
       newspartial_id: @newspartial.id.to_s,
-      wco_origin:     Rails.application.routes.default_url_options[:host], # request.base_url,
+      wco_origin:     Wco::Setting.get('WASYACO_ORIGIN'),
     })
-    puts! config, 'ze config'
     render json: JSON.generate(config, ascii_only: false, escape_html_entities: false)
   end
 

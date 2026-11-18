@@ -151,9 +151,9 @@ class Wco::Newspartial
   def generate_video_url
     newspartial = self
     url = Wco::Engine.routes.url_helpers.api_newspartial_config_url({ id: newspartial.id,
-      host:       Rails.application.routes.default_url_options[:host],
-      wco_origin: Rails.application.routes.default_url_options[:host],
-      api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
+      host:       Wco::Setting.get('WASYACO_ORIGIN'),
+      wco_origin: Wco::Setting.get('WASYACO_ORIGIN'),
+      api_key:    Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
       api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
     })
   end

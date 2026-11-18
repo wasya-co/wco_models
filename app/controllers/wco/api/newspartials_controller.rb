@@ -67,7 +67,7 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     config[:fps]  = @newspartial.newsvideo.fps
     config[:slug] = "#{@newspartial.newsvideo.slug}::#{@newspartial.slug}"
 
-    config[:generate_video_url] = wco.api_newsproducer_studio_blue_url({
+    config[:generate_video_url] = Wco::Engine.routes.url_helpers.api_newsproducer_studio_blue_url({
       api_key:        Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
       api_secret:     Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
       host:           Wco::Setting.get('WASYACO_ORIGIN'),

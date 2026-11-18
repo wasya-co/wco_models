@@ -51,30 +51,31 @@ class Wco::Api::NewspartialsController < Wco::ApiController
     render json: { status: :ok }
   end
 
-  ## via puppeteer
-  def generate_video
-    @newspartial = Wco::Newspartial.unscoped.find params[:id]
-    authorize! :create, @newspartial
-    @newspartial.generate_video
-
-    render json: { status: :ok }
-  end
-
   def show_config
     @newspartial = Wco::Newspartial.find params[:id]
-    config = JSON.parse @newspartial.speech_json
+    config = @newspartial.config
 
     # @newsvideo_events = Wco::NewsvideoEvent.where( newsvideo: @newspartial.newsvideo )
-    @newsvideo_events = @newspartial.newsvideo_events
-    config[:fns] = @newsvideo_events.map { |ev| ev.exec_js }
-    config[:ftimes] = @newsvideo_events.map { |ev| ev.start_at_ms }
+    @newsvideo_events   = @newspartial.newsvideo_events
+    config[:fns]        = @newsvideo_events.map { |ev| ev.exec_js }
+    config[:ftimes]     = @newsvideo_events.map { |ev| ev.start_at_ms }
     config[:fdurations] = @newsvideo_events.map { |ev| ev.duration_ms }
 
 
     config[:w_px] = @newspartial.newsvideo.w_px
     config[:h_px] = @newspartial.newsvideo.h_px
+    config[:fps]  = @newspartial.newsvideo.fps
     config[:slug] = "#{@newspartial.newsvideo.slug}::#{@newspartial.slug}"
-    render json: config
+
+    config[:generate_video_url] = wco.api_newsproducer_studio_blue_url({
+      api_key:        Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
+      api_secret:     Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
+      host:           Rails.application.routes.default_url_options[:host],
+      newspartial_id: @newspartial.id.to_s,
+      wco_origin:     Rails.application.routes.default_url_options[:host], # request.base_url,
+    })
+    puts! config, 'ze config'
+    render json: JSON.generate(config, ascii_only: false, escape_html_entities: false)
   end
 
 end

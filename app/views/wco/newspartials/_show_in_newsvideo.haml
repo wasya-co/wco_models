@@ -31,8 +31,8 @@
 
             -# = link_to 'Generate video 1', api_newsproducer_studio_1_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
             -# = link_to 'Generate video green', api_newsproducer_studio_green_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
-            = link_to '_blue 2', api_newsproducer_studio_blue_path({ newspartial_id: newspartial.id.to_s, wco_origin: request.base_url, api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary' # , data: { confirm: 'Are you sure?' }
-
+            = link_to '_blue 2', api_newsproducer_studio_blue_path({ newspartial_id: newspartial.id.to_s, wco_origin: Rails.application.routes.default_url_options[:host], api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'), api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET') }), target: :_blank, class: 'btn btn-primary' # , data: { confirm: 'Are you sure?' }
+            = button_to 'generate video', newspartial_generate_video_path( newspartial )
             Video:
             - if newspartial.video
               = image_tag newspartial.video.thumb.url(:thumb), class: 'thumb'

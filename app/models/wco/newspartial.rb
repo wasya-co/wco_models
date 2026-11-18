@@ -14,9 +14,10 @@ class Wco::Newspartial
 
   field :body
   field :config_json, type: :string, default: '{}'
-  field :speech_json, type: :string, default: '{}' # the smaller config, excludes audio wav
+  ## no longer used. config_json has everything, including default scene config, excluding audio data.
+  # field :speech_json, type: :string, default: '{}' # the smaller config, excludes audio wav
 
-  field :voice, type: :string, default: 'af_jessica' ## 'af_jessica', 'am_fenrir'
+  field :voice, type: :string, default: 'af_jessica' ## defaults: 'af_jessica', 'am_fenrir'
 
   belongs_to :newsvideo
 
@@ -78,9 +79,7 @@ class Wco::Newspartial
         'Accept' => 'application/json',
       }, body: {
         input: body,
-
         voice: voice,
-
         language: "en-us",
         audioEncoding: "wav",
       }.to_json
@@ -99,12 +98,19 @@ class Wco::Newspartial
     self.audio = temp_file
     temp_file.close
     temp_file.unlink
+
     tmp.delete('audio')
+    tmp.delete('audioEncoding')
 
-    self[:speech_json] = tmp.to_json
+    # puts! Wco::Utils.default_studio_config, 'Wco::Utils.default_studio_config'
+    tmp.merge!( Wco::Utils.default_studio_config )
+    tmp[:active_camera] = Wco::Utils.default_studio_config.key( Wco::Utils.voice_to_avatar(voice) )
+    tmp[:active_spot]   = Wco::Utils.default_studio_config.key( Wco::Utils.voice_to_avatar(voice) )
+    self[:config_json]  = tmp.to_json
+    # puts! tmp, 'tmp'
 
-    self.save
-    return out
+    self.save!
+    return tmp
   end
 
   ##
@@ -137,10 +143,19 @@ class Wco::Newspartial
     puts! out, 'out'
   end
   def generate_video_cmd
-    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL=#{api_newspartial_url(@newsvideo)} yarn run run_newspartial_1"
+    cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL='#{generate_video_url}' yarn run run_newspartial_1"
     puts "+++ puppeteer cmd:"
     puts cmd
     cmd
+  end
+  def generate_video_url
+    newspartial = self
+    url = Wco::Engine.routes.url_helpers.api_newspartial_config_url({ id: newspartial.id,
+      host:       Rails.application.routes.default_url_options[:host],
+      wco_origin: Rails.application.routes.default_url_options[:host],
+      api_key: Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
+      api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
+    })
   end
 
   def video

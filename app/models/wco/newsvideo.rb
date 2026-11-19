@@ -71,7 +71,7 @@ class Wco::Newsvideo
   end
 
 
-  def generate
+  def only_combine
     @newsvideo = self
     workdir    = Rails.root.join('tmp', @newsvideo.id.to_s)
     partials   = @newsvideo.newspartials.order_by(slug: :asc).to_a

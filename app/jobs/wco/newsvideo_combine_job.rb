@@ -1,14 +1,14 @@
 
 require 'sidekiq'
 
-class Wco::NewsvideoGenerateJob
+class Wco::NewsvideoCombineJob
   include Sidekiq::Job
   sidekiq_options queue: 'default'
 
   def perform id
     puts! id, 'Newsvideo generate job...'
     @newsvideo = Wco::Newsvideo.find id
-    @newsvideo.generate
+    @newsvideo.only_combine
   end
 
 end

@@ -139,8 +139,17 @@ class Wco::Newspartial
     return out
   end
   def generate_video
-    out = `#{generate_video_cmd}`
-    puts! out, 'out'
+    Open3.popen3(generate_video_cmd) do |stdin, stdout, stderr, wait_thr|
+      stdin.close
+      stdout.each_line do |line|
+        puts line
+      end
+      stderr.each_line do |line|
+        puts line
+      end
+      status = wait_thr.value
+      puts "Exit status: #{status.exitstatus}"
+    end
   end
   def generate_video_cmd
     cmd = "cd #{Wco::Setting.get('PUPPETEER_ROOT')} ; NEWSPARTIAL_URL='#{generate_video_url}' yarn run run_newspartial_1 "
@@ -150,12 +159,12 @@ class Wco::Newspartial
   end
   def generate_video_url
     newspartial = self
-    url = Wco::Engine.routes.url_helpers.api_newspartial_config_url({ id: newspartial.id,
-      host:       Wco::Setting.get('WASYACO_ORIGIN'),
+    path = Wco::Engine.routes.url_helpers.api_newspartial_config_path({ id: newspartial.id,
       wco_origin: Wco::Setting.get('WASYACO_ORIGIN'),
       api_key:    Wco::Setting.get('WASYACO_SIMPLE_API_KEY'),
       api_secret: Wco::Setting.get('WASYACO_SIMPLE_API_SECRET'),
     })
+    "https://#{Wco::Setting.get('WASYACO_ORIGIN')}#{path}"
   end
 
   def video

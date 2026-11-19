@@ -108,41 +108,43 @@ class Wco::NewsvideosController < Wco::ApplicationController
     authorize! :edit, @newsvideo
 
     Rails.env.production? ?
-      Wco::NewsvideoGenerateJob.perform_async(@newsvideo.id.to_s) :
-      Wco::NewsvideoGenerateJob.perform_sync( @newsvideo.id.to_s)
+      Wco::NewsvideoCombineJob.perform_async(@newsvideo.id.to_s) :
+      Wco::NewsvideoCombineJob.perform_sync( @newsvideo.id.to_s)
 
-    render json: { status: :ok, message: 'Scheduled the generation' }
+    flash_notice 'Scheduled.'
+    redirect_to request.referrer || { action: 'show', id: @newsvideo.id }
   end
+
 
   def generate_all_audio
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]
     authorize! :edit, @newsvideo
 
-    # cmd = "cd #{PUPPETEER_ROOT} ; yarn run newsvideo_generate_all_audio #{@newsvideo.id}"
-    # puts "+++ puppeteer cmd:"
-    # puts cmd
-    # out = `#{cmd}`
-    # puts! out, 'out'
-
     @newsvideo.newspartials.each do |newspartial|
-      newspartial.generate_speech
-      print '.'
+      Rails.env.production? ?
+        Wco::NewspartialSpeechJob.perform_async(newspartial.id.to_s) :
+        Wco::NewspartialSpeechJob.perform_sync( newspartial.id.to_s)
     end
 
-    render json: { status: :ok }
+    flash_notice 'Scheduled.'
+    redirect_to request.referrer || { action: 'show', id: @newsvideo.id }
   end
 
-  ## via puppeteer
+
   def generate_all_video
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]
     authorize! :edit, @newsvideo
 
-    @newsvideo.newspartials.each do |np|
-      np.generate_video
+    @newsvideo.newspartials.each do |newspartial|
+      Rails.env.production? ?
+        Wco::NewspartialVideoJob.perform_async(newspartial.id.to_s) :
+        Wco::NewspartialVideoJob.perform_sync( newspartial.id.to_s)
     end
 
-    render json: { status: :ok }
+    flash_notice 'Scheduled.'
+    redirect_to request.referrer || { action: 'show', id: @newsvideo.id }
   end
+
 
   def generate_illustration
     @newsvideo = Wco::Newsvideo.unscoped.find params[:id]

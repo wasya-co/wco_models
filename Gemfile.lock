@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.5.0.6)
+    wco_models (3.5.0.7)
       aws-sdk-s3
       business_time
       cancancan (~> 3.5.0)
@@ -243,7 +243,7 @@ GEM
     mime-types-data (3.2026.1103)
     mini_mime (1.1.5)
     minitest (5.20.0)
-    mongo (2.26.1)
+    mongo (2.26.2)
       base64
       bson (>= 4.14.1, < 6.0.0)
     mongoid (7.3.5)

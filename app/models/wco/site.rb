@@ -142,6 +142,12 @@ class Wco::Site
     return { total_count: @total_count, error_count: @error_count, results: @results }
   end
 
+  def basic_credentials
+    site = self
+    credentials = Base64.strict_encode64("#{site.username}:#{site.password}")
+    "Basic #{credentials}"
+  end
+
   def logg msg
     Wco::Log.create!({
       message: msg,

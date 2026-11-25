@@ -24,7 +24,8 @@ class Wco::PublishersController < Wco::ApplicationController
       flash_notice "#do_run_any Probably ok"
     end
 
-    redirect_to request.referrer || { action: 'index' }
+    @publishers = Wco::Publisher.all
+    render 'index'
   end
 
   def edit

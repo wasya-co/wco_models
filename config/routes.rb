@@ -97,7 +97,7 @@ Wco::Engine.routes.draw do
   resources :obfuscated_redirects
 
   post 'office_action_templates',             to: 'office_action_templates#update'
-  post 'office_action_templates/perform',     to: 'office_action_templates#perform', as: :oat_perform_with_conversations ## from the mailbox, the oat_id is passed as a body param.
+  post 'office_action_templates/perform',     to: 'office_action_templates#perform', as: :oats_perform ## from the mailbox, the oat id is passed as a body param.
   post 'office_action_templates/:id/perform', to: 'office_action_templates#perform', as: :oat_perform
   get  'office_action_templates/:id/perform', to: 'office_action_templates#perform'
   resources :office_action_templates
@@ -129,8 +129,8 @@ Wco::Engine.routes.draw do
 
   post 'sites/:id/check_sitemap', to: 'sites#check_sitemap', as: :check_sitemap
   resources :sites
-  get  'sitemap_paths/:id/check', to: 'sitemap_paths#check', as: :check_spath
-  post 'sitemap_paths/:id/clear', to: 'sitemap_paths#clear', as: :clear_spath
+  match 'sitemap_paths/:id/check', to: 'sitemap_paths#check', as: :check_spath, via: [ :get, :post ]
+  post  'sitemap_paths/:id/clear', to: 'sitemap_paths#clear', as: :clear_spath
   resources :sitemap_paths, as: :spaths
   resources :subscriptions
 

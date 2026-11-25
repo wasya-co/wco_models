@@ -7,6 +7,6 @@ EMS  ||= WcoEmail::MessageStub
 OA   ||= Wco::OfficeAction
 OAT  ||= Wco::OfficeActionTemplate
 OATT ||= Wco::OfficeActionTemplateTie
-# Sch  ||= WcoEmail::EmailAction
+# EAT  ||= WcoEmail::EmailActionTemplate
 # EA   ||= WcoEmail::EmailAction
 

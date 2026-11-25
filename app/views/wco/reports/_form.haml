@@ -11,7 +11,18 @@
       %label Slug
       = f.text_field :slug, class: 'w-100'
 
+    .field.flex-row
+      %label source_url
+      = f.text_field :source_url, class: 'w-100'
+
     .field
+      %label Summary
+      = f.text_area :summary
+
+    .field.d-flex.flex-column
+      %label body_format
+      = f.select :body_format, options_for_select(Wco::Report::FORMATS, selected: report.body_format)
+
       %label Body
       = f.text_area :body, class: 'tinymce'
 
@@ -25,9 +36,9 @@
       %label image
       = f.file_field :image_thumb
 
-      - if report.image_thumb&.image?
+      - if report.image_thumb
         %p Current:
-        = image_tag report.image_thumb.image.url(:thumb)
+        = image_tag report.image_thumb.photo.url(:thumb)
 
     -# .field
     -#   %label Newsvideo:

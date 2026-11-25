@@ -5,19 +5,21 @@ class Wco::Tag
   store_in collection: 'wco_tags'
 
   field :slug
-  validates :slug, presence: true, uniqueness: true
+  validates :slug, presence: true, uniqueness: { scope: :site_id }
   index({ slug: -1 })
 
   field :weight, type: :string, default: 'jjj'
+  field :external_id, type: :string
+  def eid; external_id; end
 
   belongs_to :parent, class_name: '::Wco::Tag', inverse_of: :sons, optional: true
   has_many :sons,     class_name: '::Wco::Tag', inverse_of: :parent
 
-  belongs_to :site,          class_name: '::Wco::Site', optional: true
-  belongs_to :sidebar_profile, class_name: 'Wco::Profile', optional: true
-  has_many :email_filters,   class_name: '::WcoEmail::EmailFilter',   inverse_of: :tag
-  has_many :email_templates, class_name: '::WcoEmail::EmailTemplate', inverse_of: :tag
-  has_many :ajects,         class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject
+  belongs_to :site,            class_name: '::Wco::Site',   optional: true, inverse_of: :tags
+  belongs_to :sidebar_profile, class_name: 'Wco::Profile',  optional: true
+  has_many :email_filters,     class_name: '::WcoEmail::EmailFilter',       inverse_of: :tag
+  has_many :email_templates,   class_name: '::WcoEmail::EmailTemplate',     inverse_of: :tag
+  has_many :ajects,            class_name: '::WcoEmail::EmailFilterAction', inverse_of: :aject
 
   has_and_belongs_to_many :conversations, class_name: '::WcoEmail::Conversation', index: true
   has_and_belongs_to_many :galleries,     class_name: '::Wco::Gallery'
@@ -27,6 +29,7 @@ class Wco::Tag
   has_and_belongs_to_many :message_stubs, class_name: '::WcoEmail::MessageStub'
   has_and_belongs_to_many :newsvideos, class_name: '::Wco::Newsvideo'
   has_and_belongs_to_many :reports,    class_name: '::Wco::Report'
+  has_and_belongs_to_many :publishers, class_name: '::Wco::Publisher'
   has_and_belongs_to_many :videos,     class_name: '::Wco::Video'
 
 
@@ -71,9 +74,13 @@ class Wco::Tag
 
 
   def to_s
-    slug
+    if site
+      "#{slug}@#{site}"
+    else
+      slug
+    end
   end
   def self.list
-    [[nil,nil]] + all.order_by( slug: :asc ).map { |p| [ p.slug, p.id ] }
+    [[nil,nil]] + all.includes(:site).order_by( slug: :asc ).map { |t| [ t.to_s, t.id.to_s ] }
   end
 end

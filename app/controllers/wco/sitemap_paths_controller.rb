@@ -7,12 +7,13 @@ class Wco::SitemapPathsController < Wco::ApplicationController
     @spath = Wco::SitemapPath.find params[:id]
     authorize! :check, @spath
     @spath.check
+    redirect_to wco.spath_path(@spath)
   end
 
   def clear
     @spath = Wco::SitemapPath.find params[:id]
     authorize! :clear, @spath
-    @spath.update_attributes({ results: [] })
+    @spath.logs.destroy_all
     redirect_to request.referrer || sites_path(@spath.site)
   end
 
@@ -27,6 +28,18 @@ class Wco::SitemapPathsController < Wco::ApplicationController
       flash_alert "Could not save spath: #{@spath.errors.full_messages}"
       render 'new'
     end
+  end
+
+  def destroy
+    @spath = Wco::SitemapPath.find params[:id]
+    site_id = @spath.site_id
+    authorize! :destroy, @spath
+    if @spath.destroy
+      flash_notice 'ok'
+    else
+      flash_alert 'No luck.'
+    end
+    redirect_to request.referrer || sites_path(site_id)
   end
 
   def edit
@@ -45,7 +58,6 @@ class Wco::SitemapPathsController < Wco::ApplicationController
     @spath = Wco::SitemapPath.find params[:id]
     @site = @spath.site
     authorize! :show, @spath
-    render 'check'
   end
 
 

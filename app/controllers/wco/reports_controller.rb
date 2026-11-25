@@ -5,16 +5,18 @@ class Wco::ReportsController < Wco::ApplicationController
 
   def create
     params[:report][:tag_ids]&.delete ''
+    img_thumb_params = params[:report][:image_thumb]
+    params[:report].delete :image_thumb
 
     @report = Wco::Report.new params[:report].permit!
     authorize! :create, @report
 
     @report.author = current_profile
 
-    if params[:report][:image_thumb]&.[](:image).present?
-      thumb = @report.image_thumb || @report.build_image_thumb
-      thumb.image = params[:report][:image_thumb_attributes][:image]
-      thumb.save
+    if img_thumb_params.present?
+      @photo = Wco::Photo.new photo: img_thumb_params
+      @photo.save!
+      @report.image_thumb = @photo
     end
 
     if @report.save
@@ -205,7 +207,6 @@ class Wco::ReportsController < Wco::ApplicationController
     params[:report][:tag_ids]&.delete ''
     img_thumb_params = params[:report][:image_thumb]
     params[:report].delete :image_thumb
-    # puts! img_thumb_params, 'img_thumb_params'
 
     @report = Wco::Report.unscoped.find params[:id]
     authorize! :update, @report

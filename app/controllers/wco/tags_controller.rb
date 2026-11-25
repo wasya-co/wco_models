@@ -32,7 +32,7 @@ class Wco::TagsController < Wco::ApplicationController
 
   def index
     authorize! :index, Wco::Tag
-    @tags = Wco::Tag.all.order_by( slug: :asc )
+    @tags = Wco::Tag.where( site: nil ).order_by( slug: :asc )
 
     tags = Wco::Tag.all.to_a.group_by(&:parent_id)
     build_tree = lambda do |parent_id|

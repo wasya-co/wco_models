@@ -11,6 +11,7 @@
       -# %th kind
       %th origin
       -# %th post_path
+      %th tags
     - @sites.each do |site|
       %tr
         %td
@@ -22,3 +23,8 @@
         -# %td= site.kind
         %td= site.origin
         -# %td= site.post_path
+        %td
+          - site.tags.map do |t|
+            = link_to t.slug, tag_path(t)
+            ,
+

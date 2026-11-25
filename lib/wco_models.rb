@@ -43,7 +43,7 @@ end
 
 ActiveSupport.escape_html_entities_in_json = true
 
-
+## for newsproducer
 HEIGHT_SEC = 100.0
 HEIGHT_MS = HEIGHT_SEC/1000
 

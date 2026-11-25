@@ -25,14 +25,24 @@ class Wco::Report
 
   field :body
   def body_json
-    body.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />').to_json
+    out = body
+    if FORMAT_PLAINTEXT == body_format
+      out = out.gsub(/\r/, '').gsub(/\n\n+/, '<br /><br />')
+    end
+    out.to_json
   end
+  FORMAT_PLAINTEXT = 'format-plaintext'
+  FORMAT_FULLHTML  = 'format-fullhtml'
+  FORMATS = [ FORMAT_PLAINTEXT, FORMAT_FULLHTML ]
+  field :body_format, type: :string, default: FORMAT_PLAINTEXT
 
   field :x, :type => Float
   field :y, :type => Float
   field :z, :type => Float
+  field :source_url, type: :string
+  field :summary, type: :string
 
-  belongs_to :author, class_name: 'Wco::Profile'
+  belongs_to :author, class_name: 'Wco::Profile', optional: true
 
   has_one :image_thumb, class_name: 'Wco::Photo', inverse_of: :report, dependent: :destroy
   accepts_nested_attributes_for :image_thumb

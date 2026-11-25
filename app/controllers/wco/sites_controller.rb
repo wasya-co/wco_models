@@ -40,7 +40,7 @@ class Wco::SitesController < Wco::ApplicationController
 
   def index
     authorize! :index, Wco::Site
-    @sites = Wco::Site.all
+    @sites = Wco::Site.all.includes( :tags )
   end
 
   def new

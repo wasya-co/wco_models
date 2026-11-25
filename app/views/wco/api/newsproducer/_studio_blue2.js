@@ -10,46 +10,44 @@ const logg = (a, b="", c=null) => {
   console.log(`+++ ${b}:`, a) // eslint-disable-line no-console
 }
 
-const MODELS_ROOT = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@v0.4.14/public/vendor/models'
+
+const MODELS_ROOT  = 'https://cdn.jsdelivr.net/gh/wasya-co/ishlib3js@v0.4.14/public/vendor/models'
 const AVATARS_ROOT = `${MODELS_ROOT}/avatars`
-const avatars = {
+const avatars_config = {
   brunette: { type: 'F', url: `${AVATARS_ROOT}/brunette/model.glb` },
   cara:     { type: 'F', url: `${AVATARS_ROOT}/cara/model.glb` }, // short hair
-  eve:      { type: 'F', url: `${AVATARS_ROOT}/eve/model.glb` }, // poison green
+  eve:      { type: 'F', url: `${AVATARS_ROOT}/eve/model.glb`  }, // poison green
 
   denis:  { type: 'M', url: `${AVATARS_ROOT}/denis/model.glb`  }, // beard
   gregor: { type: 'M', url: `${AVATARS_ROOT}/gregor/model.glb` }, // gray shirt
 }
 const AVATAR_STOR = 'avatar'
-$('select.avatar').each((_idx, el) => {
-  const $select = $(el)
-  $.each(avatars, function(name, url) {
-    $('<option>', {
-      value: name,
-      text: name,
-    }).appendTo($select)
+$('select.avatars').each((_idx, el) => {
+  const $avatar = $(el)
+  $.each(avatars_config, function(name) {
+    $('<option>', { value: name, text: name }).appendTo($avatar)
   })
   try {
-    const saved = localStorage.getItem(`${AVATAR_STOR}-${$select.data('uid')}`)
-    if (saved && avatars[saved]) $select.val(saved)
+    const saved_name = localStorage.getItem(`${AVATAR_STOR}-${$avatar.data('spot_id')}`)
+    if (saved_name && avatars_config[saved_name]) $avatar.val(saved_name)
   } catch (error) {
     console.log(error)
   }
 })
 
-let scenes = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
-const SCENE_STOR = 'studio'
-$.each(scenes, (name) => {
-  $('<option>', { value: name, text: name }).appendTo($('select.studio'))
+let studios_config = await fetch(`${MODELS_ROOT}/scenes/index.json`).then(r => r.json())
+const STUDIO_STOR = 'studio'
+$.each(studios_config, (name) => {
+  $('<option>', { value: name, text: name }).appendTo($(`select.${STUDIO_STOR}`))
 })
 try {
-  const saved = localStorage.getItem( SCENE_STOR )
-  if (saved && scenes[saved]) $('select.studio').val(saved)
+  const saved_name = localStorage.getItem( STUDIO_STOR )
+  if (saved_name && studios_config[saved_name]) $(`select.${STUDIO_STOR}`).val(saved_name)
 } catch (error) {
   console.log(error)
 }
 
-let scene_url = scenes[$('select.studio').val()] || scenes.rick_and_morty_garage
+let scene_url = studios_config[$(`select.${STUDIO_STOR}`).val()] || studios_config['collision-world']
 
 let gestures = {
   talking_1: (avatar) => `${MODELS_ROOT}/animation-library/feminine/fbx/expression/${avatar.body}_Talking_Variations_001.fbx`,
@@ -68,10 +66,10 @@ $.each(gestures, (name) => {
   $('<option>', { value: name, text: name }).appendTo($('select.gestures'))
 })
 
-let u_positions = {
-  '1': [0, 0, 0],
-  '2': [1, 0, 0],
-  '3': [-1, 0, 0],
+let spot_positions = {
+  'spot_1': [0, 0, 0],
+  'spot_2': [1, 0, 0],
+  'spot_3': [-1, 0, 0],
 }
 
 
@@ -85,78 +83,77 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { TalkingHead } from "talkinghead"
 
 const params = new URLSearchParams(window.location.search)
+const api_key    = params.get('api_key')
+const api_secret = params.get('api_secret')
+const wco_origin = params.get('wco_origin')
+const newspartial_id = params.get('newspartial_id')
 
-let config = {
+let streamOpts = {
   sampleRate: 8000,
   mood: 'neutral',
   gain: 0.5,
   lipsyncType: "visemes",
   lipsyncLang: "en",
   waitForAudioChunks: false,
-  enableMetrics: false,
-};
-
-const onMetrics = (which) => {
-  logg(which, 'onMetrics')
+  metrics: { enabled: false },
 }
 
 const onSubtitles = (which) => {
   logg(which, 'onSubtitles')
 }
-const streamOpts = {
-  gain: config.gain,
-  lipsyncLang: config.lipsyncLang,
-  lipsyncType: config.lipsyncType,
-  metrics: config.enableMetrics ? { enabled: true, intervalHz: config.metricsInterval } : { enabled: false },
-  mood: config.mood,
-  sampleRate: config.sampleRate,
-  waitForAudioChunks: config.waitForAudioChunks,
-}
-
 
 let width = 854
 let height = 480
 let slug = '<ccapture>'
-const fps = 30
+let fps = 30
 
 let frame = 0
 let lastAnimTime = 0
 let capturing = false
 let captureFrame = 0
 let captureTotal = 0
-const api_key    = params.get('api_key')
-const api_secret = params.get('api_secret')
-const wco_origin = params.get('wco_origin')
-const newspartial_id = params.get('newspartial_id')
 let totalFrames
 
-let camera, camera_wide, camera_1, camera_2, camera_3
-let controls, renderer, scene
-let head, head_1, head_2, head_3
-let faceTarget = new THREE.Vector3()
-const cameraTargets = {
-  wide: new THREE.Vector3(0.5, 1.2, 0),
-  av_1: new THREE.Vector3(0, 1.5, 0),
-  av_2: new THREE.Vector3(1, 1.5, 0),
-  av_3: new THREE.Vector3(-1, 1.5, 0),
+let active_camera
+let cameras = {
+  wide: {
+    cam: null,
+    tgt: new THREE.Vector3(0.5, 1.2, 0),
+  },
+  spot_1: {
+    cam: null,
+    tgt: new THREE.Vector3(0, 1.5, 0),
+  },
+  spot_2: {
+    cam: null,
+    tgt: new THREE.Vector3(1, 1.5, 0),
+  },
+  spot_3: {
+    cam: null,
+    tgt: new THREE.Vector3(-1, 1.5, 0),
+  },
 }
+let controls, renderer, scene
+let active_avatar
+let avatars = {
+  spot_1: null,
+  spot_2: null,
+  spot_3: null,
+}
+let faceTarget = new THREE.Vector3()
 let cameraTransition = null
 const CAMERA_BLEND_MS = 900
 let chunkedInput = null
 const lights = {}
-const LIGHT_CTRL_KEY = 'wco.studio_blue.light-ctrl'
-const HEAD_CTRL_KEY = 'wco.studio_blue.head-ctrl'
-const CAMERA_CTRL_KEY = 'wco.studio_blue.camera-ctrl'
 var capturer = new CCapture( { format: 'webm', framerate: fps } )
 const gltfLoader = new GLTFLoader()
-const fbxLoader = new FBXLoader()
 const loading = document.getElementById('loading')
-const status = document.getElementById('status')
+const status  = document.getElementById('status')
 
 /*
 **/
 function point_camera_at_face(cam_id, _head) {
-  const leftEye = new THREE.Vector3()
+  const leftEye  = new THREE.Vector3()
   const rightEye = new THREE.Vector3()
   _head.objectLeftEye.getWorldPosition(leftEye)
   _head.objectRightEye.getWorldPosition(rightEye)
@@ -165,10 +162,10 @@ function point_camera_at_face(cam_id, _head) {
   const camPos = new THREE.Vector3(0, 0, 2)
   camPos.applyQuaternion(_head.armature.quaternion)
   camPos.add(faceTarget)
-  const _camera = cameras_fn(cam_id)
+  const _camera = cameras[cam_id].cam
   _camera.position.copy(camPos)
   _camera.lookAt(faceTarget)
-  cameraTargets[cam_id].copy(faceTarget)
+  cameras[cam_id].tgt.copy(faceTarget)
 }
 
 /*
@@ -190,17 +187,12 @@ function put_feet_at_origin(_head) {
 
 /*
 **/
-function rescale(model, config) {
+function rescale(model, _config) {
   const box = new THREE.Box3().setFromObject(model)
   const size = box.getSize(new THREE.Vector3())
   const currentHeight = size.y
-  const scale = config.height / currentHeight
+  const scale = _config.height / currentHeight
   model.scale.setScalar(scale)
-}
-
-function scene_cfg(s) {
-  if (typeof s === 'string') return { url: s, height: 3.3 }
-  return { url: s.url, height: s.height || 3.3 }
 }
 
 function set_shadows(root, cast, receive) {
@@ -243,68 +235,15 @@ function setup_light(scene) {
   lights.rimLight.position.set( 0, 6, -8 )
   scene.add( lights.rimLight )
 
-  restoreLightControls()
   syncLightsFromControls()
 }
 
-function restoreLightControls() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(LIGHT_CTRL_KEY) || 'null')
-    if (!saved || typeof saved !== 'object') return
-    document.querySelectorAll('input.light-ctrl').forEach((input) => {
-      if (Object.prototype.hasOwnProperty.call(saved, input.name)) {
-        input.checked = !!saved[input.name]
-      }
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-function persistLightControls() {
-  const saved = {}
-  document.querySelectorAll('input.light-ctrl').forEach((input) => {
-    saved[input.name] = input.checked
-  })
-  localStorage.setItem(LIGHT_CTRL_KEY, JSON.stringify(saved))
-}
-
-function restoreHeadControl() {
-  try {
-    const saved = localStorage.getItem(HEAD_CTRL_KEY)
-    if (!saved) return
-    const input = document.querySelector(`input[name=head][value="${saved}"]`)
-    if (input) input.checked = true
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-function persistHeadControl(id) {
-  localStorage.setItem(HEAD_CTRL_KEY, String(id))
-}
-
-function restoreCameraControl() {
-  try {
-    const saved = localStorage.getItem(CAMERA_CTRL_KEY)
-    if (!saved) return
-    const input = document.querySelector(`input[name=camera][value="${saved}"]`)
-    if (input) input.checked = true
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-function persistCameraControl(id) {
-  localStorage.setItem(CAMERA_CTRL_KEY, String(id))
-}
 
 function syncLightsFromControls() {
   document.querySelectorAll('input.light-ctrl').forEach((input) => {
     const light = lights[input.name]
     if (light) light.visible = input.checked
   })
-  persistLightControls()
 }
 
 function sync_shadows() {
@@ -328,36 +267,33 @@ function update_walk(this_head, dt) {
   this_head.armature.position.addScaledVector(dir, this_head.speed * dt / 1000)
 }
 
-// function play_animation(config) {
-//   logg(config, 'my play_animation()')
-//   let this_head = heads_fn()[config.avatar_id]
-//   if (this_head) this_head.playAnimation(geastures[config.animation_name](config))
-// }
+function play_animation(props) {
+  logg(props, 'play_animation()')
+  let this_head = avatars[props.spot_id]
+  if (this_head) this_head.playAnimation(geastures[props.animation_name](props))
+}
 
 function cut_to(key) {
-  const radio = document.querySelector(`input[name=camera][value="${key}"]`)
+  const radio = document.querySelector(`input[name=active_camera][value="${key}"]`)
   if (radio) radio.checked = true
   setActiveCamera(key, true)
 }
 
-function move_camera(config) {
-  const fromKey = String(config.from)
-  const toKey = String(config.to)
-  const duration = Number(config.duration) > 0 ? Number(config.duration) : CAMERA_BLEND_MS
-  const src = cameras_fn(fromKey)
-  const dest = cameras_fn(toKey)
+function move_camera(props) {
+  const fromKey = String(props.from)
+  const toKey = String(props.to)
+  const duration = Number(props.duration) > 0 ? Number(props.duration) : CAMERA_BLEND_MS
+  const src = cameras[fromKey].cam
+  const dest = cameras[toKey].cam
   const startTarget = (cameraTargets[fromKey] || cameraTargets.wide).clone()
   const destTarget = (cameraTargets[toKey] || cameraTargets.wide).clone()
 
-  persistCameraControl(toKey)
   const radio = document.querySelector(`input[name=camera][value="${toKey}"]`)
   if (radio) radio.checked = true
 
-  ;[camera_wide, camera_1, camera_2, camera_3, camera].forEach((cam) => {
-    if (cam) {
-      cam.aspect = width / height
-      cam.updateProjectionMatrix()
-    }
+  Object.entries(cameras).forEach(([key, value]) => {
+    value.cam.aspect = width / height
+    value.cam.updateProjectionMatrix()
   })
 
   src.updateMatrixWorld()
@@ -389,7 +325,7 @@ function move_camera(config) {
   }
 }
 
-// window.play_animation = play_animation
+window.play_animation = play_animation
 window.move_camera = move_camera
 window.cut_to = cut_to
 
@@ -404,7 +340,15 @@ function tickEvents(elapsedMs) {
   }
 }
 
-
+let studio
+async function load_studio(cfg) {
+  logg(cfg, 'load_studio()')
+  if (studio && studio.parent) studio.parent.remove(studio)
+  studio = (await gltfLoader.loadAsync(`${cfg.path}/scene.glb`)).scene
+  rescale(studio, { height: cfg.height })
+  set_shadows(studio, false, true)
+  scene.add(studio)
+}
 
 /*
 **/
@@ -413,7 +357,7 @@ async function init() {
 
   if (newspartial_id) {
     try {
-      const url = wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
+      const url = 'https://' + wco_origin + '/wco/api/newspartials/' + newspartial_id + '/config.json?api_key=' + api_key + '&api_secret=' + api_secret
       chunkedInput = await fetch(url).then(r => r.json())
       logg(chunkedInput, 'chunkedInput')
 
@@ -429,6 +373,19 @@ async function init() {
       totalFrames = undefined
     }
   }
+  if (chunkedInput.studio) {
+    $(`select.${STUDIO_STOR}`).val(chunkedInput.studio)
+    load_studio(studios_config[chunkedInput.studio])
+  }
+  if (chunkedInput.spot_1) {
+    $('select.avatars[data-spot_id="spot_1"]').val(chunkedInput.spot_1)
+  }
+  if (chunkedInput.spot_2) {
+    $('select.avatars[data-spot_id="spot_2"]').val(chunkedInput.spot_2)
+  }
+  if (chunkedInput.spot_3) {
+    $('select.avatars[data-spot_id="spot_3"]').val(chunkedInput.spot_3)
+  }
 
   scene = new THREE.Scene()
   scene.background = new THREE.Color(0x333333) // new THREE.Color(0xd3d3d3)
@@ -438,6 +395,8 @@ async function init() {
    * near — Camera frustum near plane.
    * far — Camera frustum far plane.
   **/
+  let camera_1, camera_2, camera_3, camera_wide
+
   camera_1 = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
   camera_1.position.set( 0, 1.6, 4 )
   camera_1.lookAt( 0, 1.5, 0 )
@@ -454,11 +413,16 @@ async function init() {
   camera_wide.position.set( -2, 2.2, 8 )
   camera_wide.lookAt( 0.5, 1.2, 0 )
 
-  camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
-  camera.position.copy( camera_wide.position )
-  camera.quaternion.copy( camera_wide.quaternion )
-  camera.fov = camera_wide.fov
-  camera.updateProjectionMatrix()
+  cameras.wide.cam   = camera_wide
+  cameras.spot_1.cam = camera_1
+  cameras.spot_2.cam = camera_2
+  cameras.spot_3.cam = camera_3
+
+  active_camera = new THREE.PerspectiveCamera( 10, width/height, 0.1, 1000 )
+  active_camera.position.copy( camera_wide.position )
+  active_camera.quaternion.copy( camera_wide.quaternion )
+  active_camera.fov = camera_wide.fov
+  active_camera.updateProjectionMatrix()
 
   setup_light(scene)
 
@@ -466,22 +430,12 @@ async function init() {
   grid.position.y = 0
   scene.add(grid)
 
-
-  let studio
-  async function load_studio(cfg) {
-    logg(cfg, 'load_studio()')
-    if (studio && studio.parent) studio.parent.remove(studio)
-    studio = (await gltfLoader.loadAsync(`${cfg.path}/scene.glb`)).scene
-    rescale(studio, { height: cfg.height })
-    set_shadows(studio, false, true)
-    scene.add(studio)
-  }
   await load_studio(scene_url)
-  $('select.studio').on('change', async function() {
+  $(`select.${STUDIO_STOR}`).on('change', async function() {
     const name = $(this).val()
-    if (!scenes[name]) return
-    localStorage.setItem(SCENE_STOR, name)
-    scene_url = scenes[name]
+    if (!studios_config[name]) return
+    localStorage.setItem(STUDIO_STOR, name)
+    scene_url = studios_config[name]
     loading.textContent = 'Loading...'
     try {
       await load_studio(scene_url)
@@ -493,13 +447,7 @@ async function init() {
   })
 
 
-  // head = new TalkingHead( document.getElementById('avatar'), {
-  //   avatarOnly: true,
-  //   avatarOnlyScene: scene,
-  //   avatarOnlyCamera: camera,
-  //   lipsyncModules: ["en"],
-  //   dracoEnabled: true,
-  // })
+  let head_1, head_2, head_3
   head_1 = new TalkingHead( document.getElementById('avatar_1'), {
     avatarOnly: true,
     avatarOnlyScene: scene,
@@ -521,47 +469,47 @@ async function init() {
     lipsyncModules: ["en"],
     dracoEnabled: true,
   })
+  avatars.spot_1 = head_1
+  avatars.spot_2 = head_2
+  avatars.spot_3 = head_3
 
 
-
-
-  $('select.avatar').on('change', async function() {
-    const uid = String($(this).data('uid'))
-    const thisHead = heads_fn(uid)
-    const val = $(this).val()
-    localStorage.setItem(`${AVATAR_STOR}-${uid}`, val || '')
-    if (!thisHead) return
-    if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
-    const avatar = avatars[val]
-    if (!avatar || !avatar.url) return
+  $('select.avatars').on('change', async function() {
+    const spot_id = $(this).data('spot_id')
+    const name = $(this).val()
+    if (!name) return; // empty spot
+    const thisAvatar = avatars[spot_id]
+    localStorage.setItem(`${AVATAR_STOR}-${spot_id}`, name)
+    if (!thisAvatar) return
+    if (thisAvatar.armature && thisAvatar.armature.parent) thisAvatar.armature.parent.remove(thisAvatar.armature)
+    const avatar_config = avatars_config[name]
     loading.textContent = 'Loading...'
     try {
-      if (thisHead.armature && thisHead.armature.parent) thisHead.armature.parent.remove(thisHead.armature)
-      await thisHead.showAvatar({
-        url: avatar.url,
-        body: avatar.type,
+      await thisAvatar.showAvatar({
+        url: avatar_config.url,
+        body: avatar_config.type,
         avatarMood: 'neutral',
         lipsyncLang: 'en'
       }, (ev) => {
         if ( ev.lengthComputable ) {
-          let val = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
-          loading.textContent = "Loading " + val + "%"
+          let percent = Math.min(100,Math.round(ev.loaded/ev.total * 100 ))
+          loading.textContent = `Loading ${percent}%`
         }
       })
-      thisHead.armature.rotation.set(0, 0, 0)
-      set_shadows(thisHead.armature, true, false)
-      scene.add(thisHead.armature)
-      put_feet_at_origin(thisHead)
-      thisHead.armature.position.add(new THREE.Vector3(...u_positions[uid]))
-      point_camera_at_face(`av_${uid}`, thisHead)
-      await thisHead.streamStart(streamOpts, () => {}, () => {}, onSubtitles, onMetrics)
+      thisAvatar.armature.rotation.set(0, 0, 0)
+      set_shadows(thisAvatar.armature, true, false)
+      scene.add(thisAvatar.armature)
+      put_feet_at_origin(thisAvatar)
+      thisAvatar.armature.position.add(new THREE.Vector3(...spot_positions[spot_id]))
+      point_camera_at_face(spot_id, thisAvatar)
+      await thisAvatar.streamStart(streamOpts, () => {}, () => {}, onSubtitles)
       loading.textContent = 'loaded'
     } catch (error) {
       console.log(error)
       loading.textContent = error.toString()
     }
   })
-  $('select.avatar').trigger('change')
+  $('select.avatars').trigger('change')
 
 
 
@@ -583,7 +531,7 @@ async function init() {
 
   //
 
-  controls = new OrbitControls( camera, renderer.domElement )
+  controls = new OrbitControls( active_camera, renderer.domElement )
   controls.enableDamping = true
   controls.enableRotate = true
   controls.enablePan = true
@@ -594,25 +542,31 @@ async function init() {
   controls.autoRotate = false
   controls.update()
 
-  restoreHeadControl()
-  document.querySelectorAll('input[name=head]').forEach((input) => {
+  document.querySelectorAll('input[name=active_spot]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
-      setActiveHead(input.value)
+      active_avatar = avatars[input.value]
     })
+    if (chunkedInput.active_spot && input.value === chunkedInput.active_spot) {
+      input.checked = true
+    }
   })
-  const selectedHead = document.querySelector('input[name=head]:checked')
-  setActiveHead(selectedHead ? selectedHead.value : '1')
+  const active_spot = document.querySelector('input[name=active_spot]:checked')
+  if (active_spot) {
+    active_avatar = avatars[active_spot.value]
+  }
 
-  restoreCameraControl()
-  document.querySelectorAll('input[name=camera]').forEach((input) => {
+  document.querySelectorAll('input[name=active_camera]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return
       setActiveCamera(input.value)
     })
+    if (chunkedInput.active_camera && input.value === chunkedInput.active_camera) {
+      input.checked = true
+    }
   })
-  const selected = document.querySelector('input[name=camera]:checked')
-  setActiveCamera(selected ? selected.value : 'wide', true)
+  const selected = document.querySelector('input[name=active_camera]:checked')
+  if (selected.value) setActiveCamera(selected.value, true)
 
   document.querySelectorAll('input.light-ctrl').forEach((input) => {
     input.addEventListener('change', syncLightsFromControls)
@@ -646,72 +600,31 @@ if (document.readyState === 'loading') {
   init()
 }
 
-function cameras_fn(which) {
-  switch (which) {
-    case 'wide':
-      return camera_wide
-    case 'av_1':
-      return camera_1
-    case 'av_2':
-      return camera_2
-    case 'av_3':
-      return camera_3
-    default:
-      logg('fpq - cameras_fn default - this should never happen')
-      return camera_wide
-  }
-}
-
-function heads_fn(which) {
-  switch (which) {
-    case '1':
-      return head_1
-      break;
-    case '2':
-      return head_2
-      break;
-    case '3':
-      return head_3
-      break;
-    default:
-      logg('fpp - heads_fn default - this should never happen')
-      return head_1
-  }
-}
-
-function setActiveHead(id) {
-  head = heads_fn(id)
-  persistHeadControl(id)
-}
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-function setActiveCamera(id, instant = false) {
-  const key = String(id)
-  persistCameraControl(key)
-  const dest = cameras_fn(key)
-  const destTarget = (cameraTargets[key] || cameraTargets.wide).clone()
-  ;[camera_wide, camera_1, camera_2, camera_3, camera].forEach((cam) => {
-    if (cam) {
-      cam.aspect = width / height
-      cam.updateProjectionMatrix()
-    }
-  })
+function setActiveCamera(key, instant = false) {
+  const dest = cameras[key].cam
+  const destTarget = cameras[key].tgt.clone()
 
+  Object.entries(cameras).forEach(([key, value]) => {
+    value.cam.aspect = width / height
+    value.cam.updateProjectionMatrix()
+  })
   dest.updateMatrixWorld()
 
-  const endPos = dest.position.clone()
+  const endPos  = dest.position.clone()
   const endQuat = dest.quaternion.clone()
 
   if (instant || !controls) {
-    camera.position.copy(endPos)
-    camera.quaternion.copy(endQuat)
-    camera.fov = dest.fov
-    camera.near = dest.near
-    camera.far = dest.far
-    camera.updateProjectionMatrix()
+    active_camera.position.copy(endPos)
+    active_camera.quaternion.copy(endQuat)
+    active_camera.fov  = dest.fov
+    active_camera.near = dest.near
+    active_camera.far  = dest.far
+    active_camera.updateProjectionMatrix()
     faceTarget.copy(destTarget)
     if (controls) {
       controls.target.copy(destTarget)
@@ -722,9 +635,9 @@ function setActiveCamera(id, instant = false) {
   }
 
   cameraTransition = {
-    startPos: camera.position.clone(),
-    startQuat: camera.quaternion.clone(),
-    startFov: camera.fov,
+    startPos: active_camera.position.clone(),
+    startQuat: active_camera.quaternion.clone(),
+    startFov: active_camera.fov,
     startTarget: controls.target.clone(),
     endPos: endPos,
     endQuat: endQuat,
@@ -742,10 +655,10 @@ function updateCameraTransition(dt) {
   const u = Math.min(1, cameraTransition.elapsed / cameraTransition.duration)
   const e = easeInOutCubic(u)
   const tr = cameraTransition
-  camera.position.lerpVectors(tr.startPos, tr.endPos, e)
-  camera.quaternion.slerpQuaternions(tr.startQuat, tr.endQuat, e)
-  camera.fov = tr.startFov + (tr.endFov - tr.startFov) * e
-  camera.updateProjectionMatrix()
+  active_camera.position.lerpVectors(tr.startPos, tr.endPos, e)
+  active_camera.quaternion.slerpQuaternions(tr.startQuat, tr.endQuat, e)
+  active_camera.fov = tr.startFov + (tr.endFov - tr.startFov) * e
+  active_camera.updateProjectionMatrix()
   if (controls) {
     controls.target.lerpVectors(tr.startTarget, tr.endTarget, e)
     faceTarget.copy(controls.target)
@@ -762,18 +675,16 @@ function updateCameraTransition(dt) {
 }
 
 function onWindowResize() {
-  ;[camera_wide, camera_1, camera_2, camera_3].forEach((cam) => {
-    if (cam) {
-      cam.aspect = width / height
-      cam.updateProjectionMatrix()
-    }
+  Object.entries(cameras).forEach(([key, value]) => {
+    value.cam.aspect = width / height
+    value.cam.updateProjectionMatrix()
   })
   renderer.setSize( width, height )
   render()
 }
 
 function render() {
-  renderer.render( scene, camera )
+  renderer.render( scene, active_camera )
 }
 
 function animate() {
@@ -789,15 +700,13 @@ function animate() {
 
   if (capturing) tickEvents(captureFrame * dt)
 
-  if (head_1) head_1.animate(dt)
-  if (head_2) head_2.animate(dt)
-  if (head_3) head_3.animate(dt)
-  update_walk(head_1, dt)
-  update_walk(head_2, dt)
-  update_walk(head_3, dt)
+  Object.entries(avatars).forEach(([name, _avatar]) => {
+    _avatar.animate(dt)
+    update_walk(_avatar, dt)
+  })
   updateCameraTransition(dt)
   if (!cameraTransition && !capturing) controls.update()
-  renderer.render( scene, camera )
+  renderer.render( scene, active_camera )
 
   if (capturing) {
     capturer.capture( renderer.domElement )
@@ -810,8 +719,9 @@ function animate() {
 
 async function startSpeakCapture() {
   if (capturing) return
-  if (!head) return
+  if (!active_avatar) return
   if (!chunkedInput) return
+  logg(null, 'startSpeakCapture()')
 
   const last = chunkedInput.wtimes.length - 1
   const duration_ms = chunkedInput.wtimes[last] + chunkedInput.wdurations[last]
@@ -826,7 +736,7 @@ async function startSpeakCapture() {
   capturer.start()
   logg('capturer.start')
   status.textContent = 'capturing'
-  head.streamAudio(chunkedInput)
+  active_avatar.streamAudio(chunkedInput)
 }
 
 function finishCapture() {
@@ -846,9 +756,8 @@ function finishCapture() {
       form.append('thumb', thumb)
       if (newspartial_id) form.append('newspartial_id', newspartial_id)
 
-      const url = wco_origin
-        ? (wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret)
-        : '/wco/api/videos/'
+      const url = 'https://' + wco_origin + '/wco/api/videos/?api_key=' + api_key + '&api_secret=' + api_secret
+
       fetch(url, {
         method: 'POST',
         body: form,
@@ -877,12 +786,12 @@ $('#speak').on('click', async () => {
 
 $('#jesture').on('click', async () => {
   try {
-    if (!head) return
+    if (!active_avatar) return
     const name = $('select.gestures').val()
     const g = gestures[name]
-    const _anim = gesture_url(g, head.avatar)
-    head.speed = (g && typeof g === 'object' && g.speed) ? g.speed : 0
-    head.playAnimation( _anim )
+    const _anim = gesture_url(g, active_avatar.avatar)
+    active_avatar.speed = (g && typeof g === 'object' && g.speed) ? g.speed : 0
+    active_avatar.playAnimation( _anim )
   } catch (error) {
     console.log(error)
   }

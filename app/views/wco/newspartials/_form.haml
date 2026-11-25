@@ -14,6 +14,12 @@
       %label Body
       = f.text_area :body, class: 'tinymce'
 
+    .row
+      .col-12
+        .field
+          %label config_json
+          = f.text_area :config_json
+
     .field
       %label Newsvideo:
       = f.select :newsvideo_id, options_for_select(@newsvideos_list, selected: newspartial.newsvideo_id || params[:newsvideo_id] ), {}, {}

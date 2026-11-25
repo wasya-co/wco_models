@@ -17,7 +17,7 @@ Wco::Engine.routes.draw do
     patch 'reports/:id/add-config', to: 'reports#add_config'
     get   'newspartials/:id/config',          to: 'newspartials#show_config',     as: :newspartial_config
     match 'newspartials/:id/generate-speech', to: 'newspartials#generate_speech', as: :newspartial_generate_speech, via: [ :get, :post ]
-    match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video', as: :newspartial_generate_speech, via: [ :get, :post ]
+    match 'newspartials/:id/generate-video',  to: 'newspartials#generate_video',  as: :newspartial_generate_video,  via: [ :get, :post ]
 
     get 'newsproducer/canvas',         to: 'newsproducer#canvas'
     get 'newsproducer/canvas_minimal', to: 'newsproducer#canvas_minimal'

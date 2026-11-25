@@ -26,6 +26,25 @@ module Wco::Utils
     end
   end
 
+  def self.voice_to_avatar(which)
+    case which
+    when 'af_jessica'
+      return 'brunette'
+    when 'am_fernir'
+      return 'denis'
+    end
+  end
+
+  def self.default_studio_config
+    { active_camera: 'spot_1',
+      active_spot:  'spot_1',
+      studio: 'newsroom_green',
+      spot_1: 'brunette',
+      spot_2: 'denis',
+      spot_3: 'eve',
+    }
+  end
+
   private
 
   def set_slug

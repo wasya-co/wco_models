@@ -17,7 +17,6 @@ module Wco::PublisherD10
     out =<<~AOL
     "field_tags": { "data": <%= out %> }
 AOL
-    out.to_json
   end
 
   def field_image_thumb_data photo=nil
@@ -26,7 +25,6 @@ AOL
     out =<<~AOL
     "field_image_thumb": { "data": { "type": "file--file", "id": "#{save_image(photo)}" } },
 AOL
-    out.to_json
   end
 
   ## this works, if file_entity is not present in d10.

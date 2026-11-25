@@ -15,7 +15,7 @@ module Wco::PublisherD10
     end
 
     out =<<~AOL
-    "field_tags": { "data": <%= out %> }
+    "field_tags": { "data": <%= out %> },
 AOL
   end
 

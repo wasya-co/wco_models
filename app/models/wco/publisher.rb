@@ -50,7 +50,16 @@ class Wco::Publisher
     end
 
     tmpl = ERB.new publisher.post_body_tmpl
-    body = JSON.parse tmpl.result(binding)
+    tmpl = tmpl.result(binding)
+    loop do
+      ## remove ,,
+      ## remove ,} and ,]
+      cleaned = tmpl.gsub(/,\s*,/, ',').gsub(/,\s*([}\]])/, '\1')
+      break if cleaned == tmpl
+      tmpl = cleaned
+    end
+
+    body = JSON.parse tmpl
     puts! body, 'body'
 
     out = Wco::HTTParty.post( "#{@site.origin}#{post_path}", {

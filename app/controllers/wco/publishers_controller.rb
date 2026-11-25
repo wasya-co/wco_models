@@ -16,7 +16,7 @@ class Wco::PublishersController < Wco::ApplicationController
     @publisher = Wco::Publisher.find params[:id]
     authorize! :do_run, @publisher
 
-    @publisher.props = OpenStruct.new( JSON.parse params[:props] )
+    @publisher.props = OpenStruct.new( JSON.parse params[:publisher][:props] || params[:props] )
     flag = @publisher.do_run
     if !flag
       flash_alert @publisher.errors

@@ -1,10 +1,36 @@
 
 ##
-## this doesn't work and was never tested or used.
 ## 2026-11-14
 ##
-class Wco::PublisherD10 < Wco::Publisher
+module Wco::PublisherD10
 
+  def save_image image
+    publisher = self
+    # image = Wco::Photo.all.last
+
+    site = publisher.site
+    image_url = image.photo.url(:thumb)
+
+    uri = URI(image_url)
+    image_data = Net::HTTP.get(uri)
+    credentials = Base64.strict_encode64("#{site.username}:#{site.password}")
+
+    puts! 'Saving an image...'
+    response = HTTParty.post(
+      "#{site.origin}/jsonapi/node/article/field_image_thumb",
+      headers: {
+        'Content-Type' => 'application/octet-stream',
+        'Accept' => 'application/vnd.api+json',
+        'Content-Disposition' => 'file; filename="thumbnail.jpg"',
+        'Authorization' => "Basic #{credentials}",
+      },
+      body: image_data
+    )
+    puts! response, 'response'
+    field_image_thumb_id = response['data']['id']
+  end
+
+  ## this doesn't work and was never tested or used.
   def self.context_eval
 
     @headers['Content-Type']  = 'application/vnd.api+json'

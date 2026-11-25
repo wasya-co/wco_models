@@ -9,6 +9,7 @@ end
 class Wco::Publisher
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Wco::PublisherD10
   store_in collection: 'wco_publishers'
 
   field :slug

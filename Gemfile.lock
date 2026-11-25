@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wco_models (3.5.0.7)
+    wco_models (3.5.0.8)
       aws-sdk-s3
       business_time
       cancancan (~> 3.5.0)
@@ -92,12 +92,12 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.9.2)
+    addressable (2.10.0)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
     aws-eventstream (1.4.1)
-    aws-partitions (1.1308.0)
-    aws-sdk-core (3.270.0)
+    aws-partitions (1.1311.0)
+    aws-sdk-core (3.272.0)
       aws-eventstream (~> 1, >= 1.4.1)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -109,7 +109,7 @@ GEM
     aws-sdk-kms (1.145.0)
       aws-sdk-core (~> 3, >= 3.270.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.245.0)
+    aws-sdk-s3 (1.245.2)
       aws-sdk-core (~> 3, >= 3.269.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -189,7 +189,7 @@ GEM
       thor
       tilt
     hashie (5.0.0)
-    httparty (0.24.3)
+    httparty (0.25.1)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
